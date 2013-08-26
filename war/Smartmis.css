@@ -1,0 +1,19 @@
+/** Add css rules here for your application. */
+
+.serverResponseLabelError {
+  color: red;
+  font-family:Georgia,serif;
+  font-size:13px;
+}
+
+.sgwtTitle {
+    font-family:Arial,Verdana,tahoma,serif;
+    color:#454545;
+    font-size:18px;
+}
+
+.initFunctionLabel {
+    font-family:Arial,Verdana,tahoma,serif;
+    color:#F0F0F0;
+    font-size:60px;
+}
