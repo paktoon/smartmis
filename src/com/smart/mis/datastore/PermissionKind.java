@@ -141,8 +141,8 @@ public class PermissionKind {
 	}
 	
 	private static String getStatus(boolean status){
-		if (status) return "Enable";
-		else return "Disable";
+		if (status) return "Active";
+		else return "Inactive";
 	}
 	
 	private static String checkPermFlag(byte flag, byte checked){

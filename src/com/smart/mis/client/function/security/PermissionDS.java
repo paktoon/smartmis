@@ -26,7 +26,7 @@ public class PermissionDS extends DataSource  {
 			 DataSourceEnumField roleField = new DataSourceEnumField("role", "ขอบเขตการใช้งาน");
 			 roleField.setValueMap("Staff", "Manager", "Administrator");
 			 DataSourceEnumField statusField = new DataSourceEnumField("status", "สถานะ");
-			 statusField.setValueMap("Enable", "Disable");
+			 statusField.setValueMap("Active", "Inactive");
 			 DataSourceBooleanField saleField = new DataSourceBooleanField("cSale", "งานขาย");
 			 DataSourceBooleanField productField = new DataSourceBooleanField("cProd", "งานผลิต");
 			 DataSourceBooleanField invenField = new DataSourceBooleanField("cInv", "คลังสินค้าและวัตถุดิบ");

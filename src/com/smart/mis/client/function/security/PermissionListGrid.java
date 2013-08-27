@@ -16,9 +16,9 @@ public class PermissionListGrid extends ListGrid {
 	@Override
 	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
 		if (getFieldName(colNum).equals("status")) {
-			if (record.getAttributeAsString("status").equalsIgnoreCase("enable")) {
+			if (record.getAttributeAsString("status").equalsIgnoreCase("Active")) {
 				return "font-weight:bold; color:#287fd6;";
-			} else if (record.getAttributeAsString("status").equalsIgnoreCase("disable")) {  
+			} else if (record.getAttributeAsString("status").equalsIgnoreCase("Inactive")) {  
                 return "font-weight:bold; color:#d64949;";  
             } else {  
                 return super.getCellCSSText(record, rowNum, colNum);  

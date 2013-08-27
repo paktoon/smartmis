@@ -216,7 +216,7 @@ public class PermissionAdd {
         //Default selected 
         editorForm.setValue("name", "[ชื่อสิทธิการใช้งาน]");  
         editorForm.setValue("role", "Staff");
-        editorForm.setValue("status", "Enable");
+        editorForm.setValue("status", "Active");
         canReport.setValue(false);
     	canReport.setDisabled(true);
     	canAdmin.setValue(false);

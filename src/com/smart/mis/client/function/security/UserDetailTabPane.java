@@ -18,6 +18,7 @@ import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.MatchesFieldValidator;
+import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -121,6 +122,9 @@ public class UserDetailTabPane extends TabSet {
         profile.setFetchMissingValues(true);
         profile.setAlwaysFetchMissingValues(true);
         profile.setRequired(true);
+        ListGridField profile_name = new ListGridField("name");  
+        ListGridField profile_status = new ListGridField("status"); 
+        profile.setPickListFields(profile_name, profile_status);
         //End setup
         CheckboxItem status = new CheckboxItem("status", "สถานะ");
         PasswordItem pwd = new PasswordItem("pwd", "รหัสผ่าน");
