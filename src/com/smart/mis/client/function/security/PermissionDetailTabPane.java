@@ -1,6 +1,16 @@
 package com.smart.mis.client.function.security;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.smart.mis.shared.security.Function;
+import com.smart.mis.shared.security.PermissionProfile;
+import com.smart.mis.shared.security.Role;
+import com.smartgwt.client.data.Criteria;
+import com.smartgwt.client.data.DSCallback;
+import com.smartgwt.client.data.DSRequest;
+import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;  
 import com.smartgwt.client.data.Record;  
+import com.smartgwt.client.data.ResultSet;
 import com.smartgwt.client.types.Alignment;  
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
@@ -30,10 +40,13 @@ public class PermissionDetailTabPane extends TabSet {
     private DataSource permissionDataSource;
     private VLayout outlineForm;
     private IButton saveButton;
+    private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
+    private String user;
     
-    public PermissionDetailTabPane(DataSource permissionDS , PermissionListGrid permisssionGrid){
+    public PermissionDetailTabPane(DataSource permissionDS , PermissionListGrid permisssionGrid, String user){
     	this.permissionListGrid = permisssionGrid;
     	this.permissionDataSource = permissionDS;
+    	this.user = user;
     	
     	itemViewer = new DetailViewer();  
         itemViewer.setDataSource(permissionDS);  
@@ -268,20 +281,109 @@ public class PermissionDetailTabPane extends TabSet {
     }
     
     public void saveData(){
-   	
-    	Record updateRecord = PermissionData.createRecord(
-    			(String) editorForm.getValue("name"),
-    			(String) editorForm.getValue("role"),
-    			(String) editorForm.getValue("status"),
-    	    	(Boolean) normalForm.getValue("cSale"),
-    	    	(Boolean) normalForm.getValue("cProd"),
-    	    	(Boolean) normalForm.getValue("cInv"),
-    	    	(Boolean) normalForm.getValue("cPurc"),
-    	    	(Boolean) normalForm.getValue("cFin"),
-    	    	(Boolean) reportForm.getValue("cRep"),
-    	    	(Boolean) adminForm.getValue("cAdm")
-    			);
     	
-    	permissionDataSource.updateData(updateRecord);
+    	//Save data to data store
+    	//Function
+    	//System.out.println("*** Updating permission data");
+    	byte func = Function.NONE;
+    	if ((Boolean) normalForm.getValue("cSale")) {
+    		func |= Function.SALE;
+    	}
+    	if ((Boolean) normalForm.getValue("cProd")) {
+    		func |= Function.PRODUCTION;
+    	}
+    	if ((Boolean) normalForm.getValue("cInv")) {
+    		func |= Function.INVENTORY;
+    	}
+    	if ((Boolean) normalForm.getValue("cPurc")) {
+    		func |= Function.PURCHASING;
+    	}
+    	if ((Boolean) normalForm.getValue("cFin")) {
+    		func |= Function.FINANCIAL;
+    	}
+    	if ((Boolean) reportForm.getValue("cRep")) {
+    		func |= Function.REPORT;
+    	}
+    	if ((Boolean) adminForm.getValue("cAdm")) {
+    		func |= Function.SECURITY;
+    	}
+    	//End function
+    	//Role
+    	byte role = Role.NON_USER;
+    	if (((String) editorForm.getValue("role")).equalsIgnoreCase("staff")) {
+    		role = Role.STAFF;
+    	} else if (((String) editorForm.getValue("role")).equalsIgnoreCase("manager")) {
+    		role = Role.OWNER;
+    	} else if (((String) editorForm.getValue("role")).equalsIgnoreCase("administrator")) {
+    		role = Role.ADMIN;
+    	}
+    	//End Role
+    	PermissionProfile updatedPerm = new PermissionProfile((String) editorForm.getValue("name"), func, role, ((String) editorForm.getValue("status")).equalsIgnoreCase("active"));
+    	//System.out.println("*** Updating permission data " + (String) editorForm.getValue("name") + " " + func + " "  + role + " " + ((String) editorForm.getValue("status")).equalsIgnoreCase("active"));
+    	securityService.updatePermOnServer(updatedPerm, this.user, new AsyncCallback<Boolean>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				SC.warn("Updating permission Fails - please contact administrator");
+			}
+			@Override
+			public void onSuccess(Boolean result) {
+				if (result)
+				{
+					//onRefresh();
+					//System.out.println("*** Update result => " + result);
+					Record updateRecord = PermissionData.createRecord(
+					(String) editorForm.getValue("pid"),
+	    			(String) editorForm.getValue("name"),
+	    			(String) editorForm.getValue("role"),
+	    			(String) editorForm.getValue("status"),
+	    	    	(Boolean) normalForm.getValue("cSale"),
+	    	    	(Boolean) normalForm.getValue("cProd"),
+	    	    	(Boolean) normalForm.getValue("cInv"),
+	    	    	(Boolean) normalForm.getValue("cPurc"),
+	    	    	(Boolean) normalForm.getValue("cFin"),
+	    	    	(Boolean) reportForm.getValue("cRep"),
+	    	    	(Boolean) adminForm.getValue("cAdm")
+	    			);
+					permissionDataSource.updateData(updateRecord);	
+				} else {
+					SC.warn("Updating permission Fails - please contact administrator");
+				}
+			}
+		});
     }
+    
+//    private void onRefresh() {
+//    	
+//    		DataSource dataSource = permissionListGrid.getDataSource();
+//    		DSRequest request = dataSource.getRequestProperties();
+//    		//Criteria criteria = permissionListGrid.getCriteria();
+//    		//Integer[] visibleRows = permissionListGrid.getVisibleRows();
+//    		//Integer startRow = 0;
+//    		//Integer endRow = (visibleRows[1] + permissionListGrid.getResultSet().getResultSize());
+//    		
+//    		//DSRequest request = new DSRequest();
+//    		//request.setStartRow(startRow);
+//    		//request.setEndRow(endRow);
+//    		//request.setSortBy(permissionListGrid.getSort());
+//    		dataSource.fetchData(null, new DSCallback() {
+//    			@Override
+//    			public void execute(DSResponse response, Object rawData, DSRequest request) {
+//    				
+//    				System.out.println("Performing refresh.." + response.getData().length + " on " + request.getActionURL());
+//    				
+////    				DataSource dataSource = permissionListGrid.getDataSource();
+////    	
+////    				ResultSet resultSet = new ResultSet(dataSource);
+////    				resultSet.setInitialLength(response.getTotalRows());
+////    				resultSet.setInitialData(response.getData());
+////    				resultSet.setInitialSort(permissionListGrid.getSort());
+//    				for (Record i : response.getData()) {
+//    					System.out.println(i.getAttributeAsString("name"));
+//    					System.out.println("-> Status -> " + i.getAttributeAsString("status"));
+//    				}
+//    				permissionListGrid.setData(response.getData());
+//    	    		permissionListGrid.redraw();
+//    				}
+//    		}, request);
+//    	}
 }

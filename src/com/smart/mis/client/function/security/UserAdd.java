@@ -1,6 +1,10 @@
 package com.smart.mis.client.function.security;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.security.User;
+import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
@@ -33,12 +37,15 @@ public class UserAdd {
     private final DataSource userDataSource, permissionDataSource;
     private final UserListGrid userListGrid;
     private final UserDetailTabPane userTabPane;
+    private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
+    private String user;
     
-	public UserAdd(DataSource userDS, UserListGrid userListGrid, UserDetailTabPane userTabPane){
+	public UserAdd(DataSource userDS, UserListGrid userListGrid, UserDetailTabPane userTabPane, String user){
 		this.userDataSource = userDS;
     	this.permissionDataSource = PermissionDS.getInstance();
     	this.userListGrid = userListGrid;
     	this.userTabPane = userTabPane;
+    	this.user = user;
 	}
 	
 	public void show(){
@@ -74,10 +81,6 @@ public class UserAdd {
         editorForm.setUseAllDataSourceFields(false); 
         editorForm.setIsGroup(true);
         editorForm.setGroupTitle("ข้อมูลผู้ใช้ระบบ");
-
-//        HLayout inlineForm = new HLayout();
-//        inlineForm.setWidth(650);
-//        inlineForm.setHeight(50);
         
         final DynamicForm normalForm = new DynamicForm(); 
         normalForm.setAutoFocus(false);
@@ -89,29 +92,6 @@ public class UserAdd {
         normalForm.setUseAllDataSourceFields(false); 
         normalForm.setIsGroup(true);
         normalForm.setGroupTitle("ข้อมูลทั่วไป");
-        
-//        VLayout subInlineForm = new VLayout();
-//        subInlineForm.setWidth(170);
-//        
-//        final DynamicForm reportForm = new DynamicForm(); 
-//        reportForm.setAutoFocus(false);
-//        reportForm.setCellPadding(5); 
-//        reportForm.setMargin(5); 
-//        reportForm.setWidth(170);
-//        reportForm.setDataSource(this.permissionDataSource);  
-//        reportForm.setUseAllDataSourceFields(false); 
-//        reportForm.setIsGroup(true);
-//        reportForm.setGroupTitle("สิทธิเจ้าของกิจการ");
-//        
-//        final DynamicForm adminForm = new DynamicForm(); 
-//        adminForm.setAutoFocus(false);
-//        adminForm.setMargin(5); 
-//        adminForm.setWidth(170);
-//        adminForm.setCellPadding(5);
-//        adminForm.setDataSource(this.permissionDataSource);  
-//        adminForm.setUseAllDataSourceFields(false); 
-//        adminForm.setIsGroup(true);
-//        adminForm.setGroupTitle("สิทธิผู้ดูและระบบ");
         
         //editorForm
         TextItem uname = new TextItem("uname", "ชื่อผู้ใช้");
@@ -129,9 +109,7 @@ public class UserAdd {
         profile.setFetchMissingValues(true);
         profile.setAlwaysFetchMissingValues(true);
         profile.setRequired(true);
-        ListGridField profile_name = new ListGridField("name");  
-        ListGridField profile_status = new ListGridField("status"); 
-        profile.setPickListFields(profile_name, profile_status);
+        profile.setPickListCriteria(new Criteria("status", "Active"));
         //End setup
         CheckboxItem status = new CheckboxItem("status", "สถานะ");
         PasswordItem pwd = new PasswordItem("pwd", "รหัสผ่าน");
@@ -180,32 +158,58 @@ public class UserAdd {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {	
-					    	Record newRecord = UserData.createRecord(
-					    			(String) editorForm.getValue("uname"),
-					    			(String) editorForm.getValue("pwd"),
-					    			(String) normalForm.getValue("title"),
-					    	    	(String) normalForm.getValue("fname"),
-					    	    	(String) normalForm.getValue("lname"),
-					    	    	(String) normalForm.getValue("email"),
-					    	    	(String) normalForm.getValue("position"),
-					    	    	(String) editorForm.getValue("name"),
-					    	    	(Boolean) editorForm.getValue("status")
-					    			);
-					    	userDataSource.addData(newRecord, new DSCallback() {
-
+				    		String uname = (String) editorForm.getValue("uname");
+							String pwd = (String) editorForm.getValue("pwd");
+							String title = (String) normalForm.getValue("title");
+					    	String fname = (String) normalForm.getValue("fname");
+					    	String lname = (String) normalForm.getValue("lname");
+					    	String email = (String) normalForm.getValue("email");
+					    	String position = (String) normalForm.getValue("position");
+					    	String pname = (String) editorForm.getValue("name");
+					    	boolean status = (Boolean) editorForm.getValue("status");
+					    	
+					    	User createdUser = new User(uname, pwd, fname, lname, email, position, title, status);
+					    	securityService.createUserOnServer(createdUser, pname, user, new AsyncCallback<String>() {
 								@Override
-								public void execute(DSResponse dsResponse, Object data,
-										DSRequest dsRequest) {
-										if (dsResponse.getStatus() != 0) {
-											SC.warn("การเพิ่มผู้ใช้ล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
-										} else { 
-											winModel.destroy();
-											userListGrid.fetchData();
-											userListGrid.selectSingleRecord(dsResponse.getData()[0]);
-											userTabPane.updateDetails(dsResponse.getData()[0]);
-										}
+								public void onFailure(Throwable caught) {
+									SC.warn("Updating permission Fails - please contact administrator");
 								}
-					    	});
+								@Override
+								public void onSuccess(String result) {
+									if (result != null)
+									{
+										Record newRecord = UserData.createRecord(
+												result,
+								    			(String) editorForm.getValue("uname"),
+								    			(String) editorForm.getValue("pwd"),
+								    			(String) normalForm.getValue("title"),
+								    	    	(String) normalForm.getValue("fname"),
+								    	    	(String) normalForm.getValue("lname"),
+								    	    	(String) normalForm.getValue("email"),
+								    	    	(String) normalForm.getValue("position"),
+								    	    	(String) editorForm.getValue("name"),
+								    	    	(Boolean) editorForm.getValue("status")
+								    			);
+								    	userDataSource.addData(newRecord, new DSCallback() {
+
+											@Override
+											public void execute(DSResponse dsResponse, Object data,
+													DSRequest dsRequest) {
+													if (dsResponse.getStatus() != 0) {
+														SC.warn("การเพิ่มผู้ใช้ล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
+													} else { 
+														winModel.destroy();
+														userListGrid.fetchData();
+														userListGrid.selectSingleRecord(dsResponse.getData()[0]);
+														userTabPane.updateDetails(dsResponse.getData()[0]);
+													}
+											}
+								    	});
+									} else {
+										SC.warn("Updating user Fails - please contact administrator");
+									}
+								}
+							});
 					    }
 					}
             		

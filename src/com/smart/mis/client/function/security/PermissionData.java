@@ -2,23 +2,12 @@ package com.smart.mis.client.function.security;
 
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class PermissionData {
-	
-	//private static String YES = "checked.png";
-	//private static String NO = "close.png";
-	
-//	private static ListGridRecord[] records;    
-//    
-//    public static ListGridRecord[] getRecords() {  
-//        if (records == null) {  
-//            records = getNewRecords();    
-//        }    
-//        return records;    
-//    }   
+public class PermissionData {  
 
-    public static ListGridRecord createRecord(String name, String role, String status, 
+    public static ListGridRecord createRecord(String pid, String name, String role, String status, 
     		Boolean canSale, Boolean canProduct, Boolean canInven, Boolean canPurchase, Boolean canFinance, Boolean canReport, Boolean canAdmin) {  
         ListGridRecord record = new ListGridRecord();  
+        record.setAttribute("pid", pid);
         record.setAttribute("name", name);  
         record.setAttribute("role", role); 
         record.setAttribute("status", status);  

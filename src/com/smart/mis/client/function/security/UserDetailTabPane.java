@@ -1,5 +1,10 @@
 package com.smart.mis.client.function.security;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.security.PermissionProfile;
+import com.smart.mis.shared.security.User;
+import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DataSource;  
 import com.smartgwt.client.data.Record;  
 import com.smartgwt.client.types.Alignment;  
@@ -18,6 +23,7 @@ import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.MatchesFieldValidator;
+import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -36,12 +42,15 @@ public class UserDetailTabPane extends TabSet {
     private UserListGrid userListGrid; 
     private DataSource userDataSource, permissionDataSource;
     private HLayout outlineForm;
-    private IButton saveButton;
+    private IButton saveButton;    
+    private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
+    private String user;
     
-    public UserDetailTabPane(DataSource userDS , UserListGrid userGrid){
+    public UserDetailTabPane(DataSource userDS , UserListGrid userGrid, String user){
     	this.userListGrid = userGrid;
     	this.userDataSource = userDS;
     	this.permissionDataSource = PermissionDS.getInstance();
+    	this.user = user;
     	
     	itemViewer = new DetailViewer();  
         itemViewer.setDataSource(userDS);  
@@ -70,9 +79,6 @@ public class UserDetailTabPane extends TabSet {
         editorForm.setUseAllDataSourceFields(false); 
         editorForm.setIsGroup(true);
         editorForm.setGroupTitle("ข้อมูลผู้ใช้ระบบ");
-//        HLayout inlineForm = new HLayout();
-//        inlineForm.setWidth(650);
-//        inlineForm.setHeight(50);
         
         normalForm = new DynamicForm(); 
         normalForm.setAutoFocus(false);
@@ -84,33 +90,7 @@ public class UserDetailTabPane extends TabSet {
         normalForm.setUseAllDataSourceFields(false); 
         normalForm.setIsGroup(true);
         normalForm.setGroupTitle("ข้อมูลทั่วไป");
-               
-//        VLayout subInlineForm = new VLayout();
-//        subInlineForm.setWidth(170);
-//        //subInlineForm.setHeight(50);
-//        
-//        reportForm = new DynamicForm(); 
-//        reportForm.setAutoFocus(false);
-//        reportForm.setCellPadding(5); 
-//        reportForm.setMargin(5); 
-//        reportForm.setWidth(170);
-//        reportForm.setDataSource(permissionDS);  
-//        reportForm.setUseAllDataSourceFields(false); 
-//        reportForm.setIsGroup(true);
-//        reportForm.setGroupTitle("สิทธิเจ้าของกิจการ");
-//        //reportForm.setAlign(Alignment.LEFT);
-//        
-//        adminForm = new DynamicForm(); 
-//        adminForm.setAutoFocus(false);
-//        adminForm.setMargin(5); 
-//        adminForm.setWidth(170);
-//        adminForm.setCellPadding(5);
-//        adminForm.setDataSource(permissionDS);  
-//        adminForm.setUseAllDataSourceFields(false); 
-//        adminForm.setIsGroup(true);
-//        adminForm.setGroupTitle("สิทธิผู้ดูและระบบ");
-//        //adminForm.setAlign(Alignment.LEFT);
-//        
+        
         //editorForm
         StaticTextItem uname = new StaticTextItem("uname", "ชื่อผู้ใช้");
         uname.setRequired(true);
@@ -122,9 +102,7 @@ public class UserDetailTabPane extends TabSet {
         profile.setFetchMissingValues(true);
         profile.setAlwaysFetchMissingValues(true);
         profile.setRequired(true);
-        ListGridField profile_name = new ListGridField("name");  
-        ListGridField profile_status = new ListGridField("status"); 
-        profile.setPickListFields(profile_name, profile_status);
+        profile.setPickListCriteria(new Criteria("status", "Active"));
         //End setup
         CheckboxItem status = new CheckboxItem("status", "สถานะ");
         PasswordItem pwd = new PasswordItem("pwd", "รหัสผ่าน");
@@ -160,35 +138,6 @@ public class UserDetailTabPane extends TabSet {
 		fname.setHint("*");
 		lname.setHint("*");
 		
-//        final CheckboxItem canSale = new CheckboxItem("cSale");
-//        final CheckboxItem canProduct = new CheckboxItem("cProd");
-//        final CheckboxItem canInven = new CheckboxItem("cInv");
-//        final CheckboxItem canPurchase = new CheckboxItem("cPurc");
-//        final CheckboxItem canFinance = new CheckboxItem("cFin");
-//        //reportForm
-//        final CheckboxItem canReport = new CheckboxItem("cRep");
-//        //adminForm
-//        final CheckboxItem canAdmin = new CheckboxItem("cAdm");
-//
-//        role.addChangeHandler(new ChangeHandler() {  
-//            public void onChange(ChangeEvent event) {  
-//                String selectedItem = (String) event.getValue();  
-//                if (selectedItem.equalsIgnoreCase("Staff")){
-//                	canReport.setValue(false);
-//                	canReport.setDisabled(true);
-//                	canAdmin.setValue(false);
-//                	canAdmin.setDisabled(true);
-//                } else if (selectedItem.equalsIgnoreCase("Manager")) {
-//                	canReport.setDisabled(false);
-//                	canAdmin.setValue(false);
-//                	canAdmin.setDisabled(true);
-//                } else if (selectedItem.equalsIgnoreCase("Administrator")) {
-//                	canReport.setDisabled(false);
-//                	canAdmin.setDisabled(false);
-//                }
-//            }  
-//        });
-//        
         saveButton = new IButton("บันทึก");  
         saveButton.setAlign(Alignment.CENTER);  
         saveButton.setMargin(10);
@@ -215,11 +164,6 @@ public class UserDetailTabPane extends TabSet {
         editorForm.setColWidths(80, 150); 
         normalForm.setFields(title,fname,lname,email, position );
         normalForm.setColWidths(80, 150);
-//        reportForm.setFields(canReport);
-//        adminForm.setFields(canAdmin);
-//        
-//        subInlineForm.addMembers(reportForm, adminForm);
-//        inlineForm.addMembers(normalForm, subInlineForm, saveButton);
         outlineForm.addMembers(editorForm, normalForm, saveButton);
        //
         
@@ -254,8 +198,6 @@ public class UserDetailTabPane extends TabSet {
                 updateTab(1, outlineForm);
                 editorForm.editNewRecord();  
                 normalForm.editNewRecord();
-//                reportForm.editNewRecord();
-//                adminForm.editNewRecord();
             } else {  
                 updateTab(1, editorLabel);  
             }  
@@ -276,19 +218,6 @@ public class UserDetailTabPane extends TabSet {
         		editorForm.setValue("npwd", editorForm.getValueAsString("pwd"));
         		editorForm.setValue("name", selectedRecord.getAttributeAsString("pname"));
                 normalForm.editRecord(selectedRecord);  
-//                String role = selectedRecord.getAttribute("role");
-//                if (role.equalsIgnoreCase("Staff")){
-//                	reportForm.getField("cRep").setDisabled(true);
-//                	adminForm.getField("cAdm").setDisabled(true);
-//                } else if (role.equalsIgnoreCase("Manager")) {
-//                	reportForm.getField("cRep").setDisabled(false);
-//                	adminForm.getField("cAdm").setDisabled(true);
-//                } else {
-//                	reportForm.getField("cRep").setDisabled(false);
-//                	adminForm.getField("cAdm").setDisabled(false);
-//                }
-//                reportForm.editRecord(selectedRecord);  
-//                adminForm.editRecord(selectedRecord);  
         	}
         }  
     }  
@@ -304,38 +233,52 @@ public class UserDetailTabPane extends TabSet {
     		editorForm.setValue("npwd", editorForm.getValueAsString("pwd"));
     		editorForm.setValue("name", selectedRecord.getAttributeAsString("pname"));
             normalForm.editRecord(selectedRecord);  
-//            String role = selectedRecord.getAttribute("role");
-//            if (role.equalsIgnoreCase("Staff")){
-//            	reportForm.getField("cRep").setDisabled(true);
-//            	adminForm.getField("cAdm").setDisabled(true);
-//            } else if (role.equalsIgnoreCase("Manager")) {
-//            	reportForm.getField("cRep").setDisabled(false);
-//            	adminForm.getField("cAdm").setDisabled(true);
-//            } else {
-//            	reportForm.getField("cRep").setDisabled(false);
-//            	adminForm.getField("cAdm").setDisabled(false);
-//            }
-//            reportForm.editRecord(selectedRecord);  
-//            adminForm.editRecord(selectedRecord); 
         }
     }
     
     public void saveData(){
    	
     	if (editorForm.validate() && normalForm.validate()) {
-	    	Record updateRecord = UserData.createRecord(
-	    			(String) editorForm.getValue("uname"),
-	    			(String) editorForm.getValue("pwd"),
-	    			(String) normalForm.getValue("title"),
-	    	    	(String) normalForm.getValue("fname"),
-	    	    	(String) normalForm.getValue("lname"),
-	    	    	(String) normalForm.getValue("email"),
-	    	    	(String) normalForm.getValue("position"),
-	    	    	(String) editorForm.getValue("name"),
-	    	    	(Boolean) editorForm.getValue("status")
-	    			);
+    		
+    		String uname = (String) editorForm.getValue("uname");
+			String pwd = (String) editorForm.getValue("pwd");
+			String title = (String) normalForm.getValue("title");
+	    	String fname = (String) normalForm.getValue("fname");
+	    	String lname = (String) normalForm.getValue("lname");
+	    	String email = (String) normalForm.getValue("email");
+	    	String position = (String) normalForm.getValue("position");
+	    	String pname = (String) editorForm.getValue("name");
+	    	boolean status = (Boolean) editorForm.getValue("status");
 	    	
-	    	userDataSource.updateData(updateRecord);
+	    	User updatedUser = new User(uname, pwd, fname, lname, email, position, title, status);
+	    	securityService.updateUserOnServer(updatedUser, pname, this.user, new AsyncCallback<Boolean>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					SC.warn("Updating permission Fails - please contact administrator");
+				}
+				@Override
+				public void onSuccess(Boolean result) {
+					if (result)
+					{
+						//System.out.println("*** Update result => " + result);
+						Record updateRecord = UserData.createRecord(
+								(String) editorForm.getValue("uid"),
+				    			(String) editorForm.getValue("uname"),
+				    			(String) editorForm.getValue("pwd"),
+				    			(String) normalForm.getValue("title"),
+				    	    	(String) normalForm.getValue("fname"),
+				    	    	(String) normalForm.getValue("lname"),
+				    	    	(String) normalForm.getValue("email"),
+				    	    	(String) normalForm.getValue("position"),
+				    	    	(String) editorForm.getValue("name"),
+				    	    	(Boolean) editorForm.getValue("status")
+				    			);
+						userDataSource.updateData(updateRecord);
+					} else {
+						SC.warn("Updating user Fails - please contact administrator");
+					}
+				}
+			});
     	} else {
     		SC.warn("ข้อมูลผู้ใช้ไม่ถูกต้อง");
     	}

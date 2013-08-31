@@ -13,22 +13,43 @@ import com.smart.mis.shared.security.Role;
 
 public class PermissionKind {
 	
-	public static boolean createPerm(PermissionProfile profile, String creator) {
+	public static String createPerm(PermissionProfile profile, String creator) {
 		if (!hasPerm(profile.getName())){
 			try {
+				//System.out.println("*** Creating new permission on server!!");
 				Entity perm = new Entity("PERMISSION", profile.getName());
 				perm.setProperty("func", ((Byte) profile.getFunction()).longValue());
 				perm.setProperty("role", ((Byte) profile.getRole()).longValue());
-				perm.setProperty("status", true);
+				perm.setProperty("status", profile.getStatus());
 				perm.setProperty("pid", "PM" + (10000 + Util.getKey("PERMISSION").getId()));
 				perm.setProperty("creator", creator);
 				perm.setProperty("when", new SimpleDateFormat("dd-MM-yyy").format(Calendar.getInstance().getTime()));
 				Util.persistEntity(perm);
+				return (String) getPermEntity(profile.getName()).getProperty("pid");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-		return hasPerm(profile.getName());
+		} 
+		return null;
+	}
+	
+	public static boolean updatePerm(PermissionProfile profile, String creator) {
+		if (hasPerm(profile.getName())){
+			try {
+				//System.out.println("*** Updating permission on server!!");
+				Entity perm = getPermEntity(profile.getName());
+				perm.setProperty("func", ((Byte) profile.getFunction()).longValue());
+				perm.setProperty("role", ((Byte) profile.getRole()).longValue());
+				perm.setProperty("status", profile.getStatus());
+				perm.setProperty("creator", creator);
+				perm.setProperty("when", new SimpleDateFormat("dd-MM-yyy").format(Calendar.getInstance().getTime()));
+				Util.persistEntity(perm);
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} 
+		return false;
 	}
 	
 	public static PermissionProfile getPerm(String name) {

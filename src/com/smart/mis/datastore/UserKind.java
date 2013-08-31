@@ -11,8 +11,8 @@ import com.smart.mis.shared.security.User;
 
 public class UserKind{
 	
-	public static boolean createUser(User euser, String creator) {
-		Entity perm = PermissionKind.getPermEntity(euser.getProfile().getName());
+	public static String createUser(User euser, String pname, String creator) {
+		Entity perm = PermissionKind.getPermEntity(pname);
 		if (!hasUser(euser.getUserName()) && perm != null){
 			try {
 				Entity user = new Entity("USER", euser.getUserName());
@@ -22,17 +22,41 @@ public class UserKind{
 				user.setProperty("lname", euser.getLastName());
 				user.setProperty("email", euser.getEmail());
 				user.setProperty("position", euser.getPosition());
-				user.setProperty("status", true);
-				user.setProperty("profile", euser.getProfile().getName());
+				user.setProperty("status", euser.getStatus());
+				user.setProperty("profile", pname);
 				user.setProperty("uid", "UR" + (10000 + Util.getKey("USER").getId()));
 				user.setProperty("creator", creator);
 				user.setProperty("when", new SimpleDateFormat("dd-MM-yyy").format(Calendar.getInstance().getTime()));
 				Util.persistEntity(user);
+				return (String) getUserEntity(euser.getUserName()).getProperty("uid");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		return hasUser(euser.getUserName());
+		return null;
+	}
+	
+	public static boolean updateUser(User euser, String pname, String creator) {
+		if (hasUser(euser.getUserName())){
+			try {
+				Entity user = getUserEntity(euser.getUserName());
+				user.setProperty("pwd", euser.getPassWord());
+				user.setProperty("title", euser.getTitle());
+				user.setProperty("fname", euser.getFirstName());
+				user.setProperty("lname", euser.getLastName());
+				user.setProperty("email", euser.getEmail());
+				user.setProperty("position", euser.getPosition());
+				user.setProperty("status", euser.getStatus());
+				user.setProperty("profile", pname);
+				user.setProperty("creator", creator);
+				user.setProperty("when", new SimpleDateFormat("dd-MM-yyy").format(Calendar.getInstance().getTime()));
+				Util.persistEntity(user);
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 	
 	public static User loginUser(String username, String password) {
@@ -49,7 +73,7 @@ public class UserKind{
 				String position = (String) user.getProperty("position");
 				PermissionProfile profile = PermissionKind.getPerm((String) user.getProperty("profile"));
 				String title = (String) user.getProperty("title");
-				return new User(name, pwd, fname, lname, email, position, profile, title);
+				return new User(name, pwd, fname, lname, email, position, profile, title, true);
 			}
 		} 
 		return null;

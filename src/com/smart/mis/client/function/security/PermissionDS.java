@@ -21,8 +21,8 @@ public class PermissionDS extends DataSource  {
 			 DataSourceTextField pidField = new DataSourceTextField("pid", "รหัสสิทธิการใช้งาน");
 			 DataSourceTextField permissinNameField = new DataSourceTextField("name", "ชื่อ", 128 , true);
 			 permissinNameField.setPrimaryKey(true);
-			 DataSourceTextField creatorField = new DataSourceTextField("creator", "สร้างโดย");
-			 DataSourceTextField whenField = new DataSourceTextField("when", "วันที่สร้าง");
+			 DataSourceTextField creatorField = new DataSourceTextField("creator", "แก้ไขโดย");
+			 DataSourceTextField whenField = new DataSourceTextField("when", "แก้ไขล่าสุด");
 			 DataSourceEnumField roleField = new DataSourceEnumField("role", "ขอบเขตการใช้งาน");
 			 roleField.setValueMap("Staff", "Manager", "Administrator");
 			 DataSourceEnumField statusField = new DataSourceEnumField("status", "สถานะ");

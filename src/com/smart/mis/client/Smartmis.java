@@ -187,7 +187,7 @@ public class Smartmis implements EntryPoint {
 	public void onModuleLoad() {
 		        	 
 		//For test only
-		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -196,37 +196,29 @@ public class Smartmis implements EntryPoint {
 			}
 
 			@Override
-			public void onSuccess(Boolean result) {
+			public void onSuccess(String result) {
 //				if (result)
 //					System.out.println("Create successful");				
 			}
 			
 		};
 		
-		PermissionProfile all = new PermissionProfile("ADMIN", Function.ALL, Role.ADMIN);
-		PermissionProfile sale = new PermissionProfile("SALE", Function.SALE, Role.STAFF);
-		PermissionProfile product = new PermissionProfile("PRODUCTION", Function.PRODUCTION, Role.STAFF);
-		PermissionProfile inventory = new PermissionProfile("INVENTORY", Function.INVENTORY, Role.STAFF);
-		PermissionProfile purchase = new PermissionProfile("PURCHASING", Function.PURCHASING, Role.STAFF);
-		PermissionProfile financial = new PermissionProfile("FINANCIAL", Function.FINANCIAL, Role.STAFF);
-		PermissionProfile owner = new PermissionProfile("OWNER", Function.REPORT, Role.OWNER);
-		
 		//Need to be revise
-		securityService.createPermOnServer(new PermissionProfile("ADMIN", Function.ALL, Role.ADMIN), "admin", callback);
-		securityService.createPermOnServer(new PermissionProfile("SALE", Function.SALE, Role.STAFF), "admin",callback);
-		securityService.createPermOnServer(new PermissionProfile("PRODUCTION", Function.PRODUCTION, Role.STAFF), "admin",callback);
-		securityService.createPermOnServer(new PermissionProfile("INVENTORY", Function.INVENTORY, Role.STAFF), "admin",callback);
-		securityService.createPermOnServer(new PermissionProfile("PURCHASING", Function.PURCHASING, Role.STAFF), "admin",callback);
-		securityService.createPermOnServer(new PermissionProfile("FINANCIAL", Function.FINANCIAL, Role.STAFF), "admin",callback);
-		securityService.createPermOnServer(new PermissionProfile("OWNER", Function.REPORT, Role.OWNER), "admin",callback);
+		securityService.createPermOnServer(new PermissionProfile("ADMIN", Function.ALL, Role.ADMIN, true), "admin", callback);
+		securityService.createPermOnServer(new PermissionProfile("SALE", Function.SALE, Role.STAFF, true), "admin",callback);
+		securityService.createPermOnServer(new PermissionProfile("PRODUCTION", Function.PRODUCTION, Role.STAFF, true), "admin",callback);
+		securityService.createPermOnServer(new PermissionProfile("INVENTORY", Function.INVENTORY, Role.STAFF, true), "admin",callback);
+		securityService.createPermOnServer(new PermissionProfile("PURCHASING", Function.PURCHASING, Role.STAFF, true), "admin",callback);
+		securityService.createPermOnServer(new PermissionProfile("FINANCIAL", Function.FINANCIAL, Role.STAFF, true), "admin",callback);
+		securityService.createPermOnServer(new PermissionProfile("OWNER", Function.REPORT, Role.OWNER, true), "admin",callback);
 		
-		securityService.createUserOnServer(new User("admin", "test", "ภักดิ์ทูล" , "ใจทอง", "admin@projectadmin.com" , "administrator", all , "นาย"), "admin", callback);
-		securityService.createUserOnServer(new User("sale", "test", "สมศรี" , "ยอดขาย", "somsee@richsilver.com" , "sale person", sale, "นาง"), "admin",callback);
-		securityService.createUserOnServer(new User("production", "test", "สมใจ" , "ผลิตเก่ง", "somjai@richsilver.com" , "production staff", product, "นางสาว"), "admin",callback);
-		securityService.createUserOnServer(new User("inventory", "test", "สมศักดิ์" , "ดูแลคลัง", "somsak@richsilver.com" , "inventory staff", inventory, "นาย"), "admin",callback);
-		securityService.createUserOnServer(new User("purchasing", "test", "สมหมาย" , "ซื้อของ", "sommai@richsilver.com" , "purchasing staff", purchase, "นาย"), "admin",callback);
-		securityService.createUserOnServer(new User("financial", "test", "สมปรีดี" , "เงินสด", "sompredee@richsilver.com" , "accouting staff", financial, "นาง"), "admin",callback);
-		securityService.createUserOnServer(new User("owner", "test", "ดาว" , "เจ้าของ", "dow@richsilver.com" , "business owner", owner, "นางสาว"), "admin",callback);
+		securityService.createUserOnServer(new User("admin", "test", "ภักดิ์ทูล" , "ใจทอง", "admin@projectadmin.com" , "administrator" , "นาย", true), "ADMIN", "admin", callback);
+		securityService.createUserOnServer(new User("sale", "test", "สมศรี" , "ยอดขาย", "somsee@richsilver.com" , "sale person", "นาง", true),"SALE", "admin",callback);
+		securityService.createUserOnServer(new User("production", "test", "สมใจ" , "ผลิตเก่ง", "somjai@richsilver.com" , "production staff", "นางสาว", true),"PRODUCTION", "admin",callback);
+		securityService.createUserOnServer(new User("inventory", "test", "สมศักดิ์" , "ดูแลคลัง", "somsak@richsilver.com" , "inventory staff", "นาย", true),"INVENTORY", "admin",callback);
+		securityService.createUserOnServer(new User("purchasing", "test", "สมหมาย" , "ซื้อของ", "sommai@richsilver.com" , "purchasing staff", "นาย", true),"PURCHASING", "admin",callback);
+		securityService.createUserOnServer(new User("financial", "test", "สมปรีดี" , "เงินสด", "sompredee@richsilver.com" , "accouting staff", "นาง", true),"FINANCIAL", "admin",callback);
+		securityService.createUserOnServer(new User("owner", "test", "ดาว" , "เจ้าของ", "dow@richsilver.com" , "business owner", "นางสาว", true),"OWNER", "admin",callback);
 
 	    if (!isLogin) {
 	    	// To do should implement cookies

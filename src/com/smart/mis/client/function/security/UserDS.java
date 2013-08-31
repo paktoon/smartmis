@@ -31,8 +31,8 @@ public class UserDS extends DataSource  {
 			 DataSourceTextField permissionField = new DataSourceTextField("pname", "สิทธิการใช้งาน");
 			 DataSourceBooleanField statusField = new DataSourceBooleanField("status", "สถานะ");
 			 
-			 DataSourceTextField creatorField = new DataSourceTextField("creator", "สร้างโดย");
-			 DataSourceTextField whenField = new DataSourceTextField("when", "วันที่สร้าง");
+			 DataSourceTextField creatorField = new DataSourceTextField("creator", "แก้ไขโดย");
+			 DataSourceTextField whenField = new DataSourceTextField("when", "แก้ไขล่าสุด");
 			 
 			 setFields(uidField, userNameField, passwordField, creatorField, whenField, titleField, firstNameField, lastNameField, emailField, positionField, permissionField, statusField);
 			 setDataURL("smartmis/security/userData");

@@ -3,7 +3,6 @@ package com.smart.mis.server.security;
 import com.smart.mis.client.function.security.SecurityService;
 import com.smart.mis.datastore.PermissionKind;
 import com.smart.mis.datastore.UserKind;
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.security.PermissionProfile;
@@ -51,22 +50,22 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public boolean createUserOnServer(User user, String creator)
+	public String createUserOnServer(User user, String pname, String creator)
 			throws IllegalArgumentException {
 		
 		if (UserKind.hasUser(user.getUserName())){
-			return false;
+			return null;
 		}
 		
-		return UserKind.createUser(user, creator);
+		return UserKind.createUser(user, pname, creator);
 	}
 	
 	@Override
-	public boolean createPermOnServer(PermissionProfile profile, String creator)
+	public String createPermOnServer(PermissionProfile profile, String creator)
 			throws IllegalArgumentException {
 		
 		if (PermissionKind.hasPerm(profile.getName())){
-			return false;
+			return null;
 		}
 		
 		return PermissionKind.createPerm(profile, creator);
@@ -82,5 +81,17 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public boolean resetPassword(String userName, String passWord) {
 		return UserKind.resetPassword(userName, passWord);
+	}
+
+	@Override
+	public boolean updateUserOnServer(User user, String pname, String updater)
+			throws IllegalArgumentException {
+		return UserKind.updateUser(user, pname, updater);
+	}
+
+	@Override
+	public boolean updatePermOnServer(PermissionProfile profile, String updater)
+			throws IllegalArgumentException {
+		return PermissionKind.updatePerm(profile, updater);
 	}
 }

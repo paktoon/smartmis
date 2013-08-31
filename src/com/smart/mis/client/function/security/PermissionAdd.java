@@ -1,5 +1,10 @@
 package com.smart.mis.client.function.security;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.smart.mis.shared.security.Function;
+import com.smart.mis.shared.security.PermissionProfile;
+import com.smart.mis.shared.security.Role;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
@@ -26,18 +31,21 @@ public class PermissionAdd {
 	
     private final DataSource permissionDataSource;
     private final PermissionListGrid permissionListGrid;
+    private DynamicForm editorForm, normalForm, reportForm, adminForm; 
     private final PermissionDetailTabPane permissionTabPane;
+    private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
+    private final String user;
+    private Window winModel;
     
-	public PermissionAdd(DataSource permissionDS, PermissionListGrid permisssionGrid, PermissionDetailTabPane permissionTabPane){
+	public PermissionAdd(DataSource permissionDS, PermissionListGrid permisssionGrid, PermissionDetailTabPane permissionTabPane, String user){
     	this.permissionDataSource = permissionDS;
     	this.permissionListGrid = permisssionGrid;
     	this.permissionTabPane = permissionTabPane;
+    	this.user = user;
 	}
 	
 	public void show(){
-		
-		final Window winModel = new Window();
-		
+		winModel = new Window();
 		winModel.setTitle("เพิ่มสิทธิการใช้งาน");
 		//winModel.setAutoSize(true);	
 		winModel.setWidth(680);
@@ -55,7 +63,7 @@ public class PermissionAdd {
         outlineForm.setHeight100();
         outlineForm.setMargin(10);
         
-        final DynamicForm editorForm = new DynamicForm();  
+        editorForm = new DynamicForm();  
         editorForm.setWidth(650);  
         editorForm.setMargin(5);  
         editorForm.setNumCols(6);  
@@ -71,7 +79,7 @@ public class PermissionAdd {
         inlineForm.setWidth(650);
         inlineForm.setHeight(50);
         
-        final DynamicForm normalForm = new DynamicForm(); 
+        normalForm = new DynamicForm(); 
         normalForm.setAutoFocus(false);
         normalForm.setCellPadding(5);
         normalForm.setMargin(5); 
@@ -85,7 +93,7 @@ public class PermissionAdd {
         VLayout subInlineForm = new VLayout();
         subInlineForm.setWidth(170);
         
-        final DynamicForm reportForm = new DynamicForm(); 
+        reportForm = new DynamicForm(); 
         reportForm.setAutoFocus(false);
         reportForm.setCellPadding(5); 
         reportForm.setMargin(5); 
@@ -95,7 +103,7 @@ public class PermissionAdd {
         reportForm.setIsGroup(true);
         reportForm.setGroupTitle("สิทธิเจ้าของกิจการ");
         
-        final DynamicForm adminForm = new DynamicForm(); 
+        adminForm = new DynamicForm(); 
         adminForm.setAutoFocus(false);
         adminForm.setMargin(5); 
         adminForm.setWidth(170);
@@ -159,36 +167,10 @@ public class PermissionAdd {
             	SC.confirm("ยืนยันการเพิ่มสิทธิการใช้", "ท่านต้องการเพิ่มสิทธิการใช้งาน " + (String) editorForm.getValue("name") + "หรือไม่ ?", new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
-						if (value) {					       	
-					    	Record newRecord = PermissionData.createRecord(
-					    			(String) editorForm.getValue("name"),
-					    			(String) editorForm.getValue("role"),
-					    			(String) editorForm.getValue("status"),
-					    	    	(Boolean) normalForm.getValue("cSale"),
-					    	    	(Boolean) normalForm.getValue("cProd"),
-					    	    	(Boolean) normalForm.getValue("cInv"),
-					    	    	(Boolean) normalForm.getValue("cPurc"),
-					    	    	(Boolean) normalForm.getValue("cFin"),
-					    	    	(Boolean) reportForm.getValue("cRep"),
-					    	    	(Boolean) adminForm.getValue("cAdm")
-					    			);
-					    	
-					    	permissionDataSource.addData(newRecord, new DSCallback() {
-
-								@Override
-								public void execute(DSResponse dsResponse, Object data,
-										DSRequest dsRequest) {
-										if (dsResponse.getStatus() != 0) {
-											SC.warn("การเพิ่มสิทธิการใช้งานล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
-										} else { 
-											winModel.destroy();
-											permissionListGrid.fetchData();
-											permissionListGrid.selectSingleRecord(dsResponse.getData()[0]);
-											permissionTabPane.updateDetails(dsResponse.getData()[0]);
-										}
-								}
-					    	});
-					    }
+						if (value) {
+							//System.out.println("*** Confirm value => " + value);
+							saveData();
+						}
 					}
             		
             	});
@@ -217,6 +199,11 @@ public class PermissionAdd {
         editorForm.setValue("name", "[ชื่อสิทธิการใช้งาน]");  
         editorForm.setValue("role", "Staff");
         editorForm.setValue("status", "Active");
+        canSale.setValue(false);
+        canProduct.setValue(false);
+        canInven.setValue(false);
+        canPurchase.setValue(false);
+        canFinance.setValue(false);
         canReport.setValue(false);
     	canReport.setDisabled(true);
     	canAdmin.setValue(false);
@@ -230,5 +217,89 @@ public class PermissionAdd {
         outlineForm.addMembers(editorForm, inlineForm);
         winModel.addItem(outlineForm);
         winModel.show();
+	}
+	
+	public void saveData(){
+
+    	//Save data to data store
+    	//Function
+    	byte func = Function.NONE;
+    	if ((Boolean) normalForm.getValue("cSale")) {
+    		func |= Function.SALE;
+    	}
+    	if ((Boolean) normalForm.getValue("cProd")) {
+    		func |= Function.PRODUCTION;
+    	}
+    	if ((Boolean) normalForm.getValue("cInv")) {
+    		func |= Function.INVENTORY;
+    	}
+    	if ((Boolean) normalForm.getValue("cPurc")) {
+    		func |= Function.PURCHASING;
+    	}
+    	if ((Boolean) normalForm.getValue("cFin")) {
+    		func |= Function.FINANCIAL;
+    	}
+    	if ((Boolean) reportForm.getValue("cRep")) {
+    		func |= Function.REPORT;
+    	}
+    	if ((Boolean) adminForm.getValue("cAdm")) {
+    		func |= Function.SECURITY;
+    	}
+    	//End function
+    	//Role
+    	byte role = Role.NON_USER;
+    	if (((String) editorForm.getValue("role")).equalsIgnoreCase("staff")) {
+    		role = Role.STAFF;
+    	} else if (((String) editorForm.getValue("role")).equalsIgnoreCase("manager")) {
+    		role = Role.OWNER;
+    	} else if (((String) editorForm.getValue("role")).equalsIgnoreCase("administrator")) {
+    		role = Role.ADMIN;
+    	}
+    	//End Role
+    	PermissionProfile createdPerm = new PermissionProfile((String) editorForm.getValue("name"), func, role, ((String) editorForm.getValue("status")).equalsIgnoreCase("active"));
+    	//System.out.println("*** Adding new permission data " + (String) editorForm.getValue("name") + " " + func + " "  + role);
+    	securityService.createPermOnServer(createdPerm, this.user, new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				SC.warn("Adding permission Fails - please contact administrator");
+			}
+			@Override
+			public void onSuccess(String result) {
+				if (result != null)
+				{
+					//System.out.println("*** Add result => " + result);
+					Record newRecord = PermissionData.createRecord(
+							result,
+			    			(String) editorForm.getValue("name"),
+			    			(String) editorForm.getValue("role"),
+			    			(String) editorForm.getValue("status"),
+			    	    	(Boolean) normalForm.getValue("cSale"),
+			    	    	(Boolean) normalForm.getValue("cProd"),
+			    	    	(Boolean) normalForm.getValue("cInv"),
+			    	    	(Boolean) normalForm.getValue("cPurc"),
+			    	    	(Boolean) normalForm.getValue("cFin"),
+			    	    	(Boolean) reportForm.getValue("cRep"),
+			    	    	(Boolean) adminForm.getValue("cAdm")
+			    			);
+					permissionDataSource.addData(newRecord, new DSCallback() {
+
+						@Override
+						public void execute(DSResponse dsResponse, Object data,
+								DSRequest dsRequest) {
+								if (dsResponse.getStatus() != 0) {
+									SC.warn("การเพิ่มสิทธิการใช้งานล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
+								} else { 
+									winModel.destroy();
+									permissionListGrid.fetchData();
+									permissionListGrid.selectSingleRecord(dsResponse.getData()[0]);
+									permissionTabPane.updateDetails(dsResponse.getData()[0]);
+								}
+						}
+			    	});
+				} else {
+					SC.warn("Adding permission Fails - please contact administrator");
+				}
+			}
+		});
 	}
 }

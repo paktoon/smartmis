@@ -69,12 +69,12 @@ public class SecurityPanel extends FunctionPanel{
         itemList.setExpanded(true);
         
         SectionStackSection detailView = new SectionStackSection("จัดการข้อมูลสิทธิการใช้งาน");  
-        PermissionDetailTabPane permissionTabPane = new PermissionDetailTabPane(PermissionDS.getInstance(), permissionGrid);
+        PermissionDetailTabPane permissionTabPane = new PermissionDetailTabPane(PermissionDS.getInstance(), permissionGrid, this._main.getCurrentUser().getUserName());
         detailView.setItems(permissionTabPane);
         detailView.setExpanded(true);
         permissionGrid.addUpdateDetailHandler(permissionTabPane);
         
-        final PermissionAdd addFunc = new PermissionAdd(PermissionDS.getInstance(), permissionGrid, permissionTabPane);
+        final PermissionAdd addFunc = new PermissionAdd(PermissionDS.getInstance(), permissionGrid, permissionTabPane, this._main.getCurrentUser().getUserName());
         ToolStripButton addButton = new ToolStripButton();  
         addButton.setHeight(18);  
         addButton.setWidth(120);
@@ -108,12 +108,12 @@ public class SecurityPanel extends FunctionPanel{
         itemList.setExpanded(true);
 		
         SectionStackSection detailView = new SectionStackSection("จัดการข้อมูลผู้ใช้ระบบ");  
-        UserDetailTabPane userTabPane = new UserDetailTabPane(UserDS.getInstance(), userGrid);
+        UserDetailTabPane userTabPane = new UserDetailTabPane(UserDS.getInstance(), userGrid, this._main.getCurrentUser().getUserName());
         detailView.setItems(userTabPane);
         detailView.setExpanded(true);
         userGrid.addUpdateDetailHandler(userTabPane);
         
-        final UserAdd addFunc = new UserAdd(UserDS.getInstance(), userGrid, userTabPane);
+        final UserAdd addFunc = new UserAdd(UserDS.getInstance(), userGrid, userTabPane, this._main.getCurrentUser().getUserName());
         ToolStripButton addButton = new ToolStripButton();  
         addButton.setHeight(18);  
         addButton.setWidth(120);
