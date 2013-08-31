@@ -34,6 +34,7 @@ public class UserDS extends DataSource  {
 			 DataSourceTextField creatorField = new DataSourceTextField("creator", "แก้ไขโดย");
 			 DataSourceTextField whenField = new DataSourceTextField("when", "แก้ไขล่าสุด");
 			 
+			 setID("user_ds");
 			 setFields(uidField, userNameField, passwordField, creatorField, whenField, titleField, firstNameField, lastNameField, emailField, positionField, permissionField, statusField);
 			 setDataURL("smartmis/security/userData");
 			 setClientOnly(true);

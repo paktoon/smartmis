@@ -35,6 +35,7 @@ public class PermissionDS extends DataSource  {
 			 DataSourceBooleanField reportField = new DataSourceBooleanField("cRep", "ออกรายงาน");
 			 DataSourceBooleanField adminField = new DataSourceBooleanField("cAdm", "จัดการข้อมูลผู้ใช้ระบบ");
 
+			 setID("permission_ds");
 			 setFields(pidField, permissinNameField, creatorField, whenField, roleField, statusField, saleField, productField, invenField, purchaseField, financeField, reportField, adminField);
 			 setDataURL("smartmis/security/permissionData");
 			 setClientOnly(true);
