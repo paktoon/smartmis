@@ -1,9 +1,13 @@
 package com.smart.mis.client.function.security;
 
+import com.smartgwt.client.data.DSCallback;
+import com.smartgwt.client.data.DSRequest;
+import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceEnumField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
+import com.smartgwt.client.types.DSOperationType;
 
 public class UserDS extends DataSource  {
 
@@ -42,6 +46,20 @@ public class UserDS extends DataSource  {
 			 //setID("user_ds");
 			 setFields(uidField, userNameField, passwordField, creatorField, whenField, titleField, firstNameField, lastNameField, emailField, positionField, permissionField, statusField);
 			 setDataURL("smartmis/security/userData");
+			 //setCacheAllData(true);
+			 //setCacheAllData(true);
 			 setClientOnly(true);
+		 }
+		 
+		 public void refreshData() {
+			 fetchData(null, new DSCallback() {
+					@Override
+					public void execute(DSResponse dsResponse, Object data,
+							DSRequest dsRequest) {
+						dsResponse.setInvalidateCache(true);
+						//dsRequest.setOperationType(DSOperationType.UPDATE);
+						updateCaches(dsResponse, dsRequest);
+					}
+		    	});
 		 }
 }

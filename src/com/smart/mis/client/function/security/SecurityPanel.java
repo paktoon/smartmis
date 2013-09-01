@@ -86,19 +86,18 @@ public class SecurityPanel extends FunctionPanel{
             }  
         });  
         
-//        ToolStripButton refreshButton = new ToolStripButton();  
-//        refreshButton.setHeight(18);  
-//        refreshButton.setWidth(120);
-//        refreshButton.setIcon("[SKIN]actions/refresh.png");  
-//        refreshButton.setTitle("refresh");  
-//        refreshButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) {  
-//            	permissionTabPane.onRefresh();
-//            }  
-//        });
+        ToolStripButton refreshButton = new ToolStripButton();  
+        refreshButton.setHeight(18);  
+        refreshButton.setWidth(120);
+        refreshButton.setIcon("[SKIN]actions/refresh.png");  
+        refreshButton.setTitle("refresh");  
+        refreshButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	permissionTabPane.onRefresh();
+            }  
+        });
         
-//        itemList.setControls(addButton, refreshButton);
-        itemList.setControls(addButton);
+        itemList.setControls(addButton, refreshButton);
         
         functionStack.setSections(itemList, detailView);
         VLayout functionLayout = new VLayout();
@@ -120,7 +119,7 @@ public class SecurityPanel extends FunctionPanel{
         itemList.setExpanded(true);
 		
         SectionStackSection detailView = new SectionStackSection("จัดการข้อมูลผู้ใช้ระบบ");  
-        UserDetailTabPane userTabPane = new UserDetailTabPane(UserDS.getInstance(), userGrid, this._main.getCurrentUser().getUserName());
+        final UserDetailTabPane userTabPane = new UserDetailTabPane(UserDS.getInstance(), userGrid, this._main.getCurrentUser().getUserName());
         detailView.setItems(userTabPane);
         detailView.setExpanded(true);
         userGrid.addUpdateDetailHandler(userTabPane);
@@ -137,7 +136,18 @@ public class SecurityPanel extends FunctionPanel{
             }  
         });  
         
-        itemList.setControls(addButton);
+        ToolStripButton refreshButton = new ToolStripButton();  
+        refreshButton.setHeight(18);  
+        refreshButton.setWidth(120);
+        refreshButton.setIcon("[SKIN]actions/refresh.png");  
+        refreshButton.setTitle("refresh");  
+        refreshButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	userTabPane.onRefresh();
+            }  
+        });
+        
+        itemList.setControls(addButton, refreshButton);
         
         functionStack.setSections(itemList, detailView);
         VLayout functionLayout = new VLayout();

@@ -1,2 +1,0 @@
-serviceClass: com.smart.mis.client.function.security.SecurityService
-path: 0D1E557C54F7DBD48C4A60BC2770DAB2.gwt.rpc

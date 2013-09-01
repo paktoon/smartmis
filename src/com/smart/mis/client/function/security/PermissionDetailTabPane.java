@@ -12,6 +12,7 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;  
 import com.smartgwt.client.data.ResultSet;
 import com.smartgwt.client.types.Alignment;  
+import com.smartgwt.client.types.DSOperationType;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
@@ -37,13 +38,13 @@ public class PermissionDetailTabPane extends TabSet {
     private DynamicForm editorForm, normalForm, reportForm, adminForm;  
     private Label editorLabel;  
     private PermissionListGrid permissionListGrid; 
-    private DataSource permissionDataSource;
+    private PermissionDS permissionDataSource;
     private VLayout outlineForm;
     private IButton saveButton;
     private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
     private String user;
     
-    public PermissionDetailTabPane(DataSource permissionDS , PermissionListGrid permisssionGrid, String user){
+    public PermissionDetailTabPane(PermissionDS permissionDS , PermissionListGrid permisssionGrid, String user){
     	this.permissionListGrid = permisssionGrid;
     	this.permissionDataSource = permissionDS;
     	this.user = user;
@@ -352,20 +353,7 @@ public class PermissionDetailTabPane extends TabSet {
     }
     
     public void onRefresh() {
-//    		permissionDataSource = PermissionDS.resetInstance();
-//    		permissionDataSource.fetchData(null, new DSCallback() {
-//    			@Override
-//    			public void execute(DSResponse response, Object rawData, DSRequest request) {
-//    				
-//    				System.out.println("Performing refresh.." + response.getData().length + " on " + request.getActionURL());
-//
-//    				for (Record i : response.getData()) {
-//    					System.out.println(i.getAttributeAsString("name"));
-//    					System.out.println("-> Status -> " + i.getAttributeAsString("status"));
-//    				}
-//    				permissionListGrid.setData(response.getData());
-//    				//permissionListGrid.fetchData();
-//    				}
-//    		});
-    	}
+    	permissionDataSource.refreshData();
+    	permissionListGrid.invalidateCache();
+    }
 }

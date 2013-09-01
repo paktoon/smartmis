@@ -1,9 +1,13 @@
 package com.smart.mis.client.function.security;
 
+import com.smartgwt.client.data.DSCallback;
+import com.smartgwt.client.data.DSRequest;
+import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceEnumField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
+import com.smartgwt.client.types.DSOperationType;
 
 public class PermissionDS extends DataSource  {
 
@@ -43,6 +47,20 @@ public class PermissionDS extends DataSource  {
 			 //setID("permission_ds");
 			 setFields(pidField, permissinNameField, creatorField, whenField, roleField, statusField, saleField, productField, invenField, purchaseField, financeField, reportField, adminField);
 			 setDataURL("smartmis/security/permissionData");
+			 //setCacheAllData(true);
+			 //setAutoCacheAllData(true);
 			 setClientOnly(true);
+		 }
+		 
+		 public void refreshData() {
+			 fetchData(null, new DSCallback() {
+					@Override
+					public void execute(DSResponse dsResponse, Object data,
+							DSRequest dsRequest) {
+						dsResponse.setInvalidateCache(true);
+						//dsRequest.setOperationType(DSOperationType.UPDATE);
+						updateCaches(dsResponse, dsRequest);
+					}
+		    	});
 		 }
 }

@@ -40,13 +40,15 @@ public class UserDetailTabPane extends TabSet {
     private DynamicForm editorForm, normalForm;
     private Label editorLabel;  
     private UserListGrid userListGrid; 
-    private DataSource userDataSource, permissionDataSource;
+    private UserDS userDataSource;
+    private PermissionDS permissionDataSource;
     private HLayout outlineForm;
     private IButton saveButton;    
     private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
     private String user;
+    private SelectItem profile;
     
-    public UserDetailTabPane(DataSource userDS , UserListGrid userGrid, String user){
+    public UserDetailTabPane(UserDS userDS , UserListGrid userGrid, String user){
     	this.userListGrid = userGrid;
     	this.userDataSource = userDS;
     	this.permissionDataSource = PermissionDS.getInstance();
@@ -94,7 +96,7 @@ public class UserDetailTabPane extends TabSet {
         //editorForm
         StaticTextItem uname = new StaticTextItem("uname", "ชื่อผู้ใช้");
         uname.setRequired(true);
-        SelectItem profile = new SelectItem("name", "สิทธิการใช้งาน");
+        profile = new SelectItem("name", "สิทธิการใช้งาน");
         //Setup for fetch update data on Data Source
         profile.setValueField("name");
         profile.setDisplayField("name");
@@ -214,6 +216,7 @@ public class UserDetailTabPane extends TabSet {
             // edit tab : show record editor  
         	if (selectedRecord != null) {
 //        		saveButton.setDisabled(false);
+        		profile.invalidateDisplayValueCache();
         		editorForm.editRecord(selectedRecord);  
         		editorForm.setValue("npwd", editorForm.getValueAsString("pwd"));
         		editorForm.setValue("name", selectedRecord.getAttributeAsString("pname"));
@@ -229,6 +232,7 @@ public class UserDetailTabPane extends TabSet {
             itemViewer.setData(new Record[]{selectedRecord});  
         } else { 
 //        	saveButton.setDisabled(false);
+        	profile.invalidateDisplayValueCache();
     		editorForm.editRecord(selectedRecord);  
     		editorForm.setValue("npwd", editorForm.getValueAsString("pwd"));
     		editorForm.setValue("name", selectedRecord.getAttributeAsString("pname"));
@@ -282,5 +286,12 @@ public class UserDetailTabPane extends TabSet {
     	} else {
     		SC.warn("ข้อมูลผู้ใช้ไม่ถูกต้อง");
     	}
+    }
+    
+    public void onRefresh() {
+    	userDataSource.refreshData();
+    	permissionDataSource.refreshData();
+    	userListGrid.invalidateCache();
+    	profile.invalidateDisplayValueCache();
     }
 }

@@ -29,7 +29,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PermissionAdd {
 	
-    private final DataSource permissionDataSource;
+    private final PermissionDS permissionDataSource;
     private final PermissionListGrid permissionListGrid;
     private DynamicForm editorForm, normalForm, reportForm, adminForm; 
     private final PermissionDetailTabPane permissionTabPane;
@@ -37,7 +37,7 @@ public class PermissionAdd {
     private final String user;
     private Window winModel;
     
-	public PermissionAdd(DataSource permissionDS, PermissionListGrid permisssionGrid, PermissionDetailTabPane permissionTabPane, String user){
+	public PermissionAdd(PermissionDS permissionDS, PermissionListGrid permisssionGrid, PermissionDetailTabPane permissionTabPane, String user){
     	this.permissionDataSource = permissionDS;
     	this.permissionListGrid = permisssionGrid;
     	this.permissionTabPane = permissionTabPane;
