@@ -69,7 +69,7 @@ public class SecurityPanel extends FunctionPanel{
         itemList.setExpanded(true);
         
         SectionStackSection detailView = new SectionStackSection("จัดการข้อมูลสิทธิการใช้งาน");  
-        PermissionDetailTabPane permissionTabPane = new PermissionDetailTabPane(PermissionDS.getInstance(), permissionGrid, this._main.getCurrentUser().getUserName());
+        final PermissionDetailTabPane permissionTabPane = new PermissionDetailTabPane(PermissionDS.getInstance(), permissionGrid, this._main.getCurrentUser().getUserName());
         detailView.setItems(permissionTabPane);
         detailView.setExpanded(true);
         permissionGrid.addUpdateDetailHandler(permissionTabPane);
@@ -86,6 +86,18 @@ public class SecurityPanel extends FunctionPanel{
             }  
         });  
         
+//        ToolStripButton refreshButton = new ToolStripButton();  
+//        refreshButton.setHeight(18);  
+//        refreshButton.setWidth(120);
+//        refreshButton.setIcon("[SKIN]actions/refresh.png");  
+//        refreshButton.setTitle("refresh");  
+//        refreshButton.addClickHandler(new ClickHandler() {  
+//            public void onClick(ClickEvent event) {  
+//            	permissionTabPane.onRefresh();
+//            }  
+//        });
+        
+//        itemList.setControls(addButton, refreshButton);
         itemList.setControls(addButton);
         
         functionStack.setSections(itemList, detailView);

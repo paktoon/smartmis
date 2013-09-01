@@ -17,6 +17,11 @@ public class UserDS extends DataSource  {
 			 return instance;
 		 }
 		 
+		 public static UserDS resetInstance() {
+			 instance = new UserDS();
+			 return instance;
+		 }
+		 
 		 public UserDS(){
 			 DataSourceTextField uidField = new DataSourceTextField("uid", "รหัสผู้ใช้");
 			 DataSourceTextField userNameField = new DataSourceTextField("uname", "ชื่อผู้ใช้");
@@ -34,7 +39,7 @@ public class UserDS extends DataSource  {
 			 DataSourceTextField creatorField = new DataSourceTextField("creator", "แก้ไขโดย");
 			 DataSourceTextField whenField = new DataSourceTextField("when", "แก้ไขล่าสุด");
 			 
-			 setID("user_ds");
+			 //setID("user_ds");
 			 setFields(uidField, userNameField, passwordField, creatorField, whenField, titleField, firstNameField, lastNameField, emailField, positionField, permissionField, statusField);
 			 setDataURL("smartmis/security/userData");
 			 setClientOnly(true);

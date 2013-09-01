@@ -329,7 +329,6 @@ public class PermissionDetailTabPane extends TabSet {
 			public void onSuccess(Boolean result) {
 				if (result)
 				{
-					//onRefresh();
 					//System.out.println("*** Update result => " + result);
 					Record updateRecord = PermissionData.createRecord(
 					(String) editorForm.getValue("pid"),
@@ -352,38 +351,21 @@ public class PermissionDetailTabPane extends TabSet {
 		});
     }
     
-//    private void onRefresh() {
-//    	
-//    		DataSource dataSource = permissionListGrid.getDataSource();
-//    		DSRequest request = dataSource.getRequestProperties();
-//    		//Criteria criteria = permissionListGrid.getCriteria();
-//    		//Integer[] visibleRows = permissionListGrid.getVisibleRows();
-//    		//Integer startRow = 0;
-//    		//Integer endRow = (visibleRows[1] + permissionListGrid.getResultSet().getResultSize());
-//    		
-//    		//DSRequest request = new DSRequest();
-//    		//request.setStartRow(startRow);
-//    		//request.setEndRow(endRow);
-//    		//request.setSortBy(permissionListGrid.getSort());
-//    		dataSource.fetchData(null, new DSCallback() {
+    public void onRefresh() {
+//    		permissionDataSource = PermissionDS.resetInstance();
+//    		permissionDataSource.fetchData(null, new DSCallback() {
 //    			@Override
 //    			public void execute(DSResponse response, Object rawData, DSRequest request) {
 //    				
 //    				System.out.println("Performing refresh.." + response.getData().length + " on " + request.getActionURL());
-//    				
-////    				DataSource dataSource = permissionListGrid.getDataSource();
-////    	
-////    				ResultSet resultSet = new ResultSet(dataSource);
-////    				resultSet.setInitialLength(response.getTotalRows());
-////    				resultSet.setInitialData(response.getData());
-////    				resultSet.setInitialSort(permissionListGrid.getSort());
+//
 //    				for (Record i : response.getData()) {
 //    					System.out.println(i.getAttributeAsString("name"));
 //    					System.out.println("-> Status -> " + i.getAttributeAsString("status"));
 //    				}
 //    				permissionListGrid.setData(response.getData());
-//    	    		permissionListGrid.redraw();
+//    				//permissionListGrid.fetchData();
 //    				}
-//    		}, request);
-//    	}
+//    		});
+    	}
 }

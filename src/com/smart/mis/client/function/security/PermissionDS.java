@@ -17,6 +17,11 @@ public class PermissionDS extends DataSource  {
 			 return instance;
 		 }
 		 
+		 public static PermissionDS resetInstance() {
+			 instance = new PermissionDS();
+			 return instance;
+		 }
+		 
 		 public PermissionDS(){
 			 DataSourceTextField pidField = new DataSourceTextField("pid", "รหัสสิทธิการใช้งาน");
 			 DataSourceTextField permissinNameField = new DataSourceTextField("name", "ชื่อ", 128 , true);
@@ -35,7 +40,7 @@ public class PermissionDS extends DataSource  {
 			 DataSourceBooleanField reportField = new DataSourceBooleanField("cRep", "ออกรายงาน");
 			 DataSourceBooleanField adminField = new DataSourceBooleanField("cAdm", "จัดการข้อมูลผู้ใช้ระบบ");
 
-			 setID("permission_ds");
+			 //setID("permission_ds");
 			 setFields(pidField, permissinNameField, creatorField, whenField, roleField, statusField, saleField, productField, invenField, purchaseField, financeField, reportField, adminField);
 			 setDataURL("smartmis/security/permissionData");
 			 setClientOnly(true);
