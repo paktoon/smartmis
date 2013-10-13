@@ -32,6 +32,8 @@ import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
+import com.smartgwt.client.widgets.tab.events.TabDeselectedEvent;
+import com.smartgwt.client.widgets.tab.events.TabDeselectedHandler;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
@@ -109,13 +111,10 @@ public class MainPage {
         logoButton.setShowDown(false);
         logoButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
             public void onClick(ClickEvent event) {
-                //com.google.gwt.user.client.Window.open("http://code.google.com/p/smartgwt/", "sgwt", null);
             	About.show();
-            	//SC.say("เกี่ยวกับ ระบบสารสนเทศเพื่อการจัดการธุรกิจผลิตและจำหน่ายเครื่องประดับเงิน", "NOTE TO DO");
             }
         });
         
-        //Img logo = new Img("icons/logo.png",30,30);
         topBar.addMember(logoButton);
         
         topBar.addSpacer(6);
@@ -199,10 +198,7 @@ public class MainPage {
         
         final TabSet mainTabSet = createMainTab(); 
         hLayout.addMember(mainTabSet);
-//        final SectionStack sectionStack = createMenuStack();
-//        
-//        hLayout.addMember(sectionStack);
-//        
+        
         vMainLayout.addMember(hLayout);
         vMainLayout.draw();
 	}
@@ -220,7 +216,7 @@ public class MainPage {
 		tabSet.setTabBarPosition(Side.TOP);  
         tabSet.setTabBarAlign(Side.LEFT);
         tabSet.setCanEditTabTitles(false);
-        
+
         Byte userFunction = _permissionProfile.getFunction();
         Byte userRole = _permissionProfile.getRole();
         //boolean expaned = false;
@@ -235,8 +231,9 @@ public class MainPage {
 
 				@Override
 				public void onTabSelected(TabSelectedEvent event) {
-					//TBD initRightVLayout(salePanel);
-				}});        	
+					//initRightVLayout(salePanel);
+				}});
+        	
         	tabSet.addTab(saleTab);
         }
         
@@ -250,7 +247,7 @@ public class MainPage {
 
 				@Override
 				public void onTabSelected(TabSelectedEvent event) {
-					//TBD initRightVLayout(productionPanel);
+					//initRightVLayout(productionPanel);
 				}});
         	tabSet.addTab(productionTab);
         }
@@ -265,7 +262,7 @@ public class MainPage {
 
 				@Override
 				public void onTabSelected(TabSelectedEvent event) {
-					//TBD initRightVLayout(inventoryPanel);
+					//initRightVLayout(inventoryPanel);
 				}});
         	tabSet.addTab(inventoryTab);
         }
@@ -280,7 +277,7 @@ public class MainPage {
 
 				@Override
 				public void onTabSelected(TabSelectedEvent event) {
-					//TBD initRightVLayout(purchasingPanel);
+					//initRightVLayout(purchasingPanel);
 				}});
         	tabSet.addTab(purchasingTab);
         }
@@ -295,7 +292,7 @@ public class MainPage {
 
 				@Override
 				public void onTabSelected(TabSelectedEvent event) {
-					//TBD initRightVLayout(financialPanel);
+					//initRightVLayout(financialPanel);
 				}});
         	tabSet.addTab(financialTab);
         }
@@ -310,7 +307,7 @@ public class MainPage {
 
 				@Override
 				public void onTabSelected(TabSelectedEvent event) {
-					//TBD initRightVLayout(reportPanel);
+					//initRightVLayout(reportPanel);
 				}});
         	tabSet.addTab(reportTab);
         }
@@ -325,7 +322,7 @@ public class MainPage {
 
 				@Override
 				public void onTabSelected(TabSelectedEvent event) {
-					//TBD initRightVLayout(securityPanel);
+					//initRightVLayout(securityPanel);
 				}});
         	tabSet.addTab(securityTab);
         }
@@ -367,7 +364,7 @@ public class MainPage {
 		
 		ToolStrip toolStripVersion = new ToolStrip();
         toolStripVersion.setWidth100();
-        Label version = new Label("Version: 0.1 <br> Built Sat 04/08/2013 5:03");
+        Label version = new Label("Version: 0.2 <br> Built Sat 10/13/2013 12:25 PM");
         version.setWidth100();
         version.setPadding(5);
         toolStripVersion.addMember(version);
@@ -425,180 +422,13 @@ public class MainPage {
 			name = node.getAttribute("pName") + " > " + name;
 			
 		panel.load(node.getAttribute("nodeId"), name, icon);
-//		switch (root) {
-//			case 1: this.salePanel.load(node.getAttribute("nodeId"), node.getAttribute("Name")); break;
-//			case 2: this.productionPanel.load(node.getAttribute("nodeId"), node.getAttribute("Name")); break;
-//			case 3: this.inventoryPanel.load(node.getAttribute("nodeId"), node.getAttribute("Name")); break;
-//			case 4: this.purchasingPanel.load(node.getAttribute("nodeId"), node.getAttribute("Name")); break;
-//			case 5: this.financialPanel.load(node.getAttribute("nodeId"), node.getAttribute("Name")); break;
-//			case 6: this.reportPanel.load(node.getAttribute("nodeId"), node.getAttribute("Name")); break;
-//			case 7: this.securityPanel.load(node.getAttribute("nodeId"), node.getAttribute("Name")); break; //--Function--
-//		}
 	}
 	
 	private void initRightVLayout(FunctionPanel panel){
 		//Right pane
 		//final Label test = new Label();
 		panel.init();
-//		switch (type) {
-//		case 1: 
-//				this.salePanel.init();
-//				break;
-//		case 2: 
-//				this.productionPanel.init();
-//				break;
-//		case 3: 
-//				this.inventoryPanel.init();
-//				break;
-//		case 4: 
-//				this.purchasingPanel.init();
-//				break;
-//		case 5: 
-//				this.financialPanel.init();
-//				break;
-//		case 6: 
-//				this.reportPanel.init();
-//				break;
-//		case 7: 
-//				this.securityPanel.init(); //--Function--
-//				break;
-//		}
 	}
-	
-//	SectionStack createMenuStack(){
-//		
-//		final SectionStack sectionStack = new SectionStack();
-//        //Load menu on permission
-//		sectionStack.setWidth(250);
-//        sectionStack.setShowResizeBar(true);
-//        sectionStack.setVisibilityMode(VisibilityMode.MUTEX);
-//        sectionStack.setAnimateSections(true);
-//        
-//        Byte userFunction = _permissionProfile.getFunction();
-//        boolean expaned = false;
-//        		
-//        if (checkPermFlag(userFunction, Function.SALE))
-//        {
-//	        SectionStackSection saleSection = new SectionStackSection("ระบบจัดการงานขาย"); 
-//	        if (!expaned)
-//	        {
-//	        	saleSection.setExpanded(true);
-//	        	expaned = true;
-//	        }
-//	        
-//	        final SubjectTreeGrid saleGrid = new SubjectTreeGrid();
-//	        final SubjectTree saleTree = new SubjectTree();
-//	        saleTree.setRootValue(1);
-//	        saleTree.setData(FunctionTreeNode.getSaleNode());  
-//	        saleTree.openAll();
-//	        saleGrid.setData(saleTree);
-//	        saleSection.addItem(saleGrid);
-//	        
-//	        sectionStack.setSections(saleSection);
-//        }
-//        
-//        if (checkPermFlag(userFunction, Function.PRODUCTION))
-//        {
-//	        SectionStackSection productionSection = new SectionStackSection("ระบบจัดการงานผลิต"); 
-//	        if (!expaned)
-//	        {
-//	        	productionSection.setExpanded(true);
-//	        	expaned = true;
-//	        }
-//	        
-//	        final SubjectTreeGrid productionGrid = new SubjectTreeGrid();
-//	        final SubjectTree productionTree = new SubjectTree();
-//	        productionTree.setRootValue(2);
-//	        productionTree.setData(FunctionTreeNode.getProductionNode());  
-//	        productionTree.openAll();
-//	        productionGrid.setData(productionTree);
-//	        productionSection.addItem(productionGrid);
-//	        
-//	        sectionStack.setSections(productionSection);
-//        }
-//        
-//        if (checkPermFlag(userFunction, Function.INVENTORY))
-//        {
-//	        SectionStackSection inventorySection = new SectionStackSection("ระบบจัดการวัตถุดิบและสินค้าคงคลัง"); 
-//	        if (!expaned)
-//	        {
-//	        	inventorySection.setExpanded(true);
-//	        	expaned = true;
-//	        }
-//	        
-//	        final SubjectTreeGrid inventoryGrid = new SubjectTreeGrid();
-//	        final SubjectTree inventoryTree = new SubjectTree();
-//	        inventoryTree.setRootValue(3);
-//	        inventoryTree.setData(FunctionTreeNode.getInventoryNode());  
-//	        inventoryTree.openAll();
-//	        inventoryGrid.setData(inventoryTree);
-//	        inventorySection.addItem(inventoryGrid);
-//	        
-//	        sectionStack.setSections(inventorySection);
-//        }
-//        
-//        if (checkPermFlag(userFunction, Function.PURCHASING))
-//        {
-//	        SectionStackSection purchasingSection = new SectionStackSection("ระบบการจัดซื้อวัตถุดิบ"); 
-//	        if (!expaned)
-//	        {
-//	        	purchasingSection.setExpanded(true);
-//	        	expaned = true;
-//	        }
-//	        
-//	        final SubjectTreeGrid purchasingGrid = new SubjectTreeGrid();
-//	        final SubjectTree purchasingTree = new SubjectTree();
-//	        purchasingTree.setRootValue(4);
-//	        purchasingTree.setData(FunctionTreeNode.getPurchasingNode());  
-//	        purchasingTree.openAll();
-//	        purchasingGrid.setData(purchasingTree);
-//	        purchasingSection.addItem(purchasingGrid);
-//	        
-//	        sectionStack.setSections(purchasingSection);
-//        }
-//        
-//        if (checkPermFlag(userFunction, Function.FINANCIAL))
-//        {
-//	        SectionStackSection financialSection = new SectionStackSection("ระบบบันทึกรายรับรายจ่าย"); 
-//	        if (!expaned)
-//	        {
-//	        	financialSection.setExpanded(true);
-//	        	expaned = true;
-//	        }
-//	        
-//	        final SubjectTreeGrid financialGrid = new SubjectTreeGrid();
-//	        final SubjectTree financialTree = new SubjectTree();
-//	        financialTree.setRootValue(5);
-//	        financialTree.setData(FunctionTreeNode.getFinancialNode());  
-//	        financialTree.openAll();
-//	        financialGrid.setData(financialTree);
-//	        financialSection.addItem(financialGrid);
-//	        
-//	        sectionStack.setSections(financialSection);
-//        }
-//        
-//        if (checkPermFlag(userFunction, Function.REPORT))
-//        {
-//	        SectionStackSection reportSection = new SectionStackSection("ระบบสารสนเทศเพื่อผู้บริหาร"); 
-//	        if (!expaned)
-//	        {
-//	        	reportSection.setExpanded(true);
-//	        	expaned = true;
-//	        }
-//	        
-//	        final SubjectTreeGrid reportGrid = new SubjectTreeGrid();
-//	        final SubjectTree reportTree = new SubjectTree();
-//	        reportTree.setRootValue(6);
-//	        reportTree.setData(FunctionTreeNode.getReportNode());  
-//	        reportTree.openAll();
-//	        reportGrid.setData(reportTree);
-//	        reportSection.addItem(reportGrid);
-//	        
-//	        sectionStack.setSections(reportSection);
-//        }
-//        
-//        return sectionStack;
-//	}
 	
 	private boolean checkPermFlag(byte flag, byte checked){
 		return (flag & checked) == checked;

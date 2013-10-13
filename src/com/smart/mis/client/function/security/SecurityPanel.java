@@ -1,15 +1,23 @@
 package com.smart.mis.client.function.security;
 
+import java.util.LinkedHashMap;
+
 import com.smart.mis.client.MainPage;
 import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionStack;
 import com.smart.mis.client.function.FunctionWindow;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import com.smartgwt.client.widgets.events.ClickEvent;  
 import com.smartgwt.client.widgets.events.ClickHandler; 
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.events.ItemChangedEvent;
+import com.smartgwt.client.widgets.form.events.ItemChangedHandler;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 
 public class SecurityPanel extends FunctionPanel{
 
@@ -34,35 +42,27 @@ public class SecurityPanel extends FunctionPanel{
 
 	@Override
 	public void load(String nodeId, String name, String icon) {
-		//Add tab to window 
-		//End tab
-		//this._main.getSecurityPanel().setMembers(funcWindows);
 		if (nodeId.equals("71")) {
-			loadPermissionWindow(name, icon);
+			loadWindow(this._main.getSecurityPanel(), this.permissionWindow , name, icon);
 		} else if (nodeId.equals("72")) {
-			loadUserWindow(name, icon);
+			loadWindow(this._main.getSecurityPanel(), this.userWindow , name, icon);
 		} else init();
 	}
 	
-	private void loadPermissionWindow(String name, String icon) {
-		this.permissionWindow.setTitle(this._funcName + " > " + name);
-		this.permissionWindow.setHeaderIcon(icon);
-		this._main.getSecurityPanel().setMembers(this.permissionWindow);
-		//PermissionDS.getInstance().fetchData();
-	}
-	
-	private void loadUserWindow(String name, String icon) {
-		this.userWindow.setTitle(this._funcName + " > " + name);
-		this.userWindow.setHeaderIcon(icon);
-		this._main.getSecurityPanel().setMembers(this.userWindow);
-		//UserDS.getInstance().fetchData();
-	}
+//	private void loadPermissionWindow(String name, String icon) {
+//		this.permissionWindow.setTitle(this._funcName + " > " + name);
+//		this.permissionWindow.setHeaderIcon(icon);
+//		this._main.getSecurityPanel().setMembers(this.permissionWindow);
+//	}
+//	
+//	private void loadUserWindow(String name, String icon) {
+//		this.userWindow.setTitle(this._funcName + " > " + name);
+//		this.userWindow.setHeaderIcon(icon);
+//		this._main.getSecurityPanel().setMembers(this.userWindow);
+//	}
 	
 	private void preparePermissionWindow(){
-		FunctionStack functionStack = new FunctionStack();
-//		SectionStackSection findSection = new SectionStackSection("ค้นหาสิทธิการใช้งาน");
-//		//TBD findSection.setItems(searchForm);
-//		findSection.setExpanded(true);
+		final FunctionStack functionStack = new FunctionStack();
 		
         SectionStackSection itemList = new SectionStackSection("รายการสิทธิการใช้งาน");  
         itemList.setItems(permissionGrid);
@@ -97,9 +97,35 @@ public class SecurityPanel extends FunctionPanel{
             }  
         });
         
-        itemList.setControls(addButton, refreshButton);
+        //Search section
+        String[] status = {"Active", "Inactive"};
+	    final DynamicForm form = new DynamicForm();
+	    form.setWidth(200);
+	    form.setNumCols(4);
+	    form.setDataSource(PermissionDS.getInstance());
+        TextItem pid = new TextItem("pid", "รหัส");
+        pid.setWidth(80);
+        pid.setOperator(OperatorId.REGEXP);
+        SelectItem filterItem = new SelectItem("status","สถานะ");
+        filterItem.setWidth(80); 
+        filterItem.setAllowEmptyValue(true);
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (String item : status) {
+        	valueMap.put(item, item);
+        }
+        filterItem.setValueMap(valueMap);
+	    form.setItems(pid, filterItem);
+        form.addItemChangedHandler(new ItemChangedHandler() {  
+            public void onItemChanged(ItemChangedEvent event) {  
+            	permissionGrid.fetchData(form.getValuesAsCriteria());  
+            }  
+        });
+        //end form
         
+        itemList.setControls(form, addButton, refreshButton);
+       
         functionStack.setSections(itemList, detailView);
+        
         VLayout functionLayout = new VLayout();
         functionLayout.setWidth100();
         functionLayout.setHeight100();
@@ -109,13 +135,9 @@ public class SecurityPanel extends FunctionPanel{
 	
 	private void prepareUserWindow(){
 		FunctionStack functionStack = new FunctionStack();
-//		SectionStackSection findSection = new SectionStackSection("ค้นหาข้อมูลผู้ใช้ระบบ");
-//		//TBD findSection.setItems(searchForm);
-//		findSection.setExpanded(true);
 		
         SectionStackSection itemList = new SectionStackSection("รายการข้อมูลผู้ใช้ระบบ"); 
         itemList.setItems(userGrid);
-        itemList.setExpanded(true);
         itemList.setExpanded(true);
 		
         SectionStackSection detailView = new SectionStackSection("จัดการข้อมูลผู้ใช้ระบบ");  
@@ -147,7 +169,28 @@ public class SecurityPanel extends FunctionPanel{
             }  
         });
         
-        itemList.setControls(addButton, refreshButton);
+      //Search section
+	    final DynamicForm form = new DynamicForm();
+	    form.setWidth(270);
+	    form.setNumCols(4);
+	    form.setDataSource(UserDS.getInstance());
+        TextItem uid = new TextItem("uid", "รหัส");
+        TextItem name = new TextItem("uname", "ชื่อผู้ใช้");
+        uid.setWidth(80);
+        uid.setHeight(19);
+        uid.setOperator(OperatorId.REGEXP);
+        name.setWidth(80);
+        name.setHeight(19);
+        name.setOperator(OperatorId.REGEXP);
+	    form.setItems(uid, name);
+        form.addItemChangedHandler(new ItemChangedHandler() {  
+            public void onItemChanged(ItemChangedEvent event) {  
+            	userGrid.fetchData(form.getValuesAsCriteria());  
+            }  
+        });
+        //end form
+        
+        itemList.setControls(form, addButton, refreshButton);
         
         functionStack.setSections(itemList, detailView);
         VLayout functionLayout = new VLayout();

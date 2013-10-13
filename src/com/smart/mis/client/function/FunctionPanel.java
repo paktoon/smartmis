@@ -5,11 +5,12 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 public abstract class FunctionPanel {
 
 	final protected MainPage _main;
-	final protected String _funcName;
+	final public String _funcName;
 	final protected int _type;
 	
 	protected FunctionPanel(MainPage main, String name, int type){
@@ -63,5 +64,11 @@ public abstract class FunctionPanel {
             }
         });
         return funcWindows;
+	}
+	
+	protected void loadWindow (VLayout panel, FunctionWindow window, String name, String icon) {
+		window.setTitle(this._funcName + " > " + name);
+		window.setHeaderIcon(icon);
+		panel.setMembers(window);
 	}
 }

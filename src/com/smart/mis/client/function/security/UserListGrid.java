@@ -27,17 +27,17 @@ public class UserListGrid extends ListGrid {
         setUseAllDataSourceFields(true);
         
         ListGridField uid = new ListGridField("uid", 120);
-        ListGridField uname = new ListGridField("uname");
+        ListGridField uname = new ListGridField("uname", 120);
         uname.setShowHover(true);
         ListGridField pwd = new ListGridField("pwd");
         
         ListGridField creator = new ListGridField("creator");
         ListGridField when = new ListGridField("when");
 
-        ListGridField title = new ListGridField("title");
+        ListGridField title = new ListGridField("title", 75);
         ListGridField fname = new ListGridField("fname", 120);
         ListGridField lname = new ListGridField("lname", 120);
-        ListGridField email = new ListGridField("email", 200);
+        ListGridField email = new ListGridField("email");
         ListGridField position = new ListGridField("position", 120);
         ListGridField pname = new ListGridField("pname", 100);
         ListGridField status = new ListGridField("status", 50);

@@ -63,6 +63,8 @@ public class FunctionTreeNode {
 //        new SubjectTreeNode("133", "13", "นำส่งสินค้า"),   
 //        new SubjectTreeNode("134", "13", "จัดทำใบแจ้งหนี้"),   
 //        new SubjectTreeNode("135", "13", "ตรวจสอบสถานะคำสั่งซื้อ"),
+
+        new SubjectTreeNode("16", "1", "ใบแจ้งหนี้"),
         
         new SubjectTreeNode("14", "1", "ตรวจสอบสถานะคำสั่งซื้อ" , "icons/16/folder_out.png"), 
         
