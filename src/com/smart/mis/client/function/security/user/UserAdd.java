@@ -1,7 +1,10 @@
-package com.smart.mis.client.function.security;
+package com.smart.mis.client.function.security.user;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.smart.mis.client.function.security.SecurityService;
+import com.smart.mis.client.function.security.SecurityServiceAsync;
+import com.smart.mis.client.function.security.permission.PermissionDS;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;

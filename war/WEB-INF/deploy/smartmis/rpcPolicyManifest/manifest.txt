@@ -1,3 +1,2 @@
 # Module smartmis
 # RPC service class, partial path of RPC policy file
-com.smart.mis.client.function.security.SecurityService, 721399F5F68BA793FA797AAC976FE58E.gwt.rpc

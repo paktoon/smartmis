@@ -1,4 +1,4 @@
-package com.smart.mis.client.function.security;
+package com.smart.mis.client.function.security.permission;
 
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;

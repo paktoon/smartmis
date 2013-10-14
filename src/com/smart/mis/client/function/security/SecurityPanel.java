@@ -6,6 +6,14 @@ import com.smart.mis.client.MainPage;
 import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionStack;
 import com.smart.mis.client.function.FunctionWindow;
+import com.smart.mis.client.function.security.permission.PermissionAdd;
+import com.smart.mis.client.function.security.permission.PermissionDS;
+import com.smart.mis.client.function.security.permission.PermissionDetailTabPane;
+import com.smart.mis.client.function.security.permission.PermissionListGrid;
+import com.smart.mis.client.function.security.user.UserAdd;
+import com.smart.mis.client.function.security.user.UserDS;
+import com.smart.mis.client.function.security.user.UserDetailTabPane;
+import com.smart.mis.client.function.security.user.UserListGrid;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
@@ -49,18 +57,6 @@ public class SecurityPanel extends FunctionPanel{
 		} else init();
 	}
 	
-//	private void loadPermissionWindow(String name, String icon) {
-//		this.permissionWindow.setTitle(this._funcName + " > " + name);
-//		this.permissionWindow.setHeaderIcon(icon);
-//		this._main.getSecurityPanel().setMembers(this.permissionWindow);
-//	}
-//	
-//	private void loadUserWindow(String name, String icon) {
-//		this.userWindow.setTitle(this._funcName + " > " + name);
-//		this.userWindow.setHeaderIcon(icon);
-//		this._main.getSecurityPanel().setMembers(this.userWindow);
-//	}
-	
 	private void preparePermissionWindow(){
 		final FunctionStack functionStack = new FunctionStack();
 		
@@ -90,7 +86,7 @@ public class SecurityPanel extends FunctionPanel{
         refreshButton.setHeight(18);  
         refreshButton.setWidth(120);
         refreshButton.setIcon("[SKIN]actions/refresh.png");  
-        refreshButton.setTitle("refresh");  
+        refreshButton.setTitle("รีเฟรช");  
         refreshButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
             	permissionTabPane.onRefresh();
@@ -162,7 +158,7 @@ public class SecurityPanel extends FunctionPanel{
         refreshButton.setHeight(18);  
         refreshButton.setWidth(120);
         refreshButton.setIcon("[SKIN]actions/refresh.png");  
-        refreshButton.setTitle("refresh");  
+        refreshButton.setTitle("รีเฟรช");  
         refreshButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
             	userTabPane.onRefresh();
