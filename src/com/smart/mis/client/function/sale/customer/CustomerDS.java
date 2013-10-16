@@ -33,11 +33,12 @@ public class CustomerDS extends DataSource  {
 			 DataSourceTextField Field_3 = new DataSourceTextField("cus_phone", "หมายเลขโทรศัพท์ลูกค้า");
 			 DataSourceTextField Field_4 = new DataSourceTextField("contact_name", "ชื่อผู้ติดต่อ");
 			 DataSourceTextField Field_5 = new DataSourceTextField("contact_phone", "หมายเลขโทรศัพท์ผู้ติดต่อ");
-			 DataSourceTextField Field_6 = new DataSourceTextField("address", "ที่อยู่");
-			 DataSourceEnumField Field_7 = new DataSourceEnumField("cus_type", "ประเภทลูกค้า");
-			 Field_7.setValueMap("ลูกค้าประจำ", "ลูกค้าทั่วไป");
+			 DataSourceTextField Field_6 = new DataSourceTextField("contact_email", "อีเมลผู้ติดต่อ");
+			 DataSourceTextField Field_7 = new DataSourceTextField("address", "ที่อยู่");
+			 DataSourceEnumField Field_8 = new DataSourceEnumField("cus_type", "ประเภทลูกค้า");
+			 Field_8.setValueMap("ลูกค้าประจำ", "ลูกค้าทั่วไป");
 			 
-			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_7);
+			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_7, Field_8);
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(CustomerData.getNewRecords()); // For Test
 			 setClientOnly(true);

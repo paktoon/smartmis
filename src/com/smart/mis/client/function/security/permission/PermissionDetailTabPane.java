@@ -42,7 +42,7 @@ public class PermissionDetailTabPane extends TabSet {
     private PermissionListGrid permissionListGrid; 
     private PermissionDS permissionDataSource;
     private VLayout outlineForm;
-    private IButton saveButton;
+    private IButton saveButton, cancelButton;
     private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
     private String user;
     
@@ -170,6 +170,7 @@ public class PermissionDetailTabPane extends TabSet {
 					public void execute(Boolean value) {
 						if (value) {
 			            	saveData();
+			            	selectTab(0); // back to detail tab
 						}
 					}
             		
@@ -177,7 +178,29 @@ public class PermissionDetailTabPane extends TabSet {
             }  
         }); 
 
+        cancelButton = new IButton("ยกเลิก");  
+        cancelButton.setAlign(Alignment.CENTER);  
+        cancelButton.setMargin(10);
+        cancelButton.setWidth(150);  
+        cancelButton.setHeight(50);
+        cancelButton.setIcon("icons/16/close.png");
+        cancelButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	SC.confirm("ยกเลิกการแก้ไขข้อมูลสิทธิการใช้งาน", "ท่านต้องการยกเลิก การแก้ไขข้อมูลสิทธิการใช้งาน หรือไม่ ?" , new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							updateDetails();
+							selectTab(0); // back to detail tab
+						}
+					}
+            		
+            	});
+            }  
+        });
+        
         saveButton.setDisabled(true);
+        cancelButton.setDisabled(true);
         
         editorForm.setFields(name, role, status);
         editorForm.setColWidths(50, 150, 200, 80, 100, 50); 
@@ -186,7 +209,9 @@ public class PermissionDetailTabPane extends TabSet {
         adminForm.setFields(canAdmin);
         
         subInlineForm.addMembers(reportForm, adminForm);
-        inlineForm.addMembers(normalForm, subInlineForm, saveButton);
+        VLayout editor_control = new VLayout();
+        editor_control.addMembers(saveButton,cancelButton);
+        inlineForm.addMembers(normalForm, subInlineForm, editor_control);
         outlineForm.addMembers(editorForm, inlineForm);
         //
         
@@ -239,6 +264,7 @@ public class PermissionDetailTabPane extends TabSet {
             // edit tab : show record editor  
         	if (selectedRecord != null) {
         		saveButton.setDisabled(false);
+        		cancelButton.setDisabled(false);
         		editorForm.editRecord(selectedRecord);  
                 normalForm.editRecord(selectedRecord);  
                 String role = selectedRecord.getAttribute("role");
@@ -265,6 +291,7 @@ public class PermissionDetailTabPane extends TabSet {
             itemViewer.setData(new Record[]{selectedRecord});  
         } else { 
         	saveButton.setDisabled(false);
+        	cancelButton.setDisabled(false);
     		editorForm.editRecord(selectedRecord);  
             normalForm.editRecord(selectedRecord);  
             String role = selectedRecord.getAttribute("role");

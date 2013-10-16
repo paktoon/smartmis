@@ -21,6 +21,7 @@ import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
@@ -47,9 +48,9 @@ public class CustomerDetailTabPane extends TabSet {
     private CustomerDS customerDataSource;
     //private PermissionDS permissionDataSource;
     private HLayout outlineForm;
-    private IButton saveButton;    
-    private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
-    private SelectItem profile;
+    private IButton saveButton, cancelButton;
+//    private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
+//    private SelectItem profile;
     
     public CustomerDetailTabPane(CustomerDS customerDS , CustomerListGrid customerGrid){
     	this.customerListGrid = customerGrid;
@@ -73,7 +74,7 @@ public class CustomerDetailTabPane extends TabSet {
         outlineForm.setMargin(10);
         
         editorForm = new DynamicForm();  
-        editorForm.setWidth(270);  
+        editorForm.setWidth(450);  
         editorForm.setMargin(5);  
         editorForm.setNumCols(2);  
         editorForm.setCellPadding(2);  
@@ -81,7 +82,7 @@ public class CustomerDetailTabPane extends TabSet {
         editorForm.setDataSource(customerDS);  
         editorForm.setUseAllDataSourceFields(false); 
         editorForm.setIsGroup(true);
-        editorForm.setGroupTitle("ข้อมูลผู้ใช้ระบบ");
+        editorForm.setGroupTitle("ข้อมูลลูกค้า");
         
         historyGrid = new ListGrid();
 //        normalForm = new DynamicForm(); 
@@ -96,8 +97,8 @@ public class CustomerDetailTabPane extends TabSet {
 //        normalForm.setGroupTitle("ข้อมูลทั่วไป");
         
         //editorForm
-//        StaticTextItem uname = new StaticTextItem("cid", "รหัสลูกค้า");
-//        uname.setRequired(true);
+        StaticTextItem cid = new StaticTextItem("cid", "รหัสลูกค้า");
+        cid.setRequired(true);
 //        profile = new SelectItem("name", "สิทธิการใช้งาน");
 //        //Setup for fetch update data on Data Source
 //        profile.setValueField("name");
@@ -131,49 +132,80 @@ public class CustomerDetailTabPane extends TabSet {
         //normalForm
 //		SelectItem title = new SelectItem("title", "คำนำหน้าชื่อ");
 //		title.setWidth(75);
-//		TextItem fname = new TextItem("fname", "ชื่อ");
-//		TextItem lname = new TextItem("lname", "นามสกุล");
-//		TextItem email = new TextItem("email", "อีเมล");
-//		TextItem position = new TextItem("position", "ตำแหน่ง");
-//		
-//		title.setRequired(true);
-//		fname.setRequired(true);
-//		lname.setRequired(true);
-//		fname.setHint("*");
-//		lname.setHint("*");
-//		
-//        saveButton = new IButton("บันทึก");  
-//        saveButton.setAlign(Alignment.CENTER);  
-//        saveButton.setMargin(10);
-//        saveButton.setWidth(150);  
-//        saveButton.setHeight(50);
-//        saveButton.setIcon("icons/16/save.png");
-//        saveButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) {  
-//            	SC.confirm("ยืนยันการแก้ไขข้อมูลผู้ใช้", "ท่านต้องการแก้ไขข้อมูลผู้ใช้" + (String) editorForm.getValue("uname") + "หรือไม่ ?" , new BooleanCallback() {
-//					@Override
-//					public void execute(Boolean value) {
-//						if (value) {
-//			            	saveData();
-//						}
-//					}
-//            		
-//            	});
-//            }  
-//        }); 
-//
-//        saveButton.setDisabled(true);
-//        
-//        editorForm.setFields(uname, profile, status, pwd, npwd);
-//        editorForm.setColWidths(80, 150); 
-//        normalForm.setFields(title,fname,lname,email, position );
-//        normalForm.setColWidths(80, 150);
-//        outlineForm.addMembers(editorForm, normalForm, saveButton);
-//        
+		TextItem cus_name = new TextItem("cus_name", "ชื่อลูกค้า");
+		TextItem cus_phone = new TextItem("cus_phone", "หมายเลขโทรศัพท์ลูกค้า");
+		TextItem contact_name = new TextItem("contact_name", "ชื่อผู้ติดต่อ");
+		TextItem contact_phone = new TextItem("contact_phone", "หมายเลขโทรศัพท์ผู้ติดต่อ");
+		TextItem contact_email = new TextItem("contact_email", "หมายเลขโทรศัพท์ผู้ติดต่อ");
+
+		TextAreaItem address = new TextAreaItem("address", "ที่อยู่");
+		address.setWidth(300);
+		address.setRowSpan(3);
+		
+		SelectItem type = new SelectItem("cus_type", "ประเภทลูกค้า");
+		
+		cus_name.setRequired(true);
+		contact_name.setRequired(true);
+		contact_phone.setRequired(true);
+		cus_name.setHint("*");
+		contact_name.setHint("*");
+		contact_phone.setHint("*");
+		
+        saveButton = new IButton("บันทึก");  
+        saveButton.setAlign(Alignment.CENTER);  
+        saveButton.setMargin(10);
+        saveButton.setWidth(150);  
+        saveButton.setHeight(50);
+        saveButton.setIcon("icons/16/save.png");
+        saveButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	SC.confirm("ยืนยันการแก้ไขข้อมูลลูกค้า", "ท่านต้องการแก้ไขข้อมูลลูกค้า " + (String) editorForm.getValue("cid") + " หรือไม่ ?" , new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+			            	saveData();
+			            	selectTab(0); // back to detail tab
+						}
+					}
+            		
+            	});
+            }  
+        }); 
+        
+        cancelButton = new IButton("ยกเลิก");  
+        cancelButton.setAlign(Alignment.CENTER);  
+        cancelButton.setMargin(10);
+        cancelButton.setWidth(150);  
+        cancelButton.setHeight(50);
+        cancelButton.setIcon("icons/16/close.png");
+        cancelButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	SC.confirm("ยกเลิกการแก้ไขข้อมูลลูกค้า", "ท่านต้องการ ยกเลิกการแก้ไขข้อมูลลูกค้า หรือไม่ ?" , new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							updateDetails();
+							selectTab(0); // back to detail tab
+						}
+					}
+            		
+            	});
+            }  
+        });
+
+        saveButton.setDisabled(true);
+        cancelButton.setDisabled(true);
+        
+        editorForm.setFields(cid, cus_name, cus_phone, contact_name, contact_phone, contact_email , address, type);
+        editorForm.setColWidths(200	, 300); 
+        VLayout editor_control = new VLayout();
+        editor_control.addMembers(saveButton, cancelButton);
+        outlineForm.addMembers(editorForm, editor_control);
+        
         Tab viewTab = new Tab("ข้อมูลผู้ใช้ระบบ");  
         viewTab.setIcon("icons/16/application_form.png");  
         viewTab.setWidth(70);  
-        viewTab.setPane(itemViewer);  
+        viewTab.setPane(itemViewer);
   
         Tab historyTab = new Tab("ประวัติการจัดซื้อ");
         historyTab.setIcon("icons/16/application_form.png");  
@@ -219,8 +251,9 @@ public class CustomerDetailTabPane extends TabSet {
         } else {  
             // edit tab : show record editor  
         	if (selectedRecord != null) {
-//        		saveButton.setDisabled(false);
-        		profile.invalidateDisplayValueCache();
+        		saveButton.setDisabled(false);
+        		cancelButton.setDisabled(false);
+//        		profile.invalidateDisplayValueCache();
         		editorForm.editRecord(selectedRecord);
         	}
         }  
@@ -232,26 +265,26 @@ public class CustomerDetailTabPane extends TabSet {
             //view tab : show empty message  
             itemViewer.setData(new Record[]{selectedRecord});  
         } else { 
-//        	saveButton.setDisabled(false);
-        	profile.invalidateDisplayValueCache();
+        	saveButton.setDisabled(false);
+        	cancelButton.setDisabled(false);
+//        	profile.invalidateDisplayValueCache();
     		editorForm.editRecord(selectedRecord);
         }
     }
     
     public void saveData(){
    	
-//    	if (editorForm.validate() && normalForm.validate()) {
-//    		
-//    		String uname = (String) editorForm.getValue("uname");
-//			String pwd = (String) editorForm.getValue("pwd");
-//			String title = (String) normalForm.getValue("title");
-//	    	String fname = (String) normalForm.getValue("fname");
-//	    	String lname = (String) normalForm.getValue("lname");
-//	    	String email = (String) normalForm.getValue("email");
-//	    	String position = (String) normalForm.getValue("position");
-//	    	String pname = (String) editorForm.getValue("name");
-//	    	boolean status = (Boolean) editorForm.getValue("status");
-//	    	
+    	if (editorForm.validate()) {
+    		
+    		String cid = (String) editorForm.getValue("cid");
+			String cus_name = (String) editorForm.getValue("cus_name");
+			String cus_phone = (String) editorForm.getValue("cus_phone");
+	    	String contact_name = (String) editorForm.getValue("contact_name");
+	    	String contact_phone = (String) editorForm.getValue("contact_phone");
+	    	String contact_email = (String) editorForm.getValue("contact_email");
+	    	String address = (String) editorForm.getValue("address");
+	    	String type = (String) editorForm.getValue("cus_type");
+	    	
 //	    	User updatedUser = new User(uname, pwd, fname, lname, email, position, title, status);
 //	    	securityService.updateUserOnServer(updatedUser, pname, this.user, new AsyncCallback<Boolean>() {
 //				@Override
@@ -263,33 +296,31 @@ public class CustomerDetailTabPane extends TabSet {
 //					if (result)
 //					{
 //						//System.out.println("*** Update result => " + result);
-//						Record updateRecord = CustomerData.createRecord(
-//								(String) editorForm.getValue("uid"),
-//				    			(String) editorForm.getValue("uname"),
-//				    			(String) editorForm.getValue("pwd"),
-//				    			(String) normalForm.getValue("title"),
-//				    	    	(String) normalForm.getValue("fname"),
-//				    	    	(String) normalForm.getValue("lname"),
-//				    	    	(String) normalForm.getValue("email"),
-//				    	    	(String) normalForm.getValue("position"),
-//				    	    	(String) editorForm.getValue("name"),
-//				    	    	(Boolean) editorForm.getValue("status")
-//				    			);
-//						customerDataSource.updateData(updateRecord);
+						Record updateRecord = CustomerData.createRecord(
+								(String) editorForm.getValue("cid"),
+				    			(String) editorForm.getValue("cus_name"),
+				    			(String) editorForm.getValue("cus_phone"),
+				    			(String) editorForm.getValue("contact_name"),
+				    	    	(String) editorForm.getValue("contact_phone"),
+				    	    	(String) editorForm.getValue("contact_email"),
+				    	    	(String) editorForm.getValue("address"),
+				    	    	(String) editorForm.getValue("cus_type")
+				    			);
+						customerDataSource.updateData(updateRecord);
 //					} else {
 //						SC.warn("Updating user Fails - please contact administrator");
 //					}
 //				}
 //			});
-//    	} else {
-//    		SC.warn("ข้อมูลผู้ใช้ไม่ถูกต้อง");
-//    	}
+    	} else {
+    		SC.warn("ข้อมูลผู้ใช้ไม่ถูกต้อง");
+    	}
     }
     
     public void onRefresh() {
     	customerDataSource.refreshData();
     	//permissionDataSource.refreshData();
     	customerListGrid.invalidateCache();
-    	profile.invalidateDisplayValueCache();
+//    	profile.invalidateDisplayValueCache();
     }
 }

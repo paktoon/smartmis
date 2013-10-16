@@ -46,7 +46,7 @@ public class UserDetailTabPane extends TabSet {
     private UserDS userDataSource;
     private PermissionDS permissionDataSource;
     private HLayout outlineForm;
-    private IButton saveButton;    
+    private IButton saveButton, cancelButton;    
     private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
     private String user;
     private SelectItem profile;
@@ -156,22 +156,46 @@ public class UserDetailTabPane extends TabSet {
 					public void execute(Boolean value) {
 						if (value) {
 			            	saveData();
+			            	selectTab(0); // back to detail tab
 						}
 					}
             		
             	});
             }  
         }); 
-//
-//        saveButton.setDisabled(true);
-//        
+
+        cancelButton = new IButton("ยกเลิก");  
+        cancelButton.setAlign(Alignment.CENTER);  
+        cancelButton.setMargin(10);
+        cancelButton.setWidth(150);  
+        cancelButton.setHeight(50);
+        cancelButton.setIcon("icons/16/close.png");
+        cancelButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	SC.confirm("ยกเลิกการแก้ไขข้อมูผู้ใช้ระบบ", "ท่านต้องการ ยกเลิกการแก้ไขข้อมูลผู้ใช้ระบบ หรือไม่ ?" , new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							updateDetails();
+							selectTab(0); // back to detail tab
+						}
+					}
+            		
+            	});
+            }  
+        });
+        
+        saveButton.setDisabled(true);
+        cancelButton.setDisabled(true);
+        
         editorForm.setFields(uname, profile, status, pwd, npwd);
         editorForm.setColWidths(80, 150); 
         normalForm.setFields(title,fname,lname,email, position );
         normalForm.setColWidths(80, 150);
-        outlineForm.addMembers(editorForm, normalForm, saveButton);
-       //
-        
+        VLayout editor_control = new VLayout();
+        editor_control.addMembers(saveButton, cancelButton);
+        outlineForm.addMembers(editorForm, normalForm, editor_control);
+       
         Tab viewTab = new Tab("ข้อมูลผู้ใช้ระบบ");  
         viewTab.setIcon("icons/16/application_form.png");  
         viewTab.setWidth(70);  
@@ -218,7 +242,8 @@ public class UserDetailTabPane extends TabSet {
         } else {  
             // edit tab : show record editor  
         	if (selectedRecord != null) {
-//        		saveButton.setDisabled(false);
+        		saveButton.setDisabled(false);
+        		cancelButton.setDisabled(false);
         		profile.invalidateDisplayValueCache();
         		editorForm.editRecord(selectedRecord);  
         		editorForm.setValue("npwd", editorForm.getValueAsString("pwd"));
@@ -234,7 +259,8 @@ public class UserDetailTabPane extends TabSet {
             //view tab : show empty message  
             itemViewer.setData(new Record[]{selectedRecord});  
         } else { 
-//        	saveButton.setDisabled(false);
+        	saveButton.setDisabled(false);
+        	cancelButton.setDisabled(false);
         	profile.invalidateDisplayValueCache();
     		editorForm.editRecord(selectedRecord);  
     		editorForm.setValue("npwd", editorForm.getValueAsString("pwd"));
