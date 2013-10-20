@@ -66,7 +66,7 @@ public class PermissionDetailTabPane extends TabSet {
         outlineForm = new VLayout();
         outlineForm.setWidth100();
         outlineForm.setHeight100();
-        outlineForm.setMargin(10);
+        outlineForm.setMargin(5);
         editorForm = new DynamicForm();  
         editorForm.setWidth(650);  
         editorForm.setMargin(5);  
@@ -170,7 +170,6 @@ public class PermissionDetailTabPane extends TabSet {
 					public void execute(Boolean value) {
 						if (value) {
 			            	saveData();
-			            	selectTab(0); // back to detail tab
 						}
 					}
             		

@@ -1,4 +1,4 @@
-package com.smart.mis.client.function.sale.customer;
+package com.smart.mis.client.function.purchasing.supplier;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smart.mis.client.function.security.SecurityService;
@@ -14,6 +14,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;  
 import com.smartgwt.client.widgets.form.DynamicForm;  
@@ -32,6 +33,8 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.SectionStack;
+import com.smartgwt.client.widgets.layout.SectionStackSection;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;  
 import com.smartgwt.client.widgets.tab.TabSet;  
@@ -39,26 +42,26 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;  
 import com.smartgwt.client.widgets.viewer.DetailViewer;  
 
-public class CustomerDetailTabPane extends TabSet {
+public class SupplierDetailTabPane extends TabSet {
     private DetailViewer itemViewer;  
     private DynamicForm editorForm; //, normalForm;
-    private ListGrid historyGrid;
+    private ListGrid historyGrid, viewItemGrid, editItemGrid;
     private Label editorLabel;  
-    private CustomerListGrid customerListGrid; 
-    private CustomerDS customerDataSource;
+    private SupplierListGrid supplierListGrid; 
+    private SupplierDS supplierDataSource;
     //private PermissionDS permissionDataSource;
     private HLayout outlineForm;
     private IButton saveButton, cancelButton;
 //    private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
 //    private SelectItem profile;
     
-    public CustomerDetailTabPane(CustomerDS customerDS , CustomerListGrid customerGrid){
-    	this.customerListGrid = customerGrid;
-    	this.customerDataSource = customerDS;
+    public SupplierDetailTabPane(SupplierDS DS , SupplierListGrid Grid){
+    	this.supplierListGrid = Grid;
+    	this.supplierDataSource = DS;
     	
     	itemViewer = new DetailViewer();  
-        itemViewer.setDataSource(customerDS);  
-        itemViewer.setWidth(600);  
+        itemViewer.setDataSource(DS);  
+        itemViewer.setWidth(450);  
         itemViewer.setMargin(5);  
         itemViewer.setEmptyMessage("Select an item to view its details");
         
@@ -74,86 +77,42 @@ public class CustomerDetailTabPane extends TabSet {
         outlineForm.setMargin(5);
         
         editorForm = new DynamicForm();  
-        editorForm.setWidth(450);  
+        editorForm.setWidth(450); 
+        editorForm.setHeight(300);
         editorForm.setMargin(5);  
         editorForm.setNumCols(2);  
         editorForm.setCellPadding(2);  
         editorForm.setAutoFocus(false);  
-        editorForm.setDataSource(customerDS);  
-        editorForm.setUseAllDataSourceFields(false); 
+        editorForm.setDataSource(DS);  
+        editorForm.setUseAllDataSourceFields(true); 
         editorForm.setIsGroup(true);
-        editorForm.setGroupTitle("ข้อมูลลูกค้า");
+        editorForm.setGroupTitle("ข้อมูลผู้จำหน่าย");
         
         historyGrid = new ListGrid();
-//        normalForm = new DynamicForm(); 
-//        normalForm.setAutoFocus(false);
-//        normalForm.setCellPadding(2);
-//        normalForm.setMargin(5); 
-//        normalForm.setNumCols(2); 
-//        normalForm.setWidth(270); 
-//        normalForm.setDataSource(customerDS);  
-//        normalForm.setUseAllDataSourceFields(false); 
-//        normalForm.setIsGroup(true);
-//        normalForm.setGroupTitle("ข้อมูลทั่วไป");
         
         //editorForm
-        StaticTextItem cid = new StaticTextItem("cid", "รหัสลูกค้า");
-        cid.setRequired(true);
-//        profile = new SelectItem("name", "สิทธิการใช้งาน");
-//        //Setup for fetch update data on Data Source
-//        profile.setValueField("name");
-//        profile.setDisplayField("name");
-//        profile.setOptionDataSource(this.permissionDataSource);
-//        profile.setFetchMissingValues(true);
-//        profile.setAlwaysFetchMissingValues(true);
-//        profile.setRequired(true);
-//        profile.setPickListCriteria(new Criteria("status", "Active"));
-        //End setup
-//        CheckboxItem status = new CheckboxItem("status", "สถานะ");
-//        PasswordItem pwd = new PasswordItem("pwd", "รหัสผ่าน");
-//		CustomValidator cv = new CustomValidator() {
-//			@Override
-//			protected boolean condition(Object value) {
-//				return FieldVerifier.isValidName((String) value);
-//			}
-//		};
-//		pwd.setValidators(cv);
-//		PasswordItem npwd = new PasswordItem("npwd", "ยืนยันรหัสผ่าน");
-//		MatchesFieldValidator matchesValidator = new MatchesFieldValidator();
-//		matchesValidator.setOtherField("pwd");
-//		matchesValidator.setErrorMessage("ยืนยันรหัสผ่านไม่ถูกต้อง");
-//		npwd.setValidators(matchesValidator);
-//		
-//		pwd.setRequired(true);
-//		npwd.setRequired(true);
-//		pwd.setHint("*");
-//		npwd.setHint("*");
-		
-        //normalForm
-//		SelectItem title = new SelectItem("title", "คำนำหน้าชื่อ");
-//		title.setWidth(75);
-		TextItem cus_name = new TextItem("cus_name", "ชื่อลูกค้า");
-		TextItem cus_phone = new TextItem("cus_phone", "หมายเลขโทรศัพท์ลูกค้า");
-		TextItem contact_name = new TextItem("contact_name", "ชื่อผู้ติดต่อ");
-		TextItem contact_phone = new TextItem("contact_phone", "หมายเลขโทรศัพท์ผู้ติดต่อ");
-		TextItem contact_email = new TextItem("contact_email", "อีเมลผู้ติดต่อ");
+        StaticTextItem id = new StaticTextItem("sid", "รหัสผู้จำหน่าย");
+        id.setRequired(true);
+        
+		TextItem sup_name = new TextItem("sup_name", "ชื่อผู้จำหน่าย");
+		TextItem sup_phone1 = new TextItem("sup_phone1", "หมายเลขโทรศัพท์ 1");
+		TextItem sup_phone2 = new TextItem("sup_phone2", "หมายเลขโทรศัพท์ 2");
+		TextItem fax = new TextItem("fax", "หมายเลขโทรสาร");
+		TextItem email = new TextItem("email", "อีเมล");
 
 		TextAreaItem address = new TextAreaItem("address", "ที่อยู่");
 		address.setWidth(300);
 		address.setRowSpan(3);
+		TextItem leadtime = new TextItem("leadtime", "ระยะเวลาส่งสินค้า");
 		
-		SelectItem type = new SelectItem("cus_type", "ประเภทลูกค้า");
-		
-		cus_name.setRequired(true);
-		cus_phone.setRequired(true);
-		contact_name.setRequired(true);
+		sup_name.setRequired(true);
+		sup_phone1.setRequired(true);
 		address.setRequired(true);
-		type.setRequired(true);
-		cus_name.setHint("*");
-		cus_phone.setHint("*");
-		contact_name.setHint("*");
+		leadtime.setRequired(true);
+		sup_name.setHint("*");
+		sup_phone1.setHint("*");
 		address.setHint("*");
-		type.setHint("*");
+		leadtime.setHint("วัน *");
 		
         saveButton = new IButton("บันทึก");  
         saveButton.setAlign(Alignment.CENTER);  
@@ -163,7 +122,7 @@ public class CustomerDetailTabPane extends TabSet {
         saveButton.setIcon("icons/16/save.png");
         saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
-            	SC.confirm("ยืนยันการแก้ไขข้อมูลลูกค้า", "ท่านต้องการแก้ไขข้อมูลลูกค้า " + (String) editorForm.getValue("cid") + " หรือไม่ ?" , new BooleanCallback() {
+            	SC.confirm("ยืนยันการแก้ไขข้อมูล", "ท่านต้องการแก้ไขข้อมูลผู้จำหน่าย " + (String) editorForm.getValue("sid") + " หรือไม่ ?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
@@ -183,7 +142,7 @@ public class CustomerDetailTabPane extends TabSet {
         cancelButton.setIcon("icons/16/close.png");
         cancelButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
-            	SC.confirm("ยกเลิกการแก้ไขข้อมูลลูกค้า", "ท่านต้องการ ยกเลิกการแก้ไขข้อมูลลูกค้า หรือไม่ ?" , new BooleanCallback() {
+            	SC.confirm("ยกเลิกการแก้ไขข้อมูล", "ท่านต้องการ ยกเลิกการแก้ไขข้อมูล หรือไม่ ?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
@@ -199,21 +158,23 @@ public class CustomerDetailTabPane extends TabSet {
         saveButton.setDisabled(true);
         cancelButton.setDisabled(true);
         
-        cus_name.setWidth(250);
-        cus_phone.setWidth(250);
-        contact_name.setWidth(250);
-        contact_phone.setWidth(250);
-        contact_email.setWidth(250);
-        editorForm.setFields(cid, cus_name, cus_phone, contact_name, contact_phone, contact_email , address, type);
+        sup_name.setWidth(250);
+        sup_phone1.setWidth(250);
+        sup_phone2.setWidth(250);
+        email.setWidth(250);
+        editorForm.setFields(id, sup_name, sup_phone1, sup_phone2, fax, email, address, leadtime);
         editorForm.setColWidths(200	, 300); 
         VLayout editor_control = new VLayout();
         editor_control.addMembers(saveButton, cancelButton);
-        outlineForm.addMembers(editorForm, editor_control);
+        editor_control.setWidth(200);
+        outlineForm.addMembers(editorForm, getEditItemList(null), editor_control);
         
-        Tab viewTab = new Tab("ข้อมูลลูกค้า");  
+        Tab viewTab = new Tab("ข้อมูลผู้จำหน่าย");  
         viewTab.setIcon("icons/16/application_form.png");  
         viewTab.setWidth(70);  
-        viewTab.setPane(itemViewer);
+        HLayout tempLayout = new HLayout();
+        tempLayout.addMembers(itemViewer, getViewItemList(null));
+        viewTab.setPane(tempLayout);
   
         Tab historyTab = new Tab("ประวัติการจัดซื้อ");
         historyTab.setIcon("icons/16/application_form.png");  
@@ -251,7 +212,7 @@ public class CustomerDetailTabPane extends TabSet {
     }  
   
     public void updateDetails() {  
-        Record selectedRecord  = customerListGrid.getSelectedRecord();  
+        Record selectedRecord  = supplierListGrid.getSelectedRecord();  
         int selectedTab = getSelectedTabNumber();  
         if (selectedTab == 0) {  
             //view tab : show empty message  
@@ -284,14 +245,14 @@ public class CustomerDetailTabPane extends TabSet {
    	
     	if (editorForm.validate()) {
     		
-    		String cid = (String) editorForm.getValue("cid");
-			String cus_name = (String) editorForm.getValue("cus_name");
-			String cus_phone = (String) editorForm.getValue("cus_phone");
-	    	String contact_name = (String) editorForm.getValue("contact_name");
-	    	String contact_phone = (String) editorForm.getValue("contact_phone");
-	    	String contact_email = (String) editorForm.getValue("contact_email");
+    		String sid = (String) editorForm.getValue("sid");
+			String sup_name = (String) editorForm.getValue("sup_name");
+			String sup_phone1 = (String) editorForm.getValue("sup_phone1");
+	    	String sup_phone2 = (String) editorForm.getValue("sup_phone2");
+	    	String email = (String) editorForm.getValue("email");
 	    	String address = (String) editorForm.getValue("address");
-	    	String type = (String) editorForm.getValue("cus_type");
+	    	Integer leadtime = (Integer) editorForm.getValue("leadtime");
+	    	String fax = (String) editorForm.getValue("fax");
 	    	
 //	    	User updatedUser = new User(uname, pwd, fname, lname, email, position, title, status);
 //	    	securityService.updateUserOnServer(updatedUser, pname, this.user, new AsyncCallback<Boolean>() {
@@ -304,31 +265,69 @@ public class CustomerDetailTabPane extends TabSet {
 //					if (result)
 //					{
 //						//System.out.println("*** Update result => " + result);
-						Record updateRecord = CustomerData.createRecord(
-								(String) editorForm.getValue("cid"),
-				    			(String) editorForm.getValue("cus_name"),
-				    			(String) editorForm.getValue("cus_phone"),
-				    			(String) editorForm.getValue("contact_name"),
-				    	    	(String) editorForm.getValue("contact_phone"),
-				    	    	(String) editorForm.getValue("contact_email"),
+						Record updateRecord = SupplierData.createRecord(
+								(String) editorForm.getValue("sid"),
+				    			(String) editorForm.getValue("sup_name"),
+				    			(String) editorForm.getValue("sup_phone1"),
+				    			(String) editorForm.getValue("sup_phone2"),
+				    	    	(String) editorForm.getValue("email"),
 				    	    	(String) editorForm.getValue("address"),
-				    	    	(String) editorForm.getValue("cus_type")
+				    	    	(String) editorForm.getValue("fax"),
+				    	    	(Integer) editorForm.getValue("leadtime"),
+				    	    	new String[] {"TBD"}
 				    			);
-						customerDataSource.updateData(updateRecord);
+						supplierDataSource.updateData(updateRecord);
 //					} else {
 //						SC.warn("Updating user Fails - please contact administrator");
 //					}
 //				}
 //			});
     	} else {
-    		SC.warn("ข้อมูลลูกค้าไม่ถูกต้อง");
+    		SC.warn("ข้อมูลไม่ถูกต้อง");
     	}
     }
     
+    private SectionStack getViewItemList(String listId){
+    	
+    	SectionStack sectionStack = new SectionStack();
+    	sectionStack.setWidth100();
+    	sectionStack.setHeight(300);
+        String title = Canvas.imgHTML("icons/16/basket-full-icon.png", 15, 15) + " วัตถุดิบที่จำหน่าย";
+        SectionStackSection section = new SectionStackSection(title);  
+        section.setCanCollapse(false);  
+        section.setExpanded(true);
+        
+        viewItemGrid = new ListGrid();
+        viewItemGrid.setEmptyMessage("No Item to show.");
+        
+        section.setItems(viewItemGrid);  
+        sectionStack.setSections(section);  
+        return sectionStack;
+    }
+    
+    private SectionStack getEditItemList(String listId){
+    	
+    	SectionStack sectionStack = new SectionStack();
+    	sectionStack.setWidth100();
+    	sectionStack.setHeight(300);
+        String title = Canvas.imgHTML("icons/16/basket-full-icon.png", 15, 15) + " วัตถุดิบที่จำหน่าย";
+        SectionStackSection section = new SectionStackSection(title);  
+        section.setCanCollapse(false);  
+        section.setExpanded(true);
+        
+        editItemGrid = new ListGrid();
+        editItemGrid.setEmptyMessage("No Item to show.");
+        editItemGrid.setWidth100();
+        
+        section.setItems(editItemGrid);  
+        sectionStack.setSections(section);  
+        return sectionStack;
+    }
+    
     public void onRefresh() {
-    	customerDataSource.refreshData();
+    	supplierDataSource.refreshData();
     	//permissionDataSource.refreshData();
-    	customerListGrid.invalidateCache();
+    	supplierListGrid.invalidateCache();
 //    	profile.invalidateDisplayValueCache();
     }
 }

@@ -43,9 +43,9 @@ public class CustomerListGrid extends ListGrid {
         ListGridField field_2 = new ListGridField("cus_name",250);
         field_2.setShowHover(true);
         ListGridField field_3 = new ListGridField("cus_phone");
-        ListGridField field_4 = new ListGridField("contact_name",250);
+        ListGridField field_4 = new ListGridField("contact_name",150);
         ListGridField field_5 = new ListGridField("contact_phone");
-        ListGridField field_6 = new ListGridField("contact_email");
+        ListGridField field_6 = new ListGridField("contact_email",200);
 
         ListGridField field_7 = new ListGridField("address");
         ListGridField field_8 = new ListGridField("cus_type", 100);

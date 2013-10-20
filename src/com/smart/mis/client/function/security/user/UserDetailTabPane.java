@@ -72,7 +72,7 @@ public class UserDetailTabPane extends TabSet {
         outlineForm = new HLayout();
         outlineForm.setWidth100();
         outlineForm.setHeight100();
-        outlineForm.setMargin(10);
+        outlineForm.setMargin(5);
         
         editorForm = new DynamicForm();  
         editorForm.setWidth(270);  
@@ -156,7 +156,6 @@ public class UserDetailTabPane extends TabSet {
 					public void execute(Boolean value) {
 						if (value) {
 			            	saveData();
-			            	selectTab(0); // back to detail tab
 						}
 					}
             		

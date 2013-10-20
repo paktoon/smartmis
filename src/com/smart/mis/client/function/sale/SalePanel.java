@@ -6,6 +6,7 @@ import com.smart.mis.client.MainPage;
 import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionStack;
 import com.smart.mis.client.function.FunctionWindow;
+import com.smart.mis.client.function.sale.customer.CustomerAdd;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.customer.CustomerDetailTabPane;
 import com.smart.mis.client.function.sale.customer.CustomerListGrid;
@@ -91,7 +92,7 @@ public class SalePanel extends FunctionPanel{
 	
 	private void prepareCustomerWindow(){
 		FunctionStack functionStack = new FunctionStack();
-        SectionStackSection itemList = new SectionStackSection("รายการข้อมูลผู้ใช้ระบบ"); 
+        SectionStackSection itemList = new SectionStackSection("รายการข้อมูลลูกค้า"); 
         itemList.setItems(customerGrid);
         itemList.setExpanded(true);
         
@@ -101,55 +102,57 @@ public class SalePanel extends FunctionPanel{
         detailView.setExpanded(true);
         customerGrid.addUpdateDetailHandler(customerTabPane);
         
-//        final PermissionAdd addFunc = new PermissionAdd(PermissionDS.getInstance(), permissionGrid, permissionTabPane, this._main.getCurrentUser().getUserName());
-//        ToolStripButton addButton = new ToolStripButton();  
-//        addButton.setHeight(18);  
-//        addButton.setWidth(120);
-//        addButton.setIcon("[SKIN]actions/add.png");  
-//        addButton.setTitle("เพิ่มสิทธิการใช้งาน");  
-//        addButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) {  
-//            	addFunc.show();
-//            }  
-//        });  
-//        
-//        ToolStripButton refreshButton = new ToolStripButton();  
-//        refreshButton.setHeight(18);  
-//        refreshButton.setWidth(120);
-//        refreshButton.setIcon("[SKIN]actions/refresh.png");  
-//        refreshButton.setTitle("refresh");  
-//        refreshButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) {  
-//            	permissionTabPane.onRefresh();
-//            }  
-//        });
-//        
-//        //Search section
-//        String[] status = {"Active", "Inactive"};
-//	    final DynamicForm form = new DynamicForm();
-//	    form.setWidth(200);
-//	    form.setNumCols(4);
-//	    form.setDataSource(PermissionDS.getInstance());
-//        TextItem pid = new TextItem("pid", "รหัส");
-//        pid.setWidth(80);
-//        pid.setOperator(OperatorId.REGEXP);
-//        SelectItem filterItem = new SelectItem("status","สถานะ");
-//        filterItem.setWidth(80); 
-//        filterItem.setAllowEmptyValue(true);
-//        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-//        for (String item : status) {
-//        	valueMap.put(item, item);
-//        }
-//        filterItem.setValueMap(valueMap);
-//	    form.setItems(pid, filterItem);
-//        form.addItemChangedHandler(new ItemChangedHandler() {  
-//            public void onItemChanged(ItemChangedEvent event) {  
-//            	permissionGrid.fetchData(form.getValuesAsCriteria());  
-//            }  
-//        });
-//        //end form
-//        
-//        itemList.setControls(form, addButton, refreshButton);
+        final CustomerAdd addFunc = new CustomerAdd(CustomerDS.getInstance(), customerGrid, customerTabPane, this._main.getCurrentUser().getUserName());
+        ToolStripButton addButton = new ToolStripButton();  
+        addButton.setHeight(18);  
+        addButton.setWidth(120);
+        addButton.setIcon("[SKIN]actions/add.png");  
+        addButton.setTitle("เพิ่มข้อมูลลูกค้า");  
+        addButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	addFunc.show();
+            }  
+        });  
+        
+        ToolStripButton refreshButton = new ToolStripButton();  
+        refreshButton.setHeight(18);  
+        refreshButton.setWidth(120);
+        refreshButton.setIcon("[SKIN]actions/refresh.png");  
+        refreshButton.setTitle("refresh");  
+        refreshButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	customerTabPane.onRefresh();
+            }  
+        });
+        
+        //Search section
+        String[] type = {"ลูกค้าประจำ", "ลูกค้าทั่วไป"};
+	    final DynamicForm form = new DynamicForm();
+	    //form.setWidth(340);
+	    form.setNumCols(4);
+	    form.setDataSource(CustomerDS.getInstance());
+        TextItem filterText = new TextItem("cus_name", "ชื่อลูกค้า");
+        filterText.setWrapTitle(false);
+        //filterText.setWidth(120);
+        filterText.setOperator(OperatorId.REGEXP);
+        SelectItem filterItem = new SelectItem("cus_type","ประเภท");
+        //filterItem.setWidth(120); 
+        filterItem.setAllowEmptyValue(true);
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (String item : type) {
+        	valueMap.put(item, item);
+        }
+        filterItem.setValueMap(valueMap);
+	    form.setItems(filterText, filterItem);
+        form.addItemChangedHandler(new ItemChangedHandler() {  
+            public void onItemChanged(ItemChangedEvent event) {  
+            	customerGrid.fetchData(form.getValuesAsCriteria());  
+            }  
+        });
+	    form.setColWidths(80, 120, 50, 120);
+        //end form
+
+        itemList.setControls(form, addButton, refreshButton);
        
         functionStack.setSections(itemList, detailView);
         

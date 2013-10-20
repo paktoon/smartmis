@@ -86,7 +86,7 @@ public class SecurityPanel extends FunctionPanel{
         refreshButton.setHeight(18);  
         refreshButton.setWidth(120);
         refreshButton.setIcon("[SKIN]actions/refresh.png");  
-        refreshButton.setTitle("รีเฟรช");  
+        refreshButton.setTitle("refresh");  
         refreshButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
             	permissionTabPane.onRefresh();
@@ -158,7 +158,7 @@ public class SecurityPanel extends FunctionPanel{
         refreshButton.setHeight(18);  
         refreshButton.setWidth(120);
         refreshButton.setIcon("[SKIN]actions/refresh.png");  
-        refreshButton.setTitle("รีเฟรช");  
+        refreshButton.setTitle("refresh");  
         refreshButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
             	userTabPane.onRefresh();
