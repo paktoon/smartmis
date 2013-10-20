@@ -201,6 +201,7 @@ public class UserAdd {
 													if (dsResponse.getStatus() != 0) {
 														SC.warn("การเพิ่มผู้ใช้ล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
 													} else { 
+														SC.warn("เพิ่มข้อมูลผู้ใช้เรียบร้อยแล้ว");
 														winModel.destroy();
 														userListGrid.fetchData();
 														userListGrid.selectSingleRecord(dsResponse.getData()[0]);

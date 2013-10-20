@@ -291,6 +291,7 @@ public class PermissionAdd {
 								if (dsResponse.getStatus() != 0) {
 									SC.warn("การเพิ่มสิทธิการใช้งานล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
 								} else { 
+									SC.warn("เพิ่มข้อมูลสิทธิการใช้งานเรียบร้อยแล้ว");
 									winModel.destroy();
 									permissionListGrid.fetchData();
 									permissionListGrid.selectSingleRecord(dsResponse.getData()[0]);

@@ -315,6 +315,7 @@ public class CustomerDetailTabPane extends TabSet {
 				    	    	(String) editorForm.getValue("cus_type")
 				    			);
 						customerDataSource.updateData(updateRecord);
+						SC.warn("แก้ไขข้อมูลลูกค้าเรียบร้อยแล้ว");
 //					} else {
 //						SC.warn("Updating user Fails - please contact administrator");
 //					}

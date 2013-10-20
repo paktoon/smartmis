@@ -1,6 +1,8 @@
 package com.smart.mis.client.function.purchasing.supplier;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.smart.mis.client.function.purchasing.material.MaterialListGrid;
+import com.smart.mis.client.function.purchasing.material.MaterialSupplierChange;
 import com.smart.mis.client.function.security.SecurityService;
 import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
@@ -8,9 +10,11 @@ import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.security.PermissionProfile;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
+import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DataSource;  
 import com.smartgwt.client.data.Record;  
 import com.smartgwt.client.types.Alignment;  
+import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
@@ -19,6 +23,7 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;  
 import com.smartgwt.client.widgets.form.DynamicForm;  
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -40,20 +45,25 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;  
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;  
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;  
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import com.smartgwt.client.widgets.viewer.DetailViewer;  
 
 public class SupplierDetailTabPane extends TabSet {
     private DetailViewer itemViewer;  
     private DynamicForm editorForm; //, normalForm;
-    private ListGrid historyGrid, viewItemGrid, editItemGrid;
+    private ListGrid historyGrid;
+    MaterialListGrid viewItemGrid, editItemGrid;
     private Label editorLabel;  
     private SupplierListGrid supplierListGrid; 
     private SupplierDS supplierDataSource;
     //private PermissionDS permissionDataSource;
     private HLayout outlineForm;
     private IButton saveButton, cancelButton;
+    private String currentSid = null;
+    public String currentChangeMidList = null;
 //    private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
 //    private SelectItem profile;
+    private final SupplierMaterialChange changeFunc = new SupplierMaterialChange(this);
     
     public SupplierDetailTabPane(SupplierDS DS , SupplierListGrid Grid){
     	this.supplierListGrid = Grid;
@@ -103,7 +113,7 @@ public class SupplierDetailTabPane extends TabSet {
 		TextAreaItem address = new TextAreaItem("address", "ที่อยู่");
 		address.setWidth(300);
 		address.setRowSpan(3);
-		TextItem leadtime = new TextItem("leadtime", "ระยะเวลาส่งสินค้า");
+		IntegerItem leadtime = new IntegerItem("leadtime", "ระยะเวลาส่งสินค้า");
 		
 		sup_name.setRequired(true);
 		sup_phone1.setRequired(true);
@@ -167,13 +177,13 @@ public class SupplierDetailTabPane extends TabSet {
         VLayout editor_control = new VLayout();
         editor_control.addMembers(saveButton, cancelButton);
         editor_control.setWidth(200);
-        outlineForm.addMembers(editorForm, getEditItemList(null), editor_control);
+        outlineForm.addMembers(editorForm, getEditItemList(), editor_control);
         
         Tab viewTab = new Tab("ข้อมูลผู้จำหน่าย");  
         viewTab.setIcon("icons/16/application_form.png");  
         viewTab.setWidth(70);  
         HLayout tempLayout = new HLayout();
-        tempLayout.addMembers(itemViewer, getViewItemList(null));
+        tempLayout.addMembers(itemViewer, getViewItemList());
         viewTab.setPane(tempLayout);
   
         Tab historyTab = new Tab("ประวัติการจัดซื้อ");
@@ -217,6 +227,8 @@ public class SupplierDetailTabPane extends TabSet {
         if (selectedTab == 0) {  
             //view tab : show empty message  
             itemViewer.setData(new Record[]{selectedRecord});
+            if (selectedRecord != null) fetchViewItemList(selectedRecord.getAttributeAsString("list"));
+            else fetchViewItemList("NULL");
         } else {  
             // edit tab : show record editor  
         	if (selectedRecord != null) {
@@ -224,6 +236,10 @@ public class SupplierDetailTabPane extends TabSet {
         		cancelButton.setDisabled(false);
 //        		profile.invalidateDisplayValueCache();
         		editorForm.editRecord(selectedRecord);
+        		fetchEditItemList(selectedRecord.getAttributeAsString("list"));
+        		this.currentSid = selectedRecord.getAttributeAsString("sid");
+        	} else {
+      	      fetchEditItemList("NULL");
         	}
         }  
     }  
@@ -233,11 +249,15 @@ public class SupplierDetailTabPane extends TabSet {
         if (selectedTab == 0) {  
             //view tab : show empty message  
             itemViewer.setData(new Record[]{selectedRecord});  
+            fetchViewItemList(selectedRecord.getAttributeAsString("list"));
+            this.currentSid = selectedRecord.getAttributeAsString("sid");
         } else { 
         	saveButton.setDisabled(false);
         	cancelButton.setDisabled(false);
 //        	profile.invalidateDisplayValueCache();
     		editorForm.editRecord(selectedRecord);
+    		fetchEditItemList(selectedRecord.getAttributeAsString("list"));
+    		this.currentSid = selectedRecord.getAttributeAsString("sid");
         }
     }
     
@@ -245,14 +265,14 @@ public class SupplierDetailTabPane extends TabSet {
    	
     	if (editorForm.validate()) {
     		
-    		String sid = (String) editorForm.getValue("sid");
-			String sup_name = (String) editorForm.getValue("sup_name");
-			String sup_phone1 = (String) editorForm.getValue("sup_phone1");
-	    	String sup_phone2 = (String) editorForm.getValue("sup_phone2");
-	    	String email = (String) editorForm.getValue("email");
-	    	String address = (String) editorForm.getValue("address");
-	    	Integer leadtime = (Integer) editorForm.getValue("leadtime");
-	    	String fax = (String) editorForm.getValue("fax");
+    		String sid = editorForm.getValueAsString("sid");
+			String sup_name = editorForm.getValueAsString("sup_name");
+			String sup_phone1 = editorForm.getValueAsString("sup_phone1");
+	    	String sup_phone2 = editorForm.getValueAsString("sup_phone2");
+	    	String email = editorForm.getValueAsString("email");
+	    	String address = editorForm.getValueAsString("address");
+	    	Integer leadtime = Integer.parseInt(editorForm.getValueAsString("leadtime"));
+	    	String fax = editorForm.getValueAsString("fax");
 	    	
 //	    	User updatedUser = new User(uname, pwd, fname, lname, email, position, title, status);
 //	    	securityService.updateUserOnServer(updatedUser, pname, this.user, new AsyncCallback<Boolean>() {
@@ -266,17 +286,18 @@ public class SupplierDetailTabPane extends TabSet {
 //					{
 //						//System.out.println("*** Update result => " + result);
 						Record updateRecord = SupplierData.createRecord(
-								(String) editorForm.getValue("sid"),
-				    			(String) editorForm.getValue("sup_name"),
-				    			(String) editorForm.getValue("sup_phone1"),
-				    			(String) editorForm.getValue("sup_phone2"),
-				    	    	(String) editorForm.getValue("email"),
-				    	    	(String) editorForm.getValue("address"),
-				    	    	(String) editorForm.getValue("fax"),
-				    	    	(Integer) editorForm.getValue("leadtime"),
-				    	    	new String[] {"TBD"}
+								editorForm.getValueAsString("sid"),
+								editorForm.getValueAsString("sup_name"),
+								editorForm.getValueAsString("sup_phone1"),
+								editorForm.getValueAsString("sup_phone2"),
+								editorForm.getValueAsString("email"),
+								editorForm.getValueAsString("address"),
+								editorForm.getValueAsString("fax"),
+				    	    	Integer.parseInt(editorForm.getValueAsString("leadtime")),
+				    	    	currentChangeMidList
 				    			);
 						supplierDataSource.updateData(updateRecord);
+						SC.warn("แก้ไขข้อมูลผู้จำหน่ายเรียบร้อยแล้ว");
 //					} else {
 //						SC.warn("Updating user Fails - please contact administrator");
 //					}
@@ -287,25 +308,29 @@ public class SupplierDetailTabPane extends TabSet {
     	}
     }
     
-    private SectionStack getViewItemList(String listId){
+    private SectionStack getViewItemList(){
     	
     	SectionStack sectionStack = new SectionStack();
-    	sectionStack.setWidth100();
-    	sectionStack.setHeight(300);
+    	sectionStack.setWidth(530);
+    	sectionStack.setHeight(200);
         String title = Canvas.imgHTML("icons/16/basket-full-icon.png", 15, 15) + " วัตถุดิบที่จำหน่าย";
         SectionStackSection section = new SectionStackSection(title);  
         section.setCanCollapse(false);  
         section.setExpanded(true);
         
-        viewItemGrid = new ListGrid();
+        viewItemGrid = new MaterialListGrid();
         viewItemGrid.setEmptyMessage("No Item to show.");
+        viewItemGrid.setUseAllDataSourceFields(false);
+        viewItemGrid.hideFields("type", "safety", "remain", "unit", "sup_list");
+        viewItemGrid.setWidth100();
+        viewItemGrid.setHeight100();
         
         section.setItems(viewItemGrid);  
         sectionStack.setSections(section);  
         return sectionStack;
     }
     
-    private SectionStack getEditItemList(String listId){
+    private SectionStack getEditItemList(){
     	
     	SectionStack sectionStack = new SectionStack();
     	sectionStack.setWidth100();
@@ -315,13 +340,45 @@ public class SupplierDetailTabPane extends TabSet {
         section.setCanCollapse(false);  
         section.setExpanded(true);
         
-        editItemGrid = new ListGrid();
+        editItemGrid = new MaterialListGrid();
         editItemGrid.setEmptyMessage("No Item to show.");
+        editItemGrid.setUseAllDataSourceFields(false);
+        editItemGrid.hideFields("type", "safety", "remain", "unit", "sup_list");
         editItemGrid.setWidth100();
+        editItemGrid.setHeight100();
         
+	      ToolStripButton changeButton = new ToolStripButton();  
+	      changeButton.setHeight(18);  
+	      changeButton.setWidth(120);
+	      changeButton.setIcon("icons/16/comment_edit.png");  
+	      changeButton.setTitle("แก้ไขรายการผู้จำหน่าย");  
+	      changeButton.addClickHandler(new ClickHandler() {  
+	          public void onClick(ClickEvent event) {  
+	        	  changeFunc.show(currentSid);
+	          }  
+	      });
+	      
+	      section.setControls(changeButton);
+	      
         section.setItems(editItemGrid);  
         sectionStack.setSections(section);  
         return sectionStack;
+    }
+    
+    public void fetchViewItemList(String mids){
+    	if (mids != null){
+    		Criterion ci = new Criterion("mid", OperatorId.REGEXP, mids);
+	        viewItemGrid.fetchData(ci);
+    	}
+    }
+    
+    public void fetchEditItemList(String mids){
+    	if (mids != null){
+    		Criterion ci = new Criterion("mid", OperatorId.REGEXP, mids);
+    		editItemGrid.fetchData(ci);
+    		changeFunc.listId = mids;
+    		currentChangeMidList = mids;
+    	}
     }
     
     public void onRefresh() {

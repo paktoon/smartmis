@@ -306,6 +306,7 @@ public class UserDetailTabPane extends TabSet {
 				    	    	(Boolean) editorForm.getValue("status")
 				    			);
 						userDataSource.updateData(updateRecord);
+						SC.warn("แก้ไขข้อมูลผู้ใช้ระบบเรียบร้อยแล้ว");
 					} else {
 						SC.warn("Updating user Fails - please contact administrator");
 					}

@@ -364,7 +364,7 @@ public class MainPage {
 		
 		ToolStrip toolStripVersion = new ToolStrip();
         toolStripVersion.setWidth100();
-        Label version = new Label("Version: 0.2 <br> Built Sat 10/13/2013 12:25 PM");
+        Label version = new Label("Version: 0.3 <br> Built Sat 10/20/2013 11:58 PM");
         version.setWidth100();
         version.setPadding(5);
         toolStripVersion.addMember(version);

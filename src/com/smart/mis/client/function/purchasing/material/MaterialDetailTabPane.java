@@ -114,7 +114,7 @@ public class MaterialDetailTabPane extends TabSet {
 		SelectItem type = new SelectItem("type", "ชนิด");
 		FloatItem safety = new FloatItem("safety", "จำนวนสำรองขั้นต่ำ");
 		FloatItem remain = new FloatItem("remain", "จำนวนคงเหลือ");
-		StaticTextItem unit = new StaticTextItem("unit", "หน่วย");
+		TextItem unit = new TextItem("unit", "หน่วย");
 		
 		mat_name.setRequired(true);
 		type.setRequired(true);
@@ -292,6 +292,7 @@ public class MaterialDetailTabPane extends TabSet {
 				    	    	currentChangeSidList
 				    			);
 						materialDataSource.updateData(updateRecord);
+						SC.warn("แก้ไขข้อมูลวัตถุดิบเรียบร้อยแล้ว");
 //					} else {
 //						SC.warn("Updating user Fails - please contact administrator");
 //					}
@@ -346,7 +347,7 @@ public class MaterialDetailTabPane extends TabSet {
 	      changeButton.setHeight(18);  
 	      changeButton.setWidth(120);
 	      changeButton.setIcon("icons/16/comment_edit.png");  
-	      changeButton.setTitle("แก้ไขรายการผู้จำหน่าย");  
+	      changeButton.setTitle("แก้ไขรายการวัตถุดิบ");  
 	      changeButton.addClickHandler(new ClickHandler() {  
 	          public void onClick(ClickEvent event) {  
 	        	  changeFunc.show(currentMid);

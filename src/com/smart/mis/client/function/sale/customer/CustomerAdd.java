@@ -168,6 +168,7 @@ public class CustomerAdd {
 													if (dsResponse.getStatus() != 0) {
 														SC.warn("การเพิ่มข้อมูลลูกค้าล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
 													} else { 
+														SC.warn("เพิ่มข้อมูลลูกค้าเรียบร้อยแล้ว");
 														winModel.destroy();
 														customerListGrid.fetchData();
 														customerListGrid.selectSingleRecord(dsResponse.getData()[0]);

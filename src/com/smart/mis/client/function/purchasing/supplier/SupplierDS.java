@@ -6,6 +6,7 @@ import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceEnumField;
+import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSOperationType;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -40,7 +41,7 @@ public class SupplierDS extends DataSource  {
 			 DataSourceTextField Field_5 = new DataSourceTextField("fax", "หมายเลขโทรสาร");
 			 DataSourceTextField Field_6 = new DataSourceTextField("email", "อีเมล");
 			 DataSourceTextField Field_7 = new DataSourceTextField("address", "ที่อยู่");
-			 DataSourceTextField Field_8 = new DataSourceTextField("leadtime", "ระยะเวลาส่งสินค้า (วัน)");
+			 DataSourceIntegerField Field_8 = new DataSourceIntegerField("leadtime", "ระยะเวลาส่งสินค้า (วัน)");
 			 DataSourceTextField Field_9 = new DataSourceTextField("list");
 			 Field_9.setHidden(true);
 			 

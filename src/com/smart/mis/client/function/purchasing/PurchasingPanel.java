@@ -6,9 +6,11 @@ import com.smart.mis.client.MainPage;
 import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionStack;
 import com.smart.mis.client.function.FunctionWindow;
+import com.smart.mis.client.function.purchasing.material.MaterialAdd;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDetailTabPane;
 import com.smart.mis.client.function.purchasing.material.MaterialListGrid;
+import com.smart.mis.client.function.purchasing.supplier.SupplierAdd;
 import com.smart.mis.client.function.purchasing.supplier.SupplierDS;
 import com.smart.mis.client.function.purchasing.supplier.SupplierData;
 import com.smart.mis.client.function.purchasing.supplier.SupplierDetailTabPane;
@@ -95,57 +97,57 @@ public class PurchasingPanel extends FunctionPanel{
         detailView.setExpanded(true);
         materialGrid.addUpdateDetailHandler(tabPane);
         
-//        final SupplierAdd addFunc = new SupplierData(SupplierDS.getInstance(), supplierGrid, tabPane, this._main.getCurrentUser().getUserName());
-//        ToolStripButton addButton = new ToolStripButton();  
-//        addButton.setHeight(18);  
-//        addButton.setWidth(120);
-//        addButton.setIcon("[SKIN]actions/add.png");  
-//        addButton.setTitle("เพิ่มข้อมูลผู้จำหน่าย");  
-//        addButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) {  
-//            	addFunc.show();
-//            }  
-//        });  
-//        
-//        ToolStripButton refreshButton = new ToolStripButton();  
-//        refreshButton.setHeight(18);  
-//        refreshButton.setWidth(120);
-//        refreshButton.setIcon("[SKIN]actions/refresh.png");  
-//        refreshButton.setTitle("refresh");  
-//        refreshButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) {  
-//            	tabPane.onRefresh();
-//            }  
-//        });
+        final MaterialAdd addFunc = new MaterialAdd(MaterialDS.getInstance(), materialGrid, tabPane, this._main.getCurrentUser().getUserName());
+        ToolStripButton addButton = new ToolStripButton();  
+        addButton.setHeight(18);  
+        addButton.setWidth(120);
+        addButton.setIcon("[SKIN]actions/add.png");  
+        addButton.setTitle("เพิ่มข้อมูลวัตถุดิบ");  
+        addButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	addFunc.show();
+            }  
+        });  
+        
+        ToolStripButton refreshButton = new ToolStripButton();  
+        refreshButton.setHeight(18);  
+        refreshButton.setWidth(120);
+        refreshButton.setIcon("[SKIN]actions/refresh.png");  
+        refreshButton.setTitle("refresh");  
+        refreshButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	tabPane.onRefresh();
+            }  
+        });
         
         //Search section
-//        String[] type = {"ลูกค้าประจำ", "ลูกค้าทั่วไป"};
-//	    final DynamicForm form = new DynamicForm();
+        String[] type = {"แร่เงิน", "แมกกาไซต์", "พลอยประดับ"};
+	    final DynamicForm form = new DynamicForm();
 	    //form.setWidth(340);
-//	    form.setNumCols(4);
-//	    form.setDataSource(CustomerDS.getInstance());
-//        TextItem filterText = new TextItem("cus_name", "ชื่อลูกค้า");
-//        filterText.setWrapTitle(false);
-//        //filterText.setWidth(120);
-//        filterText.setOperator(OperatorId.REGEXP);
-//        SelectItem filterItem = new SelectItem("cus_type","ประเภท");
-//        //filterItem.setWidth(120); 
-//        filterItem.setAllowEmptyValue(true);
-//        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-//        for (String item : type) {
-//        	valueMap.put(item, item);
-//        }
-//        filterItem.setValueMap(valueMap);
-//	    form.setItems(filterText, filterItem);
-//        form.addItemChangedHandler(new ItemChangedHandler() {  
-//            public void onItemChanged(ItemChangedEvent event) {  
-//            	customerGrid.fetchData(form.getValuesAsCriteria());  
-//            }  
-//        });
-//	    form.setColWidths(80, 120, 50, 120);
+	    form.setNumCols(4);
+	    form.setDataSource(MaterialDS.getInstance());
+        TextItem filterText = new TextItem("mat_name", "ชื่อวัตถุดิบ");
+        filterText.setWrapTitle(false);
+        //filterText.setWidth(120);
+        filterText.setOperator(OperatorId.REGEXP);
+        SelectItem filterItem = new SelectItem("type","ชนิด");
+        //filterItem.setWidth(120); 
+        filterItem.setAllowEmptyValue(true);
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        for (String item : type) {
+        	valueMap.put(item, item);
+        }
+        filterItem.setValueMap(valueMap);
+	    form.setItems(filterText, filterItem);
+        form.addItemChangedHandler(new ItemChangedHandler() {  
+            public void onItemChanged(ItemChangedEvent event) {  
+            	materialGrid.fetchData(form.getValuesAsCriteria());  
+            }  
+        });
+	    form.setColWidths(80, 120, 50, 120);
         //end form
 
-//        itemList.setControls(form, addButton, refreshButton);
+        itemList.setControls(form, addButton, refreshButton);
        
         functionStack.setSections(itemList, detailView);
         
@@ -168,57 +170,46 @@ public class PurchasingPanel extends FunctionPanel{
         detailView.setExpanded(true);
         supplierGrid.addUpdateDetailHandler(tabPane);
         
-//        final SupplierAdd addFunc = new SupplierData(SupplierDS.getInstance(), supplierGrid, tabPane, this._main.getCurrentUser().getUserName());
-//        ToolStripButton addButton = new ToolStripButton();  
-//        addButton.setHeight(18);  
-//        addButton.setWidth(120);
-//        addButton.setIcon("[SKIN]actions/add.png");  
-//        addButton.setTitle("เพิ่มข้อมูลผู้จำหน่าย");  
-//        addButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) {  
-//            	addFunc.show();
-//            }  
-//        });  
-//        
-//        ToolStripButton refreshButton = new ToolStripButton();  
-//        refreshButton.setHeight(18);  
-//        refreshButton.setWidth(120);
-//        refreshButton.setIcon("[SKIN]actions/refresh.png");  
-//        refreshButton.setTitle("refresh");  
-//        refreshButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) {  
-//            	tabPane.onRefresh();
-//            }  
-//        });
+        final SupplierAdd addFunc = new SupplierAdd(SupplierDS.getInstance(), supplierGrid, tabPane, this._main.getCurrentUser().getUserName());
+        ToolStripButton addButton = new ToolStripButton();  
+        addButton.setHeight(18);  
+        addButton.setWidth(120);
+        addButton.setIcon("[SKIN]actions/add.png");  
+        addButton.setTitle("เพิ่มข้อมูลผู้จำหน่าย");  
+        addButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	addFunc.show();
+            }  
+        });  
+        
+        ToolStripButton refreshButton = new ToolStripButton();  
+        refreshButton.setHeight(18);  
+        refreshButton.setWidth(120);
+        refreshButton.setIcon("[SKIN]actions/refresh.png");  
+        refreshButton.setTitle("refresh");  
+        refreshButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	tabPane.onRefresh();
+            }  
+        });
         
         //Search section
-//        String[] type = {"ลูกค้าประจำ", "ลูกค้าทั่วไป"};
-//	    final DynamicForm form = new DynamicForm();
-	    //form.setWidth(340);
-//	    form.setNumCols(4);
-//	    form.setDataSource(CustomerDS.getInstance());
-//        TextItem filterText = new TextItem("cus_name", "ชื่อลูกค้า");
-//        filterText.setWrapTitle(false);
-//        //filterText.setWidth(120);
-//        filterText.setOperator(OperatorId.REGEXP);
-//        SelectItem filterItem = new SelectItem("cus_type","ประเภท");
-//        //filterItem.setWidth(120); 
-//        filterItem.setAllowEmptyValue(true);
-//        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-//        for (String item : type) {
-//        	valueMap.put(item, item);
-//        }
-//        filterItem.setValueMap(valueMap);
-//	    form.setItems(filterText, filterItem);
-//        form.addItemChangedHandler(new ItemChangedHandler() {  
-//            public void onItemChanged(ItemChangedEvent event) {  
-//            	customerGrid.fetchData(form.getValuesAsCriteria());  
-//            }  
-//        });
-//	    form.setColWidths(80, 120, 50, 120);
+	    final DynamicForm form = new DynamicForm();
+	    form.setNumCols(2);
+	    form.setDataSource(SupplierDS.getInstance());
+        TextItem filterText = new TextItem("sup_name", "ชื่อผู้จำหน่าย");
+        filterText.setWrapTitle(false);
+        filterText.setOperator(OperatorId.REGEXP);
+	    form.setItems(filterText);
+        form.addItemChangedHandler(new ItemChangedHandler() {  
+            public void onItemChanged(ItemChangedEvent event) {  
+            	supplierGrid.fetchData(form.getValuesAsCriteria());  
+            }  
+        });
+	    form.setColWidths(80, 120);
         //end form
 
-//        itemList.setControls(form, addButton, refreshButton);
+        itemList.setControls(form, addButton, refreshButton);
        
         functionStack.setSections(itemList, detailView);
         

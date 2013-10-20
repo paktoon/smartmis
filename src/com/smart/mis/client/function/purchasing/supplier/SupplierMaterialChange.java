@@ -1,11 +1,11 @@
-package com.smart.mis.client.function.purchasing.material;
+package com.smart.mis.client.function.purchasing.supplier;
 
 import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.smart.mis.client.function.purchasing.supplier.SupplierDS;
-import com.smart.mis.client.function.sale.customer.CustomerData;
+import com.smart.mis.client.function.purchasing.material.MaterialDS;
+import com.smart.mis.client.function.purchasing.material.MaterialDetailTabPane;
 import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
@@ -31,19 +31,19 @@ import com.smartgwt.client.widgets.layout.LayoutSpacer;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
-public class MaterialSupplierChange {
+public class SupplierMaterialChange {
 
-	private MaterialDetailTabPane main;
+	private SupplierDetailTabPane main;
 	public String listId;
 	final ListGrid editItemGrid = new ListGrid();
 	
-	public MaterialSupplierChange(MaterialDetailTabPane main) {
+	public SupplierMaterialChange(SupplierDetailTabPane main) {
 		this.main = main;
 	}
 	
-	public void show(final String sid){
+	public void show(final String mid){
 		
-		if (sid == null)
+		if (mid == null)
 		{
 			SC.warn("กรูณาเลือกรายการที่ต้องการแก้ไข");
 			return;
@@ -51,7 +51,7 @@ public class MaterialSupplierChange {
 		
 		final Window winModel = new Window();
 		
-		winModel.setTitle("แก้ไขรายการผู้จำหน่าย");
+		winModel.setTitle("แก้ไขรายการวัตถุดิบ");
 		//winModel.setAutoSize(true);	
 		winModel.setWidth(600);
 		winModel.setHeight(350);
@@ -82,15 +82,15 @@ public class MaterialSupplierChange {
             	SC.confirm("ยืนยันการแก้ไขรายการ", "ท่านต้องการแก้ไขรายการ  หรือไม่ ?", new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
-						if (value && sid != null) {
+						if (value && mid != null) {
 							String list = "";
 							boolean isStart = true;
 							for (ListGridRecord record : editItemGrid.getRecords()) {
 								if (isStart) {
-									list += record.getAttributeAsString("sid");
+									list += record.getAttributeAsString("mid");
 									isStart = false;
 								} else {
-									list += "|" + record.getAttributeAsString("sid");
+									list += "|" + record.getAttributeAsString("mid");
 								}
 							}
 							main.fetchEditItemList(list);
@@ -124,7 +124,7 @@ public class MaterialSupplierChange {
 	}
 	private HStack getEditItemList(){
     	//Grid
-    	 ListGridField[] defaultField = new ListGridField[] {new ListGridField("sid", 80), new ListGridField("sup_name")};
+    	 ListGridField[] defaultField = new ListGridField[] {new ListGridField("mid", 80), new ListGridField("mat_name")};
     	 final ListGrid selectItemGrid = new ListGrid();
     	selectItemGrid.setEmptyMessage("No Item to show.");
     	selectItemGrid.setWidth(240);
@@ -132,7 +132,7 @@ public class MaterialSupplierChange {
     	selectItemGrid.setCanDragRecordsOut(true);
     	selectItemGrid.setAutoFetchData(false);
     	selectItemGrid.setUseAllDataSourceFields(false);
-    	selectItemGrid.setDataSource(SupplierDS.getInstance());
+    	selectItemGrid.setDataSource(MaterialDS.getInstance());
     	selectItemGrid.setDragDataAction(DragDataAction.COPY); 
     	selectItemGrid.setDefaultFields(defaultField);
     	//selectItemGrid.hideFields("sup_phone1", "sup_phone2", "fax", "email", "leadtime", "address");
@@ -145,7 +145,7 @@ public class MaterialSupplierChange {
         editItemGrid.setAutoFetchData(false);  
         editItemGrid.setPreventDuplicates(true);
         editItemGrid.setUseAllDataSourceFields(false);
-        editItemGrid.setDataSource(SupplierDS.getCustomInstance(listId.split("\\|")));
+        editItemGrid.setDataSource(MaterialDS.getCustomInstance(listId.split("\\|")));
         editItemGrid.setDefaultFields(defaultField);
         //editItemGrid.hideFields("sup_phone1", "sup_phone2", "fax", "email", "leadtime", "address");
         
@@ -169,7 +169,7 @@ public class MaterialSupplierChange {
         hStack.addMember(arrowImg);
         
         VStack vStack2 = new VStack();
-        Label topLabel = new Label("ผู้จำหน่ายที่เลือก");
+        Label topLabel = new Label("วัตถุดิบที่เลือก");
         topLabel.setHeight(30);
         vStack2.addMember(topLabel);
         vStack2.addMember(editItemGrid);
