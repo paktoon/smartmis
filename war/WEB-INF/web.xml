@@ -16,6 +16,8 @@
   		<url-pattern>/smartmis/security</url-pattern> 
   	</servlet-mapping>
   	
+
+  	<!-- Json Servlets -->
   	<servlet>
   		<servlet-name>jsonPermissionData</servlet-name> 
   		<servlet-class>com.smart.mis.server.security.JsonPermissionData</servlet-class> 
@@ -36,6 +38,27 @@
   		<url-pattern>/smartmis/security/userData</url-pattern> 
   	</servlet-mapping>
   
+  <!-- Upload image Servlets -->
+    <servlet>
+  		<servlet-name>GetUploadUrlServlet</servlet-name> 
+  		<servlet-class>com.smart.mis.shared.image.UserImageServiceImpl</servlet-class> 
+  	</servlet>
+  
+  	<servlet-mapping>
+  		<servlet-name>GetUploadUrlServlet</servlet-name> 
+  		<url-pattern>/smartmis/images</url-pattern> 
+  	</servlet-mapping>
+  	
+	   <servlet>
+	   <servlet-name>Upload</servlet-name>
+	   <servlet-class>com.smart.mis.shared.image.ImageUploadServlet</servlet-class>
+	 </servlet>
+
+	 <servlet-mapping>
+	   <servlet-name>Upload</servlet-name>
+	   <url-pattern>/upload</url-pattern>
+	 </servlet-mapping>
+	 
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Smartmis.html</welcome-file>
