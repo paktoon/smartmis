@@ -1,6 +1,8 @@
 package com.smart.mis.shared.image;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
+import com.google.gwt.core.client.GWT;
 import com.smart.mis.datastore.Util;
 
 public class ImageUploadServlet extends HttpServlet {
@@ -40,7 +43,7 @@ public class ImageUploadServlet extends HttpServlet {
  
             // Get the image serving URL
             String imageUrl = imagesService.getServingUrl(ServingUrlOptions.Builder.withBlobKey(blobKey));
- 
+            
             // Low-level entities
             Entity uploadedImage = new Entity("UploadedImage");
             uploadedImage.setProperty("blobKey", blobKey);
@@ -59,9 +62,11 @@ public class ImageUploadServlet extends HttpServlet {
             throws ServletException, IOException {
  
         String imageUrl = req.getParameter("imageUrl");
-        resp.setHeader("Content-Type", "text/html");
- 
-        resp.getWriter().println(imageUrl);
- 
+        System.out.println("imageUrl on server : "  + imageUrl);
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("UTF-8");
+        PrintWriter out = resp.getWriter();
+        out.print(imageUrl);
+        out.flush();
     }
 }

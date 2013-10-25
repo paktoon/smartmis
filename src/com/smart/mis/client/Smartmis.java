@@ -136,7 +136,6 @@ public class Smartmis implements EntryPoint {
 		loginButton = new IButton("เข้าสู่ระบบ");		
 		
 		loginForm.setFields(userName, passWord);
-		
 		loginWindow.addMembers(loginForm, loginButton, errorLabel);
 		
 		Canvas[] loginPage = {
@@ -148,7 +147,6 @@ public class Smartmis implements EntryPoint {
 			//,loginButton
 			//,errorLabel
 			,loginWindow
-			,ImageUpload.getUploadForm()
 			,new Canvas() {{  
 	            setHeight("*");  
 	            setWidth("*");  
