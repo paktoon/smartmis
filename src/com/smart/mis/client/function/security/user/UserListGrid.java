@@ -12,7 +12,7 @@ public class UserListGrid extends ListGrid {
 
 	public UserListGrid() {
 		setWidth100();  
-        setHeight(200);  
+        setHeight("30%");  
         
         setAlternateRecordStyles(true);  
         setShowAllRecords(true);  

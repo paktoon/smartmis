@@ -3,6 +3,8 @@ package com.smart.mis.client.function.sale;
 import java.util.LinkedHashMap;
 
 import com.smart.mis.client.MainPage;
+import com.smart.mis.client.chart.CustomColumnChart;
+import com.smart.mis.client.chart.CustomPieChart;
 import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionStack;
 import com.smart.mis.client.function.FunctionWindow;
@@ -12,6 +14,7 @@ import com.smart.mis.client.function.sale.customer.CustomerDetailTabPane;
 import com.smart.mis.client.function.sale.customer.CustomerListGrid;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.OperatorId;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -30,7 +33,7 @@ public class SalePanel extends FunctionPanel{
 	private final FunctionWindow saleOrderWindow;
 	private final FunctionWindow invoiceWindow;
 	private final FunctionWindow checkPOWindow;
-	private final FunctionWindow saleReportWindow;
+	//private final FunctionWindow saleReportWindow;
 	private final FunctionWindow SubQuotationReportWindow;
 	private final FunctionWindow SubSaleReportWindow;
 	private final FunctionWindow SubDeliveryReportWindow;
@@ -45,7 +48,7 @@ public class SalePanel extends FunctionPanel{
 		saleOrderWindow = createFuncWindow();
 		invoiceWindow = createFuncWindow();
 		checkPOWindow = createFuncWindow();
-		saleReportWindow = createFuncWindow();
+		//saleReportWindow = createFuncWindow();
 		
 		SubQuotationReportWindow = createFuncWindow();
 		SubSaleReportWindow = createFuncWindow();
@@ -78,10 +81,12 @@ public class SalePanel extends FunctionPanel{
 		} else if (nodeId.equals("16")) {
 			loadWindow(this._main.getSalePanel(), this.invoiceWindow , name, icon);
 		} else if (nodeId.equals("15")) {
-			loadWindow(this._main.getSalePanel(), this.saleReportWindow , name, icon);
+			//loadWindow(this._main.getSalePanel(), this.saleReportWindow , name, icon);
+			//Do nothing
 		} else if (nodeId.equals("151")) {
 			loadWindow(this._main.getSalePanel(), this.SubQuotationReportWindow , name, icon);
 		} else if (nodeId.equals("152")) {
+			LoadSaleReportWindow();
 			loadWindow(this._main.getSalePanel(), this.SubSaleReportWindow , name, icon);
 		} else if (nodeId.equals("153")) {
 			loadWindow(this._main.getSalePanel(), this.SubDeliveryReportWindow , name, icon);
@@ -161,5 +166,15 @@ public class SalePanel extends FunctionPanel{
         functionLayout.setHeight100();
         functionLayout.setMembers(functionStack);
         this.customerWindow.addItem(functionLayout);
+	}
+	
+	private void LoadSaleReportWindow() {
+		for (Canvas removed : this.SubSaleReportWindow.getItems()) {
+			this.SubSaleReportWindow.removeItem(removed);
+		}
+		CustomColumnChart chart = new CustomColumnChart();
+		VLayout report = new VLayout();
+		chart.loadChart(report);
+		this.SubSaleReportWindow.addItem(report);
 	}
 }

@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="D:/smartgwt-4.0/smartgwt.jar"/>
 	<classpathentry kind="lib" path="D:/smartgwt-4.0/smartgwt-skins.jar"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="lib" path="D:/gwt-chart-lib/gwt-visualization-1.1.2/gwt-visualization.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

@@ -1,5 +1,6 @@
 package com.smart.mis.client.function.sale.customer;
 
+import com.smartgwt.client.types.GroupStartOpen;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -28,7 +29,7 @@ public class CustomerListGrid extends ListGrid {
 	
 	public CustomerListGrid() {
 		setWidth100();  
-        setHeight(200);  
+		setHeight("30%");  
         
         setAlternateRecordStyles(true);  
         setShowAllRecords(true);  
@@ -38,6 +39,9 @@ public class CustomerListGrid extends ListGrid {
         setCanEdit(false);
         setDataSource(CustomerDS.getInstance());
         setUseAllDataSourceFields(true);
+        
+        setGroupStartOpen(GroupStartOpen.ALL);
+        setGroupByField("zone"); 
         
         ListGridField field_1 = new ListGridField("cid", 120);
         ListGridField field_2 = new ListGridField("cus_name",250);

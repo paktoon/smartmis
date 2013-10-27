@@ -1,4 +1,4 @@
-package com.smart.mis.client.function.sale.customer;
+package com.smart.mis.client.function.production.product;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -17,11 +17,13 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -36,26 +38,28 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class CustomerAdd {
+public class ProductAdd {
 	
-    private final DataSource customerDataSource;
-    private final CustomerListGrid customerListGrid;
-    private final CustomerDetailTabPane customerTabPane;
+    private ProductListGrid ListGrid; 
+    private final DataSource DS;
+    private final ProductDetailTabPane TabPane;
     private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
     private String user;
+    private final Img editProductImage;
     
-	public CustomerAdd(DataSource customerDS, CustomerListGrid customerListGrid, CustomerDetailTabPane customerTabPane, String user){
-		this.customerDataSource = customerDS;
-    	this.customerListGrid = customerListGrid;
-    	this.customerTabPane = customerTabPane;
+	public ProductAdd(DataSource DS, ProductListGrid ListGrid, ProductDetailTabPane TabPane, String user){
+		this.DS = DS;
+    	this.ListGrid = ListGrid;
+    	this.TabPane = TabPane;
     	this.user = user;
+    	this.editProductImage = new Img("/images/icons/photoNotFound.png");
 	}
 	
 	public void show(){
 		
 		final Window winModel = new Window();
 		
-		winModel.setTitle("เพิ่มลูกค้า");
+		winModel.setTitle("เพิ่มสินค้า");
 		//winModel.setAutoSize(true);	
 		winModel.setWidth(650);
 		winModel.setHeight(350);
@@ -80,45 +84,40 @@ public class CustomerAdd {
         editorForm.setCellPadding(2);  
         editorForm.setAutoFocus(true);
         editorForm.setSelectOnFocus(true);
-        editorForm.setDataSource(this.customerDataSource);  
+        editorForm.setDataSource(this.DS);  
         editorForm.setUseAllDataSourceFields(false); 
         editorForm.setIsGroup(true);
-        editorForm.setGroupTitle("ข้อมูลลูกค้า");
+        editorForm.setGroupTitle("ข้อมูลสินค้า");
         
-		TextItem cus_name = new TextItem("cus_name", "ชื่อลูกค้า");
+		TextItem name = new TextItem("name", "ชื่อสินค้า");
 		FormItemIcon icon = new FormItemIcon();  
         icon.setSrc("[SKIN]/actions/help.png"); 
-        icon.setPrompt("ชื่อลูกค้าต้องไม่ซ้ำ");
-        cus_name.setIcons(icon);
-        cus_name.setRequired(true);
-        cus_name.setHint("*");
-        
-		TextItem cus_phone = new TextItem("cus_phone", "หมายเลขโทรศัพท์ลูกค้า");
-		TextItem contact_name = new TextItem("contact_name", "ชื่อผู้ติดต่อ");
-		TextItem contact_phone = new TextItem("contact_phone", "หมายเลขโทรศัพท์ผู้ติดต่อ");
-		TextItem contact_email = new TextItem("contact_email", "อีเมลผู้ติดต่อ");
+        icon.setPrompt("ชื่อสินค้าต้องไม่ซ้ำ");
+        name.setIcons(icon);
+        name.setRequired(true);
+        name.setHint("*");
 		
-		TextAreaItem address = new TextAreaItem("address", "ที่อยู่");
-		address.setWidth(300);
-		address.setRowSpan(3);
+		TextItem size = new TextItem("size", "ขนาด");
+		FloatItem weight = new FloatItem("weight", "น้ำหนัก");
+		FloatItem price = new FloatItem("price", "ราคา");
 		
-		SelectItem type = new SelectItem("cus_type", "ประเภทลูกค้า");
-		SelectItem zone = new SelectItem("zone", "โซน");
+		TextAreaItem desc = new TextAreaItem("desc", "คำอธิบาย");
+		desc.setWidth(300);
+		desc.setRowSpan(2);
+		SelectItem type = new SelectItem("type", "ประเภท");
 		
-		cus_name.setRequired(true);
-		cus_phone.setRequired(true);
-		contact_name.setRequired(true);
-		address.setRequired(true);
+		name.setRequired(true);
+		size.setRequired(true);
+		weight.setRequired(true);
+		price.setRequired(true);
 		type.setRequired(true);
-		type.setDefaultValue("ลูกค้าทั่วไป");
-		zone.setRequired(true);
-		zone.setDefaultValue("เอเซีย");
 		
-		cus_name.setHint("*");
-		cus_phone.setHint("*");
-		contact_name.setHint("*");
-		address.setHint("*");
+		name.setHint("*");
+		size.setHint("*");
+		weight.setHint("กรัม *");
+		price.setHint("บาท *");
 		type.setHint("*");
+		type.setDefaultValue("แหวนนิ้วมือ");
 		
         IButton saveButton = new IButton("บันทึก");  
         saveButton.setAlign(Alignment.CENTER);  
@@ -129,19 +128,18 @@ public class CustomerAdd {
         saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
             	            	
-            	SC.confirm("ยืนยันการเพิ่มข้อมูลลูกค้า", "ท่านต้องการเพิ่มลูกค้า " + (String) editorForm.getValue("cus_name") + " หรือไม่ ?", new BooleanCallback() {
+            	SC.confirm("ยืนยันการเพิ่มข้อมูลสินค้า", "ท่านต้องการเพิ่มสินค้า " + (String) editorForm.getValue("name") + " หรือไม่ ?", new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {	
-				    		String cid = (String) editorForm.getValue("cid");
-							String cus_name = (String) editorForm.getValue("cus_name");
-							String cus_phone = (String) editorForm.getValue("cus_phone");
-					    	String contact_name = (String) editorForm.getValue("contact_name");
-					    	String contact_phone = (String) editorForm.getValue("contact_phone");
-					    	String contact_email = (String) editorForm.getValue("contact_email");
-					    	String address = (String) editorForm.getValue("address");
-					    	String type = (String) editorForm.getValue("cus_type");
-					    	
+				    		//String pid = editorForm.getValueAsString("pid");
+							String name = editorForm.getValueAsString("name");
+							String size = editorForm.getValueAsString("size");
+					    	Double weight = Double.parseDouble(editorForm.getValueAsString("weight"));
+					    	Double price = Double.parseDouble(editorForm.getValueAsString("price"));
+					    	String desc = editorForm.getValueAsString("desc");
+					    	String type = editorForm.getValueAsString("type");
+					    	editProductImage.setSrc(TabPane.currentEditImgUrl);
 //					    	User createdUser = new User(uname, pwd, fname, lname, email, position, title, status);
 //					    	securityService.createUserOnServer(createdUser, pname, user, new AsyncCallback<String>() {
 //								@Override
@@ -152,31 +150,32 @@ public class CustomerAdd {
 //								public void onSuccess(String result) {
 //									if (result != null)
 //									{
-										Record newRecord = CustomerData.createRecord(
-												(String) editorForm.getValue("cid"),
-								    			(String) editorForm.getValue("cus_name"),
-								    			(String) editorForm.getValue("cus_phone"),
-								    			(String) editorForm.getValue("contact_name"),
-								    	    	(String) editorForm.getValue("contact_phone"),
-								    	    	(String) editorForm.getValue("contact_email"),
-								    	    	(String) editorForm.getValue("address"),
-								    	    	(String) editorForm.getValue("cus_type"),
-								    	    	(String) editorForm.getValue("zone")
+										Record newRecord = ProductData.createRecord(
+												"PD70" + Math.round((Math.random() * 100)),
+												editorForm.getValueAsString("name"),
+												editorForm.getValueAsString("desc"),
+												editorForm.getValueAsString("size"),
+												Double.parseDouble(editorForm.getValueAsString("weight")),
+												Double.parseDouble(editorForm.getValueAsString("price")),
+												editorForm.getValueAsString("type"),
+												0,
+												false,
+												editProductImage.getSrc()
 								    			);
 										
-										customerDataSource.addData(newRecord, new DSCallback() {
+										DS.addData(newRecord, new DSCallback() {
 
 											@Override
 											public void execute(DSResponse dsResponse, Object data,
 													DSRequest dsRequest) {
 													if (dsResponse.getStatus() != 0) {
-														SC.warn("การเพิ่มข้อมูลลูกค้าล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
+														SC.warn("การเพิ่มข้อมูลสินค้าล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
 													} else { 
-														SC.warn("เพิ่มข้อมูลลูกค้าเรียบร้อยแล้ว");
+														SC.warn("เพิ่มข้อมูลสินค้าเรียบร้อยแล้ว");
 														winModel.destroy();
-														customerListGrid.fetchData();
-														customerListGrid.selectSingleRecord(dsResponse.getData()[0]);
-														customerTabPane.updateDetails(dsResponse.getData()[0]);
+														ListGrid.fetchData();
+														ListGrid.selectSingleRecord(dsResponse.getData()[0]);
+														TabPane.updateDetails(dsResponse.getData()[0]);
 													}
 											}
 //								    	});
@@ -204,23 +203,18 @@ public class CustomerAdd {
             }  
         }); 
 
-        cus_name.setWidth(250);
-        cus_phone.setWidth(250);
-        contact_name.setWidth(250);
-        contact_phone.setWidth(250);
-        contact_email.setWidth(250);
-        editorForm.setFields(cus_name, cus_phone, contact_name, contact_phone, contact_email , address, type);
+        name.setWidth(250);
+        size.setWidth(250);
+        weight.setWidth(250);
+        price.setWidth(250);
+        type.setWidth(250);
+        editorForm.setFields(name, size, weight, price, desc, type);
         editorForm.setColWidths(200	, 300);
         
-        //Default selected 
-//        editorForm.setValue("cus_name", "[ชื่อลูกค้า]"); 
-//        editorForm.setValue("name", "ADMIN");
-//        editorForm.setValue("status", true);
-//        editorForm.setValue("pwd", "*****");
-//        editorForm.setValue("npwd", "*****");
+    	Window imageWindow = this.TabPane.getImageWindow(editProductImage , 1);
     	
     	VLayout temp = new VLayout();
-    	temp.addMembers(saveButton, cancelButton);
+    	temp.addMembers(imageWindow, saveButton, cancelButton);
     	temp.setMargin(3);
         outlineForm.addMembers(editorForm, temp);
         winModel.addItem(outlineForm);

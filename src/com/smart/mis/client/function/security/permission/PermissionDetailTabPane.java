@@ -50,6 +50,7 @@ public class PermissionDetailTabPane extends TabSet {
     	this.permissionListGrid = permisssionGrid;
     	this.permissionDataSource = permissionDS;
     	this.user = user;
+    	setHeight("70%");
     	
     	itemViewer = new DetailViewer();  
         itemViewer.setDataSource(permissionDS);  

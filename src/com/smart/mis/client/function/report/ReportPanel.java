@@ -8,7 +8,7 @@ import com.smartgwt.client.types.Alignment;
 public class ReportPanel extends FunctionPanel{
 	
 	private final FunctionWindow saleCubeReportWindow;
-	private final FunctionWindow summaryReportWindow;
+	//private final FunctionWindow summaryReportWindow;
 	private final FunctionWindow productionReportWindow;
 	private final FunctionWindow inventoryReportWindow;
 	private final FunctionWindow purchasingReportWindow;
@@ -19,7 +19,7 @@ public class ReportPanel extends FunctionPanel{
 		
 		saleCubeReportWindow = createFuncWindow();
 		
-		summaryReportWindow = createFuncWindow();
+		//summaryReportWindow = createFuncWindow();
 		productionReportWindow = createFuncWindow();
 		inventoryReportWindow = createFuncWindow();
 		purchasingReportWindow = createFuncWindow();
@@ -37,7 +37,8 @@ public class ReportPanel extends FunctionPanel{
 		if (nodeId.equals("61")) {
 			loadWindow(this._main.getReportPanel(), this.saleCubeReportWindow , name, icon);
 		} else if (nodeId.equals("62")) {
-			loadWindow(this._main.getReportPanel(), this.summaryReportWindow , name, icon);
+			//loadWindow(this._main.getReportPanel(), this.summaryReportWindow , name, icon);
+			//Do nothing
 		} else if (nodeId.equals("621")) {
 			loadWindow(this._main.getReportPanel(), this.productionReportWindow , name, icon);
 		} else if (nodeId.equals("622")) {

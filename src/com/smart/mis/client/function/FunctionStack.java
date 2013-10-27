@@ -7,6 +7,6 @@ public class FunctionStack extends SectionStack{
 
 	public FunctionStack() {
 		setVisibilityMode(VisibilityMode.MULTIPLE);
-		setAnimateSections(true);
+		setAnimateSections(false);
 	}
 }

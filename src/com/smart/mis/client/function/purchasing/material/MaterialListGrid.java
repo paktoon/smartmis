@@ -1,6 +1,7 @@
 package com.smart.mis.client.function.purchasing.material;
 
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.shared.FieldFormatter;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.GroupStartOpen;
 import com.smartgwt.client.types.SelectionStyle;
@@ -32,7 +33,7 @@ public class MaterialListGrid extends ListGrid {
 	
 	public MaterialListGrid() {
 		setWidth100();  
-        setHeight(200);  
+		setHeight("30%");  
         
         setAlternateRecordStyles(true);  
         setShowAllRecords(true);  
@@ -58,9 +59,9 @@ public class MaterialListGrid extends ListGrid {
         
         //Cell Format
         field_5.setAlign(Alignment.RIGHT);
-        field_5.setCellFormatter(getNumberFormat());
+        field_5.setCellFormatter(FieldFormatter.getNumberFormat());
         field_6.setAlign(Alignment.RIGHT);
-        field_6.setCellFormatter(getNumberFormat());
+        field_6.setCellFormatter(FieldFormatter.getNumberFormat());
         field_7.setAlign(Alignment.CENTER);
         
         setFields(field_1, field_2, field_3, field_4, field_5, field_6, field_7, field_8);
@@ -85,19 +86,5 @@ public class MaterialListGrid extends ListGrid {
 			}  
         }); 
 		
-	}
-	
-	public CellFormatter getNumberFormat(){
-		return new CellFormatter() {  
-            public String format(Object value, ListGridRecord record, int rowNum, int colNum) {  
-                if (value == null) return null;  
-                try {  
-                    NumberFormat nf = NumberFormat.getFormat("#,##0.00");  
-                    return nf.format(((Number) value).doubleValue());  
-                } catch (Exception e) {  
-                    return value.toString();  
-                }  
-            }  
-        };
 	}
 }

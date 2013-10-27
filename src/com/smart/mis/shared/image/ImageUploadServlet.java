@@ -45,13 +45,13 @@ public class ImageUploadServlet extends HttpServlet {
             String imageUrl = imagesService.getServingUrl(ServingUrlOptions.Builder.withBlobKey(blobKey));
             
             // Low-level entities
-            Entity uploadedImage = new Entity("UploadedImage");
-            uploadedImage.setProperty("blobKey", blobKey);
-            uploadedImage.setProperty("created", new Date());
-            uploadedImage.setUnindexedProperty("url",
-                    imageUrl);
- 
-            Util.persistEntity(uploadedImage);
+//            Entity uploadedImage = new Entity("UploadedImage");
+//            uploadedImage.setProperty("blobKey", blobKey);
+//            uploadedImage.setProperty("created", new Date());
+//            uploadedImage.setUnindexedProperty("url",
+//                    imageUrl);
+// 
+//            Util.persistEntity(uploadedImage);
             
             res.sendRedirect("/upload?imageUrl=" + imageUrl);
         }
@@ -62,7 +62,7 @@ public class ImageUploadServlet extends HttpServlet {
             throws ServletException, IOException {
  
         String imageUrl = req.getParameter("imageUrl");
-        System.out.println("imageUrl on server : "  + imageUrl);
+        //System.out.println("imageUrl on server : "  + imageUrl);
         resp.setContentType("text/html");
         resp.setCharacterEncoding("UTF-8");
         PrintWriter out = resp.getWriter();

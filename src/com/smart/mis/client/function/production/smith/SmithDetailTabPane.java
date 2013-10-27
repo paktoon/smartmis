@@ -1,4 +1,4 @@
-package com.smart.mis.client.function.sale.customer;
+package com.smart.mis.client.function.production.smith;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smart.mis.client.function.security.SecurityService;
@@ -39,26 +39,23 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;  
 import com.smartgwt.client.widgets.viewer.DetailViewer;  
 
-public class CustomerDetailTabPane extends TabSet {
+public class SmithDetailTabPane extends TabSet {
     private DetailViewer itemViewer;  
     private DynamicForm editorForm; //, normalForm;
     private ListGrid historyGrid;
     private Label editorLabel;  
-    private CustomerListGrid customerListGrid; 
-    private CustomerDS customerDataSource;
-    //private PermissionDS permissionDataSource;
+    private SmithListGrid ListGrid; 
+    private SmithDS DataSource;
     private HLayout outlineForm;
     private IButton saveButton, cancelButton;
-//    private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
-//    private SelectItem profile;
     
-    public CustomerDetailTabPane(CustomerDS customerDS , CustomerListGrid customerGrid){
-    	this.customerListGrid = customerGrid;
-    	this.customerDataSource = customerDS;
+    public SmithDetailTabPane(SmithDS DS , SmithListGrid Grid){
+    	this.ListGrid = Grid;
+    	this.DataSource = DS;
     	setHeight("70%");
     	
     	itemViewer = new DetailViewer();  
-        itemViewer.setDataSource(customerDS);  
+        itemViewer.setDataSource(DS);  
         itemViewer.setWidth(600);  
         itemViewer.setMargin(5);  
         itemViewer.setEmptyMessage("Select an item to view its details");
@@ -80,84 +77,32 @@ public class CustomerDetailTabPane extends TabSet {
         editorForm.setNumCols(2);  
         editorForm.setCellPadding(2);  
         editorForm.setAutoFocus(false);  
-        editorForm.setDataSource(customerDS);  
+        editorForm.setDataSource(DS);  
         editorForm.setUseAllDataSourceFields(false); 
         editorForm.setIsGroup(true);
-        editorForm.setGroupTitle("ข้อมูลลูกค้า");
+        editorForm.setGroupTitle("ข้อมูลช่าง");
         
         historyGrid = new ListGrid();
-//        normalForm = new DynamicForm(); 
-//        normalForm.setAutoFocus(false);
-//        normalForm.setCellPadding(2);
-//        normalForm.setMargin(5); 
-//        normalForm.setNumCols(2); 
-//        normalForm.setWidth(270); 
-//        normalForm.setDataSource(customerDS);  
-//        normalForm.setUseAllDataSourceFields(false); 
-//        normalForm.setIsGroup(true);
-//        normalForm.setGroupTitle("ข้อมูลทั่วไป");
         
         //editorForm
-        StaticTextItem cid = new StaticTextItem("cid", "รหัสลูกค้า");
-        cid.setRequired(true);
-//        profile = new SelectItem("name", "สิทธิการใช้งาน");
-//        //Setup for fetch update data on Data Source
-//        profile.setValueField("name");
-//        profile.setDisplayField("name");
-//        profile.setOptionDataSource(this.permissionDataSource);
-//        profile.setFetchMissingValues(true);
-//        profile.setAlwaysFetchMissingValues(true);
-//        profile.setRequired(true);
-//        profile.setPickListCriteria(new Criteria("status", "Active"));
-        //End setup
-//        CheckboxItem status = new CheckboxItem("status", "สถานะ");
-//        PasswordItem pwd = new PasswordItem("pwd", "รหัสผ่าน");
-//		CustomValidator cv = new CustomValidator() {
-//			@Override
-//			protected boolean condition(Object value) {
-//				return FieldVerifier.isValidName((String) value);
-//			}
-//		};
-//		pwd.setValidators(cv);
-//		PasswordItem npwd = new PasswordItem("npwd", "ยืนยันรหัสผ่าน");
-//		MatchesFieldValidator matchesValidator = new MatchesFieldValidator();
-//		matchesValidator.setOtherField("pwd");
-//		matchesValidator.setErrorMessage("ยืนยันรหัสผ่านไม่ถูกต้อง");
-//		npwd.setValidators(matchesValidator);
-//		
-//		pwd.setRequired(true);
-//		npwd.setRequired(true);
-//		pwd.setHint("*");
-//		npwd.setHint("*");
-		
-        //normalForm
-//		SelectItem title = new SelectItem("title", "คำนำหน้าชื่อ");
-//		title.setWidth(75);
-		TextItem cus_name = new TextItem("cus_name", "ชื่อลูกค้า");
-		TextItem cus_phone = new TextItem("cus_phone", "หมายเลขโทรศัพท์ลูกค้า");
-		TextItem contact_name = new TextItem("contact_name", "ชื่อผู้ติดต่อ");
-		TextItem contact_phone = new TextItem("contact_phone", "หมายเลขโทรศัพท์ผู้ติดต่อ");
-		TextItem contact_email = new TextItem("contact_email", "อีเมลผู้ติดต่อ");
+        StaticTextItem smid = new StaticTextItem("smid", "รหัสช่าง");
+        smid.setRequired(true);
+		TextItem name = new TextItem("name", "ชื่อช่าง");
+		TextItem phone1 = new TextItem("phone1", "หมายเลขโทรศัพท์ 1");
+		TextItem phone2 = new TextItem("phone2", "หมายเลขโทรศัพท์ 2");
+		TextItem email = new TextItem("email", "อีเมล");
 
 		TextAreaItem address = new TextAreaItem("address", "ที่อยู่");
 		address.setWidth(300);
 		address.setRowSpan(3);
 		
-		SelectItem type = new SelectItem("cus_type", "ประเภทลูกค้า");
-		SelectItem zone = new SelectItem("zone", "โซน");
 		
-		cus_name.setRequired(true);
-		cus_phone.setRequired(true);
-		contact_name.setRequired(true);
+		name.setRequired(true);
+		phone1.setRequired(true);
 		address.setRequired(true);
-		type.setRequired(true);
-		zone.setRequired(true);
-		cus_name.setHint("*");
-		cus_phone.setHint("*");
-		contact_name.setHint("*");
+		name.setHint("*");
+		phone1.setHint("*");
 		address.setHint("*");
-		type.setHint("*");
-		zone.setHint("*");
 		
         saveButton = new IButton("บันทึก");  
         saveButton.setAlign(Alignment.CENTER);  
@@ -167,7 +112,7 @@ public class CustomerDetailTabPane extends TabSet {
         saveButton.setIcon("icons/16/save.png");
         saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
-            	SC.confirm("ยืนยันการแก้ไขข้อมูลลูกค้า", "ท่านต้องการแก้ไขข้อมูลลูกค้า " + (String) editorForm.getValue("cid") + " หรือไม่ ?" , new BooleanCallback() {
+            	SC.confirm("ยืนยันการแก้ไขข้อมูลช่าง", "ท่านต้องการแก้ไขข้อมูลช่าง " + (String) editorForm.getValue("smid") + " หรือไม่ ?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
@@ -187,7 +132,7 @@ public class CustomerDetailTabPane extends TabSet {
         cancelButton.setIcon("icons/16/close.png");
         cancelButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
-            	SC.confirm("ยกเลิกการแก้ไขข้อมูลลูกค้า", "ท่านต้องการ ยกเลิกการแก้ไขข้อมูลลูกค้า หรือไม่ ?" , new BooleanCallback() {
+            	SC.confirm("ยกเลิกการแก้ไขข้อมูลช่าง", "ท่านต้องการ ยกเลิกการแก้ไขข้อมูลช่าง หรือไม่ ?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
@@ -203,23 +148,22 @@ public class CustomerDetailTabPane extends TabSet {
         saveButton.setDisabled(true);
         cancelButton.setDisabled(true);
         
-        cus_name.setWidth(250);
-        cus_phone.setWidth(250);
-        contact_name.setWidth(250);
-        contact_phone.setWidth(250);
-        contact_email.setWidth(250);
-        editorForm.setFields(cid, cus_name, cus_phone, contact_name, contact_phone, contact_email , address, type, zone);
+        name.setWidth(250);
+        phone1.setWidth(250);
+        phone2.setWidth(250);
+        email.setWidth(250);
+        editorForm.setFields(smid, name, phone1, phone2, email, address);
         editorForm.setColWidths(200	, 300); 
         VLayout editor_control = new VLayout();
         editor_control.addMembers(saveButton, cancelButton);
         outlineForm.addMembers(editorForm, editor_control);
         
-        Tab viewTab = new Tab("ข้อมูลลูกค้า");  
+        Tab viewTab = new Tab("ข้อมูลช่าง");  
         viewTab.setIcon("icons/16/application_form.png");  
         viewTab.setWidth(70);  
         viewTab.setPane(itemViewer);
   
-        Tab historyTab = new Tab("ประวัติการจัดซื้อ");
+        Tab historyTab = new Tab("ประวัติการสั่งผลิต");
         historyTab.setIcon("icons/16/application_form.png");  
         historyTab.setWidth(70);
         historyTab.setPane(historyGrid); 
@@ -255,7 +199,7 @@ public class CustomerDetailTabPane extends TabSet {
     }  
   
     public void updateDetails() {  
-        Record selectedRecord  = customerListGrid.getSelectedRecord();  
+        Record selectedRecord  = ListGrid.getSelectedRecord();  
         int selectedTab = getSelectedTabNumber();  
         if (selectedTab == 0) {  
             //view tab : show empty message  
@@ -288,14 +232,12 @@ public class CustomerDetailTabPane extends TabSet {
    	
     	if (editorForm.validate()) {
     		
-    		String cid = (String) editorForm.getValue("cid");
-			String cus_name = (String) editorForm.getValue("cus_name");
-			String cus_phone = (String) editorForm.getValue("cus_phone");
-	    	String contact_name = (String) editorForm.getValue("contact_name");
-	    	String contact_phone = (String) editorForm.getValue("contact_phone");
-	    	String contact_email = (String) editorForm.getValue("contact_email");
-	    	String address = (String) editorForm.getValue("address");
-	    	String type = (String) editorForm.getValue("cus_type");
+    		String smid = editorForm.getValueAsString("smid");
+			String name = editorForm.getValueAsString("name");
+			String phone1 = editorForm.getValueAsString("phone1");
+	    	String phone2 = editorForm.getValueAsString("phone2");
+	    	String email = editorForm.getValueAsString("email");
+	    	String address = editorForm.getValueAsString("address");
 	    	
 //	    	User updatedUser = new User(uname, pwd, fname, lname, email, position, title, status);
 //	    	securityService.updateUserOnServer(updatedUser, pname, this.user, new AsyncCallback<Boolean>() {
@@ -308,33 +250,30 @@ public class CustomerDetailTabPane extends TabSet {
 //					if (result)
 //					{
 //						//System.out.println("*** Update result => " + result);
-						Record updateRecord = CustomerData.createRecord(
-								(String) editorForm.getValue("cid"),
-				    			(String) editorForm.getValue("cus_name"),
-				    			(String) editorForm.getValue("cus_phone"),
-				    			(String) editorForm.getValue("contact_name"),
-				    	    	(String) editorForm.getValue("contact_phone"),
-				    	    	(String) editorForm.getValue("contact_email"),
-				    	    	(String) editorForm.getValue("address"),
-				    	    	(String) editorForm.getValue("cus_type"),
-				    	    	(String) editorForm.getValue("zone")
+						Record updateRecord = SmithData.createRecord(
+								editorForm.getValueAsString("smid"),
+								editorForm.getValueAsString("name"),
+								editorForm.getValueAsString("phone1"),
+								editorForm.getValueAsString("phone2"),
+								editorForm.getValueAsString("email"),
+								editorForm.getValueAsString("address")
 				    			);
-						customerDataSource.updateData(updateRecord);
-						SC.warn("แก้ไขข้อมูลลูกค้าเรียบร้อยแล้ว");
+						DataSource.updateData(updateRecord);
+						SC.warn("แก้ไขข้อมูลช่างเรียบร้อยแล้ว");
 //					} else {
 //						SC.warn("Updating user Fails - please contact administrator");
 //					}
 //				}
 //			});
     	} else {
-    		SC.warn("ข้อมูลลูกค้าไม่ถูกต้อง");
+    		SC.warn("ข้อมูลช่างไม่ถูกต้อง");
     	}
     }
     
     public void onRefresh() {
-    	customerDataSource.refreshData();
+    	DataSource.refreshData();
     	//permissionDataSource.refreshData();
-    	customerListGrid.invalidateCache();
+    	ListGrid.invalidateCache();
 //    	profile.invalidateDisplayValueCache();
     }
 }

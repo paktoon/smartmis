@@ -74,6 +74,7 @@ public class MaterialDetailTabPane extends TabSet {
     public MaterialDetailTabPane(MaterialDS mDS, MaterialListGrid Grid){
     	this.materialListGrid = Grid;
     	this.materialDataSource = mDS;
+    	setHeight("70%");
     	
     	itemViewer = new DetailViewer();  
         itemViewer.setDataSource(mDS);  

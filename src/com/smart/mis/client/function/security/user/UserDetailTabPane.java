@@ -56,6 +56,7 @@ public class UserDetailTabPane extends TabSet {
     	this.userDataSource = userDS;
     	this.permissionDataSource = PermissionDS.getInstance();
     	this.user = user;
+    	setHeight("70%");
     	
     	itemViewer = new DetailViewer();  
         itemViewer.setDataSource(userDS);  

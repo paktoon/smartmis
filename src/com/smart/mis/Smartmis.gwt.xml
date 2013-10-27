@@ -31,6 +31,7 @@
     <!--<inherits name="com.smartclient.theme.enterpriseblue.EnterpriseBlue"/>-->
     <!--<inherits name="com.smartclient.theme.graphite.Graphite"/>-->
     <!--<inherits name="com.smartclient.theme.simplicity.SimplicityResources"/>-->
+    <inherits name='com.google.gwt.visualization.Visualization'/>
   
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.smart.mis.client.Smartmis'/>

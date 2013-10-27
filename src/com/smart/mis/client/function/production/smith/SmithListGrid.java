@@ -1,6 +1,6 @@
-package com.smart.mis.client.function.purchasing.supplier;
+package com.smart.mis.client.function.production.smith;
 
-import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.GroupStartOpen;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -10,7 +10,7 @@ import com.smartgwt.client.widgets.grid.events.CellSavedHandler;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 
-public class SupplierListGrid extends ListGrid {
+public class SmithListGrid extends ListGrid {
 
 //	@Override
 //	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
@@ -27,9 +27,10 @@ public class SupplierListGrid extends ListGrid {
 //        } 
 //	}
 	
-	public SupplierListGrid() {
+	public SmithListGrid() {
 		setWidth100();  
-		setHeight("30%");   
+        //setHeight(200); 
+        setHeight("30%");
         
         setAlternateRecordStyles(true);  
         setShowAllRecords(true);  
@@ -37,28 +38,25 @@ public class SupplierListGrid extends ListGrid {
         setSelectionType(SelectionStyle.SINGLE);
         setCanResizeFields(false);
         setCanEdit(false);
-        setDataSource(SupplierDS.getInstance());
+        setDataSource(SmithDS.getInstance());
         setUseAllDataSourceFields(true);
         
-        ListGridField field_1 = new ListGridField("sid", 120);
-        ListGridField field_2 = new ListGridField("sup_name",250);
+        ListGridField field_1 = new ListGridField("smid", 120);
+        ListGridField field_2 = new ListGridField("name",250);
         field_2.setShowHover(true);
-        ListGridField field_3 = new ListGridField("sup_phone1",120);
-        ListGridField field_4 = new ListGridField("sup_phone2",120);
-        ListGridField field_5 = new ListGridField("fax", 120);
-        ListGridField field_6 = new ListGridField("email");
-        ListGridField field_7 = new ListGridField("leadtime", 150);
-        field_7.setAlign(Alignment.CENTER);
-        ListGridField field_8 = new ListGridField("address");
+        ListGridField field_3 = new ListGridField("phone1",100);
+        ListGridField field_4 = new ListGridField("phone2",100);
+        ListGridField field_5 = new ListGridField("email");
+        ListGridField field_6 = new ListGridField("address");
         
-        setFields(field_1, field_2, field_3, field_4, field_5, field_6, field_7, field_8);
+        setFields(field_1, field_2, field_3, field_4, field_5, field_6);
         setHoverWidth(200);  
         setHoverHeight(20);
         hideFields("address");
         //fetchData();
 	}
 	
-	public void addUpdateDetailHandler(final SupplierDetailTabPane itemDetailTabPane){
+	public void addUpdateDetailHandler(final SmithDetailTabPane itemDetailTabPane){
         addRecordClickHandler(new RecordClickHandler() {  
 			@Override
 			public void onRecordClick(RecordClickEvent event) {

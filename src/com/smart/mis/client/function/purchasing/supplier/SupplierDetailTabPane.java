@@ -68,6 +68,7 @@ public class SupplierDetailTabPane extends TabSet {
     public SupplierDetailTabPane(SupplierDS DS , SupplierListGrid Grid){
     	this.supplierListGrid = Grid;
     	this.supplierDataSource = DS;
+    	setHeight("70%");
     	
     	itemViewer = new DetailViewer();  
         itemViewer.setDataSource(DS);  

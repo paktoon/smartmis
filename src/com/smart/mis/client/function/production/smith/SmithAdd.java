@@ -1,4 +1,4 @@
-package com.smart.mis.client.function.sale.customer;
+package com.smart.mis.client.function.production.smith;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -36,18 +36,18 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class CustomerAdd {
+public class SmithAdd {
 	
-    private final DataSource customerDataSource;
-    private final CustomerListGrid customerListGrid;
-    private final CustomerDetailTabPane customerTabPane;
+    private SmithListGrid ListGrid; 
+    private final DataSource DS;
+    private final SmithDetailTabPane TabPane;
     private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
     private String user;
     
-	public CustomerAdd(DataSource customerDS, CustomerListGrid customerListGrid, CustomerDetailTabPane customerTabPane, String user){
-		this.customerDataSource = customerDS;
-    	this.customerListGrid = customerListGrid;
-    	this.customerTabPane = customerTabPane;
+	public SmithAdd(DataSource DS, SmithListGrid ListGrid, SmithDetailTabPane TabPane, String user){
+		this.DS = DS;
+    	this.ListGrid = ListGrid;
+    	this.TabPane = TabPane;
     	this.user = user;
 	}
 	
@@ -55,7 +55,7 @@ public class CustomerAdd {
 		
 		final Window winModel = new Window();
 		
-		winModel.setTitle("เพิ่มลูกค้า");
+		winModel.setTitle("เพิ่มช่าง");
 		//winModel.setAutoSize(true);	
 		winModel.setWidth(650);
 		winModel.setHeight(350);
@@ -80,45 +80,34 @@ public class CustomerAdd {
         editorForm.setCellPadding(2);  
         editorForm.setAutoFocus(true);
         editorForm.setSelectOnFocus(true);
-        editorForm.setDataSource(this.customerDataSource);  
+        editorForm.setDataSource(this.DS);  
         editorForm.setUseAllDataSourceFields(false); 
         editorForm.setIsGroup(true);
-        editorForm.setGroupTitle("ข้อมูลลูกค้า");
+        editorForm.setGroupTitle("ข้อมูลช่าง");
         
-		TextItem cus_name = new TextItem("cus_name", "ชื่อลูกค้า");
+		TextItem name = new TextItem("name", "ชื่อช่าง");
 		FormItemIcon icon = new FormItemIcon();  
         icon.setSrc("[SKIN]/actions/help.png"); 
-        icon.setPrompt("ชื่อลูกค้าต้องไม่ซ้ำ");
-        cus_name.setIcons(icon);
-        cus_name.setRequired(true);
-        cus_name.setHint("*");
+        icon.setPrompt("ชื่อช่างต้องไม่ซ้ำ");
+        name.setIcons(icon);
+        name.setRequired(true);
+        name.setHint("*");
         
-		TextItem cus_phone = new TextItem("cus_phone", "หมายเลขโทรศัพท์ลูกค้า");
-		TextItem contact_name = new TextItem("contact_name", "ชื่อผู้ติดต่อ");
-		TextItem contact_phone = new TextItem("contact_phone", "หมายเลขโทรศัพท์ผู้ติดต่อ");
-		TextItem contact_email = new TextItem("contact_email", "อีเมลผู้ติดต่อ");
+		TextItem phone1 = new TextItem("phone1", "หมายเลขโทรศัพท์ 1");
+		TextItem phone2 = new TextItem("phone2", "ชื่หมายเลขโทรศัพท์ 2");
+		TextItem email = new TextItem("email", "อีเมล");
 		
 		TextAreaItem address = new TextAreaItem("address", "ที่อยู่");
 		address.setWidth(300);
 		address.setRowSpan(3);
 		
-		SelectItem type = new SelectItem("cus_type", "ประเภทลูกค้า");
-		SelectItem zone = new SelectItem("zone", "โซน");
-		
-		cus_name.setRequired(true);
-		cus_phone.setRequired(true);
-		contact_name.setRequired(true);
+		name.setRequired(true);
+		phone1.setRequired(true);
 		address.setRequired(true);
-		type.setRequired(true);
-		type.setDefaultValue("ลูกค้าทั่วไป");
-		zone.setRequired(true);
-		zone.setDefaultValue("เอเซีย");
 		
-		cus_name.setHint("*");
-		cus_phone.setHint("*");
-		contact_name.setHint("*");
+		name.setHint("*");
+		phone1.setHint("*");
 		address.setHint("*");
-		type.setHint("*");
 		
         IButton saveButton = new IButton("บันทึก");  
         saveButton.setAlign(Alignment.CENTER);  
@@ -129,18 +118,16 @@ public class CustomerAdd {
         saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
             	            	
-            	SC.confirm("ยืนยันการเพิ่มข้อมูลลูกค้า", "ท่านต้องการเพิ่มลูกค้า " + (String) editorForm.getValue("cus_name") + " หรือไม่ ?", new BooleanCallback() {
+            	SC.confirm("ยืนยันการเพิ่มข้อมูลช่าง", "ท่านต้องการเพิ่มช่าง " + (String) editorForm.getValue("name") + " หรือไม่ ?", new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {	
-				    		String cid = (String) editorForm.getValue("cid");
-							String cus_name = (String) editorForm.getValue("cus_name");
-							String cus_phone = (String) editorForm.getValue("cus_phone");
-					    	String contact_name = (String) editorForm.getValue("contact_name");
-					    	String contact_phone = (String) editorForm.getValue("contact_phone");
-					    	String contact_email = (String) editorForm.getValue("contact_email");
-					    	String address = (String) editorForm.getValue("address");
-					    	String type = (String) editorForm.getValue("cus_type");
+							//String smid = editorForm.getValueAsString("smid");
+							String name = editorForm.getValueAsString("name");
+							String phone1 = editorForm.getValueAsString("phone1");
+					    	String phone2 = editorForm.getValueAsString("phone2");
+					    	String email = editorForm.getValueAsString("email");
+					    	String address = editorForm.getValueAsString("address");
 					    	
 //					    	User createdUser = new User(uname, pwd, fname, lname, email, position, title, status);
 //					    	securityService.createUserOnServer(createdUser, pname, user, new AsyncCallback<String>() {
@@ -152,31 +139,28 @@ public class CustomerAdd {
 //								public void onSuccess(String result) {
 //									if (result != null)
 //									{
-										Record newRecord = CustomerData.createRecord(
-												(String) editorForm.getValue("cid"),
-								    			(String) editorForm.getValue("cus_name"),
-								    			(String) editorForm.getValue("cus_phone"),
-								    			(String) editorForm.getValue("contact_name"),
-								    	    	(String) editorForm.getValue("contact_phone"),
-								    	    	(String) editorForm.getValue("contact_email"),
-								    	    	(String) editorForm.getValue("address"),
-								    	    	(String) editorForm.getValue("cus_type"),
-								    	    	(String) editorForm.getValue("zone")
+										Record newRecord = SmithData.createRecord(
+												"SM70" + Math.round((Math.random() * 100)),
+												editorForm.getValueAsString("name"),
+												editorForm.getValueAsString("phone1"),
+												editorForm.getValueAsString("phone2"),
+												editorForm.getValueAsString("email"),
+												editorForm.getValueAsString("address")
 								    			);
 										
-										customerDataSource.addData(newRecord, new DSCallback() {
+										DS.addData(newRecord, new DSCallback() {
 
 											@Override
 											public void execute(DSResponse dsResponse, Object data,
 													DSRequest dsRequest) {
 													if (dsResponse.getStatus() != 0) {
-														SC.warn("การเพิ่มข้อมูลลูกค้าล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
+														SC.warn("การเพิ่มข้อมูลช่างล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
 													} else { 
-														SC.warn("เพิ่มข้อมูลลูกค้าเรียบร้อยแล้ว");
+														SC.warn("เพิ่มข้อมูลช่างเรียบร้อยแล้ว");
 														winModel.destroy();
-														customerListGrid.fetchData();
-														customerListGrid.selectSingleRecord(dsResponse.getData()[0]);
-														customerTabPane.updateDetails(dsResponse.getData()[0]);
+														ListGrid.fetchData();
+														ListGrid.selectSingleRecord(dsResponse.getData()[0]);
+														TabPane.updateDetails(dsResponse.getData()[0]);
 													}
 											}
 //								    	});
@@ -204,21 +188,13 @@ public class CustomerAdd {
             }  
         }); 
 
-        cus_name.setWidth(250);
-        cus_phone.setWidth(250);
-        contact_name.setWidth(250);
-        contact_phone.setWidth(250);
-        contact_email.setWidth(250);
-        editorForm.setFields(cus_name, cus_phone, contact_name, contact_phone, contact_email , address, type);
+        name.setWidth(250);
+        phone1.setWidth(250);
+        phone2.setWidth(250);
+        email.setWidth(250);
+        editorForm.setFields(name, phone1, phone2, email , address);
         editorForm.setColWidths(200	, 300);
         
-        //Default selected 
-//        editorForm.setValue("cus_name", "[ชื่อลูกค้า]"); 
-//        editorForm.setValue("name", "ADMIN");
-//        editorForm.setValue("status", true);
-//        editorForm.setValue("pwd", "*****");
-//        editorForm.setValue("npwd", "*****");
-    	
     	VLayout temp = new VLayout();
     	temp.addMembers(saveButton, cancelButton);
     	temp.setMargin(3);

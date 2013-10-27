@@ -38,7 +38,7 @@ public class PurchasingPanel extends FunctionPanel{
 	private final FunctionWindow supplierWindow;
 	private final FunctionWindow purchaseOrderWindow;
 	private final FunctionWindow saleOrderWindow;
-	private final FunctionWindow reportWindow;
+	//private final FunctionWindow reportWindow;
 	private final FunctionWindow subPurcharseOrderReportWindow;
 	private final FunctionWindow subSaleOrderReportWindow;
 	
@@ -52,7 +52,7 @@ public class PurchasingPanel extends FunctionPanel{
 		purchaseOrderWindow = createFuncWindow();
 		saleOrderWindow = createFuncWindow();
 		
-		reportWindow = createFuncWindow();
+		//reportWindow = createFuncWindow();
 		subPurcharseOrderReportWindow = createFuncWindow();
 		subSaleOrderReportWindow = createFuncWindow();
 		
@@ -77,7 +77,8 @@ public class PurchasingPanel extends FunctionPanel{
 		} else if (nodeId.equals("44")) {
 			loadWindow(this._main.getPurchasingPanel(), this.saleOrderWindow , name, icon);
 		} else if (nodeId.equals("45")) {
-			loadWindow(this._main.getPurchasingPanel(), this.reportWindow , name, icon);
+			//loadWindow(this._main.getPurchasingPanel(), this.reportWindow , name, icon);
+			//Do nothing
 		} else if (nodeId.equals("451")) {
 			loadWindow(this._main.getPurchasingPanel(), this.subPurcharseOrderReportWindow , name, icon);
 		} else if (nodeId.equals("452")) {

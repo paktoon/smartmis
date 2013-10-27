@@ -1,5 +1,6 @@
 package com.smart.mis.client.function;
 
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Window;
 
 public class FunctionWindow extends Window {
@@ -11,6 +12,7 @@ public class FunctionWindow extends Window {
         setShowMinimizeButton(false);
         setCanDragResize(false);
         setCanDragReposition(false);
+        setAlign(Alignment.CENTER);
 	}
 	
 	public FunctionWindow(){
@@ -19,5 +21,6 @@ public class FunctionWindow extends Window {
         setShowMinimizeButton(false);
         setCanDragResize(false);
         setCanDragReposition(false);
+        setAlign(Alignment.CENTER);
 	}
 }

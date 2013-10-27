@@ -11,7 +11,7 @@ public class FinancialPanel extends FunctionPanel{
 	private final FunctionWindow cashReceiptWindow;
 	private final FunctionWindow disburseMaterialWindow;
 	private final FunctionWindow disburseWageWindow;
-	private final FunctionWindow reportWindow;
+	//private final FunctionWindow reportWindow;
 	private final FunctionWindow subReceiptReportWindow;
 	private final FunctionWindow subDisbusementReportWindow;
 	
@@ -22,7 +22,7 @@ public class FinancialPanel extends FunctionPanel{
 		disburseMaterialWindow = createFuncWindow();
 		disburseWageWindow = createFuncWindow();
 		
-		reportWindow = createFuncWindow();
+		//reportWindow = createFuncWindow();
 		subReceiptReportWindow = createFuncWindow();
 		subDisbusementReportWindow = createFuncWindow();
 	}
@@ -42,7 +42,8 @@ public class FinancialPanel extends FunctionPanel{
 		} else if (nodeId.equals("53")) {
 			loadWindow(this._main.getFinancialPanel(), this.disburseWageWindow , name, icon);
 		} else if (nodeId.equals("54")) {
-			loadWindow(this._main.getFinancialPanel(), this.reportWindow , name, icon);
+			//loadWindow(this._main.getFinancialPanel(), this.reportWindow , name, icon);
+			//Do nothing
 		} else if (nodeId.equals("541")) {
 			loadWindow(this._main.getFinancialPanel(), this.subReceiptReportWindow , name, icon);
 		} else if (nodeId.equals("542")) {

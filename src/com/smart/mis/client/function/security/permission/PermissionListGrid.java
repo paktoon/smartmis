@@ -30,7 +30,7 @@ public class PermissionListGrid extends ListGrid {
 
 	public PermissionListGrid() {
 		setWidth100();  
-        setHeight(200);  
+		setHeight("30%");  
         
         setAlternateRecordStyles(true);  
         setShowAllRecords(true);  
