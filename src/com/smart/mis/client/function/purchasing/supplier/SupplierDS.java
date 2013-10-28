@@ -42,10 +42,12 @@ public class SupplierDS extends DataSource  {
 			 DataSourceTextField Field_6 = new DataSourceTextField("email", "อีเมล");
 			 DataSourceTextField Field_7 = new DataSourceTextField("address", "ที่อยู่");
 			 DataSourceIntegerField Field_8 = new DataSourceIntegerField("leadtime", "ระยะเวลาส่งสินค้า (วัน)");
-			 DataSourceTextField Field_9 = new DataSourceTextField("list");
-			 Field_9.setHidden(true);
+			 //DataSourceTextField Field_9 = new DataSourceTextField("list");
+			 //Field_9.setHidden(true);
 			 
-			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_7, Field_8, Field_9);
+			 //setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_7, Field_8, Field_9);
+			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_7, Field_8);
+			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(SupplierData.getNewRecords()); // For Test
 			 setClientOnly(true);

@@ -87,7 +87,7 @@ public class MaterialAdd {
 		winModel.setTitle("เพิ่มวัตถุดิบ");
 		//winModel.setAutoSize(true);	
 		winModel.setWidth(570);
-		winModel.setHeight(620);
+		winModel.setHeight(315);
 		winModel.setHeaderIcon("[SKIN]actions/add.png");
 		winModel.setShowMinimizeButton(false);
 		winModel.setIsModal(true);
@@ -128,21 +128,21 @@ public class MaterialAdd {
 		desc.setRowSpan(3);
 		
 		SelectItem type = new SelectItem("type", "ชนิด");
-		FloatItem safety = new FloatItem("safety", "จำนวนสำรองขั้นต่ำ");
-		FloatItem remain = new FloatItem("remain", "จำนวนคงเหลือ");
+		//FloatItem safety = new FloatItem("safety", "จำนวนสำรองขั้นต่ำ");
+		//FloatItem remain = new FloatItem("remain", "จำนวนคงเหลือ");
 		TextItem unit = new TextItem("unit", "หน่วย");
 		
 		type.setRequired(true);
-		safety.setRequired(true);
-		remain.setRequired(true);
+		//safety.setRequired(true);
+		//remain.setRequired(true);
 		type.setHint("*");
 		//Validate number field
-		safety.setHint("* มากกว่าหรือเท่ากับ 0");
-		remain.setHint("* มากกว่าหรือเท่ากับ 0");
+		//safety.setHint("* มากกว่าหรือเท่ากับ 0");
+		//remain.setHint("* มากกว่าหรือเท่ากับ 0");
 		IntegerRangeValidator integerRangeValidator = new IntegerRangeValidator();  
         integerRangeValidator.setMin(0);
-        safety.setValidators(integerRangeValidator);
-        remain.setValidators(integerRangeValidator);
+        //safety.setValidators(integerRangeValidator);
+        //remain.setValidators(integerRangeValidator);
         
 		CustomValidator cv = new CustomValidator() {
 			@Override
@@ -198,10 +198,13 @@ public class MaterialAdd {
 								    			editorForm.getValueAsString("mat_name"),
 								    			editorForm.getValueAsString("desc"),
 								    			editorForm.getValueAsString("type"),
-								    			Double.parseDouble(editorForm.getValueAsString("safety")),
-								    	    	Double.parseDouble(editorForm.getValueAsString("remain")),
-								    	    	editorForm.getValueAsString("unit"),
-								    	    	getAttributeList(editItemGrid, "sid")
+								    			0.0,
+								    			0.0,
+								    			//Double.parseDouble(editorForm.getValueAsString("safety")),
+								    	    	//Double.parseDouble(editorForm.getValueAsString("remain")),
+								    	    	editorForm.getValueAsString("unit")
+								    	    	//,
+								    	    	//getAttributeList(editItemGrid, "sid")
 								    			);
 										
 										dataSource.addData(newRecord, new DSCallback() {
@@ -247,16 +250,18 @@ public class MaterialAdd {
         mat_name.setWidth(250);
         desc.setWidth(250);
         type.setWidth(250);
-        safety.setWidth(250);
-        remain.setWidth(250);
-        editorForm.setFields(mat_name, desc, type, safety, remain, unit);
+        //safety.setWidth(250);
+        //remain.setWidth(250);
+        //editorForm.setFields(mat_name, desc, type, safety, remain, unit);
+        editorForm.setFields(mat_name, desc, type, unit);
         editorForm.setColWidths(150	, 250);
     	
     	HLayout temp = new HLayout();
     	temp.addMembers(saveButton, cancelButton);
     	temp.setMargin(3);
     	temp.setAlign(Alignment.CENTER);
-        outlineForm.addMembers(editorForm, getEditItemList(), temp);
+        //outlineForm.addMembers(editorForm, getEditItemList(), temp);
+        outlineForm.addMembers(editorForm, temp);
         winModel.addItem(outlineForm);
         winModel.show();
 	}

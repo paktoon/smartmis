@@ -61,8 +61,8 @@ public class ProductAdd {
 		
 		winModel.setTitle("เพิ่มสินค้า");
 		//winModel.setAutoSize(true);	
-		winModel.setWidth(650);
-		winModel.setHeight(350);
+		winModel.setWidth(700);
+		winModel.setHeight(370);
 		winModel.setHeaderIcon("[SKIN]actions/add.png");
 		winModel.setShowMinimizeButton(false);
 		winModel.setIsModal(true);
