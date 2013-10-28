@@ -33,6 +33,7 @@ public class MaterialDS extends DataSource  {
 		 }
 		 
 		 public MaterialDS(){
+			 setID("MaterialDS");
 			 DataSourceTextField Field_1 = new DataSourceTextField("mid", "รหัสวัตถุดิบ");
 			 Field_1.setPrimaryKey(true);
 			 DataSourceTextField Field_2 = new DataSourceTextField("mat_name", "ชื่อวัตถุดิบ");

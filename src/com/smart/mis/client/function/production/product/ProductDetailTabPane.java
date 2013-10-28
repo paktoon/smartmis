@@ -70,7 +70,7 @@ public class ProductDetailTabPane extends ImageTabPane {
     	setHeight("70%");
     	this.ListGrid = Grid;
     	this.DataSource = DS;
-    	psOutline = new ProcessOutline(new ProcessListDS(null));
+    	psOutline = new ProcessOutline(ProcessListDS.getInstance(null));
     	viewProductImage = new Img(this.currentViewImgUrl);
     	editProductImage = new Img(this.currentEditImgUrl);
     	currentRecord = new Record();
@@ -229,7 +229,7 @@ public class ProductDetailTabPane extends ImageTabPane {
         } else if (selectedTab == 2) {  
             // edit tab : show new record editor, or empty message  
             if (selectedRecord != null) {  
-            	psOutline = new ProcessOutline(new ProcessListDS(null));
+            	psOutline = new ProcessOutline(ProcessListDS.getInstance(null));
                 updateTab(2, psOutline);
             } else {  
                 updateTab(2, psOutline);  
@@ -269,7 +269,7 @@ public class ProductDetailTabPane extends ImageTabPane {
             // edit tab : show new record editor, or empty message  
             if (selectedRecord != null) {  
                 String pid = selectedRecord.getAttributeAsString("pid");
-            	psOutline = new ProcessOutline( new ProcessListDS(pid));
+            	psOutline = new ProcessOutline(ProcessListDS.getInstance(pid));
                 updateTab(2, psOutline);
             } else {  
                 updateTab(2, psOutline); 
@@ -303,7 +303,7 @@ public class ProductDetailTabPane extends ImageTabPane {
         		editorForm.editRecord(selectedRecord);
         } else if (selectedTab == 2) { 
                 String pid = selectedRecord.getAttributeAsString("pid");
-            	psOutline = new ProcessOutline(new ProcessListDS(pid));
+            	psOutline = new ProcessOutline(ProcessListDS.getInstance(pid));
                 updateTab(2, psOutline);
         }
     }
