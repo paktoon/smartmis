@@ -61,7 +61,6 @@ public class MaterialDetailTabPane extends TabSet {
     private Label editorLabel;  
     private MaterialListGrid materialListGrid; 
     private MaterialDS materialDataSource;
-    //private PermissionDS permissionDataSource;
     private HLayout outlineForm;
     private IButton saveButton, cancelButton;
     private String currentMid = null;
@@ -113,8 +112,8 @@ public class MaterialDetailTabPane extends TabSet {
 		desc.setRowSpan(3);
 		
 		SelectItem type = new SelectItem("type", "ชนิด");
-		FloatItem safety = new FloatItem("safety", "จำนวนสำรองขั้นต่ำ");
-		FloatItem remain = new FloatItem("remain", "จำนวนคงเหลือ");
+		StaticTextItem safety = new StaticTextItem("safety", "จำนวนสำรองขั้นต่ำ");
+		StaticTextItem remain = new StaticTextItem("remain", "จำนวนคงเหลือ");
 		TextItem unit = new TextItem("unit", "หน่วย");
 		
 		mat_name.setRequired(true);
@@ -123,8 +122,8 @@ public class MaterialDetailTabPane extends TabSet {
 		remain.setRequired(true);
 		mat_name.setHint("*");
 		type.setHint("*");
-		safety.setHint("*");
-		remain.setHint("*");
+		//safety.setHint("*");
+		//remain.setHint("*");
 		
         saveButton = new IButton("บันทึก");  
         saveButton.setAlign(Alignment.CENTER);  
@@ -179,13 +178,15 @@ public class MaterialDetailTabPane extends TabSet {
         editorForm.setColWidths(150	, 250); 
         VLayout editor_control = new VLayout();
         editor_control.addMembers(saveButton, cancelButton);
-        outlineForm.addMembers(editorForm, getEditItemList(), editor_control);
+        //outlineForm.addMembers(editorForm, getEditItemList(), editor_control);
+        outlineForm.addMembers(editorForm, editor_control);
         
         Tab viewTab = new Tab("ข้อมูลวัตถุดิบ");  
         viewTab.setIcon("icons/16/application_form.png");  
         viewTab.setWidth(70);  
         HLayout tempLayout = new HLayout();
-        tempLayout.addMembers(itemViewer, getViewItemList());
+        //tempLayout.addMembers(itemViewer, getViewItemList());
+        tempLayout.addMembers(itemViewer);
         viewTab.setPane(tempLayout);
         
         Tab editTab = new Tab("แก้ไข");  
@@ -193,7 +194,13 @@ public class MaterialDetailTabPane extends TabSet {
         editTab.setWidth(70);  
         editTab.setPane(outlineForm);
         
-        setTabs(viewTab, editTab);  
+//        Tab supplierTab = new Tab("รายการผู้จำหน่าย");  
+//        supplierTab.setIcon("icons/16/vcard_edit.png");  
+//        supplierTab.setWidth(70);  
+//        supplierTab.setPane(getEditItemList());
+        
+        //setTabs(viewTab, editTab, supplierTab);  
+        setTabs(viewTab, editTab);
         
         addTabSelectedHandler(new TabSelectedHandler() {  
             public void onTabSelected(TabSelectedEvent event) {  
@@ -207,7 +214,7 @@ public class MaterialDetailTabPane extends TabSet {
         if (selectedTab == 0) {  
             //view tab : show empty message  
             itemViewer.setData((Record[]) null);  
-            fetchViewItemList(null);
+            //fetchViewItemList(null);
         } else {  
             // edit tab : show new record editor, or empty message  
             if (selectedRecord != null) {  
@@ -225,8 +232,8 @@ public class MaterialDetailTabPane extends TabSet {
         if (selectedTab == 0) {  
             //view tab : show empty message  
             itemViewer.setData(new Record[]{selectedRecord});
-            if (selectedRecord != null) fetchViewItemList(selectedRecord.getAttributeAsString("sup_list"));
-            else fetchViewItemList("NULL");
+            //if (selectedRecord != null) fetchViewItemList(selectedRecord.getAttributeAsString("sup_list"));
+            //else fetchViewItemList("NULL");
         } else {  
             // edit tab : show record editor  
         	if (selectedRecord != null) {
@@ -234,10 +241,10 @@ public class MaterialDetailTabPane extends TabSet {
         		cancelButton.setDisabled(false);
 //        		profile.invalidateDisplayValueCache();
         		editorForm.editRecord(selectedRecord);
-        		fetchEditItemList(selectedRecord.getAttributeAsString("sup_list"));
+        		//fetchEditItemList(selectedRecord.getAttributeAsString("sup_list"));
         		this.currentMid = selectedRecord.getAttributeAsString("mid");
         	} else {
-      	      fetchEditItemList("NULL");
+//      	      fetchEditItemList("NULL");
         	}
         }  
     }  
@@ -247,14 +254,14 @@ public class MaterialDetailTabPane extends TabSet {
         if (selectedTab == 0) {  
             //view tab : show empty message  
             itemViewer.setData(new Record[]{selectedRecord});  
-            fetchViewItemList(selectedRecord.getAttributeAsString("sup_list"));
+            //fetchViewItemList(selectedRecord.getAttributeAsString("sup_list"));
             this.currentMid = selectedRecord.getAttributeAsString("mid");
         } else { 
         	saveButton.setDisabled(false);
         	cancelButton.setDisabled(false);
 //        	profile.invalidateDisplayValueCache();
     		editorForm.editRecord(selectedRecord);
-    		fetchEditItemList(selectedRecord.getAttributeAsString("sup_list"));
+//    		fetchEditItemList(selectedRecord.getAttributeAsString("sup_list"));
     		this.currentMid = selectedRecord.getAttributeAsString("mid");
         }
     }
@@ -289,8 +296,9 @@ public class MaterialDetailTabPane extends TabSet {
 				    			editorForm.getValueAsString("type"),
 				    			Double.parseDouble(editorForm.getValueAsString("safety")),
 				    	    	Double.parseDouble(editorForm.getValueAsString("remain")),
-				    	    	editorForm.getValueAsString("unit"),
-				    	    	currentChangeSidList
+				    	    	editorForm.getValueAsString("unit")
+				    	    	//,
+				    	    	//currentChangeSidList
 				    			);
 						materialDataSource.updateData(updateRecord);
 						SC.warn("แก้ไขข้อมูลวัตถุดิบเรียบร้อยแล้ว");
@@ -304,27 +312,27 @@ public class MaterialDetailTabPane extends TabSet {
     	}
     }
     
-    private SectionStack getViewItemList(){
-    	
-    	SectionStack sectionStack = new SectionStack();
-    	sectionStack.setWidth(530);
-    	sectionStack.setHeight(200);
-        String title = Canvas.imgHTML("icons/16/vcard_edit.png", 15, 15) + " รายการผู้จำหน่าย";
-        SectionStackSection section = new SectionStackSection(title);  
-        section.setCanCollapse(false);
-        section.setExpanded(true);
-        
-        viewItemGrid = new SupplierListGrid();
-        viewItemGrid.setEmptyMessage("No Item to show.");
-        viewItemGrid.setUseAllDataSourceFields(false);
-        viewItemGrid.hideFields("sup_phone1", "sup_phone2", "fax", "email", "address");
-        viewItemGrid.setWidth100();
-        viewItemGrid.setHeight100();
-        
-        section.setItems(viewItemGrid);
-        sectionStack.setSections(section);
-        return sectionStack;
-    }
+//    private SectionStack getViewItemList(){
+//    	
+//    	SectionStack sectionStack = new SectionStack();
+//    	sectionStack.setWidth(530);
+//    	sectionStack.setHeight(200);
+//        String title = Canvas.imgHTML("icons/16/vcard_edit.png", 15, 15) + " รายการผู้จำหน่าย";
+//        SectionStackSection section = new SectionStackSection(title);  
+//        section.setCanCollapse(false);
+//        section.setExpanded(true);
+//        
+//        viewItemGrid = new SupplierListGrid();
+//        viewItemGrid.setEmptyMessage("No Item to show.");
+//        viewItemGrid.setUseAllDataSourceFields(false);
+//        viewItemGrid.hideFields("sup_phone1", "sup_phone2", "fax", "email", "address");
+//        viewItemGrid.setWidth100();
+//        viewItemGrid.setHeight100();
+//        
+//        section.setItems(viewItemGrid);
+//        sectionStack.setSections(section);
+//        return sectionStack;
+//    }
     
     private SectionStack getEditItemList(){
     	

@@ -44,10 +44,12 @@ public class MaterialDS extends DataSource  {
 			 Field_5.setDecimalPad(2);
 			 Field_6.setDecimalPad(2);
 			 DataSourceTextField Field_7 = new DataSourceTextField("unit", "หน่วย");
-			 DataSourceTextField Field_8 = new DataSourceTextField("sup_list");
-			 Field_8.setHidden(true);
+			 //DataSourceTextField Field_8 = new DataSourceTextField("sup_list");
+			 //Field_8.setHidden(true);
 			 
-			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_7, Field_8);
+			 //setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_7, Field_8);
+			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_7);
+			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(MaterialData.getNewRecords()); // For Test
 			 setClientOnly(true);

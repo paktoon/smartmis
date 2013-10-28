@@ -178,13 +178,15 @@ public class SupplierDetailTabPane extends TabSet {
         VLayout editor_control = new VLayout();
         editor_control.addMembers(saveButton, cancelButton);
         editor_control.setWidth(200);
-        outlineForm.addMembers(editorForm, getEditItemList(), editor_control);
+        //outlineForm.addMembers(editorForm, getEditItemList(), editor_control);
+        outlineForm.addMembers(editorForm, editor_control);
         
         Tab viewTab = new Tab("ข้อมูลผู้จำหน่าย");  
         viewTab.setIcon("icons/16/application_form.png");  
         viewTab.setWidth(70);  
         HLayout tempLayout = new HLayout();
-        tempLayout.addMembers(itemViewer, getViewItemList());
+        //tempLayout.addMembers(itemViewer, getViewItemList());
+        tempLayout.addMembers(itemViewer);
         viewTab.setPane(tempLayout);
   
         Tab historyTab = new Tab("ประวัติการจัดซื้อ");
@@ -228,8 +230,8 @@ public class SupplierDetailTabPane extends TabSet {
         if (selectedTab == 0) {  
             //view tab : show empty message  
             itemViewer.setData(new Record[]{selectedRecord});
-            if (selectedRecord != null) fetchViewItemList(selectedRecord.getAttributeAsString("list"));
-            else fetchViewItemList("NULL");
+            //if (selectedRecord != null) fetchViewItemList(selectedRecord.getAttributeAsString("list"));
+            //else fetchViewItemList("NULL");
         } else {  
             // edit tab : show record editor  
         	if (selectedRecord != null) {
@@ -237,10 +239,10 @@ public class SupplierDetailTabPane extends TabSet {
         		cancelButton.setDisabled(false);
 //        		profile.invalidateDisplayValueCache();
         		editorForm.editRecord(selectedRecord);
-        		fetchEditItemList(selectedRecord.getAttributeAsString("list"));
-        		this.currentSid = selectedRecord.getAttributeAsString("sid");
+        		//fetchEditItemList(selectedRecord.getAttributeAsString("list"));
+        		//this.currentSid = selectedRecord.getAttributeAsString("sid");
         	} else {
-      	      fetchEditItemList("NULL");
+      	      //fetchEditItemList("NULL");
         	}
         }  
     }  
@@ -257,8 +259,8 @@ public class SupplierDetailTabPane extends TabSet {
         	cancelButton.setDisabled(false);
 //        	profile.invalidateDisplayValueCache();
     		editorForm.editRecord(selectedRecord);
-    		fetchEditItemList(selectedRecord.getAttributeAsString("list"));
-    		this.currentSid = selectedRecord.getAttributeAsString("sid");
+    		//fetchEditItemList(selectedRecord.getAttributeAsString("list"));
+    		//this.currentSid = selectedRecord.getAttributeAsString("sid");
         }
     }
     
@@ -294,8 +296,9 @@ public class SupplierDetailTabPane extends TabSet {
 								editorForm.getValueAsString("email"),
 								editorForm.getValueAsString("address"),
 								editorForm.getValueAsString("fax"),
-				    	    	Integer.parseInt(editorForm.getValueAsString("leadtime")),
-				    	    	currentChangeMidList
+				    	    	Integer.parseInt(editorForm.getValueAsString("leadtime"))
+				    	    	//,
+				    	    	//currentChangeMidList
 				    			);
 						supplierDataSource.updateData(updateRecord);
 						SC.warn("แก้ไขข้อมูลผู้จำหน่ายเรียบร้อยแล้ว");

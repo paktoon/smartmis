@@ -58,7 +58,7 @@ public class SupplierAdd {
     private final DataSource dataSource;
     private final SupplierListGrid listGrid;
     private final SupplierDetailTabPane tabPane;
-    final ListGrid editItemGrid;
+    //final ListGrid editItemGrid;
     //private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
     private String user;
     
@@ -68,18 +68,18 @@ public class SupplierAdd {
     	this.tabPane = TabPane;
     	this.user = user;
     	
-    	editItemGrid = new ListGrid();
-        editItemGrid.setEmptyMessage("No Item to show.");
-        editItemGrid.setWidth(240);
-        editItemGrid.setHeight(224);
-        editItemGrid.setCanAcceptDroppedRecords(true);  
-        editItemGrid.setCanRemoveRecords(true);  
-        editItemGrid.setAutoFetchData(false);  
-        editItemGrid.setPreventDuplicates(true);
-        editItemGrid.setUseAllDataSourceFields(false);
-        editItemGrid.setDataSource(MaterialDS.getCustomInstance(null));
-        ListGridField[] defaultField = new ListGridField[] {new ListGridField("mid", 80), new ListGridField("mat_name")};
-       	editItemGrid.setDefaultFields(defaultField);
+//    	editItemGrid = new ListGrid();
+//        editItemGrid.setEmptyMessage("No Item to show.");
+//        editItemGrid.setWidth(240);
+//        editItemGrid.setHeight(224);
+//        editItemGrid.setCanAcceptDroppedRecords(true);  
+//        editItemGrid.setCanRemoveRecords(true);  
+//        editItemGrid.setAutoFetchData(false);  
+//        editItemGrid.setPreventDuplicates(true);
+//        editItemGrid.setUseAllDataSourceFields(false);
+//        editItemGrid.setDataSource(MaterialDS.getCustomInstance(null));
+//        ListGridField[] defaultField = new ListGridField[] {new ListGridField("mid", 80), new ListGridField("mat_name")};
+//       	editItemGrid.setDefaultFields(defaultField);
 	}
 	
 	public void show(){
@@ -89,7 +89,7 @@ public class SupplierAdd {
 		winModel.setTitle("เพิ่มผู้จำหน่าย");
 		//winModel.setAutoSize(true);	
 		winModel.setWidth(570);
-		winModel.setHeight(620);
+		winModel.setHeight(390);
 		winModel.setHeaderIcon("[SKIN]actions/add.png");
 		winModel.setShowMinimizeButton(false);
 		winModel.setIsModal(true);
@@ -203,8 +203,9 @@ public class SupplierAdd {
 												editorForm.getValueAsString("email"),
 												editorForm.getValueAsString("address"),
 												editorForm.getValueAsString("fax"),
-								    	    	Integer.parseInt(editorForm.getValueAsString("leadtime")),
-								    	    	getAttributeList(editItemGrid, "mid")
+								    	    	Integer.parseInt(editorForm.getValueAsString("leadtime"))
+								    	    	//,
+								    	    	//getAttributeList(editItemGrid, "mid")
 								    			);
 										dataSource.addData(newRecord, new DSCallback() {
 
@@ -257,7 +258,8 @@ public class SupplierAdd {
     	temp.addMembers(saveButton, cancelButton);
     	temp.setMargin(3);
     	temp.setAlign(Alignment.CENTER);
-        outlineForm.addMembers(editorForm, getEditItemList(), temp);
+        //outlineForm.addMembers(editorForm, getEditItemList(), temp);
+        outlineForm.addMembers(editorForm, temp);
         winModel.addItem(outlineForm);
         winModel.show();
 	}
@@ -276,50 +278,50 @@ public class SupplierAdd {
 		return list;
 	}
 	
-	private HStack getEditItemList(){
-    	//Grid
-   	 ListGridField[] defaultField = new ListGridField[] {new ListGridField("mid", 80), new ListGridField("mat_name")};
-   	 final ListGrid selectItemGrid = new ListGrid();
-   	selectItemGrid.setEmptyMessage("No Item to show.");
-   	selectItemGrid.setWidth(240);
-   	selectItemGrid.setHeight(224);
-   	selectItemGrid.setCanDragRecordsOut(true);
-   	selectItemGrid.setAutoFetchData(false);
-   	selectItemGrid.setUseAllDataSourceFields(false);
-   	selectItemGrid.setDataSource(MaterialDS.getInstance());
-   	selectItemGrid.setDragDataAction(DragDataAction.COPY); 
-   	selectItemGrid.setDefaultFields(defaultField);
-       
-   	HStack hStack = new HStack(10);  
-       hStack.setHeight(160);  
-       
-       VStack vStack = new VStack(); 
-       Label topLabel = new Label("วัตถุดิบที่มีในระบบ");
-       topLabel.setHeight(30);
-       vStack.addMember(topLabel);
-       vStack.addMember(selectItemGrid);
-       
-       hStack.addMember(vStack);
-       
-       TransferImgButton arrowImg = new TransferImgButton(TransferImgButton.RIGHT);  
-       arrowImg.addClickHandler(new ClickHandler() {  
-           public void onClick(ClickEvent event) {  
-           	editItemGrid.transferSelectedData(selectItemGrid);  
-           }  
-       });  
-       hStack.addMember(arrowImg);
-       
-       VStack vStack2 = new VStack();
-       Label topLabel2 = new Label("วัตถุดิบที่เลือก");
-       topLabel2.setHeight(30);
-       vStack2.addMember(topLabel2);
-       vStack2.addMember(editItemGrid);
-       
-       hStack.addMember(vStack2);
-       
-       editItemGrid.fetchData();
-		selectItemGrid.fetchData();
-		
-       return hStack;
-	}
+//	private HStack getEditItemList(){
+//    	//Grid
+//   	 ListGridField[] defaultField = new ListGridField[] {new ListGridField("mid", 80), new ListGridField("mat_name")};
+//   	 final ListGrid selectItemGrid = new ListGrid();
+//   	selectItemGrid.setEmptyMessage("No Item to show.");
+//   	selectItemGrid.setWidth(240);
+//   	selectItemGrid.setHeight(224);
+//   	selectItemGrid.setCanDragRecordsOut(true);
+//   	selectItemGrid.setAutoFetchData(false);
+//   	selectItemGrid.setUseAllDataSourceFields(false);
+//   	selectItemGrid.setDataSource(MaterialDS.getInstance());
+//   	selectItemGrid.setDragDataAction(DragDataAction.COPY); 
+//   	selectItemGrid.setDefaultFields(defaultField);
+//       
+//   	HStack hStack = new HStack(10);  
+//       hStack.setHeight(160);  
+//       
+//       VStack vStack = new VStack(); 
+//       Label topLabel = new Label("วัตถุดิบที่มีในระบบ");
+//       topLabel.setHeight(30);
+//       vStack.addMember(topLabel);
+//       vStack.addMember(selectItemGrid);
+//       
+//       hStack.addMember(vStack);
+//       
+//       TransferImgButton arrowImg = new TransferImgButton(TransferImgButton.RIGHT);  
+//       arrowImg.addClickHandler(new ClickHandler() {  
+//           public void onClick(ClickEvent event) {  
+//           	editItemGrid.transferSelectedData(selectItemGrid);  
+//           }  
+//       });  
+//       hStack.addMember(arrowImg);
+//       
+//       VStack vStack2 = new VStack();
+//       Label topLabel2 = new Label("วัตถุดิบที่เลือก");
+//       topLabel2.setHeight(30);
+//       vStack2.addMember(topLabel2);
+//       vStack2.addMember(editItemGrid);
+//       
+//       hStack.addMember(vStack2);
+//       
+//       editItemGrid.fetchData();
+//		selectItemGrid.fetchData();
+//		
+//       return hStack;
+//	}
 }
