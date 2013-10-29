@@ -68,7 +68,8 @@ public class ProcessOutline extends VLayout {
         editorForm.setGroupTitle("ขั้นตอนการผลิต");
         
         SelectItem name = new SelectItem("type", "ขั้นตอน");
-        name.setDefaultValue("---โปรดเลือก---");
+        //name.setDefaultValue("---โปรดเลือก---");
+        name.setEmptyDisplayValue("---โปรดเลือก---");
         name.setValueMap("หล่อและขึ้นรูป", "แต่ง", "ฝังพลอย", "ขัดและติดพลอย", "บรรจุหีบห่อ");
         
 		TextItem time = new TextItem("std_time", "เวลาผลิต");
@@ -258,7 +259,7 @@ public class ProcessOutline extends VLayout {
                 
                 final ListGrid materialGrid = new ListGrid();  
                 materialGrid.setWidth(525);  
-                materialGrid.setHeight(100);  
+                materialGrid.setHeight(224);  
                 materialGrid.setCellHeight(22);  
                 //materialGrid.setSaveLocally(true);
                 materialGrid.setCanRemoveRecords(true);
@@ -322,7 +323,8 @@ public class ProcessOutline extends VLayout {
 		    	      		material.setValueField("mid");
 		    	      		material.setDisplayField("mat_name");
 		    	      		material.setPickListWidth(350);
-		    	      		material.setDefaultValue("---โปรดเลือก---");
+		    	      		//material.setDefaultValue("---โปรดเลือก---");
+		    	      		material.setEmptyDisplayValue("---โปรดเลือก---");
 		    	      		ListGridField Field_1 = new ListGridField("mid", 80);  
 		    	            ListGridField Field_2 = new ListGridField("mat_name", 140);  
 		    	            ListGridField Field_3 = new ListGridField("remain", 80); 		  

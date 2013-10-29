@@ -20,10 +20,7 @@ public class ProcessListDS extends DataSource  {
 		static HashMap<String, ProcessListDS> instance = new HashMap<String, ProcessListDS>();
 		
 		public static ProcessListDS getInstance(String pid){
-			if (pid == null) {
-				return new ProcessListDS(null);
-			}
-			else if (instance.containsKey(pid)) {
+			if (instance.containsKey(pid)) {
 				return instance.get(pid);
 			} else {
 				ProcessListDS process = new ProcessListDS(pid);
