@@ -104,6 +104,7 @@ public class MaterialAdd {
         final DynamicForm editorForm = new DynamicForm();
         
         editorForm.setWidth(520);  
+        //editorForm.setHeight(300);
         editorForm.setMargin(5);  
         editorForm.setNumCols(2);
         editorForm.setCellPadding(2);  

@@ -93,7 +93,8 @@ public class MaterialDetailTabPane extends TabSet {
         outlineForm.setMargin(5);
         
         editorForm = new DynamicForm();  
-        editorForm.setWidth(400);  
+        editorForm.setWidth(400); 
+        editorForm.setHeight(280);
         editorForm.setMargin(5);  
         editorForm.setNumCols(2);  
         editorForm.setCellPadding(2);  

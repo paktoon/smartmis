@@ -15,11 +15,13 @@ import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.SortDirection;
+import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -28,6 +30,8 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -287,20 +291,103 @@ public class ProcessOutline extends VLayout {
 	    	          public void onClick(ClickEvent event) {  
 	    	        	  //changeFunc.show(currentMid);
 	    	        	  //
-	    	        	  String psid = grid.getSelectedRecord().getAttributeAsString("psid");
-	    	        	  String pid = DS.pid;
-	    	        	  SC.warn("psid = " + psid + " pid = " + pid);
-	    	        	  MaterialProcessDS currentDS = MaterialProcessDS.getInstance(psid, pid);
-	    	        	  Record newRecord = MaterialProcessData.createRecord(
-									"MP70" + Math.round((Math.random() * 100)),
-									psid,
-									"MA10001",
-									"test",
-									0.0,
-									"กรัม"
-					    			);
-	    	        	  currentDS.addData(newRecord);
-	    	        	  materialGrid.fetchData();
+	    	        	  final String psid = grid.getSelectedRecord().getAttributeAsString("psid");
+	    	        	  final String pid = DS.pid;
+	    	        	  
+	    	        	  final Window addMaterial = new Window();
+	    	        	  addMaterial.setTitle("เพิ่มวัตถุดิบในขั้นตอนการผลิต");
+	    	        	  addMaterial.setWidth(300);
+	    	        	  addMaterial.setHeight(200);
+	    	        	  addMaterial.setShowMinimizeButton(false);
+	    	        	  addMaterial.setIsModal(true);
+	    	        	  addMaterial.setShowModalMask(true);
+	    	      		addMaterial.setCanDragResize(false);
+	    	      		addMaterial.setCanDragReposition(false);
+	    	      		addMaterial.centerInPage();
+	    	      		
+	    	        	  VLayout addLayout = new VLayout();
+	    	        	  addLayout.setMembersMargin(5);
+	    	        	  addLayout.setMargin(10);
+	    	        	  addLayout.setAlign(Alignment.CENTER);
+	    	        	  addLayout.setWidth100();
+	    	        	  addLayout.setHeight100();
+	    	        	  final DynamicForm addForm = new DynamicForm();
+	    	        	  addForm.setGroupTitle("เลือกรายการวัตถุดิบ");  
+	    	        	  addForm.setIsGroup(true);
+	    	        	  addForm.setNumCols(1);
+	    	        	  addForm.setTitleOrientation(TitleOrientation.TOP);
+	    	        	  
+		    	      		final SelectItem material = new SelectItem("mid", "วัตถุดิบที่เลือก");
+		    	      		material.setOptionDataSource(MaterialDS.getInstance());
+		    	      		material.setValueField("mid");
+		    	      		material.setDisplayField("mat_name");
+		    	      		material.setPickListWidth(350);
+		    	      		material.setDefaultValue("---โปรดเลือก---");
+		    	      		ListGridField Field_1 = new ListGridField("mid", 80);  
+		    	            ListGridField Field_2 = new ListGridField("mat_name", 140);  
+		    	            ListGridField Field_3 = new ListGridField("remain", 80); 		  
+		    	            ListGridField Field_4 = new ListGridField("unit", 50); 
+		    	            Field_3.setCellFormatter(FieldFormatter.getNumberFormat());
+		    	            Field_3.setAlign(Alignment.CENTER);
+		    	            material.setPickListFields(Field_1, Field_2, Field_3, Field_4);
+		    	            final FloatItem reqAmount = new FloatItem("req_amount", "จำนวนที่ใช้ในการผลิต ต่อชิ้น");
+		    	            reqAmount.disable();
+		    	            reqAmount.setDefaultValue(0.0);
+		    	            reqAmount.setTextAlign(Alignment.RIGHT);
+		    	            material.addChangedHandler(new ChangedHandler() {
+
+								@Override
+								public void onChanged(ChangedEvent event) {
+									Record selected = material.getSelectedRecord();
+									if (selected != null) {
+										reqAmount.enable();
+										reqAmount.setHint(selected.getAttributeAsString("unit") + " *");
+									}
+								}
+		    	            	
+		    	            });
+		    	            
+		    	            addForm.setFields(material, reqAmount);
+		    	            addLayout.addMember(addForm);
+		    	            
+		    	            IButton confirmButton = new IButton("เพิ่มรายการ");
+		    	            confirmButton.setAlign(Alignment.CENTER);
+		    	            //confirmButton.setMargin(5);
+		    	            confirmButton.addClickHandler(new ClickHandler() {  
+		    	                public void onClick(ClickEvent event) { 
+		    	                  Record selected = material.getSelectedRecord();
+		    	                  if (selected != null && addForm.validate()) {
+		    	                	  String mid = selected.getAttributeAsString("mid");
+		    	                	  String mat_name = selected.getAttributeAsString("mat_name");
+		    	                	  Double req_amount = reqAmount.getValueAsFloat().doubleValue();
+		    	                	  String unit = selected.getAttributeAsString("unit");
+			    	                  //SC.warn("psid = " + psid + " pid = " + pid + " mid = " + mid + " mat_name = " + mat_name + " req_amount = " + req_amount);
+			    	                  
+			  	    	        	  MaterialProcessDS currentDS = MaterialProcessDS.getInstance(psid, pid);
+			  	    	        	  Record newRecord = MaterialProcessData.createRecord(
+			  									"MP70" + Math.round((Math.random() * 100)),
+			  									psid,
+			  									mid,
+			  									mat_name,
+			  									req_amount,
+			  									unit
+			  					    			);
+			  	    	        	  currentDS.addData(newRecord);
+			  	    	        	  materialGrid.fetchData();
+			  	    	        	  addMaterial.destroy();
+		    	                  } else {
+		    	                	  SC.warn("ข้อมูลไม่ถูกต้อง");
+		    	                  }
+		    	                }
+		    	            });
+		    	            HLayout temp = new HLayout();
+		    	            temp.addMember(confirmButton);
+		    	            temp.setAlign(Alignment.CENTER);
+		    	            
+		    	            addLayout.addMember(temp);
+		    	            addMaterial.addItem(addLayout);
+		    	            
+		    	            addMaterial.show();
 	    	          }  
 	    	      });
 	    	      section.setControls(changeButton);
@@ -325,8 +412,14 @@ public class ProcessOutline extends VLayout {
                 saveButton.setTop(250);  
                 saveButton.addClickHandler(new ClickHandler() {  
                     public void onClick(ClickEvent event) { 
-                        materialGrid.saveAllEdits();
-                        //grid.collapseRecord(record);
+                    	SC.confirm("ยืนยันการทำรายการ", "ท่านต้องการยืนยันการทำรายการ หรือไม่ ?" , new BooleanCallback() {
+        					@Override
+        					public void execute(Boolean value) {
+        						if (value) {
+        	                        materialGrid.saveAllEdits();
+        						}
+        					}
+                    	});
                     }  
                 });  
                 hLayout.addMember(saveButton);  
