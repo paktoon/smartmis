@@ -105,12 +105,14 @@ public class ProductAdd {
 		desc.setWidth(300);
 		desc.setRowSpan(2);
 		SelectItem type = new SelectItem("type", "ประเภท");
+		TextItem unit = new TextItem("unit", "หน่วย");
 		
 		name.setRequired(true);
 		size.setRequired(true);
 		weight.setRequired(true);
 		price.setRequired(true);
 		type.setRequired(true);
+		unit.setRequired(true);
 		
 		name.setHint("*");
 		size.setHint("*");
@@ -118,6 +120,7 @@ public class ProductAdd {
 		price.setHint("บาท *");
 		type.setHint("*");
 		type.setDefaultValue("แหวนนิ้วมือ");
+		unit.setHint("*");
 		
         IButton saveButton = new IButton("บันทึก");  
         saveButton.setAlign(Alignment.CENTER);  
@@ -139,6 +142,7 @@ public class ProductAdd {
 					    	Double price = Double.parseDouble(editorForm.getValueAsString("price"));
 					    	String desc = editorForm.getValueAsString("desc");
 					    	String type = editorForm.getValueAsString("type");
+					    	String unit = editorForm.getValueAsString("unit");
 					    	editProductImage.setSrc(TabPane.currentEditImgUrl);
 //					    	User createdUser = new User(uname, pwd, fname, lname, email, position, title, status);
 //					    	securityService.createUserOnServer(createdUser, pname, user, new AsyncCallback<String>() {
@@ -159,6 +163,7 @@ public class ProductAdd {
 												Double.parseDouble(editorForm.getValueAsString("price")),
 												editorForm.getValueAsString("type"),
 												0,
+												editorForm.getValueAsString("unit"),
 												false,
 												editProductImage.getSrc()
 								    			);

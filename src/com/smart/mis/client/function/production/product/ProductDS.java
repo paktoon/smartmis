@@ -40,13 +40,13 @@ public class ProductDS extends DataSource  {
 			 DataSourceEnumField Field_7 = new DataSourceEnumField("type", "ประเภท");
 			 Field_7.setValueMap("ต่างหู", "จี้", "สร้อยคอ", "สร้อยข้อมือ", "สร้อยข้อเท้า", "กำไลข้อมือ", "กำไลข้อเท้า", "แหวนนิ้วมือ", "แหวนนิ้วเท้า");
 			 
-			 DataSourceIntegerField Field_8 = new DataSourceIntegerField("remain", "คงเหลือ (ชิ้น)");
+			 DataSourceIntegerField Field_8 = new DataSourceIntegerField("remain", "คงเหลือ");
+			 DataSourceTextField Field_8_1 = new DataSourceTextField("unit", "หน่วย");
 			 DataSourceBooleanField Field_9 = new DataSourceBooleanField("inStock", "In Stock");
-			 
 			 DataSourceImageField Field_10 = new DataSourceImageField("imgUrl");
 			 Field_10.setHidden(true);
 			 
-			 setFields(Field_1, Field_2, Field_6, Field_3, Field_4, Field_5 ,Field_7, Field_8, Field_9, Field_10);
+			 setFields(Field_1, Field_2, Field_6, Field_3, Field_4, Field_5 ,Field_7, Field_8, Field_8_1, Field_9, Field_10);
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(ProductData.getNewRecords()); // For Test
 			 setClientOnly(true);

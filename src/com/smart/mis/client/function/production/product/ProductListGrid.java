@@ -57,6 +57,7 @@ public class ProductListGrid extends ListGrid {
         ListGridField field_7 = new ListGridField("type");
         
         ListGridField field_8 = new ListGridField("remain", 100);
+        ListGridField field_8_1 = new ListGridField("unit", 50);
         ListGridField field_9 = new ListGridField("inStock");
         
         //Cell Format
@@ -70,7 +71,7 @@ public class ProductListGrid extends ListGrid {
         field_8.setCellFormatter(FieldFormatter.getNumberFormat());
         field_7.setAlign(Alignment.CENTER);
         
-        setFields(field_1, field_2, field_6, field_3, field_4, field_5, field_7, field_8, field_9);
+        setFields(field_1, field_2, field_6, field_3, field_4, field_5, field_7, field_8, field_8_1, field_9);
         setHoverWidth(200);  
         setHoverHeight(20);
         hideFields("desc", "type", "inStock");

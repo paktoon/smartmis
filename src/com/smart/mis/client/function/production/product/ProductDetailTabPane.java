@@ -341,6 +341,7 @@ public class ProductDetailTabPane extends ImageTabPane {
 								Double.parseDouble(editorForm.getValueAsString("price")),
 								editorForm.getValueAsString("type"),
 								currentRecord.getAttributeAsInt("remain"),
+								currentRecord.getAttributeAsString("unit"),
 								currentRecord.getAttributeAsBoolean("inStock"),
 								currentEditImgUrl
 				    			);
