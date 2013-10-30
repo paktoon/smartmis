@@ -44,7 +44,7 @@ public class QuotationTabSet extends TabSet {
 		createLayout.setWidth(750);
 		createLayout.setHeight100();
 		
-		//Header
+		//******************Header
 		HLayout headerLayout = new HLayout();
 		headerLayout.setHeight(20);
 		Label quoteId = new Label();
@@ -56,9 +56,6 @@ public class QuotationTabSet extends TabSet {
 		Label empty = new Label();
 		empty.setWidth("*");
 		headerLayout.addMember(empty);
-		//End Header
-		
-		//Customer
 		Label createDate = new Label();
 		Date today = new Date();
 		DateTimeFormat pattern = DateTimeFormat.getFormat("dd/MM/yyyy");
@@ -67,19 +64,21 @@ public class QuotationTabSet extends TabSet {
 		createDate.setAlign(Alignment.RIGHT);
 		headerLayout.addMember(createDate);
 		createLayout.addMember(headerLayout);
+		//******************End Header
 		
-		DynamicForm userForm = new DynamicForm();
-		userForm.setWidth100(); 
-		userForm.setHeight(30);
-		userForm.setMargin(5); 
-		userForm.setNumCols(6); 
-		userForm.setCellPadding(2);
-		userForm.setAutoFocus(true);
-		userForm.setSelectOnFocus(true);
-		//userForm.setDataSource(CustomerDS.getInstance());
-		//userForm.setUseAllDataSourceFields(false);
-		userForm.setIsGroup(true);
-		userForm.setGroupTitle("ข้อมูลลูกค้า");
+		//******************Customer
+		DynamicForm customerForm = new DynamicForm();
+		customerForm.setWidth100(); 
+		customerForm.setHeight(30);
+		customerForm.setMargin(5); 
+		customerForm.setNumCols(6); 
+		customerForm.setCellPadding(2);
+		customerForm.setAutoFocus(true);
+		customerForm.setSelectOnFocus(true);
+		//customerForm.setDataSource(CustomerDS.getInstance());
+		//customerForm.setUseAllDataSourceFields(false);
+		customerForm.setIsGroup(true);
+		customerForm.setGroupTitle("ข้อมูลลูกค้า");
         
 		final StaticTextItem cid = new StaticTextItem("cid", "รหัสลูกค้า");
 		final SelectItem cus_name = new SelectItem("cus_name", "ชื่อลูกค้า");
@@ -114,9 +113,19 @@ public class QuotationTabSet extends TabSet {
 			}
         });
 		
-		userForm.setFields(cid, cus_name, type);
-		userForm.setColWidths(100, 80, 80, 240, 100, 100);
-		createLayout.addMember(userForm);
+		customerForm.setFields(cid, cus_name, type);
+		customerForm.setColWidths(100, 80, 80, 240, 100, 100);
+		createLayout.addMember(customerForm);
+		//******************End Customer
+		
+		//******************Product
+		//******************End Product
+		
+		//******************Summary
+		//******************End Summary
+		
+		//******************Payment
+		//******************End Payment
 		
 		createTab.setPane(createLayout);
 		
