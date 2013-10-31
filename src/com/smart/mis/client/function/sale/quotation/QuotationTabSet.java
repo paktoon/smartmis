@@ -3,17 +3,26 @@ package com.smart.mis.client.function.sale.quotation;
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.NumberFormat;
+import com.smartgwt.client.data.DateRange;
 import com.smart.mis.client.function.production.process.ProcessData;
 import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.shared.FieldFormatter;
+import com.smart.mis.shared.ListGridNumberField;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.Record;
+import com.smartgwt.client.data.RelativeDate;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.ListGridEditEvent;
+import com.smartgwt.client.types.ListGridFieldType;
+import com.smartgwt.client.types.RecordSummaryFunctionType;
+import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.types.SummaryFunctionType;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
@@ -21,6 +30,7 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -29,6 +39,14 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.ListGridSummaryField;
+import com.smartgwt.client.widgets.grid.SortNormalizer;
+import com.smartgwt.client.widgets.grid.SummaryFunction;
+import com.smartgwt.client.widgets.grid.events.CellSavedEvent;
+import com.smartgwt.client.widgets.grid.events.CellSavedHandler;
+import com.smartgwt.client.widgets.grid.events.EditorExitEvent;
+import com.smartgwt.client.widgets.grid.events.EditorExitHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -37,11 +55,53 @@ import com.smartgwt.client.widgets.tab.TabSet;
 public class QuotationTabSet extends TabSet {
 
 	Boolean allowApproved;
+	Label quoteId;
+	DynamicForm customerForm;
+	DynamicForm productForm; 
+	IButton addButton;
+	ListGrid quoteListGrid;
+	QuoteProductDetails quoteProduct;
+	StaticTextItem netExclusive, tax, netInclusive;
+	ListGridSummaryField quoteItemCell_sum;
+	
 	public QuotationTabSet(Boolean allow) {
 		this.allowApproved = allow;
 		
 		setWidth100();
 		setHeight100();
+
+		//For create tab
+		quoteId = new Label();
+		customerForm = new DynamicForm();
+		productForm = new DynamicForm(); 
+		addButton = new IButton("เพิ่มรายการสินค้า"); 
+		quoteListGrid = new ListGrid();
+		quoteProduct = new QuoteProductDetails();
+		netExclusive = new StaticTextItem("netExclusive");
+		tax = new StaticTextItem("tax");
+		netInclusive = new StaticTextItem("netInclusive");
+		
+		netExclusive.setWidth(100);
+		tax.setWidth(100);
+		netInclusive.setWidth(100);
+		
+		netExclusive.setTitle("ราคารวม");
+		tax.setTitle("ภาษีมูลค่าเพิ่ม (7%)");
+		netInclusive.setTitle("ราคาสุทธิ");
+		
+		netExclusive.setDefaultValue("0.0");
+		tax.setDefaultValue("0.0");
+		netInclusive.setDefaultValue("0.0");
+		
+		netExclusive.setHint("บาท");
+		tax.setHint("บาท");
+		netInclusive.setHint("บาท");
+		
+		netExclusive.setTextAlign(Alignment.RIGHT);
+		tax.setTextAlign(Alignment.RIGHT);
+		netInclusive.setTextAlign(Alignment.RIGHT);
+		
+		quoteItemCell_sum = new ListGridSummaryField("sum_price", 100);
 		
 		addTab(getCreateTab());
 		addTab(getReviseTab());
@@ -49,6 +109,7 @@ public class QuotationTabSet extends TabSet {
 		if (this.allowApproved) {
 			addTab(getApproveTab());
 		}
+		
 	}
 	
 	private Tab getCreateTab(){
@@ -61,7 +122,7 @@ public class QuotationTabSet extends TabSet {
 		//******************Header
 		HLayout headerLayout = new HLayout();
 		headerLayout.setHeight(20);
-		Label quoteId = new Label();
+		
 		quoteId.setContents("รหัสใบเสนอราคา : ");
 		quoteId.setWidth("25%");
 		quoteId.setAlign(Alignment.LEFT);
@@ -81,7 +142,6 @@ public class QuotationTabSet extends TabSet {
 		//******************End Header
 		
 		//******************Customer
-		DynamicForm customerForm = new DynamicForm();
 		customerForm.setWidth100(); 
 		customerForm.setHeight(30);
 		customerForm.setMargin(5); 
@@ -121,6 +181,7 @@ public class QuotationTabSet extends TabSet {
 					String contact_name = selected.getAttributeAsString("contact_name");
 					String contact_phone = selected.getAttributeAsString("contact_phone");
 					
+					productForm.enable();
 					cid.setValue(customer_id);
 					type.setValue(customer_type);
 				}
@@ -133,7 +194,6 @@ public class QuotationTabSet extends TabSet {
 		//******************End Customer
 		
 		//******************Product Header
-		final DynamicForm productForm = new DynamicForm();  
 		productForm.setWidth100(); 
 		productForm.setMargin(5);  
 		productForm.setNumCols(6);
@@ -174,14 +234,14 @@ public class QuotationTabSet extends TabSet {
 				Record selected = pname.getSelectedRecord();
 				if (selected != null) {
 					
-					//addButton.enable();
+					addButton.enable();
 					String product_id = selected.getAttributeAsString("pid");
 					String product_name = selected.getAttributeAsString("name");
 					String product_desc = selected.getAttributeAsString("desc");
 					//Contact info
 					String product_size = selected.getAttributeAsString("size");
-					String product_weight = selected.getAttributeAsString("weight");
-					String product_price = selected.getAttributeAsString("price");
+					Double product_weight = selected.getAttributeAsDouble("weight");
+					Double product_price = selected.getAttributeAsDouble("price");
 					String product_type = selected.getAttributeAsString("type");
 					
 					Double product_remain = selected.getAttributeAsDouble("remain");
@@ -197,32 +257,59 @@ public class QuotationTabSet extends TabSet {
 					desc.setValue(product_desc);
 					ptype.setValue(product_type);
 					pprice.setValue(product_price);
+				
+					quoteProduct.save(product_id, product_name, product_size, product_weight, product_price, product_type, product_unit);
 				}
 			}
         });
         productForm.setFields(pid, pname, pprice, ptype, desc , quantity);
         productForm.setColWidths(100, 80, 80, 240, 100, 100);
-        //productForm.setColWidths(100, 100, 100, 100, 50, 50);
+        productForm.disable();
 		createLayout.addMember(productForm);
 		//******************End Product Header
 		
 		//******************Add button
 		HLayout buttonLayout = new HLayout();
-		buttonLayout.setMargin(5);
+		//buttonLayout.setMargin(5);
 		
-        final IButton addButton = new IButton("เพิ่มรายการสินค้า");  
 		addButton.setIcon("[SKIN]actions/add.png");
 		addButton.setWidth(120);
 		addButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {
-            	SC.warn("Test --- Naja");
-            	//addButton.disable();
-            	productForm.reset();
-            	quantity.setHint("*");
-				pprice.setHint("");
-            }  
+	            if (productForm.validate() && quoteProduct.check()) {
+					ListGridRecord addProduct = quoteProduct.convertToRecord(quantity.getValueAsInteger());
+					QuoteProductDS.getInstance().addData(addProduct, new DSCallback() {
+						@Override
+						public void execute(DSResponse dsResponse, Object data,
+								DSRequest dsRequest) {
+								if (dsResponse.getStatus() != 0) {
+									SC.warn("การเพิ่มสินค้าล้มเหลว มีสินค้านี้อยู่แล้ว");
+								} else { 
+									quoteListGrid.fetchData();
+					            	addButton.disable();
+					            	productForm.reset();
+					            	quoteProduct.clear();
+					            	quantity.setHint("*");
+									pprice.setHint("");
+									
+									ListGridRecord[] all = quoteListGrid.getRecords();
+									Double sum_price = 0.0;
+									for (ListGridRecord record : all) {
+										sum_price += record.getAttributeAsDouble("sum_price");
+									}
+									NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+									netExclusive.setValue(nf.format(sum_price));
+									tax.setValue(nf.format(sum_price * 0.07));
+									netInclusive.setValue(nf.format(sum_price * 1.07));
+								}
+						}
+					});
+	            }  else {
+	            	SC.warn("ข้อมูลสินค้าไม่ถูกต้อง กรุณาตรวจสอบรายการอีกครั้ง");
+	            }
+            }
         });
-		//addButton.disable();
+		addButton.disable();
 		
 		buttonLayout.addMember(addButton);
 		createLayout.addMember(buttonLayout);
@@ -230,17 +317,18 @@ public class QuotationTabSet extends TabSet {
 		
 		//******************Quote List Grid
 		HLayout itemLayout = new HLayout();
-		itemLayout.setMargin(5);
-		ListGrid quoteListGrid = new ListGrid();
+		//itemLayout.setMargin(5);
 		quoteListGrid.setWidth100();
-		quoteListGrid.setHeight(300);
+		quoteListGrid.setHeight(200);
 		quoteListGrid.setAlternateRecordStyles(true);  
 		quoteListGrid.setShowAllRecords(true);  
 		quoteListGrid.setAutoFetchData(true);  
 		quoteListGrid.setSelectionType(SelectionStyle.SINGLE);
 		quoteListGrid.setCanResizeFields(false);
-		quoteListGrid.setCanEdit(false);
-		//item removal
+		quoteListGrid.setShowGridSummary(true);
+		quoteListGrid.setEditEvent(ListGridEditEvent.CLICK);  
+		quoteListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		
 		quoteListGrid.setCanRemoveRecords(true);
 		quoteListGrid.setWarnOnRemoval(true);
 		quoteListGrid.setWarnOnRemovalMessage("คุณต้องการลบ รายการสินค้า หรือไม่?");
@@ -248,23 +336,113 @@ public class QuotationTabSet extends TabSet {
 		quoteListGrid.setDataSource(QuoteProductDS.getInstance());
 		quoteListGrid.setUseAllDataSourceFields(false);
         
-		ListGridField quoteItemCell_1 = new ListGridField("pid", 80);  
-        ListGridField quoteItemCell_2 = new ListGridField("name", 140);  
-        ListGridField quoteItemCell_3 = new ListGridField("size", 80); 		  
-        ListGridField quoteItemCell_4 = new ListGridField("weight", 50); 	  
-        ListGridField quoteItemCell_5 = new ListGridField("price", 50);
-        ListGridField quoteItemCell_6 = new ListGridField("quote_amount", 50);
-        ListGridField quoteItemCell_7 = new ListGridField("quote_amount", 50);
+		ListGridField quoteItemCell_1 = new ListGridField("pid", 75);
+		quoteItemCell_1.setSummaryFunction(new SummaryFunction() {  
+            public Object getSummaryValue(Record[] records, ListGridField field) {
+                return records.length + " รายการ";  
+            }  
+        });  
+		quoteItemCell_1.setShowGridSummary(true);
+		
+        ListGridField quoteItemCell_2 = new ListGridField("name");  
+        ListGridField quoteItemCell_3 = new ListGridField("size", 80);
+        
+        ListGridNumberField quoteItemCell_4 = new ListGridNumberField("weight", 90);
+        quoteItemCell_4.setSummaryFunction(SummaryFunctionType.SUM);
+        quoteItemCell_4.setShowGridSummary(true);
+        quoteItemCell_4.setIncludeInRecordSummary(false);
+        
+        ListGridField quoteItemCell_5 = new ListGridField("price", 90);
+        //quoteItemCell_5.setSummaryFunction(SummaryFunctionType.SUM);
+        quoteItemCell_5.setShowGridSummary(false);
+        quoteItemCell_5.setCellFormatter(FieldFormatter.getPriceFormat());
+        quoteItemCell_5.setAlign(Alignment.RIGHT);
+        
+        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("quote_amount", 90);
+        
+        quoteItemCell_6.setCanEdit(true);
+        quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
+        quoteItemCell_6.setShowGridSummary(true);
+        
+        ListGridSummaryField quoteItemCell_sum = new ListGridSummaryField("sum_price", 100);
+
+        quoteItemCell_sum.setRecordSummaryFunction(RecordSummaryFunctionType.MULTIPLIER);
+        quoteItemCell_sum.setSummaryFunction(SummaryFunctionType.SUM);
+        quoteItemCell_sum.setShowGridSummary(true);
+        quoteItemCell_sum.setCellFormatter(FieldFormatter.getPriceFormat());
+        quoteItemCell_sum.setAlign(Alignment.RIGHT);
+ 
+        quoteListGrid.addCellSavedHandler(new CellSavedHandler() {  
+			@Override
+			public void onCellSaved(CellSavedEvent event) {
+				ListGridRecord[] all = quoteListGrid.getRecords();
+				Double sum_price = 0.0;
+				for (ListGridRecord record : all) {
+					sum_price += record.getAttributeAsDouble("sum_price");
+				}
+				NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+				netExclusive.setValue(nf.format(sum_price));
+				tax.setValue(nf.format(sum_price * 0.07));
+				netInclusive.setValue(nf.format(sum_price * 1.07));
+			}  
+        });
+        
+        quoteListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_3, quoteItemCell_4, quoteItemCell_5, quoteItemCell_6, quoteItemCell_sum);
         
 		itemLayout.addMember(quoteListGrid);
 		createLayout.addMember(itemLayout);
 		//******************End Product Grid
 		
+		//******************Condition
+		HLayout footerLayout = new HLayout();
+		footerLayout.setHeight(100);
+		DynamicForm dateForm = new DynamicForm();
+		dateForm.setWidth(300);
+		dateForm.setNumCols(2);
+		dateForm.setMargin(5);
+		dateForm.setIsGroup(true);
+		dateForm.setGroupTitle("ข้อกำหนดใบเสนอราคา");
+		final DateItem fromDate = new DateItem();
+		fromDate.setName("fromDate");
+		fromDate.setTitle("วันที่เริ่มข้อเสนอ");
+		fromDate.setUseTextField(true);
+		
+		final DateItem toDate = new DateItem();
+		toDate.setName("toDate");
+		toDate.setTitle("วันที่สิ้นสุดข้อเสนอ");
+		toDate.setUseTextField(true);
+		
+		DateRange dateRange = new DateRange();  
+        dateRange.setRelativeStartDate(RelativeDate.TODAY);  
+        dateRange.setRelativeEndDate(new RelativeDate("+1m"));
+        fromDate.setDefaultChooserDate(dateRange.getStartDate());
+        fromDate.setDefaultValue(dateRange.getStartDate());
+        toDate.setDefaultChooserDate(dateRange.getEndDate());
+        toDate.setDefaultValue(dateRange.getEndDate());
+        
+		dateForm.setFields(fromDate, toDate);
+		footerLayout.addMember(dateForm);
+		//******************End
+		
 		//******************Summary
+		DynamicForm summaryForm = new DynamicForm();
+		summaryForm.setWidth(300);
+		summaryForm.setNumCols(2);
+		summaryForm.setMargin(5);
+		summaryForm.setIsGroup(true);
+		summaryForm.setGroupTitle("สรุปยอดรวม");
+		summaryForm.setColWidths(100, 100);
+//		StaticTextItem netExclusive = new StaticTextItem("ราคารวม");
+//		StaticTextItem tax = new StaticTextItem("ภาษีมูลค่าเพิ่ม (7%)");
+//		StaticTextItem netInclusive = new StaticTextItem("ราคาสุทธิ");
+		summaryForm.setFields(netExclusive, tax, netInclusive);
+		footerLayout.addMember(summaryForm);
 		//******************End Summary
 		
 		//******************Payment
 		//******************End Payment
+		
+		createLayout.addMember(footerLayout);
 		
 		createTab.setPane(createLayout);
 		

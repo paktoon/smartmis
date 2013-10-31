@@ -35,10 +35,10 @@ public class QuoteProductDS extends DataSource  {
 			 DataSourceTextField Field_2 = new DataSourceTextField("name", "ชื่อสินค้า");
 			 DataSourceTextField Field_3 = new DataSourceTextField("size", "ขนาด");
 			 DataSourceFloatField Field_4 = new DataSourceFloatField("weight", "น้ำหนัก (กรัม)");
-			 DataSourceFloatField Field_5 = new DataSourceFloatField("price", "ราคาต่อหน่วย (บาท)");
+			 DataSourceFloatField Field_5 = new DataSourceFloatField("price", "ราคา (บาท)");
 			 DataSourceTextField Field_6 = new DataSourceTextField("type", "ประเภท");
 			 DataSourceTextField Field_7 = new DataSourceTextField("unit", "หน่วย");
-			 DataSourceIntegerField Field_8 = new DataSourceIntegerField("quote_amount", "จำนวน");
+			 DataSourceIntegerField Field_8 = new DataSourceIntegerField("quote_amount", "จำนวน (ชิ้น)");
 			 DataSourceFloatField Field_9 = new DataSourceFloatField("sum_price", "ราคารวม (บาท)");
 			 
 			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6 ,Field_7, Field_8,  Field_9);

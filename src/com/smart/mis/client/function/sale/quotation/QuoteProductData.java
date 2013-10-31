@@ -15,7 +15,6 @@ public class QuoteProductData {
         record.setAttribute("type", type);  
         record.setAttribute("unit", unit); 
         record.setAttribute("quote_amount", quote_amount);
-        record.setAttribute("sum_price", quote_amount * price);
         return record;  
     }
     

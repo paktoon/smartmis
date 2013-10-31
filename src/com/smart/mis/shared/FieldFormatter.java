@@ -19,4 +19,18 @@ public class FieldFormatter {
             }  
         };
 	}
+	
+	public static CellFormatter getPriceFormat(){
+		return new CellFormatter() {  
+            public String format(Object value, ListGridRecord record, int rowNum, int colNum) {  
+                if (value == null) return null;  
+                try {  
+                    NumberFormat nf = NumberFormat.getFormat("#,##0.00");  
+                    return "฿" + nf.format(((Number) value).doubleValue());  
+                } catch (Exception e) {  
+                    return value.toString();  
+                }  
+            }  
+        };
+	}
 }
