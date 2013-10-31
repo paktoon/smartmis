@@ -248,6 +248,14 @@ public class QuotationTabSet extends TabSet {
 		quoteListGrid.setDataSource(QuoteProductDS.getInstance());
 		quoteListGrid.setUseAllDataSourceFields(false);
         
+		ListGridField quoteItemCell_1 = new ListGridField("pid", 80);  
+        ListGridField quoteItemCell_2 = new ListGridField("name", 140);  
+        ListGridField quoteItemCell_3 = new ListGridField("size", 80); 		  
+        ListGridField quoteItemCell_4 = new ListGridField("weight", 50); 	  
+        ListGridField quoteItemCell_5 = new ListGridField("price", 50);
+        ListGridField quoteItemCell_6 = new ListGridField("quote_amount", 50);
+        ListGridField quoteItemCell_7 = new ListGridField("quote_amount", 50);
+        
 		itemLayout.addMember(quoteListGrid);
 		createLayout.addMember(itemLayout);
 		//******************End Product Grid
