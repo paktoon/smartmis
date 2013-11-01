@@ -175,7 +175,7 @@ public class SalePanel extends FunctionPanel{
 	private void prepareQuotationWindow(){
 		byte currentRole = this._main.getCurrentUser().getProfile().getRole();
 		Boolean allow = checkPermFlag(currentRole, Role.ADMIN) || checkPermFlag(currentRole, Role.OWNER);
-		QuotationTabSet quoteTab = new QuotationTabSet(allow);
+		QuotationTabSet quoteTab = new QuotationTabSet(allow, this._main.getCurrentUser());
 		this.quotationWindow.addItem(quoteTab);
 	}
 	
