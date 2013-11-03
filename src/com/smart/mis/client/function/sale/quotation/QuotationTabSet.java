@@ -72,15 +72,9 @@ public class QuotationTabSet extends TabSet {
 		addTab(reviseTab.getReviseTab(user));
 		
 		if (this.allowApproved) {
-			addTab(getApproveTab());
+			QuoteApproveTab approveTab = new QuoteApproveTab();
+			addTab(approveTab.getApproveTab(user));
 		}
 		
 	}
-	
-	private Tab getApproveTab(){
-		Tab approveTab = new Tab("อนุมัติใบเสนอราคา", "icons/16/star_yellow.png");
-		//TBD
-		return approveTab;
-	}
-
 }

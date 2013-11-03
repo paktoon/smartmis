@@ -69,10 +69,10 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import com.smartgwt.client.widgets.cube.CubeGrid;
 
-public class QuoteReviseTab {
+public class QuoteApproveTab {
 	
-	public Tab getReviseTab(final User currentUser){
-		Tab reviseTab = new Tab("ค้นหาและแก้ไข", "icons/16/comment_edit.png");
+	public Tab getApproveTab(final User currentUser){
+		Tab reviseTab = new Tab("อนุมัติใบเสนอราคา", "icons/16/star_yellow.png");
 		VLayout reviseLayout = new VLayout();
 		reviseLayout.setWidth(750);
 		reviseLayout.setHeight(400);
@@ -157,7 +157,7 @@ public class QuoteReviseTab {
 		netInclusive.setCellFormatter(FieldFormatter.getPriceFormat());
 		netInclusive.setAlign(Alignment.RIGHT);
 		ListGridField created_date = new ListGridField("created_date", 100);
-		ListGridField iconField = new ListGridField("viewAndEditField", "เรียกดู/แก้ไข", 100);
+		ListGridField iconField = new ListGridField("approveField", "เรียกดู/อนุมัติ", 100);
 		
 		quoteListGrid.setFields(status, quote_id, cus_name, total_amount, netInclusive, created_date, iconField);
 		

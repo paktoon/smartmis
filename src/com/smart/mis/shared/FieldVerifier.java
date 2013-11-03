@@ -1,5 +1,7 @@
 package com.smart.mis.shared;
 
+import java.util.ArrayList;
+
 /**
  * <p>
  * FieldVerifier validates that the name the user enters is valid.
@@ -38,5 +40,19 @@ public class FieldVerifier {
 			return false;
 		}
 		return name.length() > 3;
+	}
+	
+	public static String createNegativeRegex(ArrayList<String> filter) {
+		if (filter.size() != 0) {
+			String regex = "^(?!(";
+			boolean begin = true;
+			for (String item : filter) {
+				if (begin) regex += item;
+				else regex += "|" + item;
+				begin = false;
+			}
+			regex += "))";
+			return regex;
+		} else return "";
 	}
 }

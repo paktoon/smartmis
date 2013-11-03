@@ -518,6 +518,7 @@ public class QuoteCreateTab {
 									for (QuoteProductDetails item : productList) {
 										ListGridRecord subNewRecord = QuoteProductData.createRecord(item);
 										QuoteProductDS.getInstance(quote_id).addData(subNewRecord);
+										//System.out.println("add data " + item.sub_quote_id);
 									}
 									SC.warn("สร้างใบเสนอราคาเสร็จสิ้น <br> " + "รหัสใบเสนอราคา " + quote_id);
 									clearAll();

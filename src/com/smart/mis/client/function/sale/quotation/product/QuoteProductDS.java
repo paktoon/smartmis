@@ -51,12 +51,12 @@ public class QuoteProductDS extends DataSource  {
 		 
 		 public QuoteProductDS(String quote_id){
 			 DataSourceTextField sub_quote_id_field = new DataSourceTextField("sub_quote_id");
-			 sub_quote_id_field.setPrimaryKey(true);
 			 sub_quote_id_field.setHidden(true);
 			 DataSourceTextField quote_id_field = new DataSourceTextField("quote_id");
 			 quote_id_field.setHidden(true);
 			 
 			 DataSourceTextField Field_1 = new DataSourceTextField("pid", "รหัสสินค้า");
+			 Field_1.setPrimaryKey(true);
 			 DataSourceTextField Field_2 = new DataSourceTextField("name", "รายการสินค้า");
 			 DataSourceTextField Field_3 = new DataSourceTextField("type", "ประเภท");
 			 DataSourceTextField Field_4 = new DataSourceTextField("size", "ขนาด");

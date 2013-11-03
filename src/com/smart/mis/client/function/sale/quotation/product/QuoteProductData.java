@@ -5,7 +5,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class QuoteProductData {
 
-    public static ListGridRecord createRecord(String pid, String name, String size, Double weight, Double price, String type, String unit, Integer quote_amount) {  
+    public static ListGridRecord createRecord(String pid, String name, String size, Double weight, Double price, String type, String unit, Integer quote_amount, Boolean status) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("pid", pid);
         record.setAttribute("name",name);  
@@ -15,10 +15,11 @@ public class QuoteProductData {
         record.setAttribute("type", type);  
         record.setAttribute("unit", unit); 
         record.setAttribute("quote_amount", quote_amount);
+        record.setAttribute("status", status);
         return record;  
     }
     
-    public static ListGridRecord createRecord(String sub_quote_id, String quote_id, String pid, String name, String size, Double weight, Double price, String type, String unit, Integer quote_amount) {  
+    public static ListGridRecord createRecord(String sub_quote_id, String quote_id, String pid, String name, String size, Double weight, Double price, String type, String unit, Integer quote_amount, Boolean status) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("sub_quote_id", sub_quote_id);
         record.setAttribute("quote_id", quote_id);
@@ -30,6 +31,7 @@ public class QuoteProductData {
         record.setAttribute("type", type);  
         record.setAttribute("unit", unit); 
         record.setAttribute("quote_amount", quote_amount);
+        record.setAttribute("status", status);
         return record;  
     }
     
@@ -45,6 +47,7 @@ public class QuoteProductData {
         record.setAttribute("type", item.product_type);  
         record.setAttribute("unit", item.product_unit); 
         record.setAttribute("quote_amount", item.quote_amount);
+        record.setAttribute("status", item.status);
         return record;  
     }
     
@@ -53,22 +56,22 @@ public class QuoteProductData {
     }
     	
     public static ListGridRecord[] getRecords(String quote_id) {
-    	if (quote_id != null && quote_id.equals( "QA10001")) {
+    	if (quote_id != null && ( quote_id.equals( "QA10001") || quote_id.equals( "QA10005"))) {
         	return new ListGridRecord[]{ 
-        			createRecord("QS10001","QA10001", "PD10002", "Thin plain silver ring", "3.0 mm.",6.3, 55.0, "แหวนนิ้วมือ","วง", 200)
+        			createRecord("QS10001",quote_id, "PD10002", "Thin plain silver ring", "3.0 mm.",6.3, 55.0, "แหวนนิ้วมือ","วง", 200, true)
         	};
-        } else if (quote_id != null && quote_id.equals( "QA10002")) {
+        } else if (quote_id != null && ( quote_id.equals( "QA10002") || quote_id.equals( "QA10006"))) {
         	return new ListGridRecord[]{ 
-        			createRecord("QS10002","QA10002", "PD10001", "Diamond cut silver ring", "3.0 mm.", 6.3, 55.0, "แหวนนิ้วมือ","วง", 70),
-        			createRecord("QS10003","QA10002", "PD10002", "Thin plain silver ring", "3.0 mm.",6.3, 55.0, "แหวนนิ้วมือ","วง", 200)
+        			createRecord("QS10002",quote_id, "PD10001", "Diamond cut silver ring", "3.0 mm.", 6.3, 55.0, "แหวนนิ้วมือ","วง", 70, true),
+        			createRecord("QS10003",quote_id, "PD10002", "Thin plain silver ring", "3.0 mm.",6.3, 55.0, "แหวนนิ้วมือ","วง", 200, true)
         	};
-        } else if (quote_id != null && quote_id.equals( "QA10003")) {
+        } else if (quote_id != null && (quote_id.equals( "QA10003") || quote_id.equals( "QA10007"))) {
         	return new ListGridRecord[]{ 
-        			createRecord("QS10004","QA10003", "PD10004","Spiral silver earrings","0.7x2.6 cm.", 6.3, 55.0, "ต่างหู", "คู่", 300)
+        			createRecord("QS10004",quote_id, "PD10004","Spiral silver earrings","0.7x2.6 cm.", 6.3, 55.0, "ต่างหู", "คู่", 300, true)
         	};
-        } else if (quote_id != null && quote_id.equals( "QA10004")) {
+        } else if (quote_id != null && (quote_id.equals( "QA10004") || quote_id.equals( "QA10008"))) {
         	return new ListGridRecord[]{ 
-        			createRecord("QS10005","QA10004", "PD10007","Plain silver necklaces", "50 cm.", 5.6, 50.0, "สร้อยคอ","เส้น",100)
+        			createRecord("QS10005",quote_id, "PD10007","Plain silver necklaces", "50 cm.", 5.6, 50.0, "สร้อยคอ","เส้น",100, true)
         	};
         }
         	else return new ListGridRecord[]{};
