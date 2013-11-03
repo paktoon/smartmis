@@ -173,6 +173,7 @@ public class SupplierDetailTabPane extends TabSet {
         sup_phone1.setWidth(250);
         sup_phone2.setWidth(250);
         email.setWidth(250);
+        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
         editorForm.setFields(id, sup_name, sup_phone1, sup_phone2, fax, email, address, leadtime);
         editorForm.setColWidths(200	, 300); 
         VLayout editor_control = new VLayout();

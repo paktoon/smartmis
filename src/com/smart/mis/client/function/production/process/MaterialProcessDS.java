@@ -16,9 +16,6 @@ import com.smartgwt.client.types.DSOperationType;
 
 public class MaterialProcessDS extends DataSource  {
 
-		//public String psid;
-		//public String pid;
-		
 		static HashMap<String, MaterialProcessDS> instance = new HashMap<String, MaterialProcessDS>();
 		
 		public static MaterialProcessDS getInstance(String psid, String pid){

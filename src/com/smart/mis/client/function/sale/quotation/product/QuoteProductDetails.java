@@ -1,8 +1,11 @@
-package com.smart.mis.client.function.sale.quotation;
+package com.smart.mis.client.function.sale.quotation.product;
 
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class QuoteProductDetails {
+	String sub_quote_id;
+	String quote_id;
+	
 	String product_id;
 	String product_name;
 	//static String product_desc;
@@ -15,16 +18,25 @@ public class QuoteProductDetails {
 	//static Double product_remain;
 	String product_unit;
 	//static Boolean product_inStock;
-	Integer request_amount;
+	Integer quote_amount;
 	
 	public void save(String pid, String name, String size, Double weight, Double price, String type, String unit) {
-		product_id = pid;
-		product_name = name;
-		product_size = size;
-		product_weight = weight;
-		product_price = price;
-		product_type = type;
-		product_unit = unit;
+		this.product_id = pid;
+		this.product_name = name;
+		this.product_size = size;
+		this.product_weight = weight;
+		this.product_price = price;
+		this.product_type = type;
+		this.product_unit = unit;
+	}
+	
+	public void setID(String sub_quote_id, String quote_id) {
+		this.sub_quote_id = sub_quote_id;
+		this.quote_id = quote_id;
+	}
+	
+	public void setQuantity(Integer quote_amount) {
+		this.quote_amount = quote_amount;
 	}
 	
 	public ListGridRecord convertToRecord(Integer quote_amount){
@@ -32,6 +44,9 @@ public class QuoteProductDetails {
 	}
 	
 	public void clear(){
+		sub_quote_id = null;
+		quote_id = null;
+		
 		product_id = null;
 		product_name = null;
 		

@@ -254,6 +254,7 @@ public class MaterialAdd {
         //safety.setWidth(250);
         //remain.setWidth(250);
         //editorForm.setFields(mat_name, desc, type, safety, remain, unit);
+        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
         editorForm.setFields(mat_name, desc, type, unit);
         editorForm.setColWidths(150	, 250);
     	

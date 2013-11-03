@@ -1,11 +1,15 @@
 package com.smart.mis.client.function.sale.quotation;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
+import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
+import com.smart.mis.client.function.sale.quotation.product.QuoteProductData;
+import com.smart.mis.client.function.sale.quotation.product.QuoteProductDetails;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.sale.Customer;
@@ -48,9 +52,9 @@ import com.smartgwt.client.widgets.tab.Tab;
 
 public class QuoteCreateTab {
 	
-	public static QuoteCreateTab instance;
+//	public static QuoteCreateTab instance;
 	
-	Label quoteId;
+	Label userId;
 	DynamicForm customerForm, summaryForm, dateForm;
 	DynamicForm productForm; 
 	IButton addButton, delButton;
@@ -61,30 +65,19 @@ public class QuoteCreateTab {
 	Customer client = new Customer();
 	QuoteProductDS quoteDS;
 	
-//	public static QuoteCreateTab getInstance(){
-//		if (instance == null)
-//		{
-//			instance = new QuoteCreateTab();
-//		}
-//		
-//		return instance;
-//	}
-	
 	public QuoteCreateTab(){
 		//For create tab
 		quoteDS = new QuoteProductDS();
 		
-		quoteId = new Label();
-		customerForm = new DynamicForm();
-		productForm = new DynamicForm(); 
+		userId = new Label();
+
+		createDynamicForm();
+		createSummaryField();
+		
 		addButton = new IButton("เพิ่มรายการสินค้า"); 
 		delButton = new IButton("ลบรายการสินค้า"); 
 		quoteListGrid = new ListGrid();
 		quoteProduct = new QuoteProductDetails();
-		summaryForm = new DynamicForm();
-		dateForm = new DynamicForm();
-		
-		createSummaryField();
 		
 		quoteItemCell_sum = new ListGridSummaryField("sum_price", 100);
 	}
@@ -101,17 +94,17 @@ public class QuoteCreateTab {
 		HLayout headerLayout = new HLayout();
 		headerLayout.setHeight(20);
 		
-		quoteId.setContents("รหัสใบเสนอราคา : ");
-		quoteId.setWidth("25%");
-		quoteId.setAlign(Alignment.LEFT);
-		headerLayout.addMember(quoteId);
+//		userId.setContents("สร้างโดย : " + currentUser.getFirstName() + " " + currentUser.getLastName());
+//		userId.setWidth("25%");
+//		userId.setAlign(Alignment.LEFT);
+//		headerLayout.addMember(userId);
 		
 		Label empty = new Label();
 		empty.setWidth("*");
 		headerLayout.addMember(empty);
 		Label createDate = new Label();
 		Date today = new Date();
-		DateTimeFormat pattern = DateTimeFormat.getFormat("dd/MM/yyyy");
+		DateTimeFormat pattern = DateTimeFormat.getFormat("MM/dd/yyyy");
 		createDate.setContents("วันที่สร้าง : " + pattern.format(today));
 		createDate.setWidth("15%");
 		createDate.setAlign(Alignment.RIGHT);
@@ -138,6 +131,8 @@ public class QuoteCreateTab {
 		cus_name.setEmptyDisplayValue("--โปรดเลือกลูกค้า--");
 		cus_name.setPickListWidth(350);
 		cus_name.setWidth(240);
+		cus_name.setRequired(true);
+		cus_name.setHint("*");
 		ListGridField Field_1 = new ListGridField("cid", 80);  
         ListGridField Field_2 = new ListGridField("cus_name", 200);  
         ListGridField Field_3 = new ListGridField("cus_type", 70);
@@ -191,6 +186,8 @@ public class QuoteCreateTab {
         pname.setEmptyDisplayValue("--โปรดเลือกสินค้า--");
         pname.setPickListWidth(420);
         pname.setWidth(240);
+        pname.setRequired(true);
+		pname.setHint("*");
 		ListGridField Field_M1 = new ListGridField("pid", 80);  
         ListGridField Field_M2 = new ListGridField("name", 200);
         ListGridField Field_M3 = new ListGridField("type", 70);
@@ -202,9 +199,11 @@ public class QuoteCreateTab {
         final StaticTextItem ptype = new StaticTextItem("type", "ประเภทสินค้า");
         
         final IntegerItem quantity = new IntegerItem("quantity", "จำนวน");
+        quantity.setRequired(true);
         quantity.setHint("*");
         quantity.disable();
         quantity.setWidth(100);
+        quantity.setTextAlign(Alignment.LEFT);
         
         final StaticTextItem desc = new StaticTextItem("desc" , "คำอธิบาย");
         final StaticTextItem pprice = new StaticTextItem("pprice" , "ราคา");
@@ -326,6 +325,7 @@ public class QuoteCreateTab {
 		quoteListGrid.setShowGridSummary(true);
 		quoteListGrid.setEditEvent(ListGridEditEvent.CLICK);  
 		quoteListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		quoteListGrid.setShowRowNumbers(true);
 		
 		//quoteListGrid.setCanRemoveRecords(true);
 		//quoteListGrid.setWarnOnRemoval(true);
@@ -335,15 +335,15 @@ public class QuoteCreateTab {
 		quoteListGrid.setUseAllDataSourceFields(false);
         
 		ListGridField quoteItemCell_1 = new ListGridField("pid", 75);
-		quoteItemCell_1.setSummaryFunction(new SummaryFunction() {  
+        ListGridField quoteItemCell_2 = new ListGridField("name");  
+        quoteItemCell_2.setSummaryFunction(new SummaryFunction() {  
             public Object getSummaryValue(Record[] records, ListGridField field) {
                 return records.length + " รายการ";  
             }  
         });  
-		quoteItemCell_1.setShowGridSummary(true);
+        quoteItemCell_2.setShowGridSummary(true);
 		
-        ListGridField quoteItemCell_2 = new ListGridField("name");  
-        ListGridField quoteItemCell_3 = new ListGridField("size", 80);
+        ListGridField quoteItemCell_3 = new ListGridField("unit", 50);
         
         ListGridNumberField quoteItemCell_4 = new ListGridNumberField("weight", 90);
         quoteItemCell_4.setSummaryFunction(SummaryFunctionType.SUM);
@@ -377,7 +377,8 @@ public class QuoteCreateTab {
 			}  
         });
         
-        quoteListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_3, quoteItemCell_4, quoteItemCell_5, quoteItemCell_6, quoteItemCell_sum);
+        //quoteListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_3, quoteItemCell_4, quoteItemCell_5, quoteItemCell_6, quoteItemCell_sum);
+        quoteListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_4, quoteItemCell_6, quoteItemCell_3, quoteItemCell_5 , quoteItemCell_sum);
         
 		itemLayout.addMember(quoteListGrid);
 		createLayout.addMember(itemLayout);
@@ -402,15 +403,31 @@ public class QuoteCreateTab {
 		toDate.setTitle("วันที่สิ้นสุดข้อเสนอ");
 		toDate.setUseTextField(true);
 		
+		final DateItem deliveryDate = new DateItem();
+		deliveryDate.setName("deliveryDate");
+		deliveryDate.setTitle("วันที่กำหนดส่งของ");
+		deliveryDate.setUseTextField(true);
+		
 		DateRange dateRange = new DateRange();  
-        dateRange.setRelativeStartDate(RelativeDate.TODAY);  
-        dateRange.setRelativeEndDate(new RelativeDate("+1m"));
+        dateRange.setRelativeStartDate(RelativeDate.TODAY);
+        dateRange.setRelativeEndDate(new RelativeDate("+7d"));
         fromDate.setDefaultChooserDate(dateRange.getStartDate());
         fromDate.setDefaultValue(dateRange.getStartDate());
         toDate.setDefaultChooserDate(dateRange.getEndDate());
         toDate.setDefaultValue(dateRange.getEndDate());
+        dateRange.setRelativeEndDate(new RelativeDate("+1m"));
+        deliveryDate.setDefaultChooserDate(dateRange.getEndDate());
+        deliveryDate.setDefaultValue(dateRange.getEndDate());
         
-		dateForm.setFields(fromDate, toDate);
+        fromDate.setRequired(true);
+        fromDate.setHint("*");
+		toDate.setRequired(true);
+		toDate.setHint("*");
+		deliveryDate.setRequired(true);
+		deliveryDate.setHint("*");
+		
+		dateForm.setFields(fromDate, toDate, deliveryDate);
+		dateForm.setColWidths(125,125 );
 		footerLayout.addMember(dateForm);
 		//******************End
 		
@@ -444,40 +461,70 @@ public class QuoteCreateTab {
 			@Override
 			public void onClick(ClickEvent event) {
 				//quoteItem
-				ListGridRecord[] all = quoteListGrid.getRecords();
-				
-				if (all.length == 0) {
-					SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
-					return;
-				}
-				
-				SC.warn("numOfRecord : " + all.length);
-				Double total_weight = 0.0;
-				Integer total_amount = 0;
-				for (ListGridRecord item : all){
-					total_weight += item.getAttributeAsDouble("weight");
-					total_amount += item.getAttributeAsInt("quote_amount");
+				if (customerForm.validate() && dateForm.validate()) {
+					ListGridRecord[] all = quoteListGrid.getRecords();
 					
-					String pid = item.getAttributeAsString("pid");
-					Integer amount = item.getAttributeAsInt("quote_amount");
-					Double total_price = item.getAttributeAsDouble("sum_price");
-					Boolean item_quote_status = true;
+					if (all.length == 0) {
+						SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
+						return;
+					}
+					
+					//SC.warn("numOfRecord : " + all.length);
+					Double total_weight = 0.0;
+					Double total_netExclusive = 0.0;
+					Integer total_amount = 0;
+					final String quote_id = "QA70" + Math.round((Math.random() * 100));
+					final ArrayList<QuoteProductDetails> productList = new ArrayList<QuoteProductDetails>();
+					for (ListGridRecord item : all){
+						total_weight += item.getAttributeAsDouble("weight");
+						total_amount += item.getAttributeAsInt("quote_amount");
+						total_netExclusive += item.getAttributeAsDouble("sum_price");
+						
+						String sub_quote_id = "QS80" + Math.round((Math.random() * 100));
+						String pid = item.getAttributeAsString("pid");
+						String pname = item.getAttributeAsString("name");
+						String ptype = item.getAttributeAsString("type");
+						String psize = item.getAttributeAsString("size");
+						Double pweight = item.getAttributeAsDouble("weight");
+						Integer pquote_amount = item.getAttributeAsInt("quote_amount");
+						String punit = item.getAttributeAsString("unit");
+						Double pprice = item.getAttributeAsDouble("price");
+						QuoteProductDetails temp = new QuoteProductDetails();
+						temp.save(pid, pname, psize, pweight, pprice, ptype, punit);
+						temp.setID(sub_quote_id, quote_id);
+						temp.setQuantity(pquote_amount);
+						productList.add(temp);
+					}
+					String cid = client.cid;
+					Date from = fromDate.getValueAsDate();
+					Date to = toDate.getValueAsDate();
+					Date delivery = deliveryDate.getValueAsDate();
+					String quote_status = "รออนุมัติ";
+					//xxxService.xxx(Callback quoteId);
+					ListGridRecord newRecord = QuotationData.createRecord(quote_id, client.cid, client.cus_name, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "", quote_status);
+					// client; - cid
+					// DateForm; - from , to
+					// SummaryForm; - netExclusive, tax, netInclusive
+					// --> Quote Object + ItemQuote Object
+					// Quote - quote id , cid , from, to , total_weight, total_amount, netExclusive, tax, netInclusive, created_date, modified_date, created_by, modified_by, status [waiting_for_approved, waiting_for_revised, approved, removed] --> to data store
+					// ItemQuote - item quote id, quote id, pid, amount, total_price, status (0,1) --> to date store
+					QuotationDS.getInstance().addData(newRecord, new DSCallback() {
+						@Override
+						public void execute(DSResponse dsResponse, Object data,
+								DSRequest dsRequest) {
+								if (dsResponse.getStatus() != 0) {
+									SC.warn("การสร้างใบเสนอราคาล้มเหลว");
+								} else { 
+									for (QuoteProductDetails item : productList) {
+										ListGridRecord subNewRecord = QuoteProductData.createRecord(item);
+										QuoteProductDS.getInstance(quote_id).addData(subNewRecord);
+									}
+									SC.warn("สร้างใบเสนอราคาเสร็จสิ้น <br> " + "รหัสใบเสนอราคา " + quote_id);
+									clearAll();
+								}
+						}
+    				});
 				}
-				String cid = client.cid;
-				Date from = fromDate.getValueAsDate();
-				Date to = toDate.getValueAsDate();
-				Date created_date = new Date();
-				User created_by = currentUser;
-				Date modified_date = null;
-				User modified_by = null;
-				String quote_status = "waiting_for_approval";
-				// client; - cid
-				// DateForm; - from , to
-				// SummaryForm; - netExclusive, tax, netInclusive
-				// --> Quote Object + ItemQuote Object
-				// Quote - quote id , cid , from, to , total_weight, total_amount, netExclusive, tax, netInclusive, created_date, modified_date, created_by, modified_by, status [waiting_for_approved, waiting_for_revised, approved, removed] --> to data store
-				// ItemQuote - item quote id, quote id, pid, amount, total_price, status (0,1) --> to date store
-				clearAll();
 			}
 		});
 		IButton clearButton = new IButton("clearQuote");
@@ -489,7 +536,7 @@ public class QuoteCreateTab {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				SC.confirm("ยืนยันการทำรายการ", "ต้องการบ้างข้อมูลใบเสนอราคาทั้งหมด หรือไม่?" , new BooleanCallback() {
+				SC.confirm("ยืนยันการทำรายการ", "ต้องการล้างข้อมูลใบเสนอราคาทั้งหมด หรือไม่?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
@@ -549,6 +596,17 @@ public class QuoteCreateTab {
 		netExclusive.setTextAlign(Alignment.RIGHT);
 		tax.setTextAlign(Alignment.RIGHT);
 		netInclusive.setTextAlign(Alignment.RIGHT);
+	}
+	
+	private void createDynamicForm() {
+		customerForm = new DynamicForm();
+		productForm = new DynamicForm(); 
+		summaryForm = new DynamicForm();
+		dateForm = new DynamicForm();
+		
+		customerForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
+		productForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
+		dateForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 	}
 	
 	private void clearAll() {

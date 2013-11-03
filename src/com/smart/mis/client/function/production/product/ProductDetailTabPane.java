@@ -178,6 +178,7 @@ public class ProductDetailTabPane extends ImageTabPane {
         weight.setWidth(250);
         price.setWidth(250);
         type.setWidth(250);
+        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
         editorForm.setFields(pid, name, size, weight, price, desc, type);
         editorForm.setColWidths(200	, 300); 
         VLayout editor_control = new VLayout();

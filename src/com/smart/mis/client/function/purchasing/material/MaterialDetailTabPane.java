@@ -175,6 +175,7 @@ public class MaterialDetailTabPane extends TabSet {
         type.setWidth(250);
         safety.setWidth(250);
         remain.setWidth(250);
+        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
         editorForm.setFields(mid, mat_name, desc, type, safety, remain, unit);
         editorForm.setColWidths(150	, 250); 
         VLayout editor_control = new VLayout();

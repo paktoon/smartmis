@@ -202,6 +202,7 @@ public class PermissionDetailTabPane extends TabSet {
         saveButton.setDisabled(true);
         cancelButton.setDisabled(true);
         
+        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
         editorForm.setFields(name, role, status);
         editorForm.setColWidths(50, 150, 200, 80, 100, 50); 
         normalForm.setFields(canSale,canProduct,canInven,canPurchase, canFinance );

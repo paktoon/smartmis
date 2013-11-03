@@ -209,6 +209,7 @@ public class CustomerAdd {
         contact_name.setWidth(250);
         contact_phone.setWidth(250);
         contact_email.setWidth(250);
+        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
         editorForm.setFields(cus_name, cus_phone, contact_name, contact_phone, contact_email , address, type);
         editorForm.setColWidths(200	, 300);
         

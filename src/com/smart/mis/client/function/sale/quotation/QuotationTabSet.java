@@ -66,9 +66,10 @@ public class QuotationTabSet extends TabSet {
 		setHeight100();
 
 		QuoteCreateTab createTab = new QuoteCreateTab();
+		QuoteReviseTab reviseTab = new QuoteReviseTab();
 		
 		addTab(createTab.getCreateTab(user));
-		addTab(getReviseTab());
+		addTab(reviseTab.getReviseTab(user));
 		
 		if (this.allowApproved) {
 			addTab(getApproveTab());
@@ -76,14 +77,8 @@ public class QuotationTabSet extends TabSet {
 		
 	}
 	
-	private Tab getReviseTab(){
-		Tab reviseTab = new Tab("แก้ไข", "icons/16/comment_edit.png");
-		//TBD
-		return reviseTab;
-	}
-	
 	private Tab getApproveTab(){
-		Tab approveTab = new Tab("อนุมัติ", "icons/16/star_yellow.png");
+		Tab approveTab = new Tab("อนุมัติใบเสนอราคา", "icons/16/star_yellow.png");
 		//TBD
 		return approveTab;
 	}

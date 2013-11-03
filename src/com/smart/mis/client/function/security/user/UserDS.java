@@ -27,6 +27,7 @@ public class UserDS extends DataSource  {
 		 }
 		 
 		 public UserDS(){
+			 setID("UserDS");
 			 DataSourceTextField uidField = new DataSourceTextField("uid", "รหัสผู้ใช้");
 			 DataSourceTextField userNameField = new DataSourceTextField("uname", "ชื่อผู้ใช้");
 			 DataSourceTextField passwordField = new DataSourceTextField("pwd", "รหัสผ่าน");

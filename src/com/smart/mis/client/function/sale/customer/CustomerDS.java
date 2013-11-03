@@ -27,6 +27,7 @@ public class CustomerDS extends DataSource  {
 		 }
 		 
 		 public CustomerDS(){
+			 setID("CustomerDS");
 			 DataSourceTextField Field_1 = new DataSourceTextField("cid", "รหัสลูกค้า");
 			 Field_1.setPrimaryKey(true);
 			 DataSourceTextField Field_2 = new DataSourceTextField("cus_name", "ชื่อลูกค้า");

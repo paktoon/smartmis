@@ -192,6 +192,7 @@ public class SmithAdd {
         phone1.setWidth(250);
         phone2.setWidth(250);
         email.setWidth(250);
+        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
         editorForm.setFields(name, phone1, phone2, email , address);
         editorForm.setColWidths(200	, 300);
         

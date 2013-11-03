@@ -101,6 +101,7 @@ public class ResetPwd {
         matchesValidator.setErrorMessage("รหัสผ่านใหม่ไม่ถูกต้อง");
         confirmPassword.setValidators(matchesValidator);
         
+        resetForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 		resetForm.setFields(new FormItem[] {oldPassword, newPassword, confirmPassword});
 
 		IButton confirmButton = new IButton("ยืนยัน");

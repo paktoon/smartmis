@@ -213,6 +213,7 @@ public class ProductAdd {
         weight.setWidth(250);
         price.setWidth(250);
         type.setWidth(250);
+        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
         editorForm.setFields(name, size, weight, price, desc, type);
         editorForm.setColWidths(200	, 300);
         

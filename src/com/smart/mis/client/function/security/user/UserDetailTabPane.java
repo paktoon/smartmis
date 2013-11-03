@@ -187,9 +187,10 @@ public class UserDetailTabPane extends TabSet {
         
         saveButton.setDisabled(true);
         cancelButton.setDisabled(true);
-        
+        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
         editorForm.setFields(uname, profile, status, pwd, npwd);
         editorForm.setColWidths(80, 150); 
+        normalForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
         normalForm.setFields(title,fname,lname,email, position );
         normalForm.setColWidths(80, 150);
         VLayout editor_control = new VLayout();

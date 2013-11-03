@@ -226,6 +226,7 @@ public class ProcessOutline extends VLayout {
 //        price.setWidth(250);
 //        type.setWidth(250);
 //        editorForm.setFields(name, desc, material, time);
+        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
         editorForm.setFields(name, desc, time);
         editorForm.setColWidths(120, 150, 100, 100); 
 
