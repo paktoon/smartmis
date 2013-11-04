@@ -84,11 +84,11 @@ public class EditorListGrid extends ListGrid{
             viewImg.setShowRollOver(false);  
             viewImg.setAlign(Alignment.CENTER); 
             if (record.getAttributeAsString("status").equalsIgnoreCase("รออนุมัติ")) {
-	            viewImg.setSrc("icons/16/icon_view.png");  
+	            viewImg.setSrc("icons/16/process-warning-icon-16.png");  
 	            viewImg.setPrompt("มีคำร้องขออนุมัติ");  
-//            } else if (record.getAttributeAsString("status").equalsIgnoreCase("อนุมัติแล้ว")) {
-//	            viewImg.setSrc("icons/16/icon_view.png");  
-//	            viewImg.setPrompt("เรียกดูรายละเอียด");  
+            } else if (record.getAttributeAsString("status").equalsIgnoreCase("อนุมัติแล้ว")) {
+	            viewImg.setSrc("icons/16/approved.png");  
+	            viewImg.setPrompt("เรียกดูรายละเอียด");  
             } else {
             	viewImg.setSrc("icons/16/icon_view.png");  
 	            viewImg.setPrompt("เรียกดูรายละเอียด"); 

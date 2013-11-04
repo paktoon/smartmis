@@ -31,6 +31,7 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -91,7 +92,7 @@ public class QuoteViewWindow extends EditorWindow{
 		editWindow.show();
 	}
 	
-	private VLayout getViewEditor(ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
+	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
 		VLayout layout = new VLayout();
 		layout.setWidth(650);
 		layout.setHeight(500);
@@ -231,6 +232,7 @@ public class QuoteViewWindow extends EditorWindow{
 			section.setControls(addButton, delButton);
         }
 		
+        //HLayout itemLayout = new HLayout();
 		final ListGrid quoteListGrid = new ListGrid();
 		quoteListGrid.setHeight(220);
 		quoteListGrid.setAlternateRecordStyles(true);  
@@ -256,14 +258,14 @@ public class QuoteViewWindow extends EditorWindow{
 		quoteListGrid.setUseAllDataSourceFields(false);
 		
 		ListGridField quoteItemCell_1 = new ListGridField("pid", 60);
-		quoteItemCell_1.setSummaryFunction(new SummaryFunction() {  
+        ListGridField quoteItemCell_2 = new ListGridField("name"); 
+        quoteItemCell_2.setTitle("ชื่อสินค้า");
+        quoteItemCell_2.setSummaryFunction(new SummaryFunction() {  
             public Object getSummaryValue(Record[] records, ListGridField field) {
                 return records.length + " รายการ";  
             }  
         });  
-        quoteItemCell_1.setShowGridSummary(true);
-        ListGridField quoteItemCell_2 = new ListGridField("name"); 
-        quoteItemCell_2.setTitle("ชื่อสินค้า");
+        quoteItemCell_2.setShowGridSummary(true);
         ListGridField quoteItemCell_3 = new ListGridField("unit", 40);
         
         ListGridField quoteItemCell_5 = new ListGridField("price", 90);
@@ -286,6 +288,7 @@ public class QuoteViewWindow extends EditorWindow{
         quoteItemCell_sum.setAlign(Alignment.RIGHT);
  
         quoteListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_6, quoteItemCell_3, quoteItemCell_5 , quoteItemCell_sum);
+        //itemLayout.addMember(quoteListGrid);
         section.setItems(quoteListGrid);
         sectionStack.setSections(section);
 		layout.addMember(sectionStack);
@@ -377,7 +380,8 @@ public class QuoteViewWindow extends EditorWindow{
 		printButton.setWidth(120);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                SC.warn("click print");
+                //SC.warn("click print");
+            	Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
           }
         });
 		if (edit || !status.equals("อนุมัติแล้ว")) printButton.disable();
@@ -409,7 +413,7 @@ public class QuoteViewWindow extends EditorWindow{
         });
 		
 		final IButton approveButton = new IButton("อนุมัติ");
-		approveButton.setIcon("icons/16/approved.png");
+		//approveButton.setIcon("icons/16/approved.png");
 		approveButton.setWidth(120);
 		approveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
@@ -427,7 +431,7 @@ public class QuoteViewWindow extends EditorWindow{
         });
 		
 		final IButton disapproveButton = new IButton("ไม่อนุมัติ");
-		disapproveButton.setIcon("icons/16/close.png");
+		//disapproveButton.setIcon("icons/16/delete.png");
 		disapproveButton.setWidth(120);
 		disapproveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
@@ -452,6 +456,13 @@ public class QuoteViewWindow extends EditorWindow{
         });
 		
 		if (page == 2) {
+			if (!record.getAttributeAsString("status").equalsIgnoreCase("รออนุมัติ")){
+				approveButton.disable();
+				disapproveButton.disable();
+			} else {
+				approveButton.setIcon("icons/16/approved.png");
+				disapproveButton.setIcon("icons/16/delete.png");
+			}
 			controls.addMember(approveButton);
 			controls.addMember(disapproveButton);
 		}

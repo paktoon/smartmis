@@ -17,3 +17,15 @@
     color:#F0F0F0;
     font-size:60px;
 }
+
+.printTitle {
+    font-family:Arial,Verdana,tahoma,serif;
+    color:#454545;
+    font-size:24px;
+}
+
+.printDetails {
+    font-family:Arial,Verdana,tahoma,serif;
+    color:#454545;
+    font-size:18px;
+}
