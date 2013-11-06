@@ -88,7 +88,7 @@ public class QuoteCreateTab {
 		//TBD
 		VLayout createLayout = new VLayout();
 		createLayout.setWidth(750);
-		createLayout.setHeight(400);
+		createLayout.setHeight100();
 		
 		//******************Header
 		HLayout headerLayout = new HLayout();
@@ -252,6 +252,7 @@ public class QuoteCreateTab {
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMargin(10);
 		buttonLayout.setMembersMargin(5);
+		buttonLayout.setHeight(30);
 		
 		addButton.setIcon("[SKIN]actions/add.png");
 		addButton.setWidth(120);
@@ -314,6 +315,7 @@ public class QuoteCreateTab {
 		
 		//******************Quote List Grid
 		HLayout itemLayout = new HLayout();
+		itemLayout.setHeight(350);
 		//itemLayout.setMargin(5);
 		quoteListGrid.setWidth100();
 		quoteListGrid.setHeight(350);

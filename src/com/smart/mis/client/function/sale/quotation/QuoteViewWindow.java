@@ -79,7 +79,7 @@ public class QuoteViewWindow extends EditorWindow{
 		Window editWindow = new Window();
 		editWindow.setTitle("ข้อมูลใบเสนอราคา");
 		editWindow.setWidth(670);  
-		editWindow.setHeight(520);
+		editWindow.setHeight(540);
 		editWindow.setShowMinimizeButton(false);
 		editWindow.setIsModal(true);
 		editWindow.setShowModalMask(true);
@@ -455,7 +455,28 @@ public class QuoteViewWindow extends EditorWindow{
           }
         });
 		
-		if (page == 2) {
+		final IButton createSaleOrderButton = new IButton("สร้างรายการขาย");
+		//approveButton.setIcon("icons/16/approved.png");
+		createSaleOrderButton.setWidth(120);
+		createSaleOrderButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+            	SC.confirm("ยืนยันการทำรายการ", "ต้องการสร้างรายการขาย หรือไม่?" , new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							//saveQuotation(main, quote_id, customerForm, quoteListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
+			            	//updateQuoteStatus(quote_id, "อนุมัติแล้ว", "");
+							SC.warn("สร้างรายการขาย :" + record.getAttributeAsString("quote_id"));
+							main.destroy();
+						}
+					}
+            	});
+          }
+        });
+		
+		if (page == 3) {
+			controls.addMember(createSaleOrderButton);
+		} else if (page == 2) {
 			if (!record.getAttributeAsString("status").equalsIgnoreCase("รออนุมัติ")){
 				approveButton.disable();
 				disapproveButton.disable();
@@ -465,8 +486,7 @@ public class QuoteViewWindow extends EditorWindow{
 			}
 			controls.addMember(approveButton);
 			controls.addMember(disapproveButton);
-		}
-		else {
+		} else {
 			controls.addMember(printButton);
 			controls.addMember(saveButton);
 		}

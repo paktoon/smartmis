@@ -12,6 +12,7 @@ import com.smart.mis.client.function.sale.customer.CustomerAdd;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.customer.CustomerDetailTabPane;
 import com.smart.mis.client.function.sale.customer.CustomerListGrid;
+import com.smart.mis.client.function.sale.order.SaleOrderTabSet;
 import com.smart.mis.client.function.sale.quotation.QuotationTabSet;
 import com.smart.mis.shared.security.Role;
 import com.smartgwt.client.types.Alignment;
@@ -60,7 +61,7 @@ public class SalePanel extends FunctionPanel{
 		
 		prepareCustomerWindow();
 		prepareQuotationWindow();
-//		prepareSaleOrderWindow();
+		prepareSaleOrderWindow();
 //		prepareCheckPOWindow();
 //		prepareSaleReportWindow();
 	}
@@ -177,6 +178,14 @@ public class SalePanel extends FunctionPanel{
 		Boolean allow = checkPermFlag(currentRole, Role.ADMIN) || checkPermFlag(currentRole, Role.OWNER);
 		QuotationTabSet quoteTab = new QuotationTabSet(allow, this._main.getCurrentUser());
 		this.quotationWindow.addItem(quoteTab);
+	}
+	
+	private void prepareSaleOrderWindow(){
+		//byte currentRole = this._main.getCurrentUser().getProfile().getRole();
+		//Boolean allow = checkPermFlag(currentRole, Role.ADMIN) || checkPermFlag(currentRole, Role.OWNER);
+		//QuotationTabSet quoteTab = new QuotationTabSet(allow, this._main.getCurrentUser());
+		SaleOrderTabSet orderTab = new SaleOrderTabSet(this._main.getCurrentUser());
+		this.saleOrderWindow.addItem(orderTab);
 	}
 	
 	private void LoadSaleReportWindow() {

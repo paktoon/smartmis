@@ -75,7 +75,7 @@ public class QuoteApproveTab {
 		Tab reviseTab = new Tab("อนุมัติใบเสนอราคา", "icons/16/star_yellow.png");
 		VLayout reviseLayout = new VLayout();
 		reviseLayout.setWidth(750);
-		reviseLayout.setHeight(400);
+		reviseLayout.setHeight100();
 		
 		HLayout searchLayout = new HLayout();
 		searchLayout.setHeight(20);
@@ -150,7 +150,7 @@ public class QuoteApproveTab {
 		ListGridField quote_id = new ListGridField("quote_id" , 100);
 		ListGridField cus_name = new ListGridField("cus_name", 200);
 		ListGridField status = new ListGridField("status");
-		ListGridField total_amount = new ListGridField("total_amount", 125);
+		ListGridField total_amount = new ListGridField("total_amount", 120);
 		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		ListGridField netInclusive = new ListGridField("netInclusive", 125);
@@ -169,6 +169,7 @@ public class QuoteApproveTab {
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMargin(10);
 		buttonLayout.setMembersMargin(5);
+		buttonLayout.setHeight(30);
 		IButton searchButton = new IButton("ค้นหาใบเสนอราคา");
 		searchButton.setIcon("icons/16/icon_view.png");
 		searchButton.setWidth(120);
@@ -245,7 +246,7 @@ public class QuoteApproveTab {
 		
 		VLayout gridLayout = new VLayout();
 		gridLayout.setWidth100();
-		gridLayout.setHeight(350);
+		gridLayout.setHeight(355);
 		
 		gridLayout.addMember(quoteListGrid);
 		reviseLayout.addMember(gridLayout);
