@@ -11,6 +11,8 @@ public class Customer {
 	public String address;   
 	public String cus_type;
 	public String zone;
+	public String payment_model;
+	public Integer credit;
     
     public Customer(String cid, String cus_name, String cus_phone, String contact_name, String contact_phone, String contact_email, String address, String cus_type, String zone) {
     	this.cid = cid;
@@ -39,5 +41,13 @@ public class Customer {
     	this.address = address;
     	this.cus_type = cus_type;
     	this.zone = zone;
+    }
+    
+    public void setPaymentModel(String payment) {
+    	this.payment_model = payment;
+    }
+    
+    public void setCredit(Integer credit) {
+    	this.credit = credit;
     }
 }

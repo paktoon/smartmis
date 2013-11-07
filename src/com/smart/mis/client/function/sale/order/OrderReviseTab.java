@@ -73,10 +73,10 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import com.smartgwt.client.widgets.cube.CubeGrid;
 
-public class OrderCreateTab {
+public class OrderReviseTab {
 	
-	public Tab getCreateTab(final User currentUser){
-		Tab reviseTab = new Tab("สร้างรายการขาย", "icons/16/comment_edit.png");
+	public Tab getReviseTab(final User currentUser){
+		Tab reviseTab = new Tab("จัดการรายการขาย", "icons/16/search-good-icon.png");
 		VLayout reviseLayout = new VLayout();
 		reviseLayout.setWidth(750);
 		reviseLayout.setHeight100();
@@ -93,18 +93,18 @@ public class OrderCreateTab {
 		searchForm.setAutoFocus(true);
 		searchForm.setSelectOnFocus(true);
 		searchForm.setIsGroup(true);
-		searchForm.setDataSource(QuotationDS.getInstance());
+		searchForm.setDataSource(SaleOrderDS.getInstance());
 		searchForm.setUseAllDataSourceFields(false);
-		searchForm.setGroupTitle("ค้นหาใบเสนอราคา");
+		searchForm.setGroupTitle("ค้นหารายการขาย");
 		
-		final TextItem quoteText = new TextItem("quote_id", "รหัสใบเสนอราคา");
-		quoteText.setWrapTitle(false);
-		quoteText.setOperator(OperatorId.REGEXP);
-		//final SelectItem statusSelected = new SelectItem("status", "สถานะ");
-		//statusSelected.setWrapTitle(false);
-		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
-		//statusSelected.setAllowEmptyValue(true);
-		//statusSelected.setOperator(OperatorId.EQUALS);
+		final TextItem saleText = new TextItem("sale_id", "รหัสรายการขาย");
+		saleText.setWrapTitle(false);
+		saleText.setOperator(OperatorId.REGEXP);
+		final SelectItem statusSelected = new SelectItem("status", "สถานะ");
+		statusSelected.setWrapTitle(false);
+		statusSelected.setValueMap("รอผลิต", "กำลังผลิต", "ผลิตเสร็จสิ้น", "ระหว่างนำส่ง", "นำส่งแล้ว");
+		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("cid", "รหัสลูกค้า");
 		cidText.setWrapTitle(false);
 		cidText.setOperator(OperatorId.REGEXP);
@@ -120,7 +120,7 @@ public class OrderCreateTab {
 		dateForm.setCellPadding(2);
 		dateForm.setSelectOnFocus(true);
 		dateForm.setIsGroup(true);
-		dateForm.setGroupTitle("วันที่สร้างใบเสนอราคา");
+		dateForm.setGroupTitle("วันที่สร้างรายการขาย");
 		DateRange dateRange = new DateRange();  
         dateRange.setRelativeStartDate(new RelativeDate("-1m"));
         dateRange.setRelativeEndDate(RelativeDate.TODAY);
@@ -133,25 +133,26 @@ public class OrderCreateTab {
         to.setDefaultValue(dateRange.getEndDate());
         to.setUseTextField(true);
 
-        //searchForm.setItems(quoteText,statusSelected, cidText, cnameText);
-        searchForm.setItems(quoteText, cidText, cnameText);
+        searchForm.setItems(saleText,statusSelected, cidText, cnameText);
+        //searchForm.setItems(Text, cidText, cnameText);
         dateForm.setItems(from, to);
         
-		final ListGrid quoteListGrid = new EditorListGrid(new QuoteViewWindow(), currentUser);
+		final ListGrid saleListGrid = new EditorListGrid(new SaleViewWindow(), currentUser);
  
-		quoteListGrid.setAutoFetchData(true);  
-		quoteListGrid.setCanMultiSort(true);
-		quoteListGrid.setCriteria(new Criterion("status", OperatorId.EQUALS, "อนุมัติแล้ว"));
+		saleListGrid.setAutoFetchData(true);  
+		saleListGrid.setCanMultiSort(true);
+		saleListGrid.setCriteria(new Criterion("status", OperatorId.NOT_EQUAL, "ยกเลิก"));
 		
-		quoteListGrid.setDataSource(QuotationDS.getInstance());
-		quoteListGrid.setInitialSort(new SortSpecifier[]{  
+		saleListGrid.setDataSource(SaleOrderDS.getInstance());
+		saleListGrid.setInitialSort(new SortSpecifier[]{  
                 new SortSpecifier("created_date", SortDirection.DESCENDING)  
         });
-		quoteListGrid.setUseAllDataSourceFields(false);
-		//quoteListGrid.setGroupByField("created_date");
-		//quoteListGrid.setGroupStartOpen(GroupStartOpen.ALL);
+		saleListGrid.setUseAllDataSourceFields(false);
+		saleListGrid.setGroupByField("status");
+		saleListGrid.setGroupStartOpen(GroupStartOpen.ALL);
 		
-		ListGridField quote_id = new ListGridField("quote_id" , 100);
+		ListGridField sale_id = new ListGridField("sale_id" , 100);
+		//ListGridField quote_id = new ListGridField("quote_id" , 90);
 		ListGridField cus_name = new ListGridField("cus_name", 200);
 		ListGridField status = new ListGridField("status");
 //		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
@@ -174,11 +175,11 @@ public class OrderCreateTab {
 //			}
 //		});
 			
-		ListGridField iconField = new ListGridField("createSaleOrderField", "สร้างรายการขาย", 100);
+		ListGridField iconField = new ListGridField("viewSaleOrderField", "เรียกดู/ยกเลิก", 100);
 		
-		quoteListGrid.setFields(status, quote_id, cus_name, total_amount, netInclusive, created_date, iconField);
+		saleListGrid.setFields(status,sale_id, cus_name, total_amount, netInclusive, created_date, iconField);
 		
-		quoteListGrid.hideField("status");
+		saleListGrid.hideField("status");
 
 		searchLayout.addMembers(searchForm, dateForm);
 		reviseLayout.addMember(searchLayout);
@@ -195,12 +196,12 @@ public class OrderCreateTab {
             	Criterion search = new Criterion();
             	search.addCriteria(searchForm.getValuesAsCriteria());
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-          		      new Criterion("status", OperatorId.EQUALS, "อนุมัติแล้ว"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "ยกเลิก"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
           		      search
           		  });
-              quoteListGrid.fetchData(criteria);  
-              quoteListGrid.deselectAllRecords();
+              saleListGrid.fetchData(criteria);  
+              saleListGrid.deselectAllRecords();
           }
         });
 		
@@ -210,12 +211,12 @@ public class OrderCreateTab {
 		listAllButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-          		      new Criterion("status", OperatorId.EQUALS, "อนุมัติแล้ว"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "ยกเลิก"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
           		  });
                 searchForm.reset();
-                quoteListGrid.fetchData(criteria);  
-                quoteListGrid.deselectAllRecords();
+                saleListGrid.fetchData(criteria);  
+                saleListGrid.deselectAllRecords();
           }
         });
 		
@@ -224,7 +225,7 @@ public class OrderCreateTab {
 //		cancelQuoteButton.setWidth(150);
 //		cancelQuoteButton.addClickHandler(new ClickHandler() {  
 //            public void onClick(ClickEvent event) { 
-//            	ListGridRecord selected = quoteListGrid.getSelectedRecord();
+//            	ListGridRecord selected = saleListGrid.getSelectedRecord();
 //            	if (selected == null) {
 //            		SC.warn("กรุณาเลือกใบเสนอราคาที่ต้องการยกเลิก");
 //            		return;
@@ -233,12 +234,12 @@ public class OrderCreateTab {
 //					@Override
 //					public void execute(Boolean value) {
 //						if (value) {
-//							ListGridRecord selected = quoteListGrid.getSelectedRecord();
+//							ListGridRecord selected = saleListGrid.getSelectedRecord();
 //			            	if (selected != null) {
 //			            		//Do something with DB
 //			            		selected.setAttribute("status", "ยกเลิก");
-//			            		quoteListGrid.updateData(selected);
-//			            		quoteListGrid.removeSelectedData(new DSCallback() {
+//			            		saleListGrid.updateData(selected);
+//			            		saleListGrid.removeSelectedData(new DSCallback() {
 //									@Override
 //									public void execute(DSResponse dsResponse, Object data,
 //											DSRequest dsRequest) {
@@ -266,7 +267,7 @@ public class OrderCreateTab {
 		gridLayout.setWidth100();
 		gridLayout.setHeight(355);
 		
-		gridLayout.addMember(quoteListGrid);
+		gridLayout.addMember(saleListGrid);
 		reviseLayout.addMember(gridLayout);
 		
 		reviseTab.setPane(reviseLayout);

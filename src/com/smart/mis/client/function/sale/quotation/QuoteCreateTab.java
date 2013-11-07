@@ -37,6 +37,7 @@ import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -140,6 +141,19 @@ public class QuoteCreateTab {
         		
 		final StaticTextItem type = new StaticTextItem("cus_type", "ประเภทลูกค้า");
 		
+		final SelectItem paymentModel = new SelectItem("payment_model", "วิธีการชำระเงิน");
+		paymentModel.setValueMap("เงินสด", "แคชเชียร์เช็ค");
+		//paymentModel.setEmptyDisplayValue("--โปรดเลือกวิธีชำระเงิน--");
+		paymentModel.setDefaultValue("เงินสด");
+		final IntegerItem credit = new IntegerItem("credit","เครดิต");
+		credit.setRequired(true);
+		credit.setHint("วัน*");
+		credit.setWidth(100);
+		credit.setTextAlign(Alignment.LEFT);
+		credit.setDefaultValue(0);
+		paymentModel.disable();
+		credit.disable();
+        
 		cus_name.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -157,14 +171,41 @@ public class QuoteCreateTab {
 					String zone = selected.getAttributeAsString("zone");
 					
 					client.setAttributes(customer_id, customer_name, customer_phone, contact_name, contact_phone, contact_email, customer_address, customer_type, zone);
+					client.setPaymentModel(paymentModel.getValueAsString());
+					client.setCredit(credit.getValueAsInteger());
+					paymentModel.enable();
 					productForm.enable();
+					if(customer_type.equalsIgnoreCase("ลูกค้าประจำ")) {
+						credit.enable();
+					} else {
+						credit.setValue(0);
+						credit.disable();
+					}
 					cid.setValue(customer_id);
 					type.setValue(customer_type);
 				}
 			}
         });
 		
-		customerForm.setFields(cid, cus_name, type);
+		paymentModel.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (paymentModel.validate()) {
+					client.setPaymentModel(paymentModel.getValueAsString());
+				}
+			}
+        });
+		
+		credit.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (credit.validate()) {
+					client.setCredit(credit.getValueAsInteger());
+				}
+			}
+        });
+		
+		customerForm.setFields(cid, cus_name, type, paymentModel, credit);
 		customerForm.setColWidths(100, 80, 80, 240, 100, 100);
 		createLayout.addMember(customerForm);
 		//******************End Customer
@@ -503,7 +544,7 @@ public class QuoteCreateTab {
 					Date delivery = deliveryDate.getValueAsDate();
 					String quote_status = "รออนุมัติ";
 					//xxxService.xxx(Callback quoteId);
-					ListGridRecord newRecord = QuotationData.createRecord(quote_id, client.cid, client.cus_name, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "", quote_status);
+					ListGridRecord newRecord = QuotationData.createRecord(quote_id, client.cid, client.cus_name, client.payment_model, client.credit, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "", quote_status);
 					// client; - cid
 					// DateForm; - from , to
 					// SummaryForm; - netExclusive, tax, netInclusive

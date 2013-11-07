@@ -66,10 +66,10 @@ public class SaleOrderTabSet extends TabSet {
 		setHeight100();
 
 		OrderCreateTab createTab = new OrderCreateTab();
-//		QuoteReviseTab reviseTab = new QuoteReviseTab();
-//		
+		OrderReviseTab reviseTab = new OrderReviseTab();
+		
 		addTab(createTab.getCreateTab(user));
-//		addTab(reviseTab.getReviseTab(user));
+		addTab(reviseTab.getReviseTab(user));
 //		
 //		if (this.allowApproved) {
 //			QuoteApproveTab approveTab = new QuoteApproveTab();

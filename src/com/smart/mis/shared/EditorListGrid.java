@@ -71,7 +71,7 @@ public class EditorListGrid extends ListGrid{
                 }  
             });  
 
-            if (record.getAttributeAsString("status").equalsIgnoreCase("อนุมัติ")) {
+            if (record.getAttributeAsString("status").equalsIgnoreCase("อนุมัติแล้ว")) {
             	recordCanvas.addMember(viewImg); 
             }
             recordCanvas.addMember(editImg);   
@@ -115,7 +115,7 @@ public class EditorListGrid extends ListGrid{
             viewImg.setShowDown(false);  
             viewImg.setShowRollOver(false);  
             viewImg.setAlign(Alignment.CENTER); 
-	        viewImg.setSrc("icons/16/sales-report-icon.png");  
+	        viewImg.setSrc("icons/16/approved.png");  
 	        viewImg.setPrompt("สร้างรายการขาย");
             viewImg.setHeight(16);  
             viewImg.setWidth(16);  
@@ -123,6 +123,28 @@ public class EditorListGrid extends ListGrid{
                 public void onClick(ClickEvent event) {  
                     //SC.say("View Icon Clicked for : " + record.getAttribute("quote_id"));
                     EditWindow.show(record, false, currentUser, 3);
+                }  
+            });  
+
+            recordCanvas.addMember(viewImg); 
+            return recordCanvas;  
+        } else if (fieldName.equals("viewSaleOrderField")) { 
+        	HLayout recordCanvas = new HLayout(3);  
+            recordCanvas.setHeight(22);  
+            recordCanvas.setAlign(Alignment.CENTER);
+            
+        	ImgButton viewImg = new ImgButton();  
+            viewImg.setShowDown(false);  
+            viewImg.setShowRollOver(false);  
+            viewImg.setAlign(Alignment.CENTER); 
+	        viewImg.setSrc("icons/16/process-info-icon.png");  
+	        viewImg.setPrompt("จัดการรายการ");
+            viewImg.setHeight(16);  
+            viewImg.setWidth(16);  
+            viewImg.addClickHandler(new ClickHandler() {  
+                public void onClick(ClickEvent event) {  
+                    //SC.say("View Icon Clicked for : " + record.getAttribute("quote_id"));
+                    EditWindow.show(record, false, currentUser, 1);
                 }  
             });  
 
