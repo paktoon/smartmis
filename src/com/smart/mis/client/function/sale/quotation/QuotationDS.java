@@ -1,10 +1,12 @@
 package com.smart.mis.client.function.sale.quotation;
 
+import com.smart.mis.shared.sale.QuotationStatus;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateField;
+import com.smartgwt.client.data.fields.DataSourceEnumField;
 import com.smartgwt.client.data.fields.DataSourceFloatField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -56,8 +58,10 @@ public class QuotationDS extends DataSource {
 		 Field_14.setForeignKey("UserDS.uid");
 		 
 		 DataSourceTextField Field_15 = new DataSourceTextField("comment", "ความคิดเห็น");
-		 DataSourceTextField Field_16 = new DataSourceTextField("status", "สถานะ");
-	        
+		 DataSourceEnumField Field_16 = new DataSourceEnumField("status", "สถานะ");
+		 //Field_16.setValueMap("รอแก้ไข" , "รออนุมัติ" , "อนุมัติแล้ว" , "ยกเลิก");
+		 Field_16.setValueMap(QuotationStatus.getValueMap());
+		 
 		 setFields(Field_1, Field_2, Field_2_1, Field_2_2, Field_2_3, Field_3, Field_4, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_15, Field_16);
 		 
 		 //setDataURL("smartmis/security/userData");

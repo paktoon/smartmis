@@ -375,7 +375,7 @@ public class PermissionDetailTabPane extends TabSet {
 	    	    	(Boolean) adminForm.getValue("cAdm")
 	    			);
 					permissionDataSource.updateData(updateRecord);	
-					SC.warn("แก้ไขข้อมูลสิทธิการใช้งานเรียบร้อยแล้ว");
+					SC.say("แก้ไขข้อมูลสิทธิการใช้งานเรียบร้อยแล้ว");
 				} else {
 					SC.warn("Updating permission Fails - please contact administrator");
 				}

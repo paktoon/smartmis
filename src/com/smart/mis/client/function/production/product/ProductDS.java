@@ -1,5 +1,6 @@
 package com.smart.mis.client.function.production.product;
 
+import com.smart.mis.shared.prodution.ProductType;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
@@ -32,21 +33,31 @@ public class ProductDS extends DataSource  {
 		 public ProductDS(){
 			 DataSourceTextField Field_1 = new DataSourceTextField("pid", "รหัสสินค้า");
 			 Field_1.setPrimaryKey(true);
-			 DataSourceTextField Field_2 = new DataSourceTextField("name", "ชื่อสินค้า");
-			 DataSourceTextField Field_3 = new DataSourceTextField("size", "ขนาดสินค้า");
-			 DataSourceFloatField Field_4 = new DataSourceFloatField("weight", "น้ำหนัก (กรัม)");
-			 DataSourceFloatField Field_5 = new DataSourceFloatField("price", "ราคา (บาท)");
-			 DataSourceTextField Field_6 = new DataSourceTextField("desc", "คำอธิบาย");
-			 DataSourceEnumField Field_7 = new DataSourceEnumField("type", "ประเภท");
-			 Field_7.setValueMap("ต่างหู", "จี้", "สร้อยคอ", "สร้อยข้อมือ", "สร้อยข้อเท้า", "กำไลข้อมือ", "กำไลข้อเท้า", "แหวนนิ้วมือ", "แหวนนิ้วเท้า");
+			 DataSourceTextField Field_2_1 = new DataSourceTextField("name", "ชื่อสินค้าภาษาอังกฤษ");
+			 DataSourceTextField Field_2_2 = new DataSourceTextField("name_th", "ชื่อสินค้าภาษาไทย");
+			 DataSourceFloatField Field_3 = new DataSourceFloatField("weight", "น้ำหนัก (กรัม)");
+			 DataSourceFloatField Field_4_1 = new DataSourceFloatField("price", "ราคา (บาท)");
+			 //DataSourceTextField Field_6 = new DataSourceTextField("desc", "คำอธิบาย");
+			 DataSourceEnumField Field_5 = new DataSourceEnumField("type", "ประเภท");
+			 //Field_7.setValueMap("ต่างหู", "จี้", "สร้อยคอ", "สร้อยข้อมือ", "สร้อยข้อเท้า", "กำไลข้อมือ", "กำไลข้อเท้า", "แหวนนิ้วมือ", "แหวนนิ้วเท้า");
+			 Field_5.setValueMap(ProductType.getValueMap());
+			 DataSourceTextField Field_6 = new DataSourceTextField("unit", "หน่วย");
 			 
-			 DataSourceIntegerField Field_8 = new DataSourceIntegerField("remain", "คงเหลือ");
-			 DataSourceTextField Field_8_1 = new DataSourceTextField("unit", "หน่วย");
-			 DataSourceBooleanField Field_9 = new DataSourceBooleanField("inStock", "In Stock");
-			 DataSourceImageField Field_10 = new DataSourceImageField("imgUrl");
-			 Field_10.setHidden(true);
+			 DataSourceIntegerField Field_7_1 = new DataSourceIntegerField("inStock", "ปริมาณคงคลัง");
+			 DataSourceIntegerField Field_7_2 = new DataSourceIntegerField("reserved", "ถูกจอง");
+			 DataSourceIntegerField Field_7_3 = new DataSourceIntegerField("remain", "คงเหลือ");
 			 
-			 setFields(Field_1, Field_2, Field_6, Field_3, Field_4, Field_5 ,Field_7, Field_8, Field_8_1, Field_9, Field_10);
+			 DataSourceImageField Field_8 = new DataSourceImageField("imgUrl");
+			 Field_8.setHidden(true);
+			 
+			 DataSourceTextField Field_9_1 = new DataSourceTextField("size", "ขนาดสินค้า");
+			 DataSourceTextField Field_9_2 = new DataSourceTextField("width", "ความกว้าง (ซม.)");
+			 DataSourceTextField Field_9_3 = new DataSourceTextField("length", "ความยาว (ซม.)");
+			 DataSourceTextField Field_9_4 = new DataSourceTextField("height", "ความสูง (มม.)");
+			 DataSourceTextField Field_9_5 = new DataSourceTextField("diameter", "เส้นผ่าศูนย์กลาง (มม.)");
+			 DataSourceTextField Field_9_6 = new DataSourceTextField("thickness", "ความหนา (มม.)");
+			 
+			 setFields(Field_1, Field_2_1, Field_2_2, Field_3, Field_4_1, Field_5, Field_7_1, Field_7_2, Field_7_3, Field_6, Field_8, Field_9_1, Field_9_2, Field_9_3,Field_9_4,Field_9_5, Field_9_6);
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(ProductData.getNewRecords()); // For Test
 			 setClientOnly(true);

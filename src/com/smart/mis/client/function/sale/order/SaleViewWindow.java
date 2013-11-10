@@ -6,6 +6,10 @@ import java.util.Date;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
+import com.smart.mis.client.function.sale.delivery.DeliveryDS;
+import com.smart.mis.client.function.sale.delivery.DeliveryData;
+import com.smart.mis.client.function.sale.invoice.InvoiceDS;
+import com.smart.mis.client.function.sale.invoice.InvoiceData;
 import com.smart.mis.client.function.sale.order.SaleOrderDS;
 import com.smart.mis.client.function.sale.order.SaleOrderData;
 import com.smart.mis.client.function.sale.order.product.SaleProductDS;
@@ -19,12 +23,16 @@ import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.sale.Customer;
+import com.smart.mis.shared.sale.InvoiceStatus;
+import com.smart.mis.shared.sale.SaleOrderStatus;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
+import com.smartgwt.client.data.DateRange;
 import com.smartgwt.client.data.Record;
+import com.smartgwt.client.data.RelativeDate;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.OperatorId;
@@ -34,6 +42,7 @@ import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.SummaryFunctionType;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.DateUtil;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Canvas;
@@ -133,6 +142,7 @@ public class SaleViewWindow extends EditorWindow{
 		sid.setValue(sale_id);
 		qid.setValue(quote_id);
 		sts.setValue(status);
+		sts.setValueMap(SaleOrderStatus.getValueMap());
 		cby.setValue(created_by);
 		cdate.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(created_date));
 		quotationForm.setFields(sid, qid, sts, cdate ,cby);
@@ -189,14 +199,14 @@ public class SaleViewWindow extends EditorWindow{
 						String customer_name = selected.getAttributeAsString("cus_name");
 						String customer_type = selected.getAttributeAsString("cus_type");
 						//Contact info
-						String customer_address = selected.getAttributeAsString("address");
+						//String customer_address = selected.getAttributeAsString("address");
 						String customer_phone = selected.getAttributeAsString("cus_phone");
 						String contact_name = selected.getAttributeAsString("contact_name");
 						String contact_phone = selected.getAttributeAsString("contact_phone");
 						String contact_email = selected.getAttributeAsString("contact_email");
 						String zone = selected.getAttributeAsString("zone");
 						
-						client.setAttributes(customer_id, customer_name, customer_phone, contact_name, contact_phone, contact_email, customer_address, customer_type, zone);
+						client.setAttributes(customer_id, customer_name, customer_phone, contact_name, contact_phone, contact_email, customer_type, zone);
 
 						if(customer_type.equalsIgnoreCase("ลูกค้าประจำ")) {
 							cus_credit.enable();
@@ -329,7 +339,7 @@ public class SaleViewWindow extends EditorWindow{
         quoteItemCell_5.setCellFormatter(FieldFormatter.getPriceFormat());
         quoteItemCell_5.setAlign(Alignment.RIGHT);
         
-        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("quote_amount", 70);
+        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("sale_amount", 70);
         
         if (edit) quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
@@ -438,11 +448,11 @@ public class SaleViewWindow extends EditorWindow{
 		printButton.setWidth(120);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                SC.warn("click print");
+                SC.say("click print");
             	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
           }
         });
-		// if (edit || !status.equals("อนุมัติแล้ว")) printButton.disable();
+		// if (edit || !status.equals("3_approved")) printButton.disable();
 		
 //		final IButton saveButton = new IButton("บันทึกการแก้ไข");
 //		saveButton.setIcon("icons/16/save.png");
@@ -470,6 +480,32 @@ public class SaleViewWindow extends EditorWindow{
           }
         });
 		
+		final IButton deliveryButton = new IButton("นำส่งสินค้า");
+		deliveryButton.setIcon("icons/16/truck-icon-16.png");
+		deliveryButton.setWidth(120);
+		deliveryButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+            	SC.confirm("ยืนยันการสร้างรายการนำส่งสินค้า", "ต้องการสร้างรายการนำส่งสินค้า หรือไม่?" , new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+//							SC.askforValue("กรุณาระบุเลขที่คำสั่งซื้อ", new ValueCallback() {
+//								@Override
+//								public void execute(String value) {
+//									if (value == null || value.equals("")){
+//										SC.warn("กรุณาระบุเลขที่คำสั่งซื้อในกล่องข้อความ");
+//									} else {
+//										if (customerForm.validate()) createSaleOrder(main, quote_id, customerForm, quoteListGrid, deliveryDate.getValueAsDate(), currentUser, value);
+//									}
+//								}});
+							String invoice_id = record.getAttributeAsString("invoice_id");
+							createDeliveryOrder(main, sale_id, invoice_id, customerForm, saleListGrid, deliveryDate.getValueAsDate(), currentUser);
+						}
+					}
+            	});
+          }
+        });
+		
 		final IButton cancelButton = new IButton("ยกเลิกรายการขาย");
 		cancelButton.setIcon("icons/16/delete.png");
 		cancelButton.setWidth(120);
@@ -479,22 +515,39 @@ public class SaleViewWindow extends EditorWindow{
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							SC.warn("click cancel");
-//							SC.askforValue("กรุณาระบุเลขที่คำสั่งซื้อ", new ValueCallback() {
-//								@Override
-//								public void execute(String value) {
-//									if (value == null || value.equals("")){
-//										SC.warn("กรุณาระบุเลขที่คำสั่งซื้อในกล่องข้อความ");
-//									} else {
-//										if (customerForm.validate()) createSaleOrder(main, quote_id, customerForm, saleListGrid, deliveryDate.getValueAsDate(), currentUser, value);
-//									}
-//								}});
+								String invoice_id = record.getAttributeAsString("invoice_id");
+								ListGridRecord checkRecord = InvoiceData.getStatusRecords(invoice_id);
+								if (checkRecord.getAttributeAsString("status").equalsIgnoreCase("2_paid")) {
+									SC.warn("ลูกค้าชำระเงินแล้วไม่สามารถยกเลิกรายการขายได้");
+									return;
+								}
+								
+								ListGridRecord invRecord = InvoiceData.createStatusRecord(invoice_id, "4_canceled");
+								InvoiceDS.getInstance().updateData(invRecord, new DSCallback() {
+									@Override
+									public void execute(DSResponse dsResponse, Object data,
+											DSRequest dsRequest) {
+											record.setAttribute("status", "6_canceled");
+						            		//SaleOrderDS.getInstance().updateData(record);
+											SaleOrderDS.getInstance().updateData(record, new DSCallback() {
+												@Override
+												public void execute(DSResponse dsResponse, Object data,
+														DSRequest dsRequest) {
+														if (dsResponse.getStatus() != 0) {
+															SC.warn("การยกเลิกรายการขาย ล้มเหลว");
+														} else { 
+															SC.say("การยกเลิกรายการขาย เสร็จสมบูรณ์");
+															main.destroy();
+														}
+												}
+											});
+									}
+								});
 						}
 					}
             	});
           }
         });
-		if (!status.equals("รอผลิต")) printButton.disable();
 		
 //		final IButton approveButton = new IButton("อนุมัติ");
 //		//approveButton.setIcon("icons/16/approved.png");
@@ -506,7 +559,7 @@ public class SaleViewWindow extends EditorWindow{
 //					public void execute(Boolean value) {
 //						if (value) {
 //							//saveQuotation(main, quote_id, customerForm, saleListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
-//							updateQuoteStatus(quote_id, "อนุมัติแล้ว", "");
+//							updateQuoteStatus(quote_id, "3_approved", "");
 //							main.destroy();
 //						}
 //					}
@@ -529,7 +582,7 @@ public class SaleViewWindow extends EditorWindow{
 //									if (value == null || value.equals("")){
 //										SC.warn("กรุณาใส่ความคิดเห็นในกล่องข้อความ");
 //									} else {
-//										updateQuoteStatus(quote_id, "รอแก้ไข", value);
+//										updateQuoteStatus(quote_id, "1_waiting_for_revised", value);
 //										main.destroy();
 //									}
 //								}});
@@ -566,7 +619,7 @@ public class SaleViewWindow extends EditorWindow{
 //		if (page == 3) {
 //			controls.addMember(createSaleOrderButton);
 //		} else if (page == 2) {
-//			if (!record.getAttributeAsString("status").equalsIgnoreCase("รออนุมัติ")){
+//			if (!record.getAttributeAsString("status").equalsIgnoreCase("2_waiting_for_approved")){
 //				approveButton.disable();
 //				disapproveButton.disable();
 //			} else {
@@ -580,7 +633,8 @@ public class SaleViewWindow extends EditorWindow{
 //			controls.addMember(saveButton);
 //		}
 		controls.addMember(printButton);
-		controls.addMember(cancelButton);
+		if (page == 1 && status.equals("1_waiting_for_production")) controls.addMember(cancelButton);
+		if (page == 1 && status.equals("3_production_completed")) controls.addMember(deliveryButton);
 		controls.addMember(closeButton);
 		layout.addMember(controls);
 		
@@ -699,7 +753,7 @@ public class SaleViewWindow extends EditorWindow{
 //		}
 //		//System.out.println(total_weight + " " + total_amount + " " + total_netExclusive);
 //			//status
-//			final String quote_status = "รออนุมัติ";
+//			final String quote_status = "2_waiting_for_approved";
 //			
 //			if (customer.getField("cid").getValue() == null || customer.getField("cus_name").getValue() == null) {
 //				SC.warn("ชื่อและรหัสลูกค้าไม่ถุกต้อง");
@@ -755,77 +809,77 @@ public class SaleViewWindow extends EditorWindow{
 //		});
 //	}
 //	
-//	public void createSaleOrder(final Window main, final String quote_id, DynamicForm customer, ListGrid saleListGrid, Date delivery, User currentUser, String purcharse_id){
-//		
-//		ListGridRecord[] all = saleListGrid.getRecords();
-//		
-////		if (all.length == 0) {
-////			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
-////			return;
-////		}
-//		
-//		Double total_weight = 0.0;
-//		Double total_netExclusive = 0.0;
-//		Integer total_amount = 0;
-//		final String sale_id = "SO70" + Math.round((Math.random() * 100));
-//		final ArrayList<SaleProductDetails> productList = new ArrayList<SaleProductDetails>();
-//		
-//		for (ListGridRecord item : all){
-//			total_weight += item.getAttributeAsDouble("weight");
-//			total_amount += item.getAttributeAsInt("quote_amount");
-//			total_netExclusive += item.getAttributeAsDouble("sum_price");
-//			
-//			String sub_sale_id = "SS80" + Math.round((Math.random() * 100));
-//			String pid = item.getAttributeAsString("pid");
-//			String pname = item.getAttributeAsString("name");
-//			String ptype = item.getAttributeAsString("type");
-//			String psize = item.getAttributeAsString("size");
-//			Double pweight = item.getAttributeAsDouble("weight");
-//			Integer psale_amount = item.getAttributeAsInt("quote_amount");
-//			String punit = item.getAttributeAsString("unit");
-//			Double pprice = item.getAttributeAsDouble("price");
-//			SaleProductDetails temp = new SaleProductDetails();
-//			temp.save(pid, pname, psize, pweight, pprice, ptype, punit);
-//			temp.setID(sub_sale_id, sale_id);
-//			temp.setQuantity(psale_amount);
-//			productList.add(temp);
-//			//status
-//		}	
-////			if (customer.getField("cid").getValue() == null || customer.getField("cus_name").getValue() == null) {
-////				SC.warn("ชื่อและรหัสลูกค้าไม่ถุกต้อง");
-////				return;
-////			}
-//
-//			final String sale_status = "รอผลิต";
-//			String cid = (String) customer.getField("cid").getValue();
-//			String cus_name = (String) customer.getField("cus_name").getValue();
+	public void createDeliveryOrder(final Window main, final String sale_id, String invoice_id, DynamicForm customer, ListGrid saleListGrid, Date delivery, User currentUser){
+		
+		ListGridRecord[] all = saleListGrid.getRecords();
+		
+//		if (all.length == 0) {
+//			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
+//			return;
+//		}
+		
+		Double total_weight = 0.0;
+		Double total_netExclusive = 0.0;
+		Integer total_amount = 0;
+		final String delivery_id = "DL70" + Math.round((Math.random() * 100));
+		//final String invoice_id = "IN70" + Math.round((Math.random() * 100));
+		final ArrayList<SaleProductDetails> saleProductList = new ArrayList<SaleProductDetails>();
+		//final ArrayList<SaleProductDetails> invoiceProductList = new ArrayList<SaleProductDetails>();
+
+		for (ListGridRecord item : all){
+			total_weight += item.getAttributeAsDouble("weight");
+			total_amount += item.getAttributeAsInt("sale_amount");
+			total_netExclusive += item.getAttributeAsDouble("sum_price");
+			
+			String pid = item.getAttributeAsString("pid");
+			String pname = item.getAttributeAsString("name");
+			String ptype = item.getAttributeAsString("type");
+			//String psize = item.getAttributeAsString("size");
+			Double pweight = item.getAttributeAsDouble("weight");
+			Integer psale_amount = item.getAttributeAsInt("sale_amount");
+			String punit = item.getAttributeAsString("unit");
+			Double pprice = item.getAttributeAsDouble("price");
+			
+			String sub_sale_id = "SS80" + Math.round((Math.random() * 1000));
+			SaleProductDetails temp = new SaleProductDetails();
+			temp.save(pid, pname, pweight, pprice, ptype, punit);
+			temp.setID(sub_sale_id, delivery_id);
+			temp.setQuantity(psale_amount);
+			saleProductList.add(temp);
+		}	
+
+			final String delivery_status = "1_on_delivery";
+			String cid = (String) customer.getField("cid").getValue();
+			String cus_name = (String) customer.getField("cus_name").getValue();
 //			String payment_model = (String) customer.getField("payment_model").getValue();
 //			Integer credit = (Integer) customer.getField("credit").getValue();
-//			
-//			ListGridRecord newRecord = SaleOrderData.createRecord(sale_id, quote_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, sale_status, purcharse_id);
-//			
-//			SaleOrderDS.getInstance().addData(newRecord, new DSCallback() {
-//				@Override
-//				public void execute(DSResponse dsResponse, Object data,
-//						DSRequest dsRequest) {
-//						if (dsResponse.getStatus() != 0) {
-//							SC.warn("การสร้างรายการขายล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-//							main.destroy();
-//						} else { 
-//							for (SaleProductDetails item : productList) {
-//								//if (item.sub_sale_id == null) {
-//									//item.sub_sale_id = "SS80" + Math.round((Math.random() * 100));
-//									ListGridRecord subUpdateRecord = SaleProductData.createRecord(item);
-//									SaleProductDS.getInstance(sale_id).addData(subUpdateRecord);
-//								//} else  {
-//								//	ListGridRecord subUpdateRecord = SaleProductData.createRecord(item);
-//								//	SaleProductDS.getInstance(sale_id).updateData(subUpdateRecord);
-//								//}
-//							}
-//							SC.warn("สร้างรายการขายเสร็จสิ้น <br> " + "รหัสรายการขาย " + quote_id + "<br> สถานะของรายการขาย " + sale_status);
-//							main.destroy();
-//						}
-//				}
-//			});
-//	}
+			
+//			DateRange dateRange = new DateRange();  
+//	        dateRange.setRelativeStartDate(RelativeDate.TODAY);
+//	        dateRange.setRelativeEndDate(new RelativeDate("+"+credit+"d"));
+//	        final Date due_date = dateRange.getEndDate();
+	        
+			final ListGridRecord deliveryRecord = DeliveryData.createRecord(delivery_id, sale_id, invoice_id, cid, cus_name, delivery, total_weight, total_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, delivery_status, new Date(), null, "");
+			//ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
+			
+			//Auto create invoice
+			DeliveryDS.getInstance().addData(deliveryRecord, new DSCallback() {
+				@Override
+				public void execute(DSResponse dsResponse, Object data,
+						DSRequest dsRequest) {
+						if (dsResponse.getStatus() != 0) {
+							SC.warn("การสร้างรายการนำส่งสินค้าล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
+							main.destroy();
+						} else { 
+							for (SaleProductDetails item : saleProductList) {
+								ListGridRecord subAddRecord = SaleProductData.createRecord(item);
+								SaleProductDS.getInstance(delivery_id).addData(subAddRecord);
+							}
+							ListGridRecord saleRecord = SaleOrderData.createStatusRecord(sale_id, "4_on_delivery");
+							SaleOrderDS.getInstance().updateData(saleRecord);
+							main.destroy();
+						}
+				}
+			});
+	}
 }

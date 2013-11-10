@@ -35,14 +35,13 @@ public class QuoteProductDS extends DataSource  {
 			 Field_1.setPrimaryKey(true);
 			 DataSourceTextField Field_2 = new DataSourceTextField("name", "รายการสินค้า");
 			 DataSourceTextField Field_3 = new DataSourceTextField("type", "ประเภท");
-			 DataSourceTextField Field_4 = new DataSourceTextField("size", "ขนาด");
 			 DataSourceFloatField Field_5 = new DataSourceFloatField("weight", "น้ำหนัก (กรัม)");
 			 DataSourceIntegerField Field_6 = new DataSourceIntegerField("quote_amount", "จำนวน");
 			 DataSourceTextField Field_7 = new DataSourceTextField("unit", "หน่วย");
 			 DataSourceFloatField Field_8 = new DataSourceFloatField("price", "ราคา (บาท)");
 			 DataSourceFloatField Field_9 = new DataSourceFloatField("sum_price", "ราคารวม (บาท)");
 			 
-			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6 ,Field_7, Field_8,  Field_9);
+			 setFields(Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(new ListGridRecord[]{}); // For create tab
@@ -59,14 +58,13 @@ public class QuoteProductDS extends DataSource  {
 			 Field_1.setPrimaryKey(true);
 			 DataSourceTextField Field_2 = new DataSourceTextField("name", "รายการสินค้า");
 			 DataSourceTextField Field_3 = new DataSourceTextField("type", "ประเภท");
-			 DataSourceTextField Field_4 = new DataSourceTextField("size", "ขนาด");
 			 DataSourceFloatField Field_5 = new DataSourceFloatField("weight", "น้ำหนัก (กรัม)");
 			 DataSourceIntegerField Field_6 = new DataSourceIntegerField("quote_amount", "จำนวน");
 			 DataSourceTextField Field_7 = new DataSourceTextField("unit", "หน่วย");
 			 DataSourceFloatField Field_8 = new DataSourceFloatField("price", "ราคา (บาท)");
 			 DataSourceFloatField Field_9 = new DataSourceFloatField("sum_price", "ราคารวม (บาท)");
 			 
-			 setFields(sub_quote_id_field, quote_id_field, Field_1, Field_2, Field_3, Field_4, Field_5, Field_6 ,Field_7, Field_8,  Field_9);
+			 setFields(sub_quote_id_field, quote_id_field, Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(QuoteProductData.getRecords(quote_id)); // For edit tab

@@ -11,6 +11,7 @@ import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.sale.Customer;
+import com.smart.mis.shared.sale.QuotationStatus;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.AdvancedCriteria;
 import com.smartgwt.client.data.Criterion;
@@ -98,7 +99,8 @@ public class QuoteReviseTab {
 		quoteText.setOperator(OperatorId.REGEXP);
 		final SelectItem statusSelected = new SelectItem("status", "สถานะ");
 		statusSelected.setWrapTitle(false);
-		statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
+		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
+		statusSelected.setValueMap(QuotationStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("cid", "รหัสลูกค้า");
@@ -136,7 +138,7 @@ public class QuoteReviseTab {
  
 		quoteListGrid.setAutoFetchData(true);  
 		quoteListGrid.setCanMultiSort(true);
-		quoteListGrid.setCriteria(new Criterion("status", OperatorId.NOT_EQUAL, "ยกเลิก"));
+		quoteListGrid.setCriteria(new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"));
 		
 		quoteListGrid.setDataSource(QuotationDS.getInstance());
 		quoteListGrid.setInitialSort(new SortSpecifier[]{  
@@ -178,7 +180,7 @@ public class QuoteReviseTab {
             	Criterion search = new Criterion();
             	search.addCriteria(searchForm.getValuesAsCriteria());
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-          		      new Criterion("status", OperatorId.NOT_EQUAL, "ยกเลิก"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
           		      search
           		  });
@@ -193,7 +195,7 @@ public class QuoteReviseTab {
 		listAllButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-          		      new Criterion("status", OperatorId.NOT_EQUAL, "ยกเลิก"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
           		  });
                 searchForm.reset();
@@ -219,7 +221,7 @@ public class QuoteReviseTab {
 							ListGridRecord selected = quoteListGrid.getSelectedRecord();
 			            	if (selected != null) {
 			            		//Do something with DB
-			            		selected.setAttribute("status", "ยกเลิก");
+			            		selected.setAttribute("status", "4_canceled");
 			            		quoteListGrid.updateData(selected);
 			            		quoteListGrid.removeSelectedData(new DSCallback() {
 									@Override
@@ -228,7 +230,7 @@ public class QuoteReviseTab {
 											if (dsResponse.getStatus() != 0) {
 												SC.warn("การยกเลิกใบเสนอราคา ล้มเหลว");
 											} else { 
-												SC.warn("การยกเลิกใบเสนอราคา เสร็จสมบูรณ์");
+												SC.say("การยกเลิกใบเสนอราคา เสร็จสมบูรณ์");
 											}
 									}
 								}, null);

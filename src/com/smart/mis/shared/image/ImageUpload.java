@@ -92,7 +92,7 @@ public class ImageUpload {
            //startNewBlobstoreSession();
            if (imageUrl != null) { 
         	   imageUrl = convertToComplete(imageUrl);
-        	   SC.warn("การอัพโหลดภาพเสร็จสมบูรณ์...");
+        	   SC.say("การอัพโหลดภาพเสร็จสมบูรณ์...");
         	   System.out.println(imageUrl);
         	   main.currentEditImgUrl = imageUrl;
         	   target.setSrc(main.currentEditImgUrl);

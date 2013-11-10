@@ -1,10 +1,12 @@
 package com.smart.mis.client.function.sale.order;
 
+import com.smart.mis.shared.sale.SaleOrderStatus;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateField;
+import com.smartgwt.client.data.fields.DataSourceEnumField;
 import com.smartgwt.client.data.fields.DataSourceFloatField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -30,8 +32,10 @@ public class SaleOrderDS extends DataSource {
 		 setID("SaleOrderDS");
 		 DataSourceTextField Field_0 = new DataSourceTextField("sale_id", "รหัสรายการขาย");
 		 Field_0.setPrimaryKey(true);
+		 DataSourceTextField Field_0_1 = new DataSourceTextField("invoice_id", "รหัสใบแจ้งหนี้");
 		 
 		 DataSourceTextField Field_1 = new DataSourceTextField("quote_id", "รหัสใบเสนอราคา");
+		 DataSourceTextField Field_1_1 = new DataSourceTextField("purchase_id", "รหัสคำสั่งซื้อ");
 		 DataSourceTextField Field_2 = new DataSourceTextField("cid", "รหัสลูกค้า");
 		 Field_2.setForeignKey("CustomerDS.cid");
 		 DataSourceTextField Field_2_1 = new DataSourceTextField("cus_name", "ชื่อลูกค้า");
@@ -57,9 +61,12 @@ public class SaleOrderDS extends DataSource {
 		 Field_14.setForeignKey("UserDS.uid");
 		 
 		 //DataSourceTextField Field_15 = new DataSourceTextField("comment", "ความคิดเห็น");
-		 DataSourceTextField Field_16 = new DataSourceTextField("status", "สถานะ");
-	        
-		 setFields(Field_0, Field_1, Field_2, Field_2_1, Field_2_2, Field_2_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_16);
+		 //DataSourceTextField Field_16 = new DataSourceTextField("status", "สถานะ");
+		 DataSourceEnumField Field_16 = new DataSourceEnumField("status", "สถานะ");
+		 //Field_16.setValueMap("รอผลิต", "กำลังผลิต", "พร้อมนำส่ง", "อยู่ระหว่างนำส่ง", "นำส่งแล้ว", "ยกเลิก");
+		 Field_16.setValueMap(SaleOrderStatus.getValueMap());
+		 
+		 setFields(Field_0 ,Field_0_1, Field_1, Field_1_1, Field_2, Field_2_1, Field_2_2, Field_2_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_16);
 		 
 		 //setDataURL("smartmis/security/userData");
 		 setTestData(SaleOrderData.getNewRecords()); // For Test

@@ -2,6 +2,7 @@ package com.smart.mis.client.function.production.process;
 
 import java.util.HashMap;
 
+import com.smart.mis.shared.prodution.ProcessType;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
@@ -36,7 +37,7 @@ public class ProcessListDS extends DataSource  {
 			 DataSourceEnumField Field_2 = new DataSourceEnumField("type");
 			 DataSourceTextField Field_3 = new DataSourceTextField("desc", "คำอธิบาย");
 			 DataSourceFloatField Field_4 = new DataSourceFloatField("std_time", "ระยะเวลา");
-			 Field_2.setValueMap("หล่อและขึ้นรูป", "แต่ง", "ฝังพลอย", "ขัดและติดพลอย", "บรรจุหีบห่อ");
+			 Field_2.setValueMap(ProcessType.getValueMap());
 			 Field_2.setPrimaryKey(true);
 			 DataSourceIntegerField Field_5 = new DataSourceIntegerField("priority");
 

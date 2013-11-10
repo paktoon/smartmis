@@ -49,10 +49,16 @@ public class SmithListGrid extends ListGrid {
         ListGridField field_5 = new ListGridField("email");
         ListGridField field_6 = new ListGridField("address");
         
-        setFields(field_1, field_2, field_3, field_4, field_5, field_6);
+        ListGridField field_6_1 = new ListGridField("street");
+        ListGridField field_6_2 = new ListGridField("city");
+        ListGridField field_6_3 = new ListGridField("state");
+        ListGridField field_6_4 = new ListGridField("postal");
+        ListGridField field_7 = new ListGridField("type");
+        
+        setFields(field_1, field_2, field_3, field_4, field_5, field_6, field_6_1, field_6_2,field_6_3,field_6_4,field_7);
         setHoverWidth(200);  
         setHoverHeight(20);
-        hideFields("address");
+        hideFields("address", "street", "city", "state", "postal" );
         //fetchData();
 	}
 	

@@ -1,37 +1,90 @@
 package com.smart.mis.client.function.production.product;
 
 import com.google.gwt.core.client.GWT;
+import com.smart.mis.shared.prodution.ProductType;
+import com.smart.mis.shared.sale.ExchangeRate;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class ProductData {
 
-    public static ListGridRecord createRecord(String pid, String name, String desc, String size, Double weight, Double price, String type, Integer remain, String unit, Boolean inStock, String imgUrl) {  
+    public static ListGridRecord createRecord(String pid, String name, String name_th, Double weight, Double price, String type, Integer inStock, Integer reserved, String imgUrl, Double size, Double width, Double length, Double height, Double diameter, Double thickness) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("pid", pid);
-        record.setAttribute("name",name);  
-        record.setAttribute("desc", desc);
-        record.setAttribute("size", size); 
+        record.setAttribute("name",name);
+        record.setAttribute("name_th",name_th);
+
         record.setAttribute("weight", weight);
         record.setAttribute("price", price);
-        record.setAttribute("type", type);  
-        record.setAttribute("remain", remain);
-        record.setAttribute("unit", unit);  
-        record.setAttribute("inStock", inStock); 
+        record.setAttribute("type", type);
+        record.setAttribute("unit", ProductType.getUnit(type));  
+        
+        record.setAttribute("inStock", inStock);
+        record.setAttribute("reserved", reserved);
+        record.setAttribute("remain", inStock - reserved);
+        
         record.setAttribute("imgUrl", imgUrl); 
+        
+        //ring, toe ring
+        record.setAttribute("size", size); //USA size 5.0,5.5,6.0,6.5,7.0,7.5,8.0
+        //necklace, bangle
+        record.setAttribute("width", width); //cm
+        record.setAttribute("length", length); // cm
+        //earring, pendant, anklet, bracelet
+        record.setAttribute("height", height); 
+        record.setAttribute("diameter", diameter); //mm
+        //All
+        record.setAttribute("thickness", thickness); //mm
+        
+        return record;  
+    }
+    
+    public static ListGridRecord createUpdatedRecord(String pid, String name, String name_th, Double weight, Double price, String type, String imgUrl, Double size, Double width, Double length, Double height, Double diameter, Double thickness) {  
+        ListGridRecord record = new ListGridRecord();
+        record.setAttribute("pid", pid);
+        record.setAttribute("name",name);
+        record.setAttribute("name_th",name_th);
+
+        record.setAttribute("weight", weight);
+        record.setAttribute("price", price);
+        record.setAttribute("type", type);
+        record.setAttribute("unit", ProductType.getUnit(type));  
+        
+        record.setAttribute("imgUrl", imgUrl); 
+        
+        //Ring, Toe Ring
+        record.setAttribute("size", size); //USA size 5.0,5.5,6.0,6.5,7.0,7.5,8.0
+        //Necklaces, Pendants, Earing
+        record.setAttribute("width", width); //cm
+        record.setAttribute("length", length); // cm
+        //Earing
+        record.setAttribute("height", height); 
+        record.setAttribute("diameter", diameter); //mm
+        //All
+        record.setAttribute("thickness", thickness); //mm
+        
+        return record;  
+    }
+    
+    public static ListGridRecord createReservedRecord(String pid, Integer inStock, Integer reserved) {  
+        ListGridRecord record = new ListGridRecord();
+        record.setAttribute("pid", pid);
+        record.setAttribute("inStock", inStock);
+        record.setAttribute("reserved", reserved);
+        record.setAttribute("remain", inStock - reserved);
         return record;  
     }
     
     public static ListGridRecord[] getNewRecords() {
     	return new ListGridRecord[]{ 
-    			createRecord("PD10001","Diamond cut silver ring", "แหวนเงิน คัดลายน้ำ", "3.0 mm.", 6.3, 55.0, "แหวนนิ้วมือ" , 300,"วง" , true, ""),
-    			createRecord("PD10002","Thin plain silver ring", "แหวนเงินเกลี้ยง แบบบาง", "3.0 mm.", 5.6, 50.0, "แหวนนิ้วมือ", 200,"วง" , true, ""),
-    			createRecord("PD10003","Dense plain silver ring", "แหวนเงินเกลี้ยง แบบหนา", "4.0 mm.", 6.6, 62.0, "แหวนนิ้วมือ", 0 ,"วง", false, ""),
+    			createRecord("PD10001","Diamond cut silver ring", "แหวนเงิน คัดลายน้ำ", 6.3, 55.0, "ring" , 300 , 120, "", 5.0,null,null,null,null,3.0),
+    			createRecord("PD10002","Thin plain silver ring", "แหวนเงินเกลี้ยง แบบบาง", 5.6, 50.0, "ring", 200, 100, "", 5.0,null,null,null,null,3.0),
+    			createRecord("PD10003","Dense plain silver ring", "แหวนเงินเกลี้ยง แบบหนา", 6.6, 62.0, "ring", 0 , 0, "", 5.0,null,null,null,null,4.0),
 
-    			createRecord("PD10004","Spiral silver earrings", "ต่างหู ตีเกลียวคู่", "0.7x2.6 cm.", 6.3, 55.0, "ต่างหู" , 300,"คู่" , true, GWT.getHostPageBaseURL() + "_ah/img/_avEWP6JsPhjg9w8eS2rmg"),
-    			createRecord("PD10005","Scorpion silver ear cuffs", "ต่างหู ลงดำ ลายแมงป่อง", "3.0 mm.", 5.6, 50.0, "ต่างหู", 200,"คู่" , true, GWT.getHostPageBaseURL() + "_ah/img/x4oiXGpRJ2w9JHqqBnOInQ"),
+    			createRecord("PD10004","Spiral silver earrings", "ต่างหู ตีเกลียวคู่", 6.3, 55.0, "earring", 300, 0, GWT.getHostPageBaseURL() + "_ah/img/_avEWP6JsPhjg9w8eS2rmg", null, 0.7, 2.6, null, null, 3.0),
+    			createRecord("PD10005","Scorpion silver ear cuffs", "ต่างหู ลงดำ ลายแมงป่อง", 5.6, 50.0, "earring", 200, 50, GWT.getHostPageBaseURL() + "_ah/img/x4oiXGpRJ2w9JHqqBnOInQ", null, null, null, 7.0, 10.0, 3.0),
     			
-    			createRecord("PD10006","Silver necklace with star pendant", "สร้อยคอ พร้อมจี้รูปดาว", "45.5 cm.", 6.3, 55.0, "สร้อยคอ" , 100 ,"เส้น", true, GWT.getHostPageBaseURL() + "_ah/img/wcPuoWXSMi_K__gH9-5E2w"),
-    			createRecord("PD10007","Plain silver necklaces", "สายสร้อย โซ่คร้อง", "50 cm.", 5.6, 50.0, "สร้อยคอ", 100 ,"เส้น", true, GWT.getHostPageBaseURL() + "_ah/img/SaCp1BkcC059PilPBLxskg"),
+    			createRecord("PD10006","Silver necklace with star pendant", "สร้อยคอ พร้อมจี้รูปดาว", 6.3, 55.0, "necklace" , 100, 0, GWT.getHostPageBaseURL() + "_ah/img/wcPuoWXSMi_K__gH9-5E2w", null, null, 45.5, 7.0, 10.0, 3.0),
+    			createRecord("PD10007","Plain silver necklaces", "สายสร้อย โซ่คร้อง", 5.6, 50.0, "necklace", 100, 0, GWT.getHostPageBaseURL() + "_ah/img/SaCp1BkcC059PilPBLxskg", null, null, 50.0, null, null, 3.0),
     	};
     }
 }

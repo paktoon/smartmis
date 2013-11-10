@@ -216,7 +216,7 @@ public class MaterialAdd {
 													if (dsResponse.getStatus() != 0) {
 														SC.warn("การเพิ่มข้อมูลวัตถุดิบล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
 													} else { 
-														SC.warn("เพิ่มข้อมูลวัตถุดิบเรียบร้อยแล้ว");
+														SC.say("เพิ่มข้อมูลวัตถุดิบเรียบร้อยแล้ว");
 														winModel.destroy();
 														listGrid.fetchData();
 														listGrid.selectSingleRecord(dsResponse.getData()[0]);

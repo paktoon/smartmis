@@ -303,7 +303,7 @@ public class MaterialDetailTabPane extends TabSet {
 				    	    	//currentChangeSidList
 				    			);
 						materialDataSource.updateData(updateRecord);
-						SC.warn("แก้ไขข้อมูลวัตถุดิบเรียบร้อยแล้ว");
+						SC.say("แก้ไขข้อมูลวัตถุดิบเรียบร้อยแล้ว");
 //					} else {
 //						SC.warn("Updating user Fails - please contact administrator");
 //					}

@@ -6,6 +6,7 @@ import com.smart.mis.client.MainPage;
 import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionStack;
 import com.smart.mis.client.function.FunctionWindow;
+import com.smart.mis.client.function.production.plan.PlanTabSet;
 import com.smart.mis.client.function.production.product.ProductAdd;
 import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.production.product.ProductDetailTabPane;
@@ -19,6 +20,8 @@ import com.smart.mis.client.function.sale.customer.CustomerAdd;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.customer.CustomerDetailTabPane;
 import com.smart.mis.client.function.sale.customer.CustomerListGrid;
+import com.smart.mis.client.function.sale.quotation.QuotationTabSet;
+import com.smart.mis.shared.security.Role;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -58,6 +61,7 @@ public class ProductionPanel extends FunctionPanel{
 		
 		prepareSmithWindow();
 		prepareProductWindow();
+		preparePlanWindow();
 	}
 
 	@Override
@@ -224,5 +228,16 @@ public class ProductionPanel extends FunctionPanel{
         functionLayout.setHeight100();
         functionLayout.setMembers(functionStack);
         this.productWindow.addItem(functionLayout);
+	}
+	
+	private void preparePlanWindow(){
+		byte currentRole = this._main.getCurrentUser().getProfile().getRole();
+		Boolean allow = checkPermFlag(currentRole, Role.ADMIN) || checkPermFlag(currentRole, Role.OWNER);
+		PlanTabSet planTab = new PlanTabSet(allow, this._main.getCurrentUser());
+		this.planWindow.addItem(planTab);
+	}
+	
+	private boolean checkPermFlag(byte flag, byte checked){
+		return (flag & checked) == checked;
 	}
 }

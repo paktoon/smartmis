@@ -10,7 +10,7 @@ public class QuoteProductDetails {
 	String product_name;
 	//static String product_desc;
 	//Contact info
-	String product_size;
+	//String product_size;
 	Double product_weight;
 	Double product_price;
 	String product_type;
@@ -21,10 +21,10 @@ public class QuoteProductDetails {
 	Integer quote_amount;
 	Boolean status = true;
 	
-	public void save(String pid, String name, String size, Double weight, Double price, String type, String unit) {
+	public void save(String pid, String name, Double weight, Double price, String type, String unit) {
 		this.product_id = pid;
 		this.product_name = name;
-		this.product_size = size;
+		//this.product_size = size;
 		this.product_weight = weight;
 		this.product_price = price;
 		this.product_type = type;
@@ -41,7 +41,7 @@ public class QuoteProductDetails {
 	}
 	
 	public ListGridRecord convertToRecord(Integer quote_amount){
-		return QuoteProductData.createRecord(product_id, product_name, product_size, product_weight, product_price, product_type, product_unit, quote_amount, status);
+		return QuoteProductData.createRecord(product_id, product_name, product_weight, product_price, product_type, product_unit, quote_amount, status);
 	}
 	
 	public void clear(){
@@ -51,7 +51,6 @@ public class QuoteProductDetails {
 		product_id = null;
 		product_name = null;
 		
-		product_size = null;
 		product_weight = null;
 		product_price = null;
 		product_type = null;
@@ -60,7 +59,7 @@ public class QuoteProductDetails {
 	}
 	
 	public boolean check() {
-		if (product_id == null || product_name == null ||  product_size == null || product_weight == null || product_price == null || product_type == null || product_unit == null) {
+		if (product_id == null || product_name == null || product_weight == null || product_price == null || product_type == null || product_unit == null) {
 			return false;
 		}		
 		return true;

@@ -9,6 +9,7 @@ import com.smart.mis.client.function.production.process.ProcessData;
 import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
+import com.smart.mis.client.function.sale.delivery.OrderDeliveryTab;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.security.User;
@@ -67,9 +68,11 @@ public class SaleOrderTabSet extends TabSet {
 
 		OrderCreateTab createTab = new OrderCreateTab();
 		OrderReviseTab reviseTab = new OrderReviseTab();
+		OrderDeliveryTab deliveryTab = new OrderDeliveryTab();
 		
 		addTab(createTab.getCreateTab(user));
 		addTab(reviseTab.getReviseTab(user));
+		addTab(deliveryTab.getReviewTab(user));
 //		
 //		if (this.allowApproved) {
 //			QuoteApproveTab approveTab = new QuoteApproveTab();

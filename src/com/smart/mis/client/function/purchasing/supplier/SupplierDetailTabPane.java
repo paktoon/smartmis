@@ -302,7 +302,7 @@ public class SupplierDetailTabPane extends TabSet {
 				    	    	//currentChangeMidList
 				    			);
 						supplierDataSource.updateData(updateRecord);
-						SC.warn("แก้ไขข้อมูลผู้จำหน่ายเรียบร้อยแล้ว");
+						SC.say("แก้ไขข้อมูลผู้จำหน่ายเรียบร้อยแล้ว");
 //					} else {
 //						SC.warn("Updating user Fails - please contact administrator");
 //					}

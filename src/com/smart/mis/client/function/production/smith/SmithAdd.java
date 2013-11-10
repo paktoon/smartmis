@@ -23,6 +23,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -57,8 +58,8 @@ public class SmithAdd {
 		
 		winModel.setTitle("เพิ่มช่าง");
 		//winModel.setAutoSize(true);	
-		winModel.setWidth(650);
-		winModel.setHeight(300);
+		winModel.setWidth(700);
+		winModel.setHeight(350);
 		winModel.setHeaderIcon("[SKIN]actions/add.png");
 		winModel.setShowMinimizeButton(false);
 		winModel.setIsModal(true);
@@ -74,7 +75,8 @@ public class SmithAdd {
         
         final DynamicForm editorForm = new DynamicForm();
         
-        editorForm.setWidth(450);  
+        editorForm.setWidth(350); 
+        editorForm.setHeight(200);
         editorForm.setMargin(5);  
         editorForm.setNumCols(2);  
         editorForm.setCellPadding(2);  
@@ -96,18 +98,42 @@ public class SmithAdd {
 		TextItem phone1 = new TextItem("phone1", "หมายเลขโทรศัพท์ 1");
 		TextItem phone2 = new TextItem("phone2", "ชื่หมายเลขโทรศัพท์ 2");
 		TextItem email = new TextItem("email", "อีเมล");
-		
-		TextAreaItem address = new TextAreaItem("address", "ที่อยู่");
-		address.setWidth(300);
-		address.setRowSpan(3);
+		SelectItem type = new SelectItem("type", "ประเภทงาน");
+		type.setWidth(200);
 		
 		name.setRequired(true);
 		phone1.setRequired(true);
-		address.setRequired(true);
-		
+		type.setRequired(true);
 		name.setHint("*");
 		phone1.setHint("*");
+		type.setHint("*");
+		
+		final DynamicForm addressForm = new DynamicForm();  
+		addressForm.setWidth(300);  
+		addressForm.setMargin(5);  
+		addressForm.setNumCols(2);  
+		addressForm.setCellPadding(2);  
+		addressForm.setAutoFocus(false);  
+		addressForm.setDataSource(DS);  
+		addressForm.setUseAllDataSourceFields(false); 
+		addressForm.setIsGroup(true);
+		addressForm.setGroupTitle("ที่อยู่");
+		
+		TextItem address = new TextItem("address");
+		TextItem street = new TextItem("street");
+		TextItem city = new TextItem("city");
+		TextItem state = new TextItem("state");
+		IntegerItem postal = new IntegerItem("postal");
+		
+		address.setRequired(true);
+		city.setRequired(true);
+		state.setRequired(true);
+		postal.setRequired(true);
+		
 		address.setHint("*");
+		city.setHint("*");
+		state.setHint("*");
+		postal.setHint("*");
 		
         IButton saveButton = new IButton("บันทึก");  
         saveButton.setAlign(Alignment.CENTER);  
@@ -121,13 +147,20 @@ public class SmithAdd {
             	SC.confirm("ยืนยันการเพิ่มข้อมูลช่าง", "ท่านต้องการเพิ่มช่าง " + (String) editorForm.getValue("name") + " หรือไม่ ?", new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
-						if (value) {	
+						if (value) {
+							if (editorForm.validate() && addressForm.validate()) {
 							//String smid = editorForm.getValueAsString("smid");
 							String name = editorForm.getValueAsString("name");
 							String phone1 = editorForm.getValueAsString("phone1");
 					    	String phone2 = editorForm.getValueAsString("phone2");
 					    	String email = editorForm.getValueAsString("email");
-					    	String address = editorForm.getValueAsString("address");
+					    	String type = editorForm.getValueAsString("type");
+					    	
+					    	String address = addressForm.getValueAsString("address");
+				    		String street = addressForm.getValueAsString("street");
+							String city = addressForm.getValueAsString("city");
+							String state = addressForm.getValueAsString("state");
+					    	Integer postal = (Integer) addressForm.getValue("postal");
 					    	
 //					    	User createdUser = new User(uname, pwd, fname, lname, email, position, title, status);
 //					    	securityService.createUserOnServer(createdUser, pname, user, new AsyncCallback<String>() {
@@ -145,7 +178,12 @@ public class SmithAdd {
 												editorForm.getValueAsString("phone1"),
 												editorForm.getValueAsString("phone2"),
 												editorForm.getValueAsString("email"),
-												editorForm.getValueAsString("address")
+												addressForm.getValueAsString("address"),
+									    		addressForm.getValueAsString("street"),
+												addressForm.getValueAsString("city"),
+												addressForm.getValueAsString("state"),
+										    	(Integer) addressForm.getValue("postal"),
+										    	editorForm.getValueAsString("type")
 								    			);
 										
 										DS.addData(newRecord, new DSCallback() {
@@ -169,7 +207,8 @@ public class SmithAdd {
 //									}
 //								}
 							});
-					    }
+						}
+						}
 					}
             		
             	});
@@ -193,13 +232,21 @@ public class SmithAdd {
         phone2.setWidth(250);
         email.setWidth(250);
         editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-        editorForm.setFields(name, phone1, phone2, email , address);
-        editorForm.setColWidths(200	, 300);
+        editorForm.setFields(name, phone1, phone2, email , type);
+        editorForm.setColWidths(120	, 200);
         
-    	VLayout temp = new VLayout();
-    	temp.addMembers(saveButton, cancelButton);
-    	temp.setMargin(3);
-        outlineForm.addMembers(editorForm, temp);
+        addressForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
+        addressForm.setFields(address, street, city, state, postal );
+        addressForm.setColWidths(120, 200); 
+
+        VLayout information = new VLayout();
+        information.setMembersMargin(5);
+        information.addMembers(addressForm);
+        HLayout editor_control = new HLayout();
+        editor_control.addMembers(saveButton, cancelButton);
+        information.addMembers(editor_control);
+        outlineForm.addMembers(editorForm, information);
+        
         winModel.addItem(outlineForm);
         winModel.show();
 	}

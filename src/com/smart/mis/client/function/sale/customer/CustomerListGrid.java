@@ -40,11 +40,11 @@ public class CustomerListGrid extends ListGrid {
         setDataSource(CustomerDS.getInstance());
         setUseAllDataSourceFields(true);
         
-        setGroupStartOpen(GroupStartOpen.ALL);
-        setGroupByField("zone"); 
+        //setGroupStartOpen(GroupStartOpen.ALL);
+        //setGroupByField("zone"); 
         
         ListGridField field_1 = new ListGridField("cid", 120);
-        ListGridField field_2 = new ListGridField("cus_name",250);
+        ListGridField field_2 = new ListGridField("cus_name");
         field_2.setShowHover(true);
         ListGridField field_3 = new ListGridField("cus_phone");
         ListGridField field_4 = new ListGridField("contact_name",150);
@@ -52,12 +52,22 @@ public class CustomerListGrid extends ListGrid {
         ListGridField field_6 = new ListGridField("contact_email",200);
 
         ListGridField field_7 = new ListGridField("address");
-        ListGridField field_8 = new ListGridField("cus_type", 100);
+        ListGridField field_7_1 = new ListGridField("street");
+        ListGridField field_7_2 = new ListGridField("city");
+        ListGridField field_7_3 = new ListGridField("state");
+        ListGridField field_7_4 = new ListGridField("country");
+        ListGridField field_7_5 = new ListGridField("postal");
         
-        setFields(field_1, field_2, field_3, field_4, field_5, field_6, field_7, field_8);
+        ListGridField field_8 = new ListGridField("cus_type", 100);
+        ListGridField field_8_1 = new ListGridField("bus_type", 100);
+        ListGridField field_8_2 = new ListGridField("cus_group", 100);
+        ListGridField field_9 = new ListGridField("url", 100);
+        ListGridField field_10 = new ListGridField("zone", 80);
+        
+        setFields(field_1, field_2, field_3, field_4, field_5, field_6, field_7, field_7_1, field_7_2, field_7_3, field_7_4, field_7_5, field_8, field_8_2, field_8_1, field_9, field_10);
         setHoverWidth(200);  
         setHoverHeight(20);
-        hideFields("address");
+        hideFields("contact_name","contact_email","url","cus_phone", "contact_phone", "address", "street", "city", "state", "country" , "postal");
         //fetchData();
 	}
 	

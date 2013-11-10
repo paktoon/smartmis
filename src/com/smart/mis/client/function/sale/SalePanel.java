@@ -12,7 +12,9 @@ import com.smart.mis.client.function.sale.customer.CustomerAdd;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.customer.CustomerDetailTabPane;
 import com.smart.mis.client.function.sale.customer.CustomerListGrid;
+import com.smart.mis.client.function.sale.invoice.InvoiceTabSet;
 import com.smart.mis.client.function.sale.order.SaleOrderTabSet;
+import com.smart.mis.client.function.sale.purchase.ViewPOLaylout;
 import com.smart.mis.client.function.sale.quotation.QuotationTabSet;
 import com.smart.mis.shared.security.Role;
 import com.smartgwt.client.types.Alignment;
@@ -40,8 +42,8 @@ public class SalePanel extends FunctionPanel{
 	//private final FunctionWindow saleReportWindow;
 	private final FunctionWindow SubQuotationReportWindow;
 	private final FunctionWindow SubSaleReportWindow;
-	private final FunctionWindow SubDeliveryReportWindow;
 	private final FunctionWindow SubInvoiceReportWindow;
+	private final FunctionWindow SubDeliveryReportWindow;
 	
 	private final CustomerListGrid customerGrid = new CustomerListGrid();
 
@@ -62,7 +64,8 @@ public class SalePanel extends FunctionPanel{
 		prepareCustomerWindow();
 		prepareQuotationWindow();
 		prepareSaleOrderWindow();
-//		prepareCheckPOWindow();
+		prepareInvoiceWindow();
+		prepareCheckPOWindow();
 //		prepareSaleReportWindow();
 	}
 
@@ -93,10 +96,10 @@ public class SalePanel extends FunctionPanel{
 			LoadSaleReportWindow();
 			loadWindow(this._main.getSalePanel(), this.SubSaleReportWindow , name, icon);
 		} else if (nodeId.equals("153")) {
-			loadWindow(this._main.getSalePanel(), this.SubDeliveryReportWindow , name, icon);
-		} else if (nodeId.equals("154")) {
 			loadWindow(this._main.getSalePanel(), this.SubInvoiceReportWindow , name, icon);
-		} else init();
+		} else if (nodeId.equals("154")) {
+			loadWindow(this._main.getSalePanel(), this.SubDeliveryReportWindow , name, icon);
+		}  else init();
 	}
 	
 	private void prepareCustomerWindow(){
@@ -181,11 +184,18 @@ public class SalePanel extends FunctionPanel{
 	}
 	
 	private void prepareSaleOrderWindow(){
-		//byte currentRole = this._main.getCurrentUser().getProfile().getRole();
-		//Boolean allow = checkPermFlag(currentRole, Role.ADMIN) || checkPermFlag(currentRole, Role.OWNER);
-		//QuotationTabSet quoteTab = new QuotationTabSet(allow, this._main.getCurrentUser());
 		SaleOrderTabSet orderTab = new SaleOrderTabSet(this._main.getCurrentUser());
 		this.saleOrderWindow.addItem(orderTab);
+	}
+	
+	private void prepareInvoiceWindow(){
+		InvoiceTabSet invoiceTab = new InvoiceTabSet(this._main.getCurrentUser());
+		this.invoiceWindow.addItem(invoiceTab);
+	}
+	
+	private void prepareCheckPOWindow(){
+		VLayout checkPO = new ViewPOLaylout(this._main.getCurrentUser());
+		this.checkPOWindow.addItem(checkPO);
 	}
 	
 	private void LoadSaleReportWindow() {

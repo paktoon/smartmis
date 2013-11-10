@@ -394,7 +394,7 @@ public class PrintQuotation {
 //                SC.warn("click print");
 //          }
 //        });
-//		if (edit || !status.equals("อนุมัติแล้ว")) printButton.disable();
+//		if (edit || !status.equals("3_approved")) printButton.disable();
 //		
 //		final IButton saveButton = new IButton("บันทึกการแก้ไข");
 //		saveButton.setIcon("icons/16/save.png");
@@ -432,7 +432,7 @@ public class PrintQuotation {
 //					public void execute(Boolean value) {
 //						if (value) {
 //							//saveQuotation(main, quote_id, customerForm, quoteListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
-//			            	updateQuoteStatus(quote_id, "อนุมัติแล้ว", "");
+//			            	updateQuoteStatus(quote_id, "3_approved", "");
 //							main.destroy();
 //						}
 //					}
@@ -455,7 +455,7 @@ public class PrintQuotation {
 //									if (value == null || value.equals("")){
 //										SC.warn("กรุณาใส่ความคิดเห็นในกล่องข้อความ");
 //									} else {
-//										updateQuoteStatus(quote_id, "รอแก้ไข", value);
+//										updateQuoteStatus(quote_id, "1_waiting_for_revised", value);
 //										main.destroy();
 //									}
 //								}});
@@ -466,7 +466,7 @@ public class PrintQuotation {
 //        });
 //		
 //		if (page == 2) {
-//			if (!record.getAttributeAsString("status").equalsIgnoreCase("รออนุมัติ")){
+//			if (!record.getAttributeAsString("status").equalsIgnoreCase("2_waiting_for_approved")){
 //				approveButton.disable();
 //				disapproveButton.disable();
 //			} else {
@@ -596,7 +596,7 @@ public class PrintQuotation {
 //			temp.setQuantity(pquote_amount);
 //			productList.add(temp);
 //			//status
-//			final String quote_status = "รออนุมัติ";
+//			final String quote_status = "2_waiting_for_approved";
 //			
 //			if (customer.getField("cid").getValue() == null || customer.getField("cus_name").getValue() == null) {
 //				SC.warn("ชื่อและรหัสลูกค้าไม่ถุกต้อง");

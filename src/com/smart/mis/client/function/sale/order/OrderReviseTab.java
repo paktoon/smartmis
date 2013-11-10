@@ -14,6 +14,7 @@ import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.sale.Customer;
+import com.smart.mis.shared.sale.SaleOrderStatus;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.AdvancedCriteria;
 import com.smartgwt.client.data.Criterion;
@@ -102,7 +103,8 @@ public class OrderReviseTab {
 		saleText.setOperator(OperatorId.REGEXP);
 		final SelectItem statusSelected = new SelectItem("status", "สถานะ");
 		statusSelected.setWrapTitle(false);
-		statusSelected.setValueMap("รอผลิต", "กำลังผลิต", "ผลิตเสร็จสิ้น", "ระหว่างนำส่ง", "นำส่งแล้ว");
+		//statusSelected.setValueMap("รอผลิต", "กำลังผลิต", "พร้อมนำส่ง", "อยู่ระหว่างนำส่ง", "นำส่งแล้ว");
+		statusSelected.setValueMap(SaleOrderStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("cid", "รหัสลูกค้า");
@@ -141,10 +143,11 @@ public class OrderReviseTab {
  
 		saleListGrid.setAutoFetchData(true);  
 		saleListGrid.setCanMultiSort(true);
-		saleListGrid.setCriteria(new Criterion("status", OperatorId.NOT_EQUAL, "ยกเลิก"));
+		saleListGrid.setCriteria(new Criterion("status", OperatorId.NOT_EQUAL, "6_canceled"));
 		
 		saleListGrid.setDataSource(SaleOrderDS.getInstance());
-		saleListGrid.setInitialSort(new SortSpecifier[]{  
+		saleListGrid.setInitialSort(new SortSpecifier[]{ 
+                new SortSpecifier("status", SortDirection.ASCENDING),
                 new SortSpecifier("created_date", SortDirection.DESCENDING)  
         });
 		saleListGrid.setUseAllDataSourceFields(false);
@@ -156,7 +159,7 @@ public class OrderReviseTab {
 		ListGridField cus_name = new ListGridField("cus_name", 200);
 		ListGridField status = new ListGridField("status");
 //		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-//		valueMap.put("อนุมัติแล้ว", "approved");
+//		valueMap.put("3_approved", "approved");
 //		status.setValueMap(valueMap);
 		ListGridField total_amount = new ListGridField("total_amount", 120);
 		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
@@ -196,7 +199,7 @@ public class OrderReviseTab {
             	Criterion search = new Criterion();
             	search.addCriteria(searchForm.getValuesAsCriteria());
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-          		      new Criterion("status", OperatorId.NOT_EQUAL, "ยกเลิก"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "6_canceled"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
           		      search
           		  });
@@ -211,7 +214,7 @@ public class OrderReviseTab {
 		listAllButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-          		      new Criterion("status", OperatorId.NOT_EQUAL, "ยกเลิก"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "6_canceled"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
           		  });
                 searchForm.reset();

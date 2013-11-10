@@ -64,15 +64,15 @@ public class FunctionTreeNode {
 //        new SubjectTreeNode("134", "13", "จัดทำใบแจ้งหนี้"),   
 //        new SubjectTreeNode("135", "13", "ตรวจสอบสถานะคำสั่งซื้อ"),
 
-        new SubjectTreeNode("16", "1", "ใบแจ้งหนี้"),
+        new SubjectTreeNode("16", "1", "ใบแจ้งหนี้", "icons/16/folder-invoices-icon.png"),
         
         new SubjectTreeNode("14", "1", "ตรวจสอบสถานะคำสั่งซื้อ" , "icons/16/folder_out.png"), 
         
-        new SubjectTreeNode("15", "1", "รายงาน" , "icons/16/chart_bar.png"), 
+        new SubjectTreeNode("15", "1", "รายงานสรุป" , "icons/16/chart_bar.png"), 
         new SubjectTreeNode("151", "15", "การเสนอราคา", "icons/16/chart_bar.png", "รายงาน"),   
         new SubjectTreeNode("152", "15", "การขาย", "icons/16/chart_bar.png", "รายงาน"),   
-        new SubjectTreeNode("153", "15", "การนำส่งสินค้า", "icons/16/chart_bar.png", "รายงาน"),   
-        new SubjectTreeNode("154", "15", "การแจ้งหนี้", "icons/16/chart_bar.png", "รายงาน")
+        new SubjectTreeNode("153", "15", "การแจ้งหนี้", "icons/16/chart_bar.png", "รายงาน"),   
+        new SubjectTreeNode("154", "15", "การนำส่งสินค้า", "icons/16/chart_bar.png", "รายงาน")
     };
     
     public static TreeNode[] getSaleNode(){
@@ -98,7 +98,7 @@ public class FunctionTreeNode {
 //        new SubjectTreeNode("242", "24", "รับสินค้า"),   
 //        new SubjectTreeNode("243", "24", "โอนสินค้า"),
         
-        new SubjectTreeNode("25", "2", "รายงาน" , "icons/16/chart_bar.png") , 
+        new SubjectTreeNode("25", "2", "รายงานสรุป" , "icons/16/chart_bar.png") , 
         new SubjectTreeNode("251", "25", "แผนการผลิต", "icons/16/chart_bar.png", "รายงาน"),   
         new SubjectTreeNode("252", "25", "การโอนสินค้า", "icons/16/chart_bar.png", "รายงาน")
     };
@@ -127,7 +127,7 @@ public class FunctionTreeNode {
 //        new SubjectTreeNode("323", "32", "บันทึกคืน") ,  
 //        new SubjectTreeNode("324", "32", "ปรับปรุงยอด") ,
         
-        new SubjectTreeNode("37", "3", "รายงาน" , "icons/16/chart_bar.png"), 
+        new SubjectTreeNode("37", "3", "รายงานสรุป" , "icons/16/chart_bar.png"), 
         new SubjectTreeNode("371", "37", "สินค้าและวัตถุดิบคงคลัง" , "icons/16/chart_bar.png", "รายงาน"),   
         new SubjectTreeNode("372", "37", "เบิกจ่ายสินค้าและวัตถุดิบ" , "icons/16/chart_bar.png", "รายงาน"),   
         new SubjectTreeNode("373", "37", "รับสินค้าและวัตถุดิบ" , "icons/16/chart_bar.png","รายงาน"),
@@ -156,7 +156,7 @@ public class FunctionTreeNode {
         
         new SubjectTreeNode("44", "4", "คำสั่งซื้อ", "icons/16/shopping-cart-insert-icon.png"),
         
-        new SubjectTreeNode("45", "4", "รายงาน" , "icons/16/chart_bar.png"),
+        new SubjectTreeNode("45", "4", "รายงานสรุป" , "icons/16/chart_bar.png"),
         new SubjectTreeNode("451", "45", "การเสนอซื้อ", "icons/16/chart_bar.png", "รายงาน"),   
         new SubjectTreeNode("452", "45", "คำสั่งซื้อ", "icons/16/chart_bar.png", "รายงาน")
         
@@ -171,7 +171,7 @@ public class FunctionTreeNode {
         new SubjectTreeNode("52", "5", "จ่ายชำระหนี้ค่าวัตถุดิบ"),  
         new SubjectTreeNode("53", "5", "จ่ายชำระหนี้ค่าจ้างผลิต"),
         
-        new SubjectTreeNode("54", "5", "รายงาน" , "icons/16/chart_bar.png"),
+        new SubjectTreeNode("54", "5", "รายงานสรุป" , "icons/16/chart_bar.png"),
         new SubjectTreeNode("541", "54", "การรับชำระเงิน", "icons/16/chart_bar.png", "รายงาน"),   
         new SubjectTreeNode("542", "54", "การจ่ายชำระหนี้", "icons/16/chart_bar.png", "รายงาน")
         

@@ -131,12 +131,12 @@ public class SelectProductList {
 									String pid = item.getAttributeAsString("pid");
 									String pname = item.getAttributeAsString("name");
 									String ptype = item.getAttributeAsString("type");
-									String psize = item.getAttributeAsString("size");
+									//String psize = item.getAttributeAsString("size");
 									Double pweight = item.getAttributeAsDouble("weight");
 									Integer pquote_amount = item.getAttributeAsInt("quote_amount");
 									String punit = item.getAttributeAsString("unit");
 									Double pprice = item.getAttributeAsDouble("price");
-									ListGridRecord newRecord = QuoteProductData.createRecord(pid, pname, psize, pweight, pprice ,ptype, punit, pquote_amount, true);
+									ListGridRecord newRecord = QuoteProductData.createRecord(pid, pname, pweight, pprice ,ptype, punit, pquote_amount, true);
 									//DS.addData(newRecord);
 									target.addData(newRecord, new DSCallback() {
 										@Override

@@ -102,7 +102,7 @@ public class OrderCreateTab {
 		quoteText.setOperator(OperatorId.REGEXP);
 		//final SelectItem statusSelected = new SelectItem("status", "สถานะ");
 		//statusSelected.setWrapTitle(false);
-		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
+		//statusSelected.setValueMap("1_waiting_for_revised", "2_waiting_for_approved", "3_approved");
 		//statusSelected.setAllowEmptyValue(true);
 		//statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("cid", "รหัสลูกค้า");
@@ -141,7 +141,12 @@ public class OrderCreateTab {
  
 		quoteListGrid.setAutoFetchData(true);  
 		quoteListGrid.setCanMultiSort(true);
-		quoteListGrid.setCriteria(new Criterion("status", OperatorId.EQUALS, "อนุมัติแล้ว"));
+		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+    		      new Criterion("status", OperatorId.EQUALS, "3_approved"),
+    		      new Criterion("to", OperatorId.GREATER_OR_EQUAL, new Date()),
+    		      new Criterion("from", OperatorId.LESS_OR_EQUAL, new Date())
+    		  });
+		quoteListGrid.setCriteria(criteria);
 		
 		quoteListGrid.setDataSource(QuotationDS.getInstance());
 		quoteListGrid.setInitialSort(new SortSpecifier[]{  
@@ -155,7 +160,7 @@ public class OrderCreateTab {
 		ListGridField cus_name = new ListGridField("cus_name", 200);
 		ListGridField status = new ListGridField("status");
 //		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
-//		valueMap.put("อนุมัติแล้ว", "approved");
+//		valueMap.put("3_approved", "approved");
 //		status.setValueMap(valueMap);
 		ListGridField total_amount = new ListGridField("total_amount", 120);
 		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
@@ -195,9 +200,11 @@ public class OrderCreateTab {
             	Criterion search = new Criterion();
             	search.addCriteria(searchForm.getValuesAsCriteria());
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-          		      new Criterion("status", OperatorId.EQUALS, "อนุมัติแล้ว"),
+          		      new Criterion("status", OperatorId.EQUALS, "3_approved"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
-          		      search
+          		      new Criterion("to", OperatorId.GREATER_OR_EQUAL, new Date()),
+          		      new Criterion("from", OperatorId.LESS_OR_EQUAL, new Date()),
+        		      search
           		  });
               quoteListGrid.fetchData(criteria);  
               quoteListGrid.deselectAllRecords();
@@ -210,8 +217,10 @@ public class OrderCreateTab {
 		listAllButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-          		      new Criterion("status", OperatorId.EQUALS, "อนุมัติแล้ว"),
-          		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+          		      new Criterion("status", OperatorId.EQUALS, "3_approved"),
+          		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
+          		      new Criterion("to", OperatorId.GREATER_OR_EQUAL, new Date()),
+        		      new Criterion("from", OperatorId.LESS_OR_EQUAL, new Date()),
           		  });
                 searchForm.reset();
                 quoteListGrid.fetchData(criteria);  

@@ -4,6 +4,7 @@ import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.production.product.ProductData;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.shared.FieldFormatter;
+import com.smart.mis.shared.prodution.ProcessType;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
@@ -70,7 +71,7 @@ public class ProcessOutline extends VLayout {
         SelectItem name = new SelectItem("type", "ขั้นตอน");
         //name.setDefaultValue("---โปรดเลือก---");
         name.setEmptyDisplayValue("---โปรดเลือก---");
-        name.setValueMap("หล่อและขึ้นรูป", "แต่ง", "ฝังพลอย", "ขัดและติดพลอย", "บรรจุหีบห่อ");
+        name.setValueMap(ProcessType.getValueMap());
         
 		TextItem time = new TextItem("std_time", "เวลาผลิต");
 
@@ -253,14 +254,14 @@ public class ProcessOutline extends VLayout {
   
                 SectionStack sectionStack = new SectionStack();
             	sectionStack.setWidth(525);
-            	sectionStack.setHeight(100);
+            	sectionStack.setHeight(150);
             	SectionStackSection section = new SectionStackSection("รายการวัตถุดิบ");
             	section.setCanCollapse(false);
                 section.setExpanded(true);
                 
                 final ListGrid materialGrid = new ListGrid();  
                 materialGrid.setWidth(525);  
-                materialGrid.setHeight(224);  
+                materialGrid.setHeight(150);  
                 materialGrid.setCellHeight(22);  
                 //materialGrid.setSaveLocally(true);
                 materialGrid.setCanRemoveRecords(true);

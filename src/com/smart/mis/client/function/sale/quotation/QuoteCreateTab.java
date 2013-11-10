@@ -12,6 +12,8 @@ import com.smart.mis.client.function.sale.quotation.product.QuoteProductData;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDetails;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.ValidatorFactory;
+import com.smart.mis.shared.prodution.ProductType;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.DSCallback;
@@ -163,14 +165,14 @@ public class QuoteCreateTab {
 					String customer_name = selected.getAttributeAsString("cus_name");
 					String customer_type = selected.getAttributeAsString("cus_type");
 					//Contact info
-					String customer_address = selected.getAttributeAsString("address");
+					//String customer_address = selected.getAttributeAsString("address");
 					String customer_phone = selected.getAttributeAsString("cus_phone");
 					String contact_name = selected.getAttributeAsString("contact_name");
 					String contact_phone = selected.getAttributeAsString("contact_phone");
 					String contact_email = selected.getAttributeAsString("contact_email");
 					String zone = selected.getAttributeAsString("zone");
 					
-					client.setAttributes(customer_id, customer_name, customer_phone, contact_name, contact_phone, contact_email, customer_address, customer_type, zone);
+					client.setAttributes(customer_id, customer_name, customer_phone, contact_name, contact_phone, contact_email, customer_type, zone);
 					client.setPaymentModel(paymentModel.getValueAsString());
 					client.setCredit(credit.getValueAsInteger());
 					paymentModel.enable();
@@ -238,6 +240,7 @@ public class QuoteCreateTab {
         pname.setPickListFields(Field_M1, Field_M2, Field_M3, Field_M4);
         
         final StaticTextItem ptype = new StaticTextItem("type", "ประเภทสินค้า");
+        ptype.setValueMap(ProductType.getValueMap());
         
         final IntegerItem quantity = new IntegerItem("quantity", "จำนวน");
         quantity.setRequired(true);
@@ -245,8 +248,9 @@ public class QuoteCreateTab {
         quantity.disable();
         quantity.setWidth(100);
         quantity.setTextAlign(Alignment.LEFT);
+        quantity.setValidators(ValidatorFactory.integerRange(50, null));
         
-        final StaticTextItem desc = new StaticTextItem("desc" , "คำอธิบาย");
+        final StaticTextItem pname_th = new StaticTextItem("name_th", "คำอธิบาย");
         final StaticTextItem pprice = new StaticTextItem("pprice" , "ราคา");
 		
         pname.addChangedHandler(new ChangedHandler() {
@@ -258,16 +262,15 @@ public class QuoteCreateTab {
 					addButton.enable();
 					String product_id = selected.getAttributeAsString("pid");
 					String product_name = selected.getAttributeAsString("name");
-					String product_desc = selected.getAttributeAsString("desc");
+					String product_name_th = selected.getAttributeAsString("name_th");
 					//Contact info
-					String product_size = selected.getAttributeAsString("size");
 					Double product_weight = selected.getAttributeAsDouble("weight");
 					Double product_price = selected.getAttributeAsDouble("price");
 					String product_type = selected.getAttributeAsString("type");
 					
-					Double product_remain = selected.getAttributeAsDouble("remain");
+					//Double product_remain = selected.getAttributeAsDouble("remain");
 					String product_unit = selected.getAttributeAsString("unit");
-					Boolean product_inStock = selected.getAttributeAsBoolean("inStock");
+					//Boolean product_inStock = selected.getAttributeAsBoolean("inStock");
 					
 					quantity.setHint(product_unit + "*");
 					pprice.setHint("บาท ต่อ "+product_unit);
@@ -275,15 +278,15 @@ public class QuoteCreateTab {
 					quantity.enable();
 					pname.setValue(product_name);
 					pid.setValue(product_id);
-					desc.setValue(product_desc);
+					pname_th.setValue(product_name_th);
 					ptype.setValue(product_type);
 					pprice.setValue(product_price);
 				
-					quoteProduct.save(product_id, product_name, product_size, product_weight, product_price, product_type, product_unit);
+					quoteProduct.save(product_id, product_name, product_weight, product_price, product_type, product_unit);
 				}
 			}
         });
-        productForm.setFields(pid, pname, pprice, ptype, desc , quantity);
+        productForm.setFields(pid, pname, pprice, ptype, pname_th , quantity);
         productForm.setColWidths(100, 80, 80, 240, 100, 100);
         productForm.disable();
 		createLayout.addMember(productForm);
@@ -505,69 +508,75 @@ public class QuoteCreateTab {
 			public void onClick(ClickEvent event) {
 				//quoteItem
 				if (customerForm.validate() && dateForm.validate()) {
-					ListGridRecord[] all = quoteListGrid.getRecords();
-					
-					if (all.length == 0) {
-						SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
-						return;
-					}
-					
-					//SC.warn("numOfRecord : " + all.length);
-					Double total_weight = 0.0;
-					Double total_netExclusive = 0.0;
-					Integer total_amount = 0;
-					final String quote_id = "QA70" + Math.round((Math.random() * 100));
-					final ArrayList<QuoteProductDetails> productList = new ArrayList<QuoteProductDetails>();
-					for (ListGridRecord item : all){
-						total_weight += item.getAttributeAsDouble("weight");
-						total_amount += item.getAttributeAsInt("quote_amount");
-						total_netExclusive += item.getAttributeAsDouble("sum_price");
-						
-						String sub_quote_id = "QS80" + Math.round((Math.random() * 100));
-						String pid = item.getAttributeAsString("pid");
-						String pname = item.getAttributeAsString("name");
-						String ptype = item.getAttributeAsString("type");
-						String psize = item.getAttributeAsString("size");
-						Double pweight = item.getAttributeAsDouble("weight");
-						Integer pquote_amount = item.getAttributeAsInt("quote_amount");
-						String punit = item.getAttributeAsString("unit");
-						Double pprice = item.getAttributeAsDouble("price");
-						QuoteProductDetails temp = new QuoteProductDetails();
-						temp.save(pid, pname, psize, pweight, pprice, ptype, punit);
-						temp.setID(sub_quote_id, quote_id);
-						temp.setQuantity(pquote_amount);
-						productList.add(temp);
-					}
-					String cid = client.cid;
-					Date from = fromDate.getValueAsDate();
-					Date to = toDate.getValueAsDate();
-					Date delivery = deliveryDate.getValueAsDate();
-					String quote_status = "รออนุมัติ";
-					//xxxService.xxx(Callback quoteId);
-					ListGridRecord newRecord = QuotationData.createRecord(quote_id, client.cid, client.cus_name, client.payment_model, client.credit, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "", quote_status);
-					// client; - cid
-					// DateForm; - from , to
-					// SummaryForm; - netExclusive, tax, netInclusive
-					// --> Quote Object + ItemQuote Object
-					// Quote - quote id , cid , from, to , total_weight, total_amount, netExclusive, tax, netInclusive, created_date, modified_date, created_by, modified_by, status [waiting_for_approved, waiting_for_revised, approved, removed] --> to data store
-					// ItemQuote - item quote id, quote id, pid, amount, total_price, status (0,1) --> to date store
-					QuotationDS.getInstance().addData(newRecord, new DSCallback() {
+					SC.confirm("ยืนยันการออกใบเสนอราคา", "ต้องการออกใบเสนอราคา หรือไม่?" , new BooleanCallback() {
 						@Override
-						public void execute(DSResponse dsResponse, Object data,
-								DSRequest dsRequest) {
-								if (dsResponse.getStatus() != 0) {
-									SC.warn("การสร้างใบเสนอราคาล้มเหลว");
-								} else { 
-									for (QuoteProductDetails item : productList) {
-										ListGridRecord subNewRecord = QuoteProductData.createRecord(item);
-										QuoteProductDS.getInstance(quote_id).addData(subNewRecord);
-										//System.out.println("add data " + item.sub_quote_id);
-									}
-									SC.warn("สร้างใบเสนอราคาเสร็จสิ้น <br> " + "รหัสใบเสนอราคา " + quote_id);
-									clearAll();
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord[] all = quoteListGrid.getRecords();
+								
+								if (all.length == 0) {
+									SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
+									return;
 								}
+								
+								//SC.warn("numOfRecord : " + all.length);
+								Double total_weight = 0.0;
+								Double total_netExclusive = 0.0;
+								Integer total_amount = 0;
+								final String quote_id = "QA70" + Math.round((Math.random() * 100));
+								final ArrayList<QuoteProductDetails> productList = new ArrayList<QuoteProductDetails>();
+								for (ListGridRecord item : all){
+									total_weight += item.getAttributeAsDouble("weight");
+									total_amount += item.getAttributeAsInt("quote_amount");
+									total_netExclusive += item.getAttributeAsDouble("sum_price");
+									
+									String sub_quote_id = "QS80" + Math.round((Math.random() * 100));
+									String pid = item.getAttributeAsString("pid");
+									String pname = item.getAttributeAsString("name");
+									String ptype = item.getAttributeAsString("type");
+									Double pweight = item.getAttributeAsDouble("weight");
+									Integer pquote_amount = item.getAttributeAsInt("quote_amount");
+									String punit = item.getAttributeAsString("unit");
+									Double pprice = item.getAttributeAsDouble("price");
+									QuoteProductDetails temp = new QuoteProductDetails();
+									temp.save(pid, pname, pweight, pprice, ptype, punit);
+									temp.setID(sub_quote_id, quote_id);
+									temp.setQuantity(pquote_amount);
+									productList.add(temp);
+								}
+								//String cid = client.cid;
+								Date from = fromDate.getValueAsDate();
+								Date to = toDate.getValueAsDate();
+								Date delivery = deliveryDate.getValueAsDate();
+								String quote_status = "2_waiting_for_approved";
+								//xxxService.xxx(Callback quoteId);
+								ListGridRecord newRecord = QuotationData.createRecord(quote_id, client.cid, client.cus_name, client.payment_model, client.credit, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "", quote_status);
+								// client; - cid
+								// DateForm; - from , to
+								// SummaryForm; - netExclusive, tax, netInclusive
+								// --> Quote Object + ItemQuote Object
+								// Quote - quote id , cid , from, to , total_weight, total_amount, netExclusive, tax, netInclusive, created_date, modified_date, created_by, modified_by, status [waiting_for_approved, waiting_for_revised, approved, removed] --> to data store
+								// ItemQuote - item quote id, quote id, pid, amount, total_price, status (0,1) --> to date store
+								QuotationDS.getInstance().addData(newRecord, new DSCallback() {
+									@Override
+									public void execute(DSResponse dsResponse, Object data,
+											DSRequest dsRequest) {
+											if (dsResponse.getStatus() != 0) {
+												SC.warn("การสร้างใบเสนอราคาล้มเหลว");
+											} else { 
+												for (QuoteProductDetails item : productList) {
+													ListGridRecord subNewRecord = QuoteProductData.createRecord(item);
+													QuoteProductDS.getInstance(quote_id).addData(subNewRecord);
+													//System.out.println("add data " + item.sub_quote_id);
+												}
+												SC.say("สร้างใบเสนอราคาเสร็จสิ้น <br> " + "รหัสใบเสนอราคา " + quote_id);
+												clearAll();
+											}
+									}
+			    				});
+							}
 						}
-    				});
+	            	});
 				}
 			}
 		});
