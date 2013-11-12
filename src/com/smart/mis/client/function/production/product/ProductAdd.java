@@ -2,6 +2,7 @@ package com.smart.mis.client.function.production.product;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.smart.mis.client.function.production.process.ProcessAdd;
 import com.smart.mis.client.function.security.SecurityService;
 import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
@@ -47,6 +48,7 @@ public class ProductAdd {
     private final ProductDetailTabPane TabPane;
     private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
     private String user;
+    private final ProcessAdd process;
     private final Img editProductImage;
     
     private SelectItem size;
@@ -58,6 +60,7 @@ public class ProductAdd {
     	this.TabPane = TabPane;
     	this.user = user;
     	this.editProductImage = new Img("/images/icons/photoNotFound.png");
+    	this.process = new ProcessAdd();
 	}
 	
 	public void show(){

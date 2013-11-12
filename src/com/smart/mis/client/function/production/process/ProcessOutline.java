@@ -112,7 +112,7 @@ public class ProcessOutline extends VLayout {
             			@Override
                         public void execute(Boolean value) {  
             				if (value) {
-            					Integer priority = getPriority(editorForm.getValueAsString("type"));
+            					Integer priority = ProcessType.getPriority(editorForm.getValueAsString("type"));
             					
 	            				Record newRecord = ProcessData.createRecord(
 										"PS70" + Math.round((Math.random() * 100)),
@@ -501,13 +501,13 @@ public class ProcessOutline extends VLayout {
     	return pGrid;
     }
     
-    private Integer getPriority(String type){
-    	String[] valueMap = new String[]{"หล่อและขึ้นรูป", "แต่ง", "ฝังพลอย", "ขัดและติดพลอย", "บรรจุหีบห่อ"};
-    	if (type.equalsIgnoreCase(valueMap[0])) return 1;
-    	else if (type.equalsIgnoreCase(valueMap[1])) return 2;
-    	else if (type.equalsIgnoreCase(valueMap[2])) return 3;
-    	else if (type.equalsIgnoreCase(valueMap[3])) return 4;
-    	else if (type.equalsIgnoreCase(valueMap[4])) return 5;
-    	else return 99;
-    }
+//    private Integer getPriority(String type){
+//    	String[] valueMap = new String[]{"หล่อและขึ้นรูป", "แต่ง", "ฝังพลอย", "ขัดและติดพลอย", "บรรจุหีบห่อ"};
+//    	if (type.equalsIgnoreCase(valueMap[0])) return 1;
+//    	else if (type.equalsIgnoreCase(valueMap[1])) return 2;
+//    	else if (type.equalsIgnoreCase(valueMap[2])) return 3;
+//    	else if (type.equalsIgnoreCase(valueMap[3])) return 4;
+//    	else if (type.equalsIgnoreCase(valueMap[4])) return 5;
+//    	else return 99;
+//    }
 }

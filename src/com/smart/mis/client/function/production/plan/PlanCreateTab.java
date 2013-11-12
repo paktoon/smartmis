@@ -402,6 +402,7 @@ public class PlanCreateTab {
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
         
+        ListGridField quoteItemCell_7 = new ListGridField("details");
 //        ListGridSummaryField quoteItemCell_sum = new ListGridSummaryField("sum_price", 100);
 //
 //        quoteItemCell_sum.setRecordSummaryFunction(RecordSummaryFunctionType.MULTIPLIER);
@@ -419,7 +420,7 @@ public class PlanCreateTab {
         
         //planListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_3, quoteItemCell_4, quoteItemCell_5, quoteItemCell_6, quoteItemCell_sum);
         //planListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_4, quoteItemCell_6, quoteItemCell_3, quoteItemCell_5 , quoteItemCell_sum);
-        planListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_4, quoteItemCell_6, quoteItemCell_3);
+        planListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_7, quoteItemCell_4, quoteItemCell_6, quoteItemCell_3);
         
 		itemLayout.addMember(planListGrid);
 		

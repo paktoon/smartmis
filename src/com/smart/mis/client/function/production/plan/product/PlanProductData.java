@@ -20,6 +20,8 @@ public class PlanProductData {
         record.setAttribute("diameter", diameter);  
         record.setAttribute("thickness", thickness);
 		
+        record.setAttribute("details", PlanProductDetails.getProductDetails(size, width, length, height, diameter, thickness));
+        
         record.setAttribute("plan_amount", plan_amount);
         record.setAttribute("status", status);
         return record;  
@@ -42,6 +44,8 @@ public class PlanProductData {
         record.setAttribute("diameter", diameter);  
         record.setAttribute("thickness", thickness);
         
+        record.setAttribute("details", PlanProductDetails.getProductDetails(size, width, length, height, diameter, thickness));
+        
         record.setAttribute("plan_amount", plan_amount);
         record.setAttribute("status", status);
         return record;  
@@ -63,6 +67,8 @@ public class PlanProductData {
         record.setAttribute("height", item.product_height); 
         record.setAttribute("diameter", item.product_diameter);  
         record.setAttribute("thickness", item.product_thickness);
+        
+        record.setAttribute("details", item.getProductDetails());
         
         record.setAttribute("plan_amount", item.plan_amount);
         record.setAttribute("status", item.status);

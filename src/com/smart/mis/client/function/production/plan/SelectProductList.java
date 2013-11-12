@@ -81,9 +81,9 @@ public class SelectProductList {
         ListGridField pnameField = new ListGridField("name", 150);
         pnameField.setCanEdit(false);
         //ListGridField pdescField = new ListGridField("desc", 150);
-        ListGridField ppriceField = new ListGridField("price", 80);
-        ppriceField.setCellFormatter(FieldFormatter.getPriceFormat());
-        ppriceField.setCanEdit(false);
+        ListGridField pweightField = new ListGridField("weight", 80);
+        pweightField.setCellFormatter(FieldFormatter.getNumberFormat());
+        pweightField.setCanEdit(false);
         //ListGridField ptypeField = new ListGridField("type", 80);
         ListGridField premainField = new ListGridField("remain", 80);
         premainField.setCellFormatter(FieldFormatter.getNumberFormat());
@@ -98,7 +98,7 @@ public class SelectProductList {
         pplanAmount.setRequired(true);
         pplanAmount.setDefaultValue(0);
         pplanAmount.setValidators(ValidatorFactory.integerRange(1, null));
-        productGrid.setFields(pidField, pnameField, ppriceField, premainField, punitField, pplanAmount); 
+        productGrid.setFields(pidField, pnameField, pweightField, premainField, punitField, pplanAmount); 
         
         HLayout control = new HLayout();
         control.setAlign(Alignment.CENTER);

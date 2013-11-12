@@ -74,4 +74,26 @@ public class PlanProductDetails {
 		}		
 		return true;
 	}
+	
+	public String getProductDetails() {
+		String details = "";
+		if (product_size != null) details += "ขนาดมาตรฐาน " + product_size + " ";
+		if (product_width != null) details += "กว้าง" + product_width + " ซม. ";
+		if (product_length != null) details += "ยาว " + product_length + " ซม. ";
+		if (product_height != null) details += "สูง " + product_height + " มม. ";
+		if (product_diameter != null) details += "เส้นผ่าศูนย์กลาง " + product_diameter+ " มม. ";
+		if (product_thickness != null) details += "หนา " + product_thickness+ " มม. ";
+		return details;
+	}
+	
+	public static String getProductDetails(Double size, Double width, Double length, Double height, Double diameter, Double thickness) {
+		String details = "";
+		if (size != null) details += "ขนาดมาตรฐาน " + size + " ";
+		if (width != null) details += "กว้าง" + width + " ซม. ";
+		if (length != null) details += "ยาว " + length + " ซม. ";
+		if (height != null) details += "สูง " + height + " มม. ";
+		if (diameter != null) details += "เส้นผ่าศูนย์กลาง " + diameter+ " มม. ";
+		if (thickness != null) details += "หนา " + thickness+ " มม. ";
+		return details;
+	}
 }

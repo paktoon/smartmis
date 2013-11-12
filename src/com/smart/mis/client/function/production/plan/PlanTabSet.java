@@ -71,10 +71,10 @@ public class PlanTabSet extends TabSet {
 		addTab(createTab.getCreateTab(user));
 		addTab(reviseTab.getReviseTab(user));
 		
-//		if (this.allowApproved) {
-//			PlanApproveTab approveTab = new PlanApproveTab();
-//			addTab(approveTab.getApproveTab(user));
-//		}
+		if (this.allowApproved) {
+			PlanApproveTab approveTab = new PlanApproveTab();
+			addTab(approveTab.getApproveTab(user));
+		}
 		
 	}
 }

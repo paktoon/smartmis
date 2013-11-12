@@ -45,8 +45,10 @@ public class PlanProductDS extends DataSource  {
 			 DataSourceTextField Field_7_4 = new DataSourceTextField("height", "หน่วย");
 			 DataSourceTextField Field_7_5 = new DataSourceTextField("diameter", "หน่วย");
 			 DataSourceTextField Field_7_6 = new DataSourceTextField("thickness", "หน่วย");
+			 
+			 DataSourceTextField Field_7 = new DataSourceTextField("details", "รายละเอียดสินค้า");
 
-			 setFields(Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_7_6);
+			 setFields(Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_7_6, Field_7);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(new ListGridRecord[]{}); // For create tab

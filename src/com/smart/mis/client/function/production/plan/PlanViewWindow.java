@@ -231,6 +231,7 @@ public class PlanViewWindow extends EditorWindow{
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
         
+        ListGridField quoteItemCell_7 = new ListGridField("details");
 //        ListGridSummaryField quoteItemCell_sum = new ListGridSummaryField("sum_price", 100);
 //
 //        quoteItemCell_sum.setRecordSummaryFunction(RecordSummaryFunctionType.MULTIPLIER);
@@ -239,7 +240,7 @@ public class PlanViewWindow extends EditorWindow{
 //        quoteItemCell_sum.setCellFormatter(FieldFormatter.getPriceFormat());
 //        quoteItemCell_sum.setAlign(Alignment.RIGHT);
  
-        planListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_6, quoteItemCell_3);
+        planListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_7, quoteItemCell_6, quoteItemCell_3);
         //itemLayout.addMember(planListGrid);
         section.setItems(planListGrid);
         sectionStack.setSections(section);
@@ -592,7 +593,7 @@ public class PlanViewWindow extends EditorWindow{
 		}
 		
 		Double total_weight = 0.0;
-		Double total_netExclusive = 0.0;
+		//Double total_netExclusive = 0.0;
 		Integer total_amount = 0;
 		//final String plan_id = "QA70" + Math.round((Math.random() * 100));
 		final ArrayList<PlanProductDetails> productList = new ArrayList<PlanProductDetails>();
