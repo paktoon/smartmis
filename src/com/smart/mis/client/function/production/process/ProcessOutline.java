@@ -58,22 +58,22 @@ public class ProcessOutline extends VLayout {
         setHeight(100);
         setMargin(5);
         
-        final DynamicForm editorForm = new DynamicForm();  
-        editorForm.setWidth(600); 
-        editorForm.setMargin(5);  
-        editorForm.setNumCols(4);  
-        editorForm.setAutoFocus(false);  
-        editorForm.setDataSource(DS);  
-        editorForm.setUseAllDataSourceFields(false); 
-        editorForm.setIsGroup(true);
-        editorForm.setGroupTitle("ขั้นตอนการผลิต");
-        
-        SelectItem name = new SelectItem("type", "ขั้นตอน");
-        //name.setDefaultValue("---โปรดเลือก---");
-        name.setEmptyDisplayValue("---โปรดเลือก---");
-        name.setValueMap(ProcessType.getValueMap());
-        
-		TextItem time = new TextItem("std_time", "เวลาผลิต");
+//        final DynamicForm editorForm = new DynamicForm();  
+//        editorForm.setWidth(600); 
+//        editorForm.setMargin(5);  
+//        editorForm.setNumCols(4);  
+//        editorForm.setAutoFocus(false);  
+//        editorForm.setDataSource(DS);  
+//        editorForm.setUseAllDataSourceFields(false); 
+//        editorForm.setIsGroup(true);
+//        editorForm.setGroupTitle("ขั้นตอนการผลิต");
+//        
+//        SelectItem name = new SelectItem("type", "ขั้นตอน");
+//        //name.setDefaultValue("---โปรดเลือก---");
+//        name.setEmptyDisplayValue("---โปรดเลือก---");
+//        name.setValueMap(ProcessType.getValueMap());
+//        
+//		TextItem time = new TextItem("std_time", "เวลาผลิต");
 
 //		SelectItem material = new SelectItem("mid", "วัตถุดิบ");
 //		material.setOptionDataSource(MaterialDS.getInstance());
@@ -87,98 +87,67 @@ public class ProcessOutline extends VLayout {
 //        Field_3.setAlign(Alignment.CENTER);
 //        material.setPickListFields(Field_1, Field_2, Field_3);
         
-		TextAreaItem desc = new TextAreaItem("desc", "คำอธิบาย");
-		desc.setWidth(220);
-		desc.setRowSpan(4);
-		
-		name.setRequired(true);
-		time.setRequired(true);
-		desc.setRequired(true);
-		
-		name.setHint("*");
-		time.setHint("วัน *");
-		desc.setHint("*");
+//		TextAreaItem desc = new TextAreaItem("desc", "คำอธิบาย");
+//		desc.setWidth(220);
+//		desc.setRowSpan(4);
+//		
+//		name.setRequired(true);
+//		time.setRequired(true);
+//		desc.setRequired(true);
+//		
+//		name.setHint("*");
+//		time.setHint("วัน *");
+//		desc.setHint("*");
 		
         HLayout editor_control = new HLayout();
         editor_control.setMargin(5);
         editor_control.setMembersMargin(10);
         editor_control.setHeight(20);
         
-		IButton addButton = new IButton("เพิ่มขั้นตอน");  
-		addButton.setIcon("[SKIN]actions/add.png");
-		addButton.addClickHandler(new ClickHandler() {  
-            public void onClick(ClickEvent event) {  
-            	SC.confirm("เพิ่มขั้นตอนการผลิต", "ท่านต้องการ เพิ่มขั้นตอนการผลิตสินค้า หรือไม่ ?" , new BooleanCallback() {
-            			@Override
-                        public void execute(Boolean value) {  
-            				if (value) {
-            					Integer priority = ProcessType.getPriority(editorForm.getValueAsString("type"));
-            					
-	            				Record newRecord = ProcessData.createRecord(
-										"PS70" + Math.round((Math.random() * 100)),
-										editorForm.getValueAsString("type"),
-										editorForm.getValueAsString("desc"),
-										Double.parseDouble(editorForm.getValueAsString("std_time")),
-										DS.pid,
-										priority
-										//,
-										//editorForm.getValueAsString("mid"),
-										//editorForm.getField("mid").getDisplayValue()
-						    			);
-	            				
-	            				DS.addData(newRecord, new DSCallback() {
-									@Override
-									public void execute(DSResponse dsResponse, Object data,
-											DSRequest dsRequest) {
-											if (dsResponse.getStatus() != 0) {
-												SC.warn("การเพิ่มขั้นตอนล้มเหลว มีขั้นตอนนี้อยู่แล้ว");
-											} else { 
-												process.fetchData();
-								            	editorForm.reset(); 
-											}
-									}
-	            				});
-            				}
-                        }
-                    }); 
-            }  
-        });
-        
-		editor_control.addMember(addButton);
-		
-//		IButton delButton = new IButton("ลบขั้นตอน");
-//		delButton.setIcon("icons/16/delete.png");
-//		delButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) {
-//            	Record selected = process.getSelectedRecord();
-//            	if (selected == null) {
-//            		SC.warn("กรุณาเลือกรายการที่ต้องการลบ");
-//            	} else {
-//            		SC.confirm("ยืนยันการลบ ขั้นตอนการผลิต", "ท่านต้องการลบ ขั้นตอนการผลิต หรือไม่ ?" , new BooleanCallback() {
-//    					@Override
-//    					public void execute(Boolean value) {
-//    						if (value) {
-//    							process.removeSelectedData();
-//    							editorForm.reset();
-//    						}
-//    					}
-//                	});
-//            	}
+//		IButton addButton = new IButton("เพิ่มขั้นตอน");  
+//		addButton.setIcon("[SKIN]actions/add.png");
+//		addButton.addClickHandler(new ClickHandler() {  
+//            public void onClick(ClickEvent event) {  
+//            	SC.confirm("เพิ่มขั้นตอนการผลิต", "ท่านต้องการ เพิ่มขั้นตอนการผลิตสินค้า หรือไม่ ?" , new BooleanCallback() {
+//            			@Override
+//                        public void execute(Boolean value) {  
+//            				if (value) {
+//            					Integer priority = ProcessType.getPriority(editorForm.getValueAsString("type"));
+//            					
+//	            				Record newRecord = ProcessData.createRecord(
+//										"PS70" + Math.round((Math.random() * 100)),
+//										editorForm.getValueAsString("type"),
+//										editorForm.getValueAsString("desc"),
+//										Double.parseDouble(editorForm.getValueAsString("std_time")),
+//										DS.pid,
+//										priority
+//										//,
+//										//editorForm.getValueAsString("mid"),
+//										//editorForm.getField("mid").getDisplayValue()
+//						    			);
+//	            				
+//	            				DS.addData(newRecord, new DSCallback() {
+//									@Override
+//									public void execute(DSResponse dsResponse, Object data,
+//											DSRequest dsRequest) {
+//											if (dsResponse.getStatus() != 0) {
+//												SC.warn("การเพิ่มขั้นตอนล้มเหลว มีขั้นตอนนี้อยู่แล้ว");
+//											} else { 
+//												process.fetchData();
+//								            	editorForm.reset(); 
+//											}
+//									}
+//	            				});
+//            				}
+//                        }
+//                    }); 
 //            }  
 //        });
-		IButton discardButton = new IButton("ยกเลิก");  
-		discardButton.setIcon("icons/16/delete.png");
-        discardButton.addClickHandler(new ClickHandler() {  
-            public void onClick(ClickEvent event) {  
-                process.discardAllEdits();  
-            }  
-        });  
-        editor_control.addMember(discardButton);  
+//        
+//		editor_control.addMember(addButton);
 		
 		IButton saveButton = new IButton("บันทึกรายการ");  
-        //saveButton.setMargin(10);
-        //saveButton.setWidth(150);  
-        //saveButton.setHeight(50);
+
         saveButton.setIcon("icons/16/save.png");
         saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
@@ -197,43 +166,25 @@ public class ProcessOutline extends VLayout {
         }); 
         editor_control.addMember(saveButton);
         
-//        cancelButton = new IButton("ยกเลิก");  
-//        cancelButton.setAlign(Alignment.CENTER);  
-//        cancelButton.setMargin(10);
-//        cancelButton.setWidth(150);  
-//        cancelButton.setHeight(50);
-//        cancelButton.setIcon("icons/16/close.png");
-//        cancelButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) {  
-//            	SC.confirm("ยกเลิกการแก้ไขข้อมูลสินค้า", "ท่านต้องการ ยกเลิกการแก้ไขข้อมูลสินค้า หรือไม่ ?" , new BooleanCallback() {
-//					@Override
-//					public void execute(Boolean value) {
-//						if (value) {
-//							updateDetails();
-//							selectTab(0); // back to detail tab
-//						}
-//					}
-//            		
-//            	});
-//            }  
-//        });
-//
-//        saveButton.setDisabled(true);
-//        cancelButton.setDisabled(true);
-//        
-        name.setWidth(150);
-        time.setWidth(150);
-//        weight.setWidth(250);
-//        price.setWidth(250);
-//        type.setWidth(250);
-//        editorForm.setFields(name, desc, material, time);
-        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-        editorForm.setFields(name, desc, time);
-        editorForm.setColWidths(120, 150, 100, 100); 
+		IButton discardButton = new IButton("ยกเลิก");  
+		discardButton.setIcon("icons/16/delete.png");
+        discardButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) {  
+                process.discardAllEdits();  
+            }  
+        });  
+        editor_control.addMember(discardButton); 
+
+//        name.setWidth(150);
+//        time.setWidth(150);
+//        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
+//        editorForm.setFields(name, desc, time);
+//        editorForm.setColWidths(120, 150, 100, 100); 
 
         //editor_control.addMembers(addButton, delButton, saveButton);
         //addMembers(editorForm , editor_control);
-        addMembers(editorForm, editor_control, process);
+//        addMembers(editorForm, editor_control, process);
+        addMembers(editor_control, process);
     }
     
     private ListGrid processListGrid(final ProcessListDS DS) {
@@ -376,9 +327,13 @@ public class ProcessOutline extends VLayout {
 			  									req_amount,
 			  									unit
 			  					    			);
-			  	    	        	  currentDS.addData(newRecord);
-			  	    	        	  materialGrid.fetchData();
-			  	    	        	  addMaterial.destroy();
+			  	    	        	currentDS.addData(newRecord, new DSCallback() {
+										@Override
+										public void execute(DSResponse dsResponse,
+												Object data, DSRequest dsRequest) {
+					  	    	        	  addMaterial.destroy();
+					  	    	        	  materialGrid.fetchData();
+										}});
 		    	                  } else {
 		    	                	  SC.warn("ข้อมูลไม่ถูกต้อง");
 		    	                  }
@@ -453,10 +408,10 @@ public class ProcessOutline extends VLayout {
     	pGrid.setWidth(600);  
     	pGrid.setHeight(300); 
         
-    	pGrid.setCanRemoveRecords(true);
-    	pGrid.setDeferRemoval(true);
-    	pGrid.setWarnOnRemoval(true);
-    	pGrid.setWarnOnRemovalMessage("คุณต้องการลบ ขั้นตอนการผลิต หรือไม่?");
+    	//pGrid.setCanRemoveRecords(true);
+    	//pGrid.setDeferRemoval(true);
+    	//pGrid.setWarnOnRemoval(true);
+    	//pGrid.setWarnOnRemovalMessage("คุณต้องการลบ ขั้นตอนการผลิต หรือไม่?");
     	pGrid.setAutoSaveEdits(false); 
     	
     	pGrid.setAlternateRecordStyles(true);  

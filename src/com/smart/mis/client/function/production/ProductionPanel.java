@@ -6,6 +6,7 @@ import com.smart.mis.client.MainPage;
 import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionStack;
 import com.smart.mis.client.function.FunctionWindow;
+import com.smart.mis.client.function.production.order.ProductionOrderTabSet;
 import com.smart.mis.client.function.production.plan.PlanTabSet;
 import com.smart.mis.client.function.production.product.ProductAdd;
 import com.smart.mis.client.function.production.product.ProductDS;
@@ -62,6 +63,7 @@ public class ProductionPanel extends FunctionPanel{
 		prepareSmithWindow();
 		prepareProductWindow();
 		preparePlanWindow();
+		prepareOrderWindow();
 	}
 
 	@Override
@@ -235,6 +237,11 @@ public class ProductionPanel extends FunctionPanel{
 		Boolean allow = checkPermFlag(currentRole, Role.ADMIN) || checkPermFlag(currentRole, Role.OWNER);
 		PlanTabSet planTab = new PlanTabSet(allow, this._main.getCurrentUser());
 		this.planWindow.addItem(planTab);
+	}
+	
+	private void prepareOrderWindow(){
+		ProductionOrderTabSet orderTab = new ProductionOrderTabSet( this._main.getCurrentUser());
+		this.produceWindow.addItem(orderTab);
 	}
 	
 	private boolean checkPermFlag(byte flag, byte checked){

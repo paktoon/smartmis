@@ -36,7 +36,7 @@ public class PlanDS extends DataSource {
 		 
 		 DataSourceTextField Field_2 = new DataSourceTextField("sale_id", "รหัสรายการขาย");
 		 Field_2.setForeignKey("SaleOrderDS.sale_id");
-//		 DataSourceTextField Field_2_1 = new DataSourceTextField("cus_name", "ชื่อลูกค้า");
+		 DataSourceTextField Field_2_1 = new DataSourceTextField("reason", "เหตุผลในการผลิต");
 //		 DataSourceTextField Field_2_2 = new DataSourceTextField("payment_model", "วิธีการชำระเงิน");
 //		 DataSourceIntegerField Field_2_3 = new DataSourceIntegerField("credit", "เครดิต");
 		 
@@ -63,7 +63,7 @@ public class PlanDS extends DataSource {
 		 //Field_16.setValueMap("รอแก้ไข" , "รออนุมัติ" , "อนุมัติแล้ว" , "ยกเลิก");
 		 Field_16.setValueMap(ProductionPlanStatus.getValueMap());
 		 
-		 setFields(Field_1, Field_2, Field_5, Field_6 ,Field_7, Field_11, Field_12, Field_13, Field_14, Field_15, Field_16);
+		 setFields(Field_1, Field_2, Field_2_1, Field_5, Field_6 ,Field_7, Field_11, Field_12, Field_13, Field_14, Field_15, Field_16);
 		 
 		 //setDataURL("smartmis/security/userData");
 		 setTestData(PlanData.getNewRecords()); // For Test

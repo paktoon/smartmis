@@ -50,6 +50,7 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SelectOtherItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -77,8 +78,8 @@ public class PlanViewWindow extends EditorWindow{
 		client = new Customer();
 		Window editWindow = new Window();
 		editWindow.setTitle("ข้อมูลแผนการผลิค");
-		editWindow.setWidth(670);  
-		editWindow.setHeight(620);
+		editWindow.setWidth(690);  
+		editWindow.setHeight(450);
 		editWindow.setShowMinimizeButton(false);
 		editWindow.setIsModal(true);
 		editWindow.setShowModalMask(true);
@@ -93,7 +94,7 @@ public class PlanViewWindow extends EditorWindow{
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
 		VLayout layout = new VLayout();
 		layout.setWidth(650);
-		layout.setHeight(600);
+		layout.setHeight(400);
 		layout.setMargin(10);
 		
 		final String plan_id = record.getAttributeAsString("plan_id");
@@ -105,6 +106,7 @@ public class PlanViewWindow extends EditorWindow{
 		final String sale_id = record.getAttributeAsString("sale_id");
 		Date delivery = record.getAttributeAsDate("delivery");
 		String comment = record.getAttributeAsString("comment");
+		String reason = record.getAttributeAsString("reason");
 		
 		String created_by = record.getAttributeAsString("created_by");
 		Date created_date = record.getAttributeAsDate("created_date");
@@ -159,15 +161,23 @@ public class PlanViewWindow extends EditorWindow{
 		commentForm.setMargin(5);
 		commentForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 		
-		TextAreaItem comment_area = new TextAreaItem();
+		final SelectOtherItem reason_area = new SelectOtherItem(); 
+		if (edit) reason_area.setCanEdit(true);
+		else reason_area.setCanEdit(false);
+		reason_area.setOtherTitle("อื่นๆ..");  
+		reason_area.setOtherValue("OtherVal");
+		reason_area.setEmptyDisplayValue("---โปรดระบุความคิดเห็น---");
+		reason_area.setTitle("เหตุผลในการผลิต");  
+		reason_area.setValueMap("สินค้ามีปริมาณต่ำกว่าที่ควรจะเป็น", "สินค้าขายดี", "สินค้าขาดตลาด"); 
+		reason_area.setValue(reason);
+		reason_area.setWidth(250);
+		
+		final StaticTextItem comment_area = new StaticTextItem();
 		comment_area.setTitle("ความคิดเห็น");
-		comment_area.setTitleOrientation(TitleOrientation.TOP);
-		comment_area.setHeight(60);
 		comment_area.setWidth(250);
-		if (edit) comment_area.setCanEdit(true);
-		else comment_area.setCanEdit(false);
 		comment_area.setValue(comment);
-		commentForm.setFields(comment_area);
+		
+		commentForm.setFields(reason_area, comment_area);
 		
 		HLayout headerLayout = new HLayout();
 		headerLayout.setWidth100();
@@ -423,7 +433,7 @@ public class PlanViewWindow extends EditorWindow{
 					        selectOtherItem.setOtherValue("OtherVal");
 					        selectOtherItem.setEmptyDisplayValue("---โปรดระบุความคิดเห็น---");
 					        selectOtherItem.setTitle("ความคิดเห็น");  
-					        selectOtherItem.setValueMap("ข้อมูลลูกค้าไม่ถูกต้อง", "รายการสินค้าไม่ถูกต้อง", "เงื่อนไขในแผนการผลิคไม่ถูกต้อง", "วันที่กำหนดส่งสินค้าไม่ถูกต้อง");  
+					        selectOtherItem.setValueMap("รายการสินค้าไม่เหมาะสม", "จำนวนสินค้าไม่เหมาะสม", "แผนการผลิตซ้ำซ้อน");  
 					        selectOtherItem.setWidth(250);
 					        commentForm.setFields(selectOtherItem);  
 					        	
@@ -676,7 +686,7 @@ public class PlanViewWindow extends EditorWindow{
 					if (dsResponse.getStatus() != 0) {
 						SC.warn("การอนุมัติแผนการผลิคล้มเหลว");
 					} else { 
-						SC.say("แก้ไขสถานะแผนการผลิค \"" + ProductionPlanStatus.getDisplay(status) + "\" เสร็จสิ้น");
+						SC.say("แก้ไขสถานะแผนการผลิต \"" + ProductionPlanStatus.getDisplay(status) + "\" เสร็จสิ้น");
 					}
 			}
 		});

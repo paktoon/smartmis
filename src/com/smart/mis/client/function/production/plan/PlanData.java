@@ -9,7 +9,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 public class PlanData {
 	// --> Quote Object + ItemQuote Object
 	// Quote - quote id , sale_id , from, to ,delivery , total_weight, total_amount, netExclusive, tax, netInclusive, created_date, modified_date, created_by, modified_by, comment, status [waiting_for_approved, waiting_for_revised, approved, removed] --> to data store
-    public static ListGridRecord createRecord(String plan_id,String sale_id, Date delivery ,Double total_weight,Integer total_amount,Date created_date,Date modified_date,String created_by,String modified_by, String comment, String status) {  
+    public static ListGridRecord createRecord(String plan_id,String sale_id, Date delivery ,Double total_weight,Integer total_amount,Date created_date,Date modified_date,String created_by,String modified_by, String comment, String status, String reason) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("plan_id", plan_id);
         record.setAttribute("sale_id",sale_id);  
@@ -30,6 +30,8 @@ public class PlanData {
         record.setAttribute("modified_by", created_by);
         record.setAttribute("comment", comment);
         record.setAttribute("status", status);
+        
+        record.setAttribute("reason",reason);
         return record;  
     }
     

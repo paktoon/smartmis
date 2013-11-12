@@ -38,6 +38,36 @@ public class ProductData {
         return record;  
     }
     
+    public static ListGridRecord createRecord(String name, String name_th, Double weight, Double price, String type, Integer inStock, Integer reserved, String imgUrl, Double size, Double width, Double length, Double height, Double diameter, Double thickness) {  
+        ListGridRecord record = new ListGridRecord();
+        record.setAttribute("name",name);
+        record.setAttribute("name_th",name_th);
+
+        record.setAttribute("weight", weight);
+        record.setAttribute("price", price);
+        record.setAttribute("type", type);
+        record.setAttribute("unit", ProductType.getUnit(type));  
+        
+        record.setAttribute("inStock", inStock);
+        record.setAttribute("reserved", reserved);
+        record.setAttribute("remain", inStock - reserved);
+        
+        record.setAttribute("imgUrl", imgUrl); 
+        
+        //ring, toe ring
+        record.setAttribute("size", size); //USA size 5.0,5.5,6.0,6.5,7.0,7.5,8.0
+        //necklace, bangle
+        record.setAttribute("width", width); //cm
+        record.setAttribute("length", length); // cm
+        //earring, pendant, anklet, bracelet
+        record.setAttribute("height", height); 
+        record.setAttribute("diameter", diameter); //mm
+        //All
+        record.setAttribute("thickness", thickness); //mm
+        
+        return record;  
+    }
+    
     public static ListGridRecord createUpdatedRecord(String pid, String name, String name_th, Double weight, Double price, String type, String imgUrl, Double size, Double width, Double length, Double height, Double diameter, Double thickness) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("pid", pid);

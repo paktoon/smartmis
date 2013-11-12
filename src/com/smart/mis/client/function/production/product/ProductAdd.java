@@ -1,5 +1,7 @@
 package com.smart.mis.client.function.production.product;
 
+import java.util.ArrayList;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smart.mis.client.function.production.process.ProcessAdd;
@@ -38,6 +40,7 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.MatchesFieldValidator;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -96,7 +99,7 @@ public class ProductAdd {
         editorForm.setUseAllDataSourceFields(false); 
         editorForm.setIsGroup(true);
         editorForm.setGroupTitle("ข้อมูลสินค้า");
-        
+        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 		TextItem name = new TextItem("name", "ชื่อสินค้าภาษาอังกฤษ");
 //		FormItemIcon icon = new FormItemIcon();  
 //        icon.setSrc("[SKIN]/actions/help.png"); 
@@ -163,15 +166,21 @@ public class ProductAdd {
 			}
         });
 		
-        IButton saveButton = new IButton("บันทึก");  
+        IButton saveButton = new IButton("ต่อไป");  
         saveButton.setAlign(Alignment.CENTER);
-        saveButton.setWidth(100); 
+        saveButton.setMargin(10); 
         saveButton.setHeight(50);
-        saveButton.setIcon("icons/16/save.png");
+        saveButton.setWidth(150);
+        saveButton.setIcon("icons/16/next.png");
         saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
             	            	
-            	SC.confirm("ยืนยันการเพิ่มข้อมูลสินค้า", "ท่านต้องการเพิ่มสินค้า " + (String) editorForm.getValue("name") + " หรือไม่ ?", new BooleanCallback() {
+            	if (!editorForm.validate()) {
+            		SC.warn("กรูณากรอกข้อมูลให้ครบถ้วน");
+            		return;
+            	}
+            	
+            	SC.confirm("ยืนยันการเพิ่มข้อมูลสินค้า", "ท่านต้องการเพิ่มสินค้า หรือไม่ ?", new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {	
@@ -215,7 +224,6 @@ public class ProductAdd {
 //									if (result != null)
 //									{
 										Record newRecord = ProductData.createRecord(
-												"PD70" + Math.round((Math.random() * 100)),
 												editorForm.getValueAsString("name"),
 												editorForm.getValueAsString("name_th"),
 												Double.parseDouble(editorForm.getValueAsString("weight")),
@@ -231,28 +239,30 @@ public class ProductAdd {
 												diameter,
 												thickness
 								    			);
-										
-										DS.addData(newRecord, new DSCallback() {
-
-											@Override
-											public void execute(DSResponse dsResponse, Object data,
-													DSRequest dsRequest) {
-													if (dsResponse.getStatus() != 0) {
-														SC.warn("การเพิ่มข้อมูลสินค้าล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
-													} else { 
-														SC.say("เพิ่มข้อมูลสินค้าเรียบร้อยแล้ว");
-														winModel.destroy();
-														ListGrid.fetchData();
-														ListGrid.selectSingleRecord(dsResponse.getData()[0]);
-														TabPane.updateDetails(dsResponse.getData()[0]);
-													}
-											}
-//								    	});
-//									} else {
-//										SC.warn("Updating customer Fails - please contact administrator");
-//									}
-//								}
-							});
+										ProcessAdd next = new ProcessAdd();
+		  					        	next.show("1_casting", newRecord, new ArrayList<ListGridRecord>(), new ArrayList<ListGridRecord>(), new ArrayList<ListGridRecord>(), new ArrayList<ListGridRecord>(), new ArrayList<ListGridRecord>());
+		  	  							winModel.destroy();
+//										DS.addData(newRecord, new DSCallback() {
+//
+//											@Override
+//											public void execute(DSResponse dsResponse, Object data,
+//													DSRequest dsRequest) {
+//													if (dsResponse.getStatus() != 0) {
+//														SC.warn("การเพิ่มข้อมูลสินค้าล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
+//													} else { 
+//														SC.say("เพิ่มข้อมูลสินค้าเรียบร้อยแล้ว");
+//														winModel.destroy();
+//														ListGrid.fetchData();
+//														ListGrid.selectSingleRecord(dsResponse.getData()[0]);
+//														TabPane.updateDetails(dsResponse.getData()[0]);
+//													}
+//											}
+////								    	});
+////									} else {
+////										SC.warn("Updating customer Fails - please contact administrator");
+////									}
+////								}
+//							});
 					    }
 					}
             		
@@ -262,7 +272,8 @@ public class ProductAdd {
         
         IButton cancelButton = new IButton("ยกเลิก");  
         cancelButton.setAlign(Alignment.CENTER);  
-        cancelButton.setWidth(100);  
+        cancelButton.setWidth(150);  
+        cancelButton.setMargin(10); 
         cancelButton.setHeight(50);
         cancelButton.setIcon("icons/16/close.png");
         cancelButton.addClickHandler(new ClickHandler() {  
@@ -295,10 +306,11 @@ public class ProductAdd {
         sizeForm.setFields(size,width,length,height,diameter,thickness);
         leftLayout.addMembers(editorForm, sizeForm);
         
-        HLayout editor_control = new HLayout();
-        editor_control.setMembersMargin(5);
+        VLayout editor_control = new VLayout();
+        //editor_control.setMembersMargin(5);
         editor_control.addMembers(saveButton, cancelButton);
         VLayout rightLayout = new VLayout();
+        rightLayout.setMembersMargin(5);
         rightLayout.addMembers(this.TabPane.getImageWindow(editProductImage, 1), editor_control);
         
         outlineForm.addMembers(leftLayout , rightLayout);

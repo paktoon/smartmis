@@ -13,6 +13,15 @@ public class MaterialProcessData {
         record.setAttribute("unit", unit);
         return record;  
     }
+	
+	public static ListGridRecord createRecord(String mid, String mat_name, Double req_amount, String unit) {  
+        ListGridRecord record = new ListGridRecord();
+        record.setAttribute("mid",mid);  
+        record.setAttribute("mat_name", mat_name);
+        record.setAttribute("req_amount", req_amount);
+        record.setAttribute("unit", unit);
+        return record;  
+    }
     
     //For test only
     public static ListGridRecord[] getNewRecords(String psid) {

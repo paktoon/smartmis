@@ -165,7 +165,8 @@ public class ProductDetailTabPane extends ImageTabPane {
 		
         saveButton = new IButton("บันทึก");  
         saveButton.setAlign(Alignment.CENTER);
-        saveButton.setWidth(100);  
+        saveButton.setWidth(150);   
+        saveButton.setMargin(5); 
         saveButton.setHeight(50);
         saveButton.setIcon("icons/16/save.png");
         saveButton.addClickHandler(new ClickHandler() {  
@@ -184,7 +185,8 @@ public class ProductDetailTabPane extends ImageTabPane {
         
         cancelButton = new IButton("ยกเลิก");  
         cancelButton.setAlign(Alignment.CENTER);
-        cancelButton.setWidth(100);  
+        cancelButton.setWidth(150);
+        cancelButton.setMargin(5); 
         cancelButton.setHeight(50);
         cancelButton.setIcon("icons/16/close.png");
         cancelButton.addClickHandler(new ClickHandler() {  
@@ -218,10 +220,10 @@ public class ProductDetailTabPane extends ImageTabPane {
         sizeForm.setFields(size,width,length,height,diameter,thickness);
         leftLayout.addMembers(editorForm, sizeForm);
         
-        HLayout editor_control = new HLayout();
-        editor_control.setMembersMargin(5);
+        VLayout editor_control = new VLayout();
         editor_control.addMembers(saveButton, cancelButton);
         VLayout rightLayout = new VLayout();
+        rightLayout.setMembersMargin(5);
         rightLayout.addMembers(getImageWindow(editProductImage, 1), editor_control);
         
         outlineForm.addMembers(leftLayout , rightLayout);

@@ -31,12 +31,14 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.SelectOtherItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -356,7 +358,7 @@ public class PlanCreateTab {
 		itemLayout.setHeight(350);
 		//itemLayout.setMargin(5);
 		planListGrid.setWidth100();
-		planListGrid.setHeight(300);
+		planListGrid.setHeight(400);
 		planListGrid.setAlternateRecordStyles(true);  
 		planListGrid.setShowAllRecords(true);  
 		planListGrid.setAutoFetchData(true);  
@@ -507,75 +509,67 @@ public class PlanCreateTab {
 						@Override
 						public void execute(Boolean value) {
 							if (value) {
-								ListGridRecord[] all = planListGrid.getRecords();
 								
-								if (all.length == 0) {
-									SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
-									return;
-								}
+								final Window confirm = new Window();
+								confirm.setTitle("ความคิดเห็น");
+								confirm.setWidth(350);
+								confirm.setHeight(150);
+								confirm.setShowMinimizeButton(false);
+								confirm.setIsModal(true);
+								confirm.setShowModalMask(true);
+								confirm.setCanDragResize(false);
+								confirm.setCanDragReposition(false);
+								confirm.centerInPage();
+								VLayout commentLayout = new VLayout();
+								commentLayout.setMargin(10);
 								
-								//SC.warn("numOfRecord : " + all.length);
-								Double total_weight = 0.0;
-								//Double total_netExclusive = 0.0;
-								Integer total_amount = 0;
-								final String plan_id = "PL70" + Math.round((Math.random() * 100));
-								final ArrayList<PlanProductDetails> productList = new ArrayList<PlanProductDetails>();
-								for (ListGridRecord item : all){
-									total_weight += item.getAttributeAsDouble("weight");
-									total_amount += item.getAttributeAsInt("plan_amount");
-									//total_netExclusive += item.getAttributeAsDouble("sum_price");
-									
-									String sub_plan_id = "SP80" + Math.round((Math.random() * 100));
-									String pid = item.getAttributeAsString("pid");
-									String pname = item.getAttributeAsString("name");
-									String ptype = item.getAttributeAsString("type");
-									Double pweight = item.getAttributeAsDouble("weight");
-									Integer pplan_amount = item.getAttributeAsInt("plan_amount");
-									String punit = item.getAttributeAsString("unit");
-									
-									Double psize = item.getAttributeAsDouble("size");
-									Double pwidth = item.getAttributeAsDouble("width");
-									Double plength = item.getAttributeAsDouble("length");
-									Double pheight = item.getAttributeAsDouble("height");
-									Double pdiameter = item.getAttributeAsDouble("diameter");
-									Double pthickness = item.getAttributeAsDouble("thickness");
-									
-									PlanProductDetails temp = new PlanProductDetails();
-									temp.save(pid, pname, pweight, ptype, punit, psize, pwidth, plength, pheight, pdiameter, pthickness);
-									temp.setID(sub_plan_id, plan_id);
-									temp.setQuantity(pplan_amount);
-									productList.add(temp);
-								}
-								//String cid = client.cid;
-//								Date from = fromDate.getValueAsDate();
-//								Date to = toDate.getValueAsDate();
-								Date delivery = null;
-								String quote_status = "2_waiting_for_approved";
-								//xxxService.xxx(Callback quoteId);
-								ListGridRecord newRecord = PlanData.createRecord(plan_id, null, delivery, total_weight, total_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "", quote_status);
-								// client; - cid
-								// DateForm; - from , to
-								// SummaryForm; - netExclusive, tax, netInclusive
-								// --> Quote Object + ItemQuote Object
-								// Quote - quote id , cid , from, to , total_weight, total_amount, netExclusive, tax, netInclusive, created_date, modified_date, created_by, modified_by, status [waiting_for_approved, waiting_for_revised, approved, removed] --> to data store
-								// ItemQuote - item quote id, quote id, pid, amount, total_price, status (0,1) --> to date store
-								PlanDS.getInstance().addData(newRecord, new DSCallback() {
-									@Override
-									public void execute(DSResponse dsResponse, Object data,
-											DSRequest dsRequest) {
-											if (dsResponse.getStatus() != 0) {
-												SC.warn("การสร้างแผนการผลิตล้มเหลว");
-											} else { 
-												for (PlanProductDetails item : productList) {
-													ListGridRecord subNewRecord = PlanProductData.createRecord(item);
-													PlanProductDS.getInstance(plan_id).addData(subNewRecord);
-													//System.out.println("add data " + item.sub_plan_id);
-												}
-												SC.say("สร้างแผนการผลิตเสร็จสิ้น <br> " + "รหัสแผนการผลิต " + plan_id);
-												clearAll();
-											}
-									}
-			    				});
+								DynamicForm commentForm = new DynamicForm();
+								final SelectOtherItem selectOtherItem = new SelectOtherItem();  
+						        selectOtherItem.setOtherTitle("อื่นๆ..");  
+						        selectOtherItem.setOtherValue("OtherVal");
+						        selectOtherItem.setEmptyDisplayValue("---โปรดระบุเหตุผล---");
+						        selectOtherItem.setTitle("เหตุผลในการผลิตสินค้า");  
+						        selectOtherItem.setValueMap("สินค้ามีปริมาณต่ำกว่าที่ควรจะเป็น", "สินค้าขายดี", "สินค้าขาดตลาด");  
+						        selectOtherItem.setWidth(250);
+						        commentForm.setFields(selectOtherItem);  
+						        	
+						        commentLayout.addMember(commentForm);
+						        
+						        HLayout controlLayout = new HLayout();
+						        controlLayout.setMargin(10);
+						        controlLayout.setMembersMargin(10);
+						        controlLayout.setAlign(Alignment.CENTER);
+						        IButton confirmButton = new IButton("ยืนยัน");
+						        confirmButton.setIcon("icons/16/approved.png");
+						        IButton cancelButton = new IButton("ยกเลิก");
+						        cancelButton.setIcon("icons/16/delete.png");
+						        controlLayout.addMember(confirmButton);
+						        controlLayout.addMember(cancelButton);
+						        confirmButton.addClickHandler(new ClickHandler() {  
+						            public void onClick(ClickEvent event) { 
+						            	String value = selectOtherItem.getValueAsString();
+						            	if (value != null && !value.equalsIgnoreCase("")) {
+											createProductionPlan(currentUser.getFirstName() + " " + currentUser.getLastName(), value);
+											confirm.destroy();
+						            	} else {
+						            		SC.warn("กรูณาใส่เหตุผล");
+						            	}
+						          }
+						        });
+						        
+						        cancelButton.addClickHandler(new ClickHandler() {  
+						            public void onClick(ClickEvent event) { 
+						            	confirm.destroy();
+						            	//main.destroy();
+						          }
+						        });
+						        
+						        commentLayout.addMember(controlLayout);
+						        
+						        confirm.addItem(commentLayout);
+						        
+						        confirm.show();
+								
 							}
 						}
 	            	});
@@ -681,5 +675,77 @@ public class PlanCreateTab {
 		//dateForm.reset();
 		
 		addButton.disable();
+	}
+	
+	private void createProductionPlan(String user, String reason) {
+		ListGridRecord[] all = planListGrid.getRecords();
+		
+		if (all.length == 0) {
+			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
+			return;
+		}
+		
+		//SC.warn("numOfRecord : " + all.length);
+		Double total_weight = 0.0;
+		//Double total_netExclusive = 0.0;
+		Integer total_amount = 0;
+		final String plan_id = "PL70" + Math.round((Math.random() * 100));
+		final ArrayList<PlanProductDetails> productList = new ArrayList<PlanProductDetails>();
+		for (ListGridRecord item : all){
+			total_weight += item.getAttributeAsDouble("weight");
+			total_amount += item.getAttributeAsInt("plan_amount");
+			//total_netExclusive += item.getAttributeAsDouble("sum_price");
+			
+			String sub_plan_id = "SP80" + Math.round((Math.random() * 100));
+			String pid = item.getAttributeAsString("pid");
+			String pname = item.getAttributeAsString("name");
+			String ptype = item.getAttributeAsString("type");
+			Double pweight = item.getAttributeAsDouble("weight");
+			Integer pplan_amount = item.getAttributeAsInt("plan_amount");
+			String punit = item.getAttributeAsString("unit");
+			
+			Double psize = item.getAttributeAsDouble("size");
+			Double pwidth = item.getAttributeAsDouble("width");
+			Double plength = item.getAttributeAsDouble("length");
+			Double pheight = item.getAttributeAsDouble("height");
+			Double pdiameter = item.getAttributeAsDouble("diameter");
+			Double pthickness = item.getAttributeAsDouble("thickness");
+			
+			PlanProductDetails temp = new PlanProductDetails();
+			temp.save(pid, pname, pweight, ptype, punit, psize, pwidth, plength, pheight, pdiameter, pthickness);
+			temp.setID(sub_plan_id, plan_id);
+			temp.setQuantity(pplan_amount);
+			productList.add(temp);
+		}
+		//String cid = client.cid;
+//		Date from = fromDate.getValueAsDate();
+//		Date to = toDate.getValueAsDate();
+		Date delivery = null;
+		String quote_status = "2_waiting_for_approved";
+		//xxxService.xxx(Callback quoteId);
+		ListGridRecord newRecord = PlanData.createRecord(plan_id, null, delivery, total_weight, total_amount, new Date(), null, user, null, "", quote_status, reason);
+		// client; - cid
+		// DateForm; - from , to
+		// SummaryForm; - netExclusive, tax, netInclusive
+		// --> Quote Object + ItemQuote Object
+		// Quote - quote id , cid , from, to , total_weight, total_amount, netExclusive, tax, netInclusive, created_date, modified_date, created_by, modified_by, status [waiting_for_approved, waiting_for_revised, approved, removed] --> to data store
+		// ItemQuote - item quote id, quote id, pid, amount, total_price, status (0,1) --> to date store
+		PlanDS.getInstance().addData(newRecord, new DSCallback() {
+			@Override
+			public void execute(DSResponse dsResponse, Object data,
+					DSRequest dsRequest) {
+					if (dsResponse.getStatus() != 0) {
+						SC.warn("การสร้างแผนการผลิตล้มเหลว");
+					} else { 
+						for (PlanProductDetails item : productList) {
+							ListGridRecord subNewRecord = PlanProductData.createRecord(item);
+							PlanProductDS.getInstance(plan_id).addData(subNewRecord);
+							//System.out.println("add data " + item.sub_plan_id);
+						}
+						SC.say("สร้างแผนการผลิตเสร็จสิ้น <br> " + "รหัสแผนการผลิต " + plan_id);
+						clearAll();
+					}
+			}
+		});
 	}
 }

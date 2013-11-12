@@ -22,6 +22,7 @@ public class ProcessListDS extends DataSource  {
 		
 		public static ProcessListDS getInstance(String pid){
 			if (instance.containsKey(pid)) {
+				//System.out.println("get ProcessListDS for pid " + pid);
 				return instance.get(pid);
 			} else {
 				ProcessListDS process = new ProcessListDS(pid);
@@ -35,7 +36,7 @@ public class ProcessListDS extends DataSource  {
 			 setID("ProcessListDS_"+pid);
 			 DataSourceTextField Field_1 = new DataSourceTextField("psid", "รหัสขั้นตอน");
 			 DataSourceEnumField Field_2 = new DataSourceEnumField("type");
-			 DataSourceTextField Field_3 = new DataSourceTextField("desc", "คำอธิบาย");
+			 DataSourceEnumField Field_3 = new DataSourceEnumField("desc", "รายละเอียด");
 			 DataSourceFloatField Field_4 = new DataSourceFloatField("std_time", "ระยะเวลา");
 			 Field_2.setValueMap(ProcessType.getValueMap());
 			 Field_2.setPrimaryKey(true);

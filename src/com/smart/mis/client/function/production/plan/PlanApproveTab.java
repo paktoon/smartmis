@@ -103,9 +103,9 @@ public class PlanApproveTab {
 		statusSelected.setValueMap(QuotationStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
 		statusSelected.setOperator(OperatorId.EQUALS);
-		final TextItem cidText = new TextItem("cid", "รหัสลูกค้า");
-		cidText.setWrapTitle(false);
-		cidText.setOperator(OperatorId.REGEXP);
+//		final TextItem cidText = new TextItem("sale_id", "รหัสรายการขาย");
+//		cidText.setWrapTitle(false);
+//		cidText.setOperator(OperatorId.REGEXP);
 //		final TextItem cnameText = new TextItem("cus_name", "ชื่อลูกค้า");
 //		cnameText.setWrapTitle(false);
 //		cnameText.setOperator(OperatorId.REGEXP);
@@ -132,7 +132,7 @@ public class PlanApproveTab {
         to.setUseTextField(true);
 
         //searchForm.setItems(quoteText,statusSelected, cidText, cnameText);
-        searchForm.setItems(quoteText,statusSelected, cidText);
+        searchForm.setItems(quoteText,statusSelected);
         dateForm.setItems(from, to);
         
 		final ListGrid planListGrid = new EditorListGrid(new PlanViewWindow(), currentUser);
@@ -151,7 +151,7 @@ public class PlanApproveTab {
 		planListGrid.setGroupStartOpen(GroupStartOpen.ALL);
 		
 		ListGridField plan_id = new ListGridField("plan_id" , 100);
-		//ListGridField cus_name = new ListGridField("cus_name", 200);
+		ListGridField reason = new ListGridField("reason", 200);
 		ListGridField status = new ListGridField("status");
 		ListGridField total_amount = new ListGridField("total_amount", 120);
 		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
@@ -162,7 +162,7 @@ public class PlanApproveTab {
 		ListGridField created_date = new ListGridField("created_date", 100);
 		ListGridField iconField = new ListGridField("approveField", "เรียกดู/อนุมัติ", 100);
 		
-		planListGrid.setFields(status, plan_id, total_amount, total_weight, created_date, iconField);
+		planListGrid.setFields(status, plan_id, reason, total_amount, total_weight, created_date, iconField);
 		
 		planListGrid.hideField("status");
 

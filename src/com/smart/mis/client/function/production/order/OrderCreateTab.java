@@ -1,17 +1,20 @@
-package com.smart.mis.client.function.production.plan;
+package com.smart.mis.client.function.production.order;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.smart.mis.client.function.production.plan.PlanDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
-//import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
+import com.smart.mis.client.function.sale.quotation.QuoteViewWindow;
+import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
-import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.sale.Customer;
+import com.smart.mis.shared.sale.QuotationStatus;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.AdvancedCriteria;
 import com.smartgwt.client.data.Criterion;
@@ -52,6 +55,7 @@ import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.GroupValueFunction;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -70,10 +74,10 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import com.smartgwt.client.widgets.cube.CubeGrid;
 
-public class PlanReviseTab {
+public class OrderCreateTab {
 	
-	public Tab getReviseTab(final User currentUser){
-		Tab reviseTab = new Tab("ค้นหาและแก้ไข", "icons/16/comment_edit.png");
+	public Tab getCreateTab(final User currentUser){
+		Tab reviseTab = new Tab("สร้างคำสั่งผลิต", "icons/16/comment_edit.png");
 		VLayout reviseLayout = new VLayout();
 		reviseLayout.setWidth(750);
 		reviseLayout.setHeight100();
@@ -97,15 +101,15 @@ public class PlanReviseTab {
 		final TextItem quoteText = new TextItem("plan_id", "รหัสแผนการผลิต");
 		quoteText.setWrapTitle(false);
 		quoteText.setOperator(OperatorId.REGEXP);
-		final SelectItem statusSelected = new SelectItem("status", "สถานะ");
-		statusSelected.setWrapTitle(false);
-		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
-		statusSelected.setValueMap(ProductionPlanStatus.getValueMap());
-		statusSelected.setAllowEmptyValue(true);
-		statusSelected.setOperator(OperatorId.EQUALS);
-//		final TextItem cidText = new TextItem("sale_id", "รหัสรายการขาย");
-//		cidText.setWrapTitle(false);
-//		cidText.setOperator(OperatorId.REGEXP);
+//		final SelectItem statusSelected = new SelectItem("status", "สถานะ");
+//		statusSelected.setWrapTitle(false);
+//		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
+//		statusSelected.setValueMap(QuotationStatus.getValueMap());
+//		statusSelected.setAllowEmptyValue(true);
+//		statusSelected.setOperator(OperatorId.EQUALS);
+		final TextItem cidText = new TextItem("sale_id", "รหัสรายการขาย");
+		cidText.setWrapTitle(false);
+		cidText.setOperator(OperatorId.REGEXP);
 //		final TextItem cnameText = new TextItem("cus_name", "ชื่อลูกค้า");
 //		cnameText.setWrapTitle(false);
 //		cnameText.setOperator(OperatorId.REGEXP);
@@ -132,23 +136,27 @@ public class PlanReviseTab {
         to.setUseTextField(true);
 
         //searchForm.setItems(quoteText,statusSelected, cidText, cnameText);
-        searchForm.setItems(quoteText,statusSelected);
+        searchForm.setItems(quoteText, cidText);
         dateForm.setItems(from, to);
         
-		final ListGrid planListGrid = new EditorListGrid(new PlanViewWindow(), currentUser);
+		final ListGrid planListGrid = new EditorListGrid(new QuoteViewWindow(), currentUser);
  
 		planListGrid.setAutoFetchData(true);  
 		planListGrid.setCanMultiSort(true);
-		planListGrid.setCriteria(new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"));
+		
+		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+    		      new Criterion("status", OperatorId.EQUALS, "3_approved"),
+    		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+    		  });
+		planListGrid.setCriteria(criteria);
 		
 		planListGrid.setDataSource(PlanDS.getInstance());
 		planListGrid.setInitialSort(new SortSpecifier[]{  
-                new SortSpecifier("status", SortDirection.ASCENDING),  
                 new SortSpecifier("created_date", SortDirection.DESCENDING)  
         });
 		planListGrid.setUseAllDataSourceFields(false);
-		planListGrid.setGroupByField("status");
-		planListGrid.setGroupStartOpen(GroupStartOpen.ALL);
+		//planListGrid.setGroupByField("created_date");
+		//planListGrid.setGroupStartOpen(GroupStartOpen.ALL);
 		
 		ListGridField plan_id = new ListGridField("plan_id" , 100);
 		ListGridField reason = new ListGridField("reason", 200);
@@ -159,11 +167,8 @@ public class PlanReviseTab {
 		ListGridField total_weight = new ListGridField("total_weight", 120);
 		total_weight.setCellFormatter(FieldFormatter.getNumberFormat());
 		total_weight.setAlign(Alignment.RIGHT);
-//		ListGridField netInclusive = new ListGridField("netInclusive", 125);
-//		netInclusive.setCellFormatter(FieldFormatter.getPriceFormat());
-//		netInclusive.setAlign(Alignment.RIGHT);
 		ListGridField created_date = new ListGridField("created_date", 100);
-		ListGridField iconField = new ListGridField("viewAndEditField", "เรียกดู/แก้ไข", 100);
+		ListGridField iconField = new ListGridField("createProductionOrderField", "ออกคำสั่งผลิต", 100);
 		
 		planListGrid.setFields(status, plan_id, reason, total_amount, total_weight, created_date, iconField);
 		
@@ -184,9 +189,9 @@ public class PlanReviseTab {
             	Criterion search = new Criterion();
             	search.addCriteria(searchForm.getValuesAsCriteria());
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-          		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
+          		      new Criterion("status", OperatorId.EQUALS, "3_approved"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
-          		      search
+        		      search
           		  });
               planListGrid.fetchData(criteria);  
               planListGrid.deselectAllRecords();
@@ -199,7 +204,7 @@ public class PlanReviseTab {
 		listAllButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-          		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
+          		      new Criterion("status", OperatorId.EQUALS, "3_approved"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
           		  });
                 searchForm.reset();
@@ -208,51 +213,52 @@ public class PlanReviseTab {
           }
         });
 		
-		IButton cancelQuoteButton = new IButton("ยกเลิกแผนการผลิต");
-		cancelQuoteButton.setIcon("icons/16/close.png");
-		cancelQuoteButton.setWidth(150);
-		cancelQuoteButton.addClickHandler(new ClickHandler() {  
-            public void onClick(ClickEvent event) { 
-            	ListGridRecord selected = planListGrid.getSelectedRecord();
-            	if (selected == null) {
-            		SC.warn("กรุณาเลือกแผนการผลิตที่ต้องการยกเลิก");
-            		return;
-            	}
-            	SC.confirm("ยืนยันการทำรายการ", "ต้องการยกเลิกแผนการผลิต หรือไม่?" , new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							ListGridRecord selected = planListGrid.getSelectedRecord();
-			            	if (selected != null) {
-			            		//Do something with DB
-			            		selected.setAttribute("status", "4_canceled");
-			            		planListGrid.updateData(selected);
-			            		planListGrid.removeSelectedData(new DSCallback() {
-									@Override
-									public void execute(DSResponse dsResponse, Object data,
-											DSRequest dsRequest) {
-											if (dsResponse.getStatus() != 0) {
-												SC.warn("การยกเลิกแผนการผลิต ล้มเหลว");
-											} else { 
-												SC.say("การยกเลิกแผนการผลิต เสร็จสมบูรณ์");
-											}
-									}
-								}, null);
-			            	} else {
-			            		SC.warn("กรุณาเลือกรายการที่ต้องการลบ");
-			            	}
-						}
-					}
-            	});
-          }
-        });
+//		IButton cancelQuoteButton = new IButton("ยกเลิกแผนการผลิต");
+//		cancelQuoteButton.setIcon("icons/16/close.png");
+//		cancelQuoteButton.setWidth(150);
+//		cancelQuoteButton.addClickHandler(new ClickHandler() {  
+//            public void onClick(ClickEvent event) { 
+//            	ListGridRecord selected = planListGrid.getSelectedRecord();
+//            	if (selected == null) {
+//            		SC.warn("กรุณาเลือกแผนการผลิตที่ต้องการยกเลิก");
+//            		return;
+//            	}
+//            	SC.confirm("ยืนยันการทำรายการ", "ต้องการยกเลิกแผนการผลิต หรือไม่?" , new BooleanCallback() {
+//					@Override
+//					public void execute(Boolean value) {
+//						if (value) {
+//							ListGridRecord selected = planListGrid.getSelectedRecord();
+//			            	if (selected != null) {
+//			            		//Do something with DB
+//			            		selected.setAttribute("status", "ยกเลิก");
+//			            		planListGrid.updateData(selected);
+//			            		planListGrid.removeSelectedData(new DSCallback() {
+//									@Override
+//									public void execute(DSResponse dsResponse, Object data,
+//											DSRequest dsRequest) {
+//											if (dsResponse.getStatus() != 0) {
+//												SC.warn("การยกเลิกแผนการผลิต ล้มเหลว");
+//											} else { 
+//												SC.warn("การยกเลิกแผนการผลิต เสร็จสมบูรณ์");
+//											}
+//									}
+//								}, null);
+//			            	} else {
+//			            		SC.warn("กรุณาเลือกรายการที่ต้องการลบ");
+//			            	}
+//						}
+//					}
+//            	});
+//          }
+//        });
 
-		buttonLayout.addMembers(searchButton, listAllButton, cancelQuoteButton);
+//		buttonLayout.addMembers(searchButton, listAllButton, cancelQuoteButton);
+		buttonLayout.addMembers(searchButton, listAllButton);
 		reviseLayout.addMember(buttonLayout);
 		
 		VLayout gridLayout = new VLayout();
 		gridLayout.setWidth100();
-		gridLayout.setHeight(350);
+		gridLayout.setHeight(355);
 		
 		gridLayout.addMember(planListGrid);
 		reviseLayout.addMember(gridLayout);
