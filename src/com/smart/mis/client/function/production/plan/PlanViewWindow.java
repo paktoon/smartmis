@@ -9,6 +9,7 @@ import com.smart.mis.client.function.production.plan.product.PlanProductDS;
 import com.smart.mis.client.function.production.plan.product.PlanProductData;
 import com.smart.mis.client.function.production.plan.product.PlanProductDetails;
 import com.smart.mis.client.function.sale.order.SaleOrderDS;
+import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
@@ -216,6 +217,7 @@ public class PlanViewWindow extends EditorWindow{
 		planListGrid.setCriteria(ci);
 		
 		PlanProductDS tempView = new PlanProductDS(plan_id);
+		tempView.setTestData(PlanProductDS.getInstance(plan_id).getCacheData());
 		planListGrid.setDataSource(tempView);
 		planListGrid.setUseAllDataSourceFields(false);
 		

@@ -721,9 +721,9 @@ public class PlanCreateTab {
 //		Date from = fromDate.getValueAsDate();
 //		Date to = toDate.getValueAsDate();
 		Date delivery = null;
-		String quote_status = "2_waiting_for_approved";
+		String plan_status = "2_waiting_for_approved";
 		//xxxService.xxx(Callback quoteId);
-		ListGridRecord newRecord = PlanData.createRecord(plan_id, null, delivery, total_weight, total_amount, new Date(), null, user, null, "", quote_status, reason);
+		ListGridRecord newRecord = PlanData.createRecord(plan_id, null, delivery, total_weight, total_amount, new Date(), null, user, null, "", plan_status, reason);
 		// client; - cid
 		// DateForm; - from , to
 		// SummaryForm; - netExclusive, tax, netInclusive

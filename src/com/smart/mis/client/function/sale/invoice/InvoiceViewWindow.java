@@ -313,6 +313,7 @@ public class InvoiceViewWindow extends EditorWindow{
 //		}
 		
 		SaleProductDS tempView = new SaleProductDS(invoice_id);
+		tempView.setTestData(SaleProductDS.getInstance(invoice_id).getCacheData());
 		saleListGrid.setDataSource(tempView);
 		saleListGrid.setUseAllDataSourceFields(false);
 		

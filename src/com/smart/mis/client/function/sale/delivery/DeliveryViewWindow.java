@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.production.plan.product.PlanProductDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryData;
@@ -322,6 +323,7 @@ public class DeliveryViewWindow extends EditorWindow{
 //		}
 		
 		SaleProductDS tempView = new SaleProductDS(delivery_id);
+		tempView.setTestData(SaleProductDS.getInstance(delivery_id).getCacheData());
 		saleListGrid.setDataSource(tempView);
 		saleListGrid.setUseAllDataSourceFields(false);
 		

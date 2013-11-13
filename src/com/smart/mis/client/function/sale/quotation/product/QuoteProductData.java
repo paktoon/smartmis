@@ -53,22 +53,22 @@ public class QuoteProductData {
     }
     	
     public static ListGridRecord[] getRecords(String quote_id) {
-    	if (quote_id != null && ( quote_id.equals( "QA10001") || quote_id.equals( "QA10005"))) {
+    	if (quote_id != null && ( quote_id.equals( "QA10001") || quote_id.equals( "QA10005") || quote_id.equals( "QA10009"))) {
         	return new ListGridRecord[]{ 
         			createRecord("QS10001",quote_id, "PD10002", "Thin plain silver ring",6.3, 55.0, "ring","วง", 200, true)
         	};
-        } else if (quote_id != null && ( quote_id.equals( "QA10002") || quote_id.equals( "QA10006"))) {
+        } else if (quote_id != null && ( quote_id.equals( "QA10002") || quote_id.equals( "QA10006") || quote_id.equals( "QA10010"))) {
         	return new ListGridRecord[]{ 
         			createRecord("QS10002",quote_id, "PD10001", "Diamond cut silver ring", 6.3, 55.0, "ring","วง", 70, true),
         			createRecord("QS10003",quote_id, "PD10002", "Thin plain silver ring",6.3, 55.0, "ring","วง", 200, true)
         	};
-        } else if (quote_id != null && (quote_id.equals( "QA10003") || quote_id.equals( "QA10007"))) {
+        } else if (quote_id != null && (quote_id.equals( "QA10003") || quote_id.equals( "QA10007") || quote_id.equals( "QA10011"))) {
         	return new ListGridRecord[]{ 
         			createRecord("QS10004",quote_id, "PD10004","Spiral silver earrings", 6.3, 55.0, "earring", "คู่", 300, true)
         	};
-        } else if (quote_id != null && (quote_id.equals( "QA10004") || quote_id.equals( "QA10008"))) {
+        } else if (quote_id != null && (quote_id.equals( "QA10004") || quote_id.equals( "QA10008") || quote_id.equals( "QA10012"))) {
         	return new ListGridRecord[]{ 
-        			createRecord("QS10005",quote_id, "PD10007","Plain silver necklaces", 5.6, 50.0, "necklace","เส้น",100, true)
+        			createRecord("QS10005",quote_id, "PD10007","Plain silver necklaces", 5.6, 50.0, "necklace","เส้น",10, true)
         	};
         }
         	else return new ListGridRecord[]{};

@@ -5,6 +5,13 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.production.plan.PlanDS;
+import com.smart.mis.client.function.production.plan.PlanData;
+import com.smart.mis.client.function.production.plan.product.PlanProductDS;
+import com.smart.mis.client.function.production.plan.product.PlanProductData;
+import com.smart.mis.client.function.production.plan.product.PlanProductDetails;
+import com.smart.mis.client.function.production.product.ProductDS;
+import com.smart.mis.client.function.production.product.ProductData;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.invoice.InvoiceDS;
 import com.smart.mis.client.function.sale.invoice.InvoiceData;
@@ -311,6 +318,7 @@ public class QuoteViewWindow extends EditorWindow{
 //		}
 		
 		QuoteProductDS tempView = new QuoteProductDS(quote_id);
+		tempView.setTestData(QuoteProductDS.getInstance(quote_id).getCacheData());
 		quoteListGrid.setDataSource(tempView);
 		quoteListGrid.setUseAllDataSourceFields(false);
 		
@@ -786,7 +794,7 @@ public class QuoteViewWindow extends EditorWindow{
 		});
 	}
 	
-	public void createSaleOrder(final Window main, final String quote_id, DynamicForm customer, ListGrid quoteListGrid, Date delivery, User currentUser, String purchase_id){
+	public void createSaleOrder(final Window main, final String quote_id, DynamicForm customer, ListGrid quoteListGrid, final Date delivery, final User currentUser, String purchase_id){
 		
 		ListGridRecord[] all = quoteListGrid.getRecords();
 		
@@ -797,12 +805,18 @@ public class QuoteViewWindow extends EditorWindow{
 		
 		Double total_weight = 0.0;
 		Double total_netExclusive = 0.0;
+		Double total_produce_weight = 0.0;
 		Integer total_amount = 0;
+		Integer total_produce_amount = 0;
+		
 		final String sale_id = "SO70" + Math.round((Math.random() * 100));
 		final String invoice_id = "IN70" + Math.round((Math.random() * 100));
+		final String plan_id = "PL70" + Math.round((Math.random() * 100));
 		final ArrayList<SaleProductDetails> saleProductList = new ArrayList<SaleProductDetails>();
 		final ArrayList<SaleProductDetails> invoiceProductList = new ArrayList<SaleProductDetails>();
-
+		final ArrayList<PlanProductDetails> planProductList = new ArrayList<PlanProductDetails>();
+		final ArrayList<Record> productUpdateList = new ArrayList<Record>();
+		
 		for (ListGridRecord item : all){
 			total_weight += item.getAttributeAsDouble("weight");
 			total_amount += item.getAttributeAsInt("quote_amount");
@@ -817,6 +831,7 @@ public class QuoteViewWindow extends EditorWindow{
 			String punit = item.getAttributeAsString("unit");
 			Double pprice = item.getAttributeAsDouble("price");
 			
+			//Sale order
 			String sub_sale_id = "SS80" + Math.round((Math.random() * 1000));
 			SaleProductDetails temp1 = new SaleProductDetails();
 			temp1.save(pid, pname, pweight, pprice, ptype, punit);
@@ -824,20 +839,52 @@ public class QuoteViewWindow extends EditorWindow{
 			temp1.setQuantity(psale_amount);
 			saleProductList.add(temp1);
 			
+			//Invoice
 			String sub_invoice_id = "SI80" + Math.round((Math.random() * 1000));
 			SaleProductDetails temp2 = new SaleProductDetails();
 			temp2.save(pid, pname, pweight, pprice, ptype, punit);
 			temp2.setID(sub_invoice_id, invoice_id);
 			temp2.setQuantity(psale_amount);
 			invoiceProductList.add(temp2);
-			//status
-		}	
-//			if (customer.getField("cid").getValue() == null || customer.getField("cus_name").getValue() == null) {
-//				SC.warn("ชื่อและรหัสลูกค้าไม่ถุกต้อง");
-//				return;
-//			}
 
-			final String sale_status = "1_waiting_for_production";
+			//Production Plan
+			Record[] selectedProduct = ProductDS.getInstance().applyFilter(ProductDS.getInstance().getCacheData(), new Criterion("pid", OperatorId.EQUALS, pid));
+			if (selectedProduct.length == 0) {
+				SC.warn("ไม่พบรายการสินค้า รหัส " + pid + " <br> โปรดตรวจสอบ ข้อมูลสินค้าอีกครั้ง" );
+				return;
+			} else {
+				Record product = selectedProduct[0];
+				Integer remain = product.getAttributeAsInt("remain");
+				Integer reserved = product.getAttributeAsInt("reserved");
+				Integer produce = psale_amount - remain;
+				
+				System.out.println("Produce " + pid + " - reserved = " + reserved + " remain = " + remain + ", need for sale = " + psale_amount);
+				if (produce > 0) {
+					//Create sub production order in planProductList
+					total_produce_weight += product.getAttributeAsDouble("weight");
+					total_produce_amount += produce;
+					//reserved = remain
+					Record product_update = ProductData.createReservedRecord(pid, reserved + remain, 0, product);
+					System.out.println("Create product_update - reserved = " + (reserved + remain) + " remain = 0");
+					//Update reserved
+					productUpdateList.add(product_update);
+					planProductList.add(CreatePlanProductDetails(plan_id, product, produce));
+					System.out.println("CreatePlanProductDetails - produce = " + produce);
+				} else {
+					//Nothing reserved = psale_amount
+					Record product_update = ProductData.createReservedRecord(pid, reserved + psale_amount, remain - psale_amount, product);
+					System.out.println("Create product_update - reserved = " + (reserved + psale_amount) + " remain = " + (remain - psale_amount));
+					//Update reserved
+					productUpdateList.add(product_update);
+				}
+				
+			}
+		}	
+			//For sale and invoice
+			String sale_status = "3_production_completed";
+			if (planProductList.size() != 0) {
+				sale_status = "1_waiting_for_production";
+			}
 			final String invoice_status = "1_waiting_for_payment";
 			String cid = (String) customer.getField("cid").getValue();
 			String cus_name = (String) customer.getField("cus_name").getValue();
@@ -850,41 +897,109 @@ public class QuoteViewWindow extends EditorWindow{
 	        final Date due_date = dateRange.getEndDate();
 	        
 			final ListGridRecord saleRecord = SaleOrderData.createRecord(sale_id, quote_id, invoice_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, sale_status, purchase_id, due_date);
-			ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
+			final ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
 			
-			//Auto create invoice
-			InvoiceDS.getInstance().addData(invoiceRecord, new DSCallback() {
-				@Override
-				public void execute(DSResponse dsResponse, Object data,
-						DSRequest dsRequest) {
-						if (dsResponse.getStatus() != 0) {
-							SC.warn("การสร้างรายการขายล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-							main.destroy();
-						} else { 
-							for (SaleProductDetails item : invoiceProductList) {
-								ListGridRecord subAddRecord = SaleProductData.createRecord(item);
-								SaleProductDS.getInstance(invoice_id).addData(subAddRecord);
-							}
-							
-							SaleOrderDS.getInstance().addData(saleRecord, new DSCallback() {
+			//For production
+			for (Record updateProduct : productUpdateList) {
+				ProductDS.getInstance().updateData(updateProduct);
+			}
+		
+			final Double produce_weight = total_produce_weight;
+			final Integer produce_amount = total_produce_amount;
+			if (planProductList.size() != 0) {
+				SC.confirm("สร้างแผนการผลิตโดยอัตโนมัติ", "สินค้าในรายการขายไม่เพียงพอ <br> ต้องการสร้างแผนการผลิต หรือไม่?" , new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							//Date delivery = null;
+							String plan_status = "3_approved";
+							//xxxService.xxx(Callback quoteId);
+							ListGridRecord newRecord = PlanData.createRecord(plan_id, sale_id, delivery, produce_weight, produce_amount, new Date(), null,  currentUser.getFirstName() + " " + currentUser.getLastName(), null, "", plan_status, "สร้างจากรายการขายโดยอัตโนมัติ");
+							PlanDS.getInstance().addData(newRecord, new DSCallback() {
 								@Override
 								public void execute(DSResponse dsResponse, Object data,
 										DSRequest dsRequest) {
 										if (dsResponse.getStatus() != 0) {
-											SC.warn("การสร้างรายการขายล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-											main.destroy();
+											SC.warn("การสร้างแผนการผลิตล้มเหลว");
 										} else { 
-											for (SaleProductDetails item : saleProductList) {
-													ListGridRecord subAddRecord = SaleProductData.createRecord(item);
-													SaleProductDS.getInstance(sale_id).addData(subAddRecord);
+											for (PlanProductDetails item : planProductList) {
+												ListGridRecord subNewRecord = PlanProductData.createRecord(item);
+												PlanProductDS.getInstance(plan_id).addData(subNewRecord);
+												//System.out.println("add data " + item.sub_plan_id);
 											}
-											SC.say("สร้างรายการขายเสร็จสิ้น <br> " + "รหัสรายการขาย " + sale_id + "<br> สถานะของรายการขาย " + SaleOrderStatus.getDisplay(sale_status) + "<br><br> สร้างใบแจ้งหนี้โดยอัตโนมัติ เลขที่ "+ invoice_id + "<br> กำหนดชำระเงินวันที่ " + DateUtil.formatAsShortDate(due_date));
-											main.destroy();
+											CreateInvoiceAndSaleOrder(main, invoice_id, invoiceRecord, sale_id, saleRecord, invoiceProductList,saleProductList, " <br><br> สร้างแผนการผลิตเสร็จสิ้น " + "รหัสแผนการผลิต " + plan_id + "<br>" + "กำหนดส่งสินค้าวันที่ " + DateUtil.formatAsShortDate(delivery));
 										}
 								}
 							});
 						}
-				}
-			});
+					}
+            	});
+			} else {
+				CreateInvoiceAndSaleOrder(main, invoice_id, invoiceRecord, sale_id, saleRecord, invoiceProductList,saleProductList, "");
+			}
+			
+			
+			
 	}
+	
+	private PlanProductDetails CreatePlanProductDetails(String plan_id, Record product, Integer pplan_amount) {
+		String sub_plan_id = "SP80" + Math.round((Math.random() * 100));
+		String pid = product.getAttributeAsString("pid");
+		String pname = product.getAttributeAsString("name");
+		String ptype = product.getAttributeAsString("type");
+		Double pweight = product.getAttributeAsDouble("weight");
+		String punit = product.getAttributeAsString("unit");
+		
+		Double psize = product.getAttributeAsDouble("size");
+		Double pwidth = product.getAttributeAsDouble("width");
+		Double plength = product.getAttributeAsDouble("length");
+		Double pheight = product.getAttributeAsDouble("height");
+		Double pdiameter = product.getAttributeAsDouble("diameter");
+		Double pthickness = product.getAttributeAsDouble("thickness");
+		
+		PlanProductDetails temp = new PlanProductDetails();
+		temp.save(pid, pname, pweight, ptype, punit, psize, pwidth, plength, pheight, pdiameter, pthickness);
+		temp.setID(sub_plan_id, plan_id);
+		temp.setQuantity(pplan_amount);
+		
+		return temp;
+	}
+	
+	private void CreateInvoiceAndSaleOrder(final Window main, final String invoice_id, Record invoiceRecord, final String sale_id, final Record saleRecord, final ArrayList<SaleProductDetails> invoiceProductList,final ArrayList<SaleProductDetails> saleProductList, final String message) {
+		//Auto create invoice
+		InvoiceDS.getInstance().addData(invoiceRecord, new DSCallback() {
+			@Override
+			public void execute(DSResponse dsResponse, Object data,
+					DSRequest dsRequest) {
+					if (dsResponse.getStatus() != 0) {
+						SC.warn("การสร้างรายการขายล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
+						main.destroy();
+					} else { 
+						for (SaleProductDetails item : invoiceProductList) {
+							ListGridRecord subAddRecord = SaleProductData.createRecord(item);
+							SaleProductDS.getInstance(invoice_id).addData(subAddRecord);
+						}
+						
+						SaleOrderDS.getInstance().addData(saleRecord, new DSCallback() {
+							@Override
+							public void execute(DSResponse dsResponse, Object data,
+									DSRequest dsRequest) {
+									if (dsResponse.getStatus() != 0) {
+										SC.warn("การสร้างรายการขายล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
+										main.destroy();
+									} else { 
+										for (SaleProductDetails item : saleProductList) {
+												ListGridRecord subAddRecord = SaleProductData.createRecord(item);
+												SaleProductDS.getInstance(sale_id).addData(subAddRecord);
+										}
+										SC.say("สร้างรายการขายเสร็จสิ้น <br> " + "รหัสรายการขาย " + sale_id + "<br> สถานะของรายการขาย " + SaleOrderStatus.getDisplay(saleRecord.getAttributeAsString("status")) + "<br><br> สร้างใบแจ้งหนี้โดยอัตโนมัติ เลขที่ "+ invoice_id + "<br> กำหนดชำระเงินวันที่ " + DateUtil.formatAsShortDate(saleRecord.getAttributeAsDate("due_date")) + message);
+										main.destroy();
+									}
+							}
+						});
+					}
+			}
+		});
+	}
+	
 }
