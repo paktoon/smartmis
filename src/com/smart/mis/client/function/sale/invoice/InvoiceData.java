@@ -29,7 +29,7 @@ public class InvoiceData {
         record.setAttribute("created_date", created_date); 
         record.setAttribute("created_by", created_by);
         record.setAttribute("modified_date", modified_date);
-        record.setAttribute("modified_by", created_by);
+        record.setAttribute("modified_by", modified_by);
         //record.setAttribute("comment", comment);
         record.setAttribute("status", status); // รอชำระเงิน, ชำระเงินแล้ว, เกินกำหนดชำระเงิน
         record.setAttribute("purchase_id", purchase_id);

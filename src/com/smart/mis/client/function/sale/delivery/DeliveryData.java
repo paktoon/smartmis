@@ -29,7 +29,7 @@ public class DeliveryData {
         record.setAttribute("created_date", created_date); 
         record.setAttribute("created_by", created_by);
         record.setAttribute("modified_date", modified_date);
-        record.setAttribute("modified_by", created_by);
+        record.setAttribute("modified_by", modified_by);
         //record.setAttribute("comment", comment);
         record.setAttribute("status", status); // กำลังนำส่ง, นำส่งแล้ว
         record.setAttribute("sent", sent);

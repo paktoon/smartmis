@@ -9,7 +9,7 @@ public class PlanProductData {
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("pid", pid);
         record.setAttribute("name",name);  
-        record.setAttribute("weight", weight);
+        record.setAttribute("weight", weight * plan_amount);
         record.setAttribute("type", type);  
         record.setAttribute("unit", unit); 
         
@@ -33,7 +33,7 @@ public class PlanProductData {
         record.setAttribute("plan_id", plan_id);
         record.setAttribute("pid", pid);
         record.setAttribute("name",name); 
-        record.setAttribute("weight", weight);
+        record.setAttribute("weight", weight * plan_amount);
         record.setAttribute("type", type);  
         record.setAttribute("unit", unit); 
         
@@ -57,7 +57,7 @@ public class PlanProductData {
         record.setAttribute("plan_id", item.plan_id);
         record.setAttribute("pid", item.product_id);
         record.setAttribute("name",item.product_name); 
-        record.setAttribute("weight", item.product_weight);
+        record.setAttribute("weight", item.product_weight * item.plan_amount);
         record.setAttribute("type", item.product_type);  
         record.setAttribute("unit", item.product_unit);
         

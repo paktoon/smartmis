@@ -27,7 +27,7 @@ public class QuotationData {
         record.setAttribute("created_date", created_date); 
         record.setAttribute("created_by", created_by);
         record.setAttribute("modified_date", modified_date);
-        record.setAttribute("modified_by", created_by);
+        record.setAttribute("modified_by", modified_by);
         record.setAttribute("comment", comment);
         record.setAttribute("status", status);
         return record;  

@@ -159,6 +159,7 @@ public class InvoiceReviewTab {
 		//ListGridField quote_id = new ListGridField("quote_id" , 90);
 		ListGridField cus_name = new ListGridField("cus_name", 200);
 		ListGridField status = new ListGridField("status");
+		
 //		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
 //		valueMap.put("3_approved", "approved");
 //		status.setValueMap(valueMap);

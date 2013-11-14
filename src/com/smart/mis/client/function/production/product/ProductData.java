@@ -106,11 +106,11 @@ public class ProductData {
         record.setAttribute("name_th",product.getAttributeAsString("name_th"));
 
         record.setAttribute("weight", product.getAttributeAsDouble("weight"));
-        record.setAttribute("price", product.getAttributeAsString("price"));
+        record.setAttribute("price", product.getAttributeAsDouble("price"));
         record.setAttribute("type", product.getAttributeAsString("type"));
         record.setAttribute("unit", product.getAttributeAsString("unit"));  
         
-        record.setAttribute("inStock", product.getAttributeAsString("inStock"));
+        record.setAttribute("inStock", product.getAttributeAsInt("inStock"));
         record.setAttribute("imgUrl", product.getAttributeAsString("imgUrl")); 
         
         //ring, toe ring

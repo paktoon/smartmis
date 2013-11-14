@@ -9,7 +9,7 @@ public class QuoteProductData {
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("pid", pid);
         record.setAttribute("name",name);  
-        record.setAttribute("weight", weight);
+        record.setAttribute("weight", weight * quote_amount);
         record.setAttribute("price", price);
         record.setAttribute("type", type);  
         record.setAttribute("unit", unit); 
@@ -24,7 +24,7 @@ public class QuoteProductData {
         record.setAttribute("quote_id", quote_id);
         record.setAttribute("pid", pid);
         record.setAttribute("name",name); 
-        record.setAttribute("weight", weight);
+        record.setAttribute("weight", weight * quote_amount);
         record.setAttribute("price", price);
         record.setAttribute("type", type);  
         record.setAttribute("unit", unit); 
@@ -39,7 +39,7 @@ public class QuoteProductData {
         record.setAttribute("quote_id", item.quote_id);
         record.setAttribute("pid", item.product_id);
         record.setAttribute("name",item.product_name); 
-        record.setAttribute("weight", item.product_weight);
+        record.setAttribute("weight", item.product_weight * item.quote_amount);
         record.setAttribute("price", item.product_price);
         record.setAttribute("type", item.product_type);  
         record.setAttribute("unit", item.product_unit); 

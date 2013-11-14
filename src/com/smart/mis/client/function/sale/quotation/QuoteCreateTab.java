@@ -402,7 +402,7 @@ public class QuoteCreateTab {
         quoteItemCell_5.setCellFormatter(FieldFormatter.getPriceFormat());
         quoteItemCell_5.setAlign(Alignment.RIGHT);
         
-        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("quote_amount", 90);
+        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("quote_amount", 80);
         
         quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
@@ -424,7 +424,7 @@ public class QuoteCreateTab {
         });
         
         //quoteListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_3, quoteItemCell_4, quoteItemCell_5, quoteItemCell_6, quoteItemCell_sum);
-        quoteListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_4, quoteItemCell_6, quoteItemCell_3, quoteItemCell_5 , quoteItemCell_sum);
+        quoteListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_6, quoteItemCell_3, quoteItemCell_4, quoteItemCell_5 , quoteItemCell_sum);
         
 		itemLayout.addMember(quoteListGrid);
 		createLayout.addMember(itemLayout);

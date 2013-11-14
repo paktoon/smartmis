@@ -35,7 +35,7 @@ public class QuoteProductDS extends DataSource  {
 			 Field_1.setPrimaryKey(true);
 			 DataSourceTextField Field_2 = new DataSourceTextField("name", "รายการสินค้า");
 			 DataSourceTextField Field_3 = new DataSourceTextField("type", "ประเภท");
-			 DataSourceFloatField Field_5 = new DataSourceFloatField("weight", "น้ำหนัก (กรัม)");
+			 DataSourceFloatField Field_5 = new DataSourceFloatField("weight", "น้ำหนักรวม (กรัม)");
 			 DataSourceIntegerField Field_6 = new DataSourceIntegerField("quote_amount", "จำนวน");
 			 DataSourceTextField Field_7 = new DataSourceTextField("unit", "หน่วย");
 			 DataSourceFloatField Field_8 = new DataSourceFloatField("price", "ราคา (บาท)");
