@@ -39,7 +39,8 @@ public class MaterialDS extends DataSource  {
 			 DataSourceTextField Field_2 = new DataSourceTextField("mat_name", "ชื่อวัตถุดิบ");
 			 DataSourceTextField Field_3 = new DataSourceTextField("desc", "คำอธิบาย");
 			 DataSourceEnumField Field_4 = new DataSourceEnumField("type", "ชนิด");
-			 Field_4.setValueMap("แร่เงิน", "แมกกาไซต์", "พลอยประดับ");
+			 Field_4.setValueMap("แร่เงิน", "แมกกาไซต์", "พลอยประดับ", "อื่นๆ");
+			 DataSourceFloatField Field_4_1 = new DataSourceFloatField("weight", "น้ำหนัก (กรัม)");
 			 DataSourceFloatField Field_5 = new DataSourceFloatField("safety", "จำนวนสำรองขั้นต่ำ");
 			 DataSourceFloatField Field_6 = new DataSourceFloatField("remain", "จำนวนคงเหลือ");
 			 Field_5.setDecimalPad(2);
@@ -49,7 +50,7 @@ public class MaterialDS extends DataSource  {
 			 //Field_8.setHidden(true);
 			 
 			 //setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_7, Field_8);
-			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_7);
+			 setFields(Field_1, Field_2, Field_3, Field_4, Field_4_1, Field_5, Field_6, Field_7);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(MaterialData.getNewRecords()); // For Test

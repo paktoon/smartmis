@@ -101,7 +101,7 @@ public class ProcessAdd {
         }
         selectOtherItem.setWidth(250);
 		
-        final FloatItem std_time = new FloatItem("std_time");
+        final IntegerItem std_time = new IntegerItem("std_time");
         std_time.setTitle("ระยะเวลา");
         std_time.setHint("วัน *");
         std_time.setRequired(true);
@@ -321,7 +321,7 @@ public class ProcessAdd {
 //  					public void execute(Boolean value) {
 //  						if (value) {
   							if (process.equalsIgnoreCase("1_casting")) {
-  								processList.add(ProcessData.createRecord("1_casting", selectOtherItem.getValueAsString(), std_time.getValueAsFloat().doubleValue(), 1));
+  								processList.add(ProcessData.createRecord("1_casting", selectOtherItem.getValueAsString(), std_time.getValueAsInteger(), 1));
   								List_1.clear();
   								for (ListGridRecord item : materialGrid.getRecords()) {
   									List_1.add(item);
@@ -331,7 +331,7 @@ public class ProcessAdd {
   					        	next.show("2_scrape", product, processList, List_1, List_2, List_3, List_4);
   	  							winModel.destroy();
   					        } else if (process.equalsIgnoreCase("2_scrape")) {
-  					        	processList.add(ProcessData.createRecord("2_scrape", selectOtherItem.getValueAsString(), std_time.getValueAsFloat().doubleValue(), 2));
+  					        	processList.add(ProcessData.createRecord("2_scrape", selectOtherItem.getValueAsString(), std_time.getValueAsInteger(), 2));
   					        	List_2.clear();
   					        	for (ListGridRecord item : materialGrid.getRecords()) {
   					        		List_2.add(item);
@@ -341,7 +341,7 @@ public class ProcessAdd {
   					        	next.show("3_abrade", product, processList, List_1, List_2, List_3, List_4);
   	  							winModel.destroy();
   					        } else if (process.equalsIgnoreCase("3_abrade")) {
-  					        	processList.add(ProcessData.createRecord("3_abrade", selectOtherItem.getValueAsString(), std_time.getValueAsFloat().doubleValue(), 2));
+  					        	processList.add(ProcessData.createRecord("3_abrade", selectOtherItem.getValueAsString(), std_time.getValueAsInteger(), 2));
   					        	List_3.clear();
   					        	for (ListGridRecord item : materialGrid.getRecords()) {
   					        		List_3.add(item);
@@ -351,7 +351,7 @@ public class ProcessAdd {
   					        	next.show("4_packing", product,processList, List_1, List_2, List_3, List_4);
   	  							winModel.destroy();
   					        } else if (process.equalsIgnoreCase("4_packing")) {
-  					        	processList.add(ProcessData.createRecord("4_packing", selectOtherItem.getValueAsString(), std_time.getValueAsFloat().doubleValue(), 2));
+  					        	processList.add(ProcessData.createRecord("4_packing", selectOtherItem.getValueAsString(), std_time.getValueAsInteger(), 2));
   					        	List_4.clear();
   					        	for (ListGridRecord item : materialGrid.getRecords()) {
   					        		List_4.add(item);
@@ -387,7 +387,7 @@ public class ProcessAdd {
 		String process_id_3 = "PS70" + Math.round((Math.random() * 100));
 		String process_id_4 = "PS70" + Math.round((Math.random() * 100));
 		
-      	product.setAttribute("pid", "PD70" + Math.round((Math.random() * 100)));
+      	product.setAttribute("pid", product_id);
       	
       	ListGridRecord process_1 = processList.get(0);
       	process_1.setAttribute("pid", product_id);
@@ -403,9 +403,14 @@ public class ProcessAdd {
       	process_4.setAttribute("psid", process_id_4);
       	
       	ProcessListDS.getInstance(product_id).addData(process_1);
+      	System.out.println("Add process for pid " + product_id);
+      	System.out.println("	psid " + process_id_1);
       	ProcessListDS.getInstance(product_id).addData(process_2);
+      	System.out.println("	psid " + process_id_2);
       	ProcessListDS.getInstance(product_id).addData(process_3);
+      	System.out.println("	psid " + process_id_3);
       	ProcessListDS.getInstance(product_id).addData(process_4);
+      	System.out.println("	psid " + process_id_4);
       	
       	//System.out.println("List_1 " + List_1.size());
       	//System.out.println("List_2 " + List_2.size());

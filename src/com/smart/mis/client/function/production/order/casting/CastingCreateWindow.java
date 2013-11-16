@@ -1,4 +1,4 @@
-package com.smart.mis.client.function.sale.delivery;
+package com.smart.mis.client.function.production.order.casting;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -6,26 +6,14 @@ import java.util.Date;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.smart.mis.client.function.production.plan.product.PlanProductDS;
-import com.smart.mis.client.function.sale.customer.CustomerDS;
-import com.smart.mis.client.function.sale.delivery.DeliveryDS;
-import com.smart.mis.client.function.sale.delivery.DeliveryData;
-import com.smart.mis.client.function.sale.invoice.InvoiceDS;
-import com.smart.mis.client.function.sale.invoice.InvoiceData;
-import com.smart.mis.client.function.sale.order.SaleOrderDS;
-import com.smart.mis.client.function.sale.order.SaleOrderData;
-import com.smart.mis.client.function.sale.order.product.SaleProductDS;
-import com.smart.mis.client.function.sale.order.product.SaleProductData;
-import com.smart.mis.client.function.sale.order.product.SaleProductDetails;
+import com.smart.mis.client.function.production.smith.SmithDS;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
-import com.smart.mis.client.function.sale.quotation.product.QuoteProductData;
-import com.smart.mis.client.function.sale.quotation.product.QuoteProductDetails;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
-import com.smart.mis.shared.sale.Customer;
-import com.smart.mis.shared.sale.DeliveryStatus;
-import com.smart.mis.shared.sale.InvoiceStatus;
+import com.smart.mis.shared.prodution.ProductionPlanStatus;
+import com.smart.mis.shared.prodution.Smith;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DSCallback;
@@ -73,28 +61,16 @@ import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class DeliveryViewWindow extends EditorWindow{
+public class CastingCreateWindow {
 
 //	SelectProductList addFunc;
-	Customer client;
+//	Customer client;
+	Smith smith;
 	
-	public DeliveryViewWindow(){
-//		super();
-//		addFunc = new SelectProductList();
-//		setWidth(650);  
-//		setHeight(500);
-//		setShowMinimizeButton(false);
-//		setIsModal(true);
-//		setShowModalMask(true);
-//		setCanDragResize(false);
-//		setCanDragReposition(false);
-//		centerInPage();
-	}
-	
-	public void show(ListGridRecord record, boolean edit, User currentUser, int page){
-		client = new Customer();
+	public void show(ListGridRecord record, User currentUser, Integer std_time){
+		smith = new Smith();
 		Window editWindow = new Window();
-		editWindow.setTitle("ข้อมูลรายการนำส่งสินค้า");
+		editWindow.setTitle("ข้อมูลคำสั่งผลิต");
 		editWindow.setWidth(670);  
 		editWindow.setHeight(620);
 		editWindow.setShowMinimizeButton(false);
@@ -105,160 +81,142 @@ public class DeliveryViewWindow extends EditorWindow{
 		editWindow.centerInPage();
 		
 		//editWindow.setHeaderControls(HeaderControls.HEADER_LABEL);
-		editWindow.addItem(getViewEditor(record, edit, editWindow, currentUser, page));
+		editWindow.addItem(getViewEditor(record, editWindow, currentUser, std_time));
 		editWindow.show();
 	}
 	
-	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
+	private VLayout getViewEditor(final ListGridRecord record, final Window main, final User currentUser, Integer std_time) {
 		VLayout layout = new VLayout();
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
 		
-		final String delivery_id = record.getAttributeAsString("delivery_id");
-		String cid = record.getAttributeAsString("cid");
-		//String payment_model = record.getAttributeAsString("payment_model");
-		//Integer credit = record.getAttributeAsInt("credit");
-		final String sale_id = record.getAttributeAsString("sale_id");
-		//final String quote_id = record.getAttributeAsString("quote_id");
+		final String plan_id = record.getAttributeAsString("plan_id");
+		String sale_id = record.getAttributeAsString("sale_id");
+		if (sale_id == null) sale_id= "-";
 		Date delivery = record.getAttributeAsDate("delivery");
-		//Double netEx = record.getAttributeAsDouble("netExclusive");
-		
 		String status = record.getAttributeAsString("status");
-		//String created_by = record.getAttributeAsString("created_by");
-		//Date created_date = record.getAttributeAsDate("created_date");
+		String created_by = record.getAttributeAsString("created_by");
+		Date created_date = record.getAttributeAsDate("created_date");
+		Double total_weight = record.getAttributeAsDouble("total_weight");
+		Double total_amount = record.getAttributeAsDouble("total_amount");
 		
 		DynamicForm quotationForm = new DynamicForm();
 		quotationForm.setWidth100(); 
 		quotationForm.setHeight(30);
 		quotationForm.setMargin(5);
 		quotationForm.setIsGroup(true);
-		quotationForm.setNumCols(8);
-		quotationForm.setGroupTitle("ข้อมูลรายการนำส่งสินค้า");
+		quotationForm.setNumCols(6);
+		quotationForm.setGroupTitle("ข้อมูลแผนการผลิต");
 
-		StaticTextItem did = new StaticTextItem("delivery_id", "รหัสรายการนำส่งสินค้า");
+		StaticTextItem qid = new StaticTextItem("plan_id", "รหัสแผนการผลิต");
 		StaticTextItem sid = new StaticTextItem("sale_id", "รหัสรายการขาย");
-		//StaticTextItem qid = new StaticTextItem("quote_id", "รหัสใบเสนอราคา");
+		StaticTextItem ddate = new StaticTextItem("delivery", "วันที่กำหนดส่งสินค้า");
 		StaticTextItem sts = new StaticTextItem("status", "สถานะ");
-		StaticTextItem delivery_date = new StaticTextItem("delivery", "กำหนดส่งสินค้า");
-		//StaticTextItem cdate = new StaticTextItem("created_date", "สร้างเมื่อ");
-		did.setValue(delivery_id);
+		StaticTextItem cby = new StaticTextItem("created_by", "สร้างโดย");
+		StaticTextItem cdate = new StaticTextItem("created_date", "สร้างเมื่อ");
+		qid.setValue(plan_id);
 		sid.setValue(sale_id);
-		sts.setValue(status);
-		sts.setValueMap(DeliveryStatus.getValueMap());
-		delivery_date.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(delivery));
-		quotationForm.setFields(did, sid, sts, delivery_date);
-		quotationForm.setColWidths(80,80,80,80,80,80,80,80);
+		if (delivery != null ) ddate.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(delivery));
+		else ddate.setValue("-");
+		sts.setValue(ProductionPlanStatus.getDisplay(status));
+		cby.setValue(created_by);
+		cdate.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(created_date));
+		quotationForm.setFields(qid, sid, ddate, sts, cdate ,cby);
+		quotationForm.setColWidths(100,100,100,100,100,100);
 		layout.addMember(quotationForm);
 		
-		final DynamicForm customerForm = new DynamicForm();
-		customerForm.setWidth100(); 
-		customerForm.setHeight(30);
-		customerForm.setMargin(5); 
-		customerForm.setNumCols(6); 
-		customerForm.setCellPadding(2);
-		customerForm.setAutoFocus(true);
-		customerForm.setSelectOnFocus(true);
-		customerForm.setDataSource(CustomerDS.getInstance());
-		customerForm.setUseAllDataSourceFields(false);
-		customerForm.setIsGroup(true);
-		customerForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-		customerForm.setGroupTitle("ข้อมูลลูกค้า");
-//		if (edit) {
-//			final StaticTextItem cus_id = new StaticTextItem("cid", "รหัสลูกค้า");
-//			final SelectItem cus_name = new SelectItem("cus_name", "ชื่อลูกค้า");
-//			cus_name.setColSpan(3);
-//			final StaticTextItem cus_type = new StaticTextItem("cus_type", "ประเภทลูกค้า");
-//			cus_name.setOptionDataSource(CustomerDS.getInstance());
-//			cus_name.setEmptyDisplayValue("--โปรดเลือกลูกค้า--");
-//			cus_name.setPickListWidth(350);
-//			cus_name.setWidth(240);
-//			cus_name.setRequired(true);
-//			cus_name.setHint("*");
-//			ListGridField Field_1 = new ListGridField("cid", 80);  
-//	        ListGridField Field_2 = new ListGridField("cus_name", 200);  
-//	        ListGridField Field_3 = new ListGridField("cus_type", 70);
-//	        cus_name.setPickListFields(Field_1, Field_2, Field_3);
-//	        
-//	        final SelectItem cus_payment_model = new SelectItem("payment_model", "วิธีการชำระเงิน");
-//	        cus_payment_model.setValueMap("เงินสด", "แคชเชียร์เช็ค");
-//			//paymentModel.setEmptyDisplayValue("--โปรดเลือกวิธีชำระเงิน--");
-//	        cus_payment_model.setDefaultValue(payment_model);
-//	        cus_payment_model.setWidth(100);
-//			final IntegerItem cus_credit = new IntegerItem("credit","เครดิต");
-//			cus_credit.setRequired(true);
-//			cus_credit.setHint("วัน*");
-//			cus_credit.setWidth(50);
-//			cus_credit.setTextAlign(Alignment.LEFT);
-//			cus_credit.setDefaultValue(credit);
+		final DynamicForm smithForm = new DynamicForm();
+		smithForm.setWidth100(); 
+		smithForm.setHeight(30);
+		smithForm.setMargin(5); 
+		smithForm.setNumCols(6); 
+		smithForm.setCellPadding(2);
+		smithForm.setAutoFocus(true);
+		smithForm.setSelectOnFocus(true);
+		smithForm.setDataSource(SmithDS.getInstance());
+		smithForm.setUseAllDataSourceFields(false);
+		smithForm.setIsGroup(true);
+		smithForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
+		smithForm.setGroupTitle("ข้อมูลช่าง");
+			final StaticTextItem smith_id = new StaticTextItem("smid", "รหัสช่าง");
+			final SelectItem smith_name = new SelectItem("name", "ชื่อช่าง");
+			//smith_name.setColSpan(3);
+			final StaticTextItem smith_type = new StaticTextItem("type", "ประเภทช่าง");
+			
+			smith_name.setOptionDataSource(SmithDS.getInstance());
+			smith_name.setOptionCriteria(new Criterion("type", OperatorId.EQUALS, "หล่อขึ้นรูป"));
+			smith_name.setEmptyDisplayValue("--โปรดเลือกช่าง--");
+			smith_name.setPickListWidth(280);
+			smith_name.setWidth(240);
+			smith_name.setRequired(true);
+			smith_name.setHint("*");
+			ListGridField Field_1 = new ListGridField("smid", 80);  
+	        ListGridField Field_2 = new ListGridField("name", 200);
+	        smith_name.setPickListFields(Field_1, Field_2);
+	        
+	        final StaticTextItem smith_phone1 = new StaticTextItem("phone1", "โทรศัทท์ 1");
+	        final StaticTextItem smith_phone2 = new StaticTextItem("phone2", "โทรศัทท์ 2");
+	        final StaticTextItem smith_email = new StaticTextItem("email", "อีเมล");
+	        final StaticTextItem smith_address = new StaticTextItem("address", "ที่อยู่");
+	        smith_address.setColSpan(6);
+	        
+	        smith_name.addChangedHandler(new ChangedHandler() {
+				@Override
+				public void onChanged(ChangedEvent event) {
+					Record selected = smith_name.getSelectedRecord();
+					if (selected != null) {
+						String sid = selected.getAttributeAsString("smid");
+						String sname = selected.getAttributeAsString("name");
+						String stype = selected.getAttributeAsString("type");
+						//Contact info
+						//String smith_address = selected.getAttributeAsString("address");
+						String phone1 = selected.getAttributeAsString("phone1");
+						if (phone1 == null) phone1 = "-";
+						String phone2 = selected.getAttributeAsString("phone2");
+						if (phone2 == null) phone2 = "-";
+						String email = selected.getAttributeAsString("email");
+						if (email == null) email = "-";
+						
+						String address = selected.getAttributeAsString("address");
+						String street = selected.getAttributeAsString("street");
+						String city = selected.getAttributeAsString("city");
+						String state = selected.getAttributeAsString("state");
+						String postal = selected.getAttributeAsString("postal");
+						String fullAddress = address;
+						if (street !=null) fullAddress += " ถนน " + street;
+						if (city !=null) fullAddress += " เขต " + city;
+						if (state !=null) fullAddress += " จังหวัด " + state;
+						if (postal !=null) fullAddress += " รหัสไปรษณีย์ " + postal;
+						
+						smith.setAttributes(sid, sname, phone1, phone2, email, fullAddress, stype);
+
+						smith_id.setValue(sid);
+						smith_type.setValue(stype);
+						
+						smith_phone1.setValue(phone1);
+						smith_phone2.setValue(phone2);
+						smith_email.setValue(email);
+						smith_address.setValue(fullAddress);
+					}
+				}
+	        });
+	        smithForm.setFields(smith_name, smith_id, smith_type,smith_email, smith_phone1, smith_phone2 , smith_address);  
+
+//			smithForm.setDataSource(CastingDS.getInstance());
+//			smithForm.setUseAllDataSourceFields(false);
 //			
-//	        cus_name.addChangedHandler(new ChangedHandler() {
-//				@Override
-//				public void onChanged(ChangedEvent event) {
-//					Record selected = cus_name.getSelectedRecord();
-//					if (selected != null) {
-//						String customer_id = selected.getAttributeAsString("cid");
-//						String customer_name = selected.getAttributeAsString("cus_name");
-//						String customer_type = selected.getAttributeAsString("cus_type");
-//						//Contact info
-//						String customer_address = selected.getAttributeAsString("address");
-//						String customer_phone = selected.getAttributeAsString("cus_phone");
-//						String contact_name = selected.getAttributeAsString("contact_name");
-//						String contact_phone = selected.getAttributeAsString("contact_phone");
-//						String contact_email = selected.getAttributeAsString("contact_email");
-//						String zone = selected.getAttributeAsString("zone");
-//						
-//						client.setAttributes(customer_id, customer_name, customer_phone, contact_name, contact_phone, contact_email, customer_address, customer_type, zone);
-//
-//						if(customer_type.equalsIgnoreCase("ลูกค้าประจำ")) {
-//							cus_credit.enable();
-//						} else {
-//							cus_credit.setValue(0);
-//							cus_credit.disable();
-//						}
-//						
-//						cus_id.setValue(customer_id);
-//						cus_type.setValue(customer_type);
-//					}
-//				}
-//	        });
-//	        
-//	        cus_payment_model.addChangedHandler(new ChangedHandler() {
-//				@Override
-//				public void onChanged(ChangedEvent event) {
-//					if (cus_payment_model.validate()) {
-//						client.setPaymentModel(cus_payment_model.getValueAsString());
-//					}
-//				}
-//	        });
-//			
-//	        cus_credit.addChangedHandler(new ChangedHandler() {
-//				@Override
-//				public void onChanged(ChangedEvent event) {
-//					if (cus_credit.validate()) {
-//						client.setCredit(cus_credit.getValueAsInteger());
-//					}
-//				}
-//	        });
-//			
-//	        customerForm.setFields(cus_id, cus_type, cus_name, cus_payment_model, cus_credit );
-////	        customerForm.setFields(cus_id, cus_type, cus_name );
-//		} else {
-			final StaticTextItem cus_id = new StaticTextItem("cid", "รหัสลูกค้า");
-			final StaticTextItem cus_name = new StaticTextItem("cus_name", "ชื่อลูกค้า");
-			cus_name.setColSpan(4);
-			final StaticTextItem cus_type = new StaticTextItem("cus_type", "ประเภทลูกค้า");
-			//final StaticTextItem cus_payment_model = new StaticTextItem("payment_model", "วิธีการชำระเงิน");
-			//cus_payment_model.setDefaultValue(payment_model);
-			//final StaticTextItem cus_credit = new StaticTextItem("credit", "เครดิต");
-			//cus_credit.setDefaultValue(credit);
-			//cus_credit.setHint("วัน");
-			customerForm.setFields(cus_id,cus_type, cus_name);
-			//customerForm.setFields(cus_id,cus_type, cus_name);
-//		}
-		customerForm.setColWidths(100,100,100,100,100,100);
-		customerForm.fetchData(new Criterion("cid", OperatorId.EQUALS, cid));
-		//customerForm.editRecord(record);
+//			final StaticTextItem smith_id = new StaticTextItem("smid", "รหัสช่าง");
+//			final StaticTextItem smith_name = new StaticTextItem("sname", "ชื่อช่าง");
+//			final StaticTextItem smith_type = new StaticTextItem("stype", "ประเภทช่าง");
+//	        final StaticTextItem smith_phone1 = new StaticTextItem("sphone1", "โทรศัทท์ 1");
+//	        final StaticTextItem smith_phone2 = new StaticTextItem("sphone2", "โทรศัทท์ 2");
+//	        final StaticTextItem smith_email = new StaticTextItem("semail", "อีเมล");
+//	        final StaticTextItem smith_address = new StaticTextItem("saddress", "ที่อยู่");
+//	        smithForm.setFields(smith_id, smith_name, smith_type, smith_phone1, smith_phone2, smith_email, smith_address);
+
+		smithForm.setColWidths(100,100,100,100,100,100);
+		//smithForm.editRecord(record);
 		
 //		DynamicForm commentForm = new DynamicForm();
 //		commentForm.setWidth(250); 
@@ -281,8 +239,8 @@ public class DeliveryViewWindow extends EditorWindow{
 		
 		HLayout headerLayout = new HLayout();
 		headerLayout.setWidth100();
-		//headerLayout.addMembers(customerForm, commentForm);
-		headerLayout.addMembers(customerForm);
+		//headerLayout.addMembers(smithForm, commentForm);
+		headerLayout.addMembers(smithForm);
 		layout.addMember(headerLayout);
 		
 		SectionStack sectionStack = new SectionStack();
@@ -301,34 +259,32 @@ public class DeliveryViewWindow extends EditorWindow{
 //        }
 		
         //HLayout itemLayout = new HLayout();
-		final ListGrid saleListGrid = new ListGrid();
-		saleListGrid.setHeight(230);
-		saleListGrid.setAlternateRecordStyles(true);  
-		saleListGrid.setShowAllRecords(true);  
-		saleListGrid.setAutoFetchData(true);  
-		//if (edit) saleListGrid.setSelectionType(SelectionStyle.SINGLE);
-		//else 
-		saleListGrid.setSelectionType(SelectionStyle.NONE);
-		saleListGrid.setCanResizeFields(false);
-		saleListGrid.setShowGridSummary(true);
-		saleListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		saleListGrid.setListEndEditAction(RowEndEditAction.NEXT);
-		saleListGrid.setShowRowNumbers(true);
+		final ListGrid orderListGrid = new ListGrid();
+		orderListGrid.setHeight(230);
+		orderListGrid.setAlternateRecordStyles(true);  
+		orderListGrid.setShowAllRecords(true);  
+		orderListGrid.setAutoFetchData(true);  
+		orderListGrid.setSelectionType(SelectionStyle.NONE);
+		orderListGrid.setCanResizeFields(false);
+		orderListGrid.setShowGridSummary(true);
+		orderListGrid.setEditEvent(ListGridEditEvent.CLICK);  
+		orderListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		orderListGrid.setShowRowNumbers(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
-		saleListGrid.setCriteria(ci);
+		orderListGrid.setCriteria(ci);
 //		if (edit) {
-//			saleListGrid.setCanRemoveRecords(true);
-//			saleListGrid.setWarnOnRemoval(true);
-//			saleListGrid.setWarnOnRemovalMessage("คุณต้องการลบ รายการสินค้า หรือไม่?");
+//			orderListGrid.setCanRemoveRecords(true);
+//			orderListGrid.setWarnOnRemoval(true);
+//			orderListGrid.setWarnOnRemovalMessage("คุณต้องการลบ รายการสินค้า หรือไม่?");
 //		}
 		
-		SaleProductDS tempView = new SaleProductDS(delivery_id);
-		Record[] cachedData = SaleProductDS.getInstance(delivery_id).getCacheData();
+		PlanProductDS tempView = new PlanProductDS(plan_id);
+		Record[] cachedData = PlanProductDS.getInstance(plan_id).getCacheData();
 		if (cachedData.length != 0) {
 			tempView.setTestData(cachedData);
 		}
-		saleListGrid.setDataSource(tempView);
-		saleListGrid.setUseAllDataSourceFields(false);
+		orderListGrid.setDataSource(tempView);
+		orderListGrid.setUseAllDataSourceFields(false);
 		
 		ListGridField quoteItemCell_1 = new ListGridField("pid", 60);
         ListGridField quoteItemCell_2 = new ListGridField("name"); 
@@ -341,26 +297,29 @@ public class DeliveryViewWindow extends EditorWindow{
         quoteItemCell_2.setShowGridSummary(true);
         ListGridField quoteItemCell_3 = new ListGridField("unit", 40);
         
-        ListGridField quoteItemCell_5 = new ListGridField("weight", 90);
-        quoteItemCell_5.setShowGridSummary(false);
-        quoteItemCell_5.setCellFormatter(FieldFormatter.getNumberFormat());
-        quoteItemCell_5.setAlign(Alignment.RIGHT);
+        ListGridNumberField quoteItemCell_4 = new ListGridNumberField("weight", 90);
+        quoteItemCell_4.setSummaryFunction(SummaryFunctionType.SUM);
+        quoteItemCell_4.setShowGridSummary(true);
+        quoteItemCell_4.setIncludeInRecordSummary(false);
         
-        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("sale_amount", 70);
-        if (edit) quoteItemCell_6.setCanEdit(true);
+        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("plan_amount", 70);
+        
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
         
+        ListGridField quoteItemCell_7 = new ListGridField("details", "รายละเอียดสินค้า");
+        
 //        ListGridSummaryField quoteItemCell_sum = new ListGridSummaryField("sum_price", 100);
+//
 //        quoteItemCell_sum.setRecordSummaryFunction(RecordSummaryFunctionType.MULTIPLIER);
 //        quoteItemCell_sum.setSummaryFunction(SummaryFunctionType.SUM);
 //        quoteItemCell_sum.setShowGridSummary(true);
 //        quoteItemCell_sum.setCellFormatter(FieldFormatter.getPriceFormat());
 //        quoteItemCell_sum.setAlign(Alignment.RIGHT);
  
-        saleListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_6, quoteItemCell_3, quoteItemCell_5);
-        //itemLayout.addMember(saleListGrid);
-        section.setItems(saleListGrid);
+        orderListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_7, quoteItemCell_6, quoteItemCell_3);
+        //itemLayout.addMember(orderListGrid);
+        section.setItems(orderListGrid);
         sectionStack.setSections(section);
 		layout.addMember(sectionStack);
 		
@@ -369,21 +328,31 @@ public class DeliveryViewWindow extends EditorWindow{
 		
 		final DynamicForm dateForm = new DynamicForm();
 		dateForm.setWidth(300);
+		dateForm.setHeight(75);
 		dateForm.setNumCols(2);
 		dateForm.setMargin(5);
 		dateForm.setIsGroup(true);
 		dateForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-		dateForm.setGroupTitle("ข้อกำหนดรายการขาย");
-		if (!edit) dateForm.setCanEdit(false);
-//		final DateItem fromDate = new DateItem();
-//		fromDate.setName("fromDate");
-//		fromDate.setTitle("วันที่เริ่มข้อเสนอ");
-//		fromDate.setUseTextField(true);
-//		
-//		final DateItem toDate = new DateItem();
-//		toDate.setName("toDate");
-//		toDate.setTitle("วันที่สิ้นสุดข้อเสนอ");
-//		toDate.setUseTextField(true);
+		dateForm.setGroupTitle("ข้อกำหนดคำสั่งผลิต");
+		dateForm.setCanEdit(false);
+		
+		DateRange dateRange = new DateRange();  
+	    dateRange.setRelativeStartDate(RelativeDate.TODAY);
+	    dateRange.setRelativeEndDate(new RelativeDate("+"+std_time+"d"));
+		
+		final DateItem sentDate = new DateItem();
+		sentDate.setName("sent_date");
+		sentDate.setTitle("วันที่สั่งผลิต");
+		sentDate.setUseTextField(true);
+		sentDate.setDefaultValue(dateRange.getStartDate());
+		sentDate.setCanEdit(false);
+		
+		final DateItem dueDate = new DateItem();
+		dueDate.setName("due_date");
+		dueDate.setTitle("วันที่กำหนดรับของ");
+		dueDate.setUseTextField(true);
+		dueDate.setDefaultValue(dateRange.getEndDate());
+		dueDate.setCanEdit(false);
 		
 //		final DateItem deliveryDate = new DateItem();
 //		deliveryDate.setName("deliveryDate");
@@ -404,83 +373,57 @@ public class DeliveryViewWindow extends EditorWindow{
 //		deliveryDate.setHint("*");
 		
 //		dateForm.setFields(fromDate, toDate, deliveryDate);
-//		dateForm.setFields(deliveryDate);
-//		dateForm.setColWidths(130,80);
-//		//dateForm.editRecord(record);
-//		footerLayout.addMember(dateForm);
-//		//******************End
-//		
-//		//******************Summary
-//		final DynamicForm summaryForm = new DynamicForm();
-//		summaryForm.setWidth(300);
-//		summaryForm.setNumCols(2);
-//		summaryForm.setMargin(5);
-//		summaryForm.setIsGroup(true);
-//		summaryForm.setGroupTitle("สรุปยอดรวม");
-//		summaryForm.setColWidths(120, 100);
-//		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
-//		StaticTextItem netExclusive = new StaticTextItem("netExclusive");
-//		netExclusive.setValue(nf.format(netEx));
-//		StaticTextItem tax = new StaticTextItem("tax");
-//		tax.setValue(nf.format(netEx * 0.07));
-//		StaticTextItem netInclusive = new StaticTextItem("netInclusive");
-//		netInclusive.setValue(nf.format(netEx * 1.07));
-//		netExclusive.setWidth(100);
-//		tax.setWidth(100);
-//		netInclusive.setWidth(100);
-//		netExclusive.setTitle("ราคารวม");
-//		tax.setTitle("ภาษีมูลค่าเพิ่ม (7%)");
-//		netInclusive.setTitle("ราคาสุทธิ");
-//		netExclusive.setTextAlign(Alignment.RIGHT);
-//		tax.setTextAlign(Alignment.RIGHT);
-//		netInclusive.setTextAlign(Alignment.RIGHT);
-//		netExclusive.setHint("บาท");
-//		tax.setHint("บาท");
-//		netInclusive.setHint("บาท");
-//		summaryForm.setFields(netExclusive, tax, netInclusive);
-//		//summaryForm.editRecord(record);
-//		footerLayout.addMember(summaryForm);
-//		
-//		layout.addMember(footerLayout);
+		dateForm.setFields(sentDate, dueDate);
+		dateForm.setColWidths(130,80);
+		//dateForm.editRecord(record);
+		footerLayout.addMember(dateForm);
+		//******************End
+		
+		//******************Summary
+		final DynamicForm summaryForm = new DynamicForm();
+		summaryForm.setWidth(300);
+		summaryForm.setHeight(75);
+		summaryForm.setNumCols(2);
+		summaryForm.setMargin(5);
+		summaryForm.setIsGroup(true);
+		summaryForm.setGroupTitle("สรุปยอดรวม");
+		summaryForm.setColWidths(120, 100);
+		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
+		total_sent_weight.setValue(nf.format(total_weight));
+		StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
+		total_sent_amount.setValue(nf.format(total_amount));
+		total_sent_weight.setWidth(100);
+		total_sent_amount.setWidth(100);
+		total_sent_weight.setTitle("น้ำหนักรวม");
+		total_sent_amount.setTitle("จำนวนรวม");
+		total_sent_weight.setTextAlign(Alignment.RIGHT);
+		total_sent_amount.setTextAlign(Alignment.RIGHT);
+		total_sent_weight.setHint("กรัม");
+		total_sent_amount.setHint("ชิ้น");
+		summaryForm.setFields(total_sent_amount, total_sent_weight);
+		//summaryForm.editRecord(record);
+		footerLayout.addMember(summaryForm);
+		
+		layout.addMember(footerLayout);
 		
 		//Control
 		HLayout controls = new HLayout();
 		controls.setAlign(Alignment.CENTER);
 		controls.setMargin(5);
 		controls.setMembersMargin(5);
-		final IButton printButton = new IButton("พิมพ์รายการนำส่งสินค้า");
+		final IButton printButton = new IButton("ออกคำสั่งหล่อขึ้นรูป");
 		printButton.setIcon("icons/16/print.png");
-		printButton.setWidth(150);
+		printButton.setWidth(120);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                SC.say("click print");
+            	if (smithForm.validate()) {
+                    SC.say("click order and print");
+            	}
+            	else {
+            		SC.warn("กรุณาเลือกข้อมูลช่าง");
+            	}
             	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
-          }
-        });
-		
-		final IButton saveButton = new IButton("บันทึกการนำส่งสินค้า");
-		saveButton.setIcon("icons/16/save.png");
-		saveButton.setWidth(150);
-		saveButton.addClickHandler(new ClickHandler() {  
-            public void onClick(ClickEvent event) { 
-            	SC.confirm("ยืนยันการทำรายการ", "ต้องการบันทึกการนำส่งสินค้า หรือไม่?" , new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							SC.askforValue("กรุณาระบุเลขที่ใบรับสินค้า", new ValueCallback() {
-								@Override
-								public void execute(String value) {
-									if (value == null || value.equals("")){
-										SC.warn("กรุณาระบุเลขที่ใบรับสินค้า");
-									} else {
-										updateDeliveryOrder(delivery_id, "2_delivery_completed", value);
-										main.destroy();
-									}
-								}});
-						}
-					}
-            	});
-          
           }
         });
 		// if (edit || !status.equals("3_approved")) printButton.disable();
@@ -494,7 +437,7 @@ public class DeliveryViewWindow extends EditorWindow{
 //					@Override
 //					public void execute(Boolean value) {
 //						if (value) {
-//							if (customerForm.validate()) saveQuotation(main, quote_id, customerForm, saleListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
+//							if (smithForm.validate()) saveQuotation(main, quote_id, smithForm, orderListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
 //						}
 //					}
 //            	});
@@ -520,17 +463,17 @@ public class DeliveryViewWindow extends EditorWindow{
 //					@Override
 //					public void execute(Boolean value) {
 //						if (value) {
-//							SC.askforValue("กรุณาระบุเลขที่คำสั่งซื้อ", new ValueCallback() {
-//								@Override
-//								public void execute(String value) {
-//									if (value == null || value.equals("")){
-//										SC.warn("กรุณาระบุเลขที่คำสั่งซื้อในกล่องข้อความ");
-//									} else {
-//										if (customerForm.validate()) createSaleOrder(main, quote_id, customerForm, quoteListGrid, deliveryDate.getValueAsDate(), currentUser, value);
-//									}
-//								}});
+////							SC.askforValue("กรุณาระบุเลขที่คำสั่งซื้อ", new ValueCallback() {
+////								@Override
+////								public void execute(String value) {
+////									if (value == null || value.equals("")){
+////										SC.warn("กรุณาระบุเลขที่คำสั่งซื้อในกล่องข้อความ");
+////									} else {
+////										if (smithForm.validate()) createSaleOrder(main, quote_id, smithForm, quoteListGrid, deliveryDate.getValueAsDate(), currentUser, value);
+////									}
+////								}});
 //							String invoice_id = record.getAttributeAsString("invoice_id");
-//							createDeliveryOrder(main, sale_id, invoice_id, customerForm, saleListGrid, deliveryDate.getValueAsDate(), currentUser);
+//							createDeliveryOrder(main, sale_id, invoice_id, smithForm, orderListGrid, deliveryDate.getValueAsDate(), currentUser);
 //						}
 //					}
 //            	});
@@ -553,15 +496,14 @@ public class DeliveryViewWindow extends EditorWindow{
 //									return;
 //								}
 //								
-//								ListGridRecord invRecord = InvoiceData.createStatusRecord(invoice_id, "ยกเลิก");
+//								ListGridRecord invRecord = InvoiceData.createStatusRecord(invoice_id, "4_canceled");
 //								InvoiceDS.getInstance().updateData(invRecord, new DSCallback() {
 //									@Override
 //									public void execute(DSResponse dsResponse, Object data,
 //											DSRequest dsRequest) {
-//											record.setAttribute("status", "ยกเลิก");
-//						            		//saleListGrid.updateData(record);
+//											record.setAttribute("status", "6_canceled");
 //						            		//SaleOrderDS.getInstance().updateData(record);
-//						            		SaleOrderDS.getInstance().updateData(record, new DSCallback() {
+//											SaleOrderDS.getInstance().updateData(record, new DSCallback() {
 //												@Override
 //												public void execute(DSResponse dsResponse, Object data,
 //														DSRequest dsRequest) {
@@ -580,7 +522,7 @@ public class DeliveryViewWindow extends EditorWindow{
 //            	});
 //          }
 //        });
-		
+//		
 //		final IButton approveButton = new IButton("อนุมัติ");
 //		//approveButton.setIcon("icons/16/approved.png");
 //		approveButton.setWidth(120);
@@ -590,7 +532,7 @@ public class DeliveryViewWindow extends EditorWindow{
 //					@Override
 //					public void execute(Boolean value) {
 //						if (value) {
-//							//saveQuotation(main, quote_id, customerForm, saleListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
+//							//saveQuotation(main, quote_id, smithForm, orderListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
 //							updateQuoteStatus(quote_id, "3_approved", "");
 //							main.destroy();
 //						}
@@ -639,7 +581,7 @@ public class DeliveryViewWindow extends EditorWindow{
 //									if (value == null || value.equals("")){
 //										SC.warn("กรุณาระบุเลขที่คำสั่งซื้อในกล่องข้อความ");
 //									} else {
-//										if (customerForm.validate()) createSaleOrder(main, quote_id, customerForm, saleListGrid, deliveryDate.getValueAsDate(), currentUser, value);
+//										if (smithForm.validate()) createSaleOrder(main, quote_id, smithForm, orderListGrid, deliveryDate.getValueAsDate(), currentUser, value);
 //									}
 //								}});
 //						}
@@ -665,36 +607,37 @@ public class DeliveryViewWindow extends EditorWindow{
 //			controls.addMember(saveButton);
 //		}
 		controls.addMember(printButton);
-		if (status.equals("1_on_delivery")) controls.addMember(saveButton);
+//		if (page == 1 && status.equals("1_waiting_for_production")) controls.addMember(cancelButton);
+//		if (page == 1 && status.equals("3_production_completed")) controls.addMember(deliveryButton);
 		controls.addMember(closeButton);
 		layout.addMember(controls);
 		
 //		addButton.addClickHandler(new ClickHandler() {  
 //            public void onClick(ClickEvent event) {
-//            	//SC.warn("add click " + saleListGrid.getRecords().length);
+//            	//SC.warn("add click " + orderListGrid.getRecords().length);
 //            	ArrayList<String> selected = new ArrayList<String>();
-//            	for (ListGridRecord item : saleListGrid.getRecords()) {
+//            	for (ListGridRecord item : orderListGrid.getRecords()) {
 //            		selected.add(item.getAttributeAsString("pid"));
 //            	}
-//            	addFunc.show(selected, saleListGrid, summaryForm);
+//            	addFunc.show(selected, orderListGrid, summaryForm);
 //            }
 //        });
 //		
 //		delButton.addClickHandler(new ClickHandler() {  
 //            public void onClick(ClickEvent event) {
-//            	ListGridRecord selected = saleListGrid.getSelectedRecord();
+//            	ListGridRecord selected = orderListGrid.getSelectedRecord();
 //            	if (selected != null) {
-//            		//saleListGrid.removeSelectedData();
+//            		//orderListGrid.removeSelectedData();
 //            		selected.setAttribute("status", false);
-//            		saleListGrid.updateData(selected);
-//            		saleListGrid.removeSelectedData(new DSCallback() {
+//            		orderListGrid.updateData(selected);
+//            		orderListGrid.removeSelectedData(new DSCallback() {
 //						@Override
 //						public void execute(DSResponse dsResponse, Object data,
 //								DSRequest dsRequest) {
 //								if (dsResponse.getStatus() != 0) {
 //									SC.warn("การลบสินค้าล้มเหลว");
 //								} else { 
-//									summaryPriceRecalculate(saleListGrid.getRecords(), summaryForm);
+//									summaryPriceRecalculate(orderListGrid.getRecords(), summaryForm);
 //								}
 //						}
 //					}, null);
@@ -704,53 +647,37 @@ public class DeliveryViewWindow extends EditorWindow{
 //            }
 //        });
 		
-//        saleListGrid.addCellSavedHandler(new CellSavedHandler() {  
+//        orderListGrid.addCellSavedHandler(new CellSavedHandler() {  
 //			@Override
 //			public void onCellSaved(CellSavedEvent event) {
-//				summaryPriceRecalculate(saleListGrid.getRecords(), summaryForm);
+//				summaryPriceRecalculate(orderListGrid.getRecords(), summaryForm);
 //			}  
 //        });
         
-//        saleListGrid.addRemoveRecordClickHandler(new RemoveRecordClickHandler() {
+//        orderListGrid.addRemoveRecordClickHandler(new RemoveRecordClickHandler() {
 //
 //			@Override
 //			public void onRemoveRecordClick(RemoveRecordClickEvent event) {
-//				//System.out.println("onRemoveRecordClick getResultSize " +saleListGrid.getResultSet().getResultSize());
-//				System.out.println("onRemoveRecordClick getRecords " +saleListGrid.getRecords().length);
-//				summaryPriceRecalculate(saleListGrid.getRecords(), summaryForm);
+//				//System.out.println("onRemoveRecordClick getResultSize " +orderListGrid.getResultSet().getResultSize());
+//				System.out.println("onRemoveRecordClick getRecords " +orderListGrid.getRecords().length);
+//				summaryPriceRecalculate(orderListGrid.getRecords(), summaryForm);
 //			}
 //        });
 //        
-//        saleListGrid.addFetchDataHandler(new FetchDataHandler() {
+//        orderListGrid.addFetchDataHandler(new FetchDataHandler() {
 //
 //			@Override
 //			public void onFilterData(FetchDataEvent event) {
-//				//System.out.println("onFilterData getResultSize " +saleListGrid.getResultSet().getResultSize());
-//				System.out.println("onFilterData getRecords " +saleListGrid.getRecords().length);
-//				if (saleListGrid.getRecords().length != 0) {
-//					summaryPriceRecalculate(saleListGrid.getRecords(), summaryForm);
+//				//System.out.println("onFilterData getResultSize " +orderListGrid.getResultSet().getResultSize());
+//				System.out.println("onFilterData getRecords " +orderListGrid.getRecords().length);
+//				if (orderListGrid.getRecords().length != 0) {
+//					summaryPriceRecalculate(orderListGrid.getRecords(), summaryForm);
 //				}
 //			}
 //        	
 //        });
         
 		return layout;
-	}
-	
-	public void updateDeliveryOrder(String delivery_id, String status, String receipt_id){
-		ListGridRecord updated = DeliveryData.createStatusRecord(delivery_id, "2_delivery_completed", new Date(),receipt_id);
-		DeliveryDS.getInstance().updateData(updated, new DSCallback() {
-			@Override
-			public void execute(DSResponse dsResponse, Object data,
-					DSRequest dsRequest) {
-					if (dsResponse.getStatus() != 0) {
-						SC.warn("การบันทึกการนำส่งสินค้าล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-						return;
-					} else {
-						SC.say("การบันทึกการนำส่งสินค้าเสร็จสิ้น <br> บันทึกเมื่อวันที่ " + DateUtil.formatAsShortDate(new Date()));
-					}
-			}
-		});
 	}
 	
 //	public void summaryPriceRecalculate(ListGridRecord[] all, DynamicForm target){
@@ -764,8 +691,8 @@ public class DeliveryViewWindow extends EditorWindow{
 //		target.getField("netInclusive").setValue(nf.format(sum_price * 1.07));
 //	}
 //	
-//	public void saveQuotation(final Window main, final String quote_id, DynamicForm customer, ListGrid saleListGrid, Date from, Date to, Date delivery, User currentUser){
-//		ListGridRecord[] all = saleListGrid.getRecords();
+//	public void saveQuotation(final Window main, final String quote_id, DynamicForm customer, ListGrid orderListGrid, Date from, Date to, Date delivery, User currentUser){
+//		ListGridRecord[] all = orderListGrid.getRecords();
 //		
 //		if (all.length == 0) {
 //			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
@@ -802,18 +729,18 @@ public class DeliveryViewWindow extends EditorWindow{
 //			//status
 //			final String quote_status = "2_waiting_for_approved";
 //			
-//			if (customer.getField("cid").getValue() == null || customer.getField("cus_name").getValue() == null) {
+//			if (customer.getField("cid").getValue() == null || customer.getField("smith_name").getValue() == null) {
 //				SC.warn("ชื่อและรหัสลูกค้าไม่ถุกต้อง");
 //				return;
 //			}
 //			
 //			String cid = (String) customer.getField("cid").getValue();
-//			String cus_name = (String) customer.getField("cus_name").getValue();
+//			String smith_name = (String) customer.getField("smith_name").getValue();
 //			String payment_model = (String) customer.getField("payment_model").getValue();
 //			Integer credit = (Integer) customer.getField("credit").getValue();
-//			//System.out.println(cid + " " + cus_name + " " + payment_model + " " + credit);
+//			//System.out.println(cid + " " + smith_name + " " + payment_model + " " + credit);
 //			
-//			ListGridRecord updateRecord = QuotationData.createUpdateRecord(quote_id, cid, cus_name, payment_model, credit, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), currentUser.getFirstName() + " " + currentUser.getLastName(), "", quote_status);
+//			ListGridRecord updateRecord = QuotationData.createUpdateRecord(quote_id, cid, smith_name, payment_model, credit, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), currentUser.getFirstName() + " " + currentUser.getLastName(), "", quote_status);
 //			
 //			QuotationDS.getInstance().updateData(updateRecord, new DSCallback() {
 //				@Override
@@ -856,9 +783,9 @@ public class DeliveryViewWindow extends EditorWindow{
 //		});
 //	}
 //	
-//	public void createDeliveryOrder(final Window main, final String sale_id, String invoice_id, DynamicForm customer, ListGrid saleListGrid, Date delivery, User currentUser){
+//	public void createDeliveryOrder(final Window main, final String sale_id, String invoice_id, DynamicForm customer, ListGrid orderListGrid, Date delivery, User currentUser){
 //		
-//		ListGridRecord[] all = saleListGrid.getRecords();
+//		ListGridRecord[] all = orderListGrid.getRecords();
 //		
 ////		if (all.length == 0) {
 ////			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
@@ -881,7 +808,7 @@ public class DeliveryViewWindow extends EditorWindow{
 //			String pid = item.getAttributeAsString("pid");
 //			String pname = item.getAttributeAsString("name");
 //			String ptype = item.getAttributeAsString("type");
-//			String psize = item.getAttributeAsString("size");
+//			//String psize = item.getAttributeAsString("size");
 //			Double pweight = item.getAttributeAsDouble("weight");
 //			Integer psale_amount = item.getAttributeAsInt("sale_amount");
 //			String punit = item.getAttributeAsString("unit");
@@ -889,7 +816,7 @@ public class DeliveryViewWindow extends EditorWindow{
 //			
 //			String sub_sale_id = "SS80" + Math.round((Math.random() * 1000));
 //			SaleProductDetails temp = new SaleProductDetails();
-//			temp.save(pid, pname, psize, pweight, pprice, ptype, punit);
+//			temp.save(pid, pname, pweight, pprice, ptype, punit);
 //			temp.setID(sub_sale_id, delivery_id);
 //			temp.setQuantity(psale_amount);
 //			saleProductList.add(temp);
@@ -897,7 +824,7 @@ public class DeliveryViewWindow extends EditorWindow{
 //
 //			final String delivery_status = "1_on_delivery";
 //			String cid = (String) customer.getField("cid").getValue();
-//			String cus_name = (String) customer.getField("cus_name").getValue();
+//			String smith_name = (String) customer.getField("smith_name").getValue();
 ////			String payment_model = (String) customer.getField("payment_model").getValue();
 ////			Integer credit = (Integer) customer.getField("credit").getValue();
 //			
@@ -906,8 +833,8 @@ public class DeliveryViewWindow extends EditorWindow{
 ////	        dateRange.setRelativeEndDate(new RelativeDate("+"+credit+"d"));
 ////	        final Date due_date = dateRange.getEndDate();
 //	        
-//			final ListGridRecord deliveryRecord = DeliveryData.createRecord(delivery_id, sale_id, invoice_id, cid, cus_name, delivery, total_weight, total_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, delivery_status, new Date(), null, "");
-//			//ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
+//			final ListGridRecord deliveryRecord = DeliveryData.createRecord(delivery_id, sale_id, invoice_id, cid, smith_name, delivery, total_weight, total_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, delivery_status, new Date(), null, "");
+//			//ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, smith_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
 //			
 //			//Auto create invoice
 //			DeliveryDS.getInstance().addData(deliveryRecord, new DSCallback() {
@@ -922,7 +849,7 @@ public class DeliveryViewWindow extends EditorWindow{
 //								ListGridRecord subAddRecord = SaleProductData.createRecord(item);
 //								SaleProductDS.getInstance(delivery_id).addData(subAddRecord);
 //							}
-//							ListGridRecord saleRecord = SaleOrderData.createStatusRecord(sale_id, "อยู่ระหว่างนำส่ง");
+//							ListGridRecord saleRecord = SaleOrderData.createStatusRecord(sale_id, "4_on_delivery");
 //							SaleOrderDS.getInstance().updateData(saleRecord);
 //							main.destroy();
 //						}

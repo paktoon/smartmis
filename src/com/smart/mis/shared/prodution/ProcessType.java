@@ -1,6 +1,11 @@
 package com.smart.mis.shared.prodution;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+
+import com.smart.mis.client.function.production.process.ProcessListDS;
+import com.smart.mis.client.function.production.product.ProductDS;
+import com.smartgwt.client.data.Record;
 
 public class ProcessType {
 	static LinkedHashMap<String, String> valueMap;
@@ -30,5 +35,28 @@ public class ProcessType {
 	
 	public static Integer getPriority(String value) {
         return priorityMap.get(value);
+	}
+	
+	public static Integer getMaxStdTime(ArrayList<String> pids, String value) {
+		Integer max_std_time = 0;
+		System.out.println("Getting max std_time for process " + value);
+		for (String pid : pids){
+			System.out.println("	pid " + pid);
+			ProcessListDS.getInstance(pid).fetchData();
+			Record[] processList = ProcessListDS.getInstance(pid).getCacheData();
+			for (Record process : processList) {
+				String type = process.getAttributeAsString("type");
+				System.out.println("	type " + type);
+				if (type.equalsIgnoreCase(value)) {
+					Integer std_time = process.getAttributeAsInt("std_time");
+					System.out.println("	std_time " + std_time);
+					if (std_time > max_std_time) {
+						max_std_time = std_time;
+					}
+				} else System.out.println("		skipped");
+			}
+		}
+		
+		return max_std_time;
 	}
 }

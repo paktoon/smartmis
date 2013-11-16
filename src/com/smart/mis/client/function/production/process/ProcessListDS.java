@@ -22,9 +22,11 @@ public class ProcessListDS extends DataSource  {
 		
 		public static ProcessListDS getInstance(String pid){
 			if (instance.containsKey(pid)) {
-				//System.out.println("get ProcessListDS for pid " + pid);
+				System.out.println("get ProcessListDS for pid " + pid);
 				return instance.get(pid);
 			} else {
+				System.out.println("no ProcessListDS for pid " + pid);
+				System.out.println("create new empty");
 				ProcessListDS process = new ProcessListDS(pid);
 				instance.put(pid, process);
 				return process;
@@ -37,7 +39,7 @@ public class ProcessListDS extends DataSource  {
 			 DataSourceTextField Field_1 = new DataSourceTextField("psid", "รหัสขั้นตอน");
 			 DataSourceEnumField Field_2 = new DataSourceEnumField("type");
 			 DataSourceEnumField Field_3 = new DataSourceEnumField("desc", "รายละเอียด");
-			 DataSourceFloatField Field_4 = new DataSourceFloatField("std_time", "ระยะเวลา");
+			 DataSourceIntegerField Field_4 = new DataSourceIntegerField("std_time", "ระยะเวลา");
 			 Field_2.setValueMap(ProcessType.getValueMap());
 			 Field_2.setPrimaryKey(true);
 			 DataSourceIntegerField Field_5 = new DataSourceIntegerField("priority");

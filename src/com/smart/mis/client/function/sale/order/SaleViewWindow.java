@@ -320,7 +320,10 @@ public class SaleViewWindow extends EditorWindow{
 //		}
 		
 		SaleProductDS tempView = new SaleProductDS(sale_id);
-		tempView.setTestData(SaleProductDS.getInstance(sale_id).getCacheData());
+		Record[] cachedData = SaleProductDS.getInstance(sale_id).getCacheData();
+		if (cachedData.length != 0) {
+			tempView.setTestData(cachedData);
+		}
 		saleListGrid.setDataSource(tempView);
 		saleListGrid.setUseAllDataSourceFields(false);
 		

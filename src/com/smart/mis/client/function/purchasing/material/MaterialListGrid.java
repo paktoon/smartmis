@@ -68,7 +68,7 @@ public class MaterialListGrid extends ListGrid {
         setFields(field_1, field_2, field_3, field_4, field_5, field_6, field_7);
         setHoverWidth(200);  
         setHoverHeight(20);
-        //hideFields("address");
+        hideFields("type");
         //fetchData();
 	}
 	

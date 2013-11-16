@@ -318,7 +318,10 @@ public class QuoteViewWindow extends EditorWindow{
 //		}
 		
 		QuoteProductDS tempView = new QuoteProductDS(quote_id);
-		tempView.setTestData(QuoteProductDS.getInstance(quote_id).getCacheData());
+		Record[] cachedData = QuoteProductDS.getInstance(quote_id).getCacheData();
+		if (cachedData.length != 0) {
+			tempView.setTestData(cachedData);
+		}
 		quoteListGrid.setDataSource(tempView);
 		quoteListGrid.setUseAllDataSourceFields(false);
 		
@@ -582,7 +585,7 @@ public class QuoteViewWindow extends EditorWindow{
         });
 		
 		final IButton createSaleOrderButton = new IButton("สร้างรายการขาย");
-		approveButton.setIcon("icons/16/approved.png");
+		createSaleOrderButton.setIcon("icons/16/coins.png");
 		createSaleOrderButton.setWidth(120);
 		createSaleOrderButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 

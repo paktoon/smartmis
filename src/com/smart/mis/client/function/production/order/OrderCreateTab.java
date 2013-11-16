@@ -7,14 +7,9 @@ import java.util.LinkedHashMap;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.smart.mis.client.function.production.plan.PlanDS;
-import com.smart.mis.client.function.sale.customer.CustomerDS;
-import com.smart.mis.client.function.sale.quotation.QuoteViewWindow;
-import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
+import com.smart.mis.client.function.production.plan.PlanViewWindow;
 import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
-import com.smart.mis.shared.ListGridNumberField;
-import com.smart.mis.shared.sale.Customer;
-import com.smart.mis.shared.sale.QuotationStatus;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.AdvancedCriteria;
 import com.smartgwt.client.data.Criterion;
@@ -85,6 +80,7 @@ public class OrderCreateTab {
 		HLayout searchLayout = new HLayout();
 		searchLayout.setHeight(20);
 		
+		VLayout leftLayout = new VLayout();
 		final DynamicForm searchForm = new DynamicForm();
 		searchForm.setWidth(450); 
 		searchForm.setHeight(30);
@@ -139,7 +135,7 @@ public class OrderCreateTab {
         searchForm.setItems(quoteText, cidText);
         dateForm.setItems(from, to);
         
-		final ListGrid planListGrid = new EditorListGrid(new QuoteViewWindow(), currentUser);
+		final ListGrid planListGrid = new EditorListGrid(new PlanViewWindow(), currentUser);
  
 		planListGrid.setAutoFetchData(true);  
 		planListGrid.setCanMultiSort(true);
@@ -173,9 +169,6 @@ public class OrderCreateTab {
 		planListGrid.setFields(status, plan_id, reason, total_amount, total_weight, created_date, iconField);
 		
 		planListGrid.hideField("status");
-
-		searchLayout.addMembers(searchForm, dateForm);
-		reviseLayout.addMember(searchLayout);
 		
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMargin(10);
@@ -254,7 +247,12 @@ public class OrderCreateTab {
 
 //		buttonLayout.addMembers(searchButton, listAllButton, cancelQuoteButton);
 		buttonLayout.addMembers(searchButton, listAllButton);
-		reviseLayout.addMember(buttonLayout);
+		
+		leftLayout.addMembers(searchForm, buttonLayout);
+		searchLayout.addMembers(leftLayout, dateForm);
+		reviseLayout.addMember(searchLayout);
+		
+		//reviseLayout.addMember(buttonLayout);
 		
 		VLayout gridLayout = new VLayout();
 		gridLayout.setWidth100();

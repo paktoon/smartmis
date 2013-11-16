@@ -29,6 +29,7 @@ import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.SelectOtherItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -65,6 +66,7 @@ public class MaterialDetailTabPane extends TabSet {
     private IButton saveButton, cancelButton;
     private String currentMid = null;
     public String currentChangeSidList = null;
+    FloatItem weight;
     
     private final MaterialSupplierChange changeFunc = new MaterialSupplierChange(this);
 //    private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
@@ -113,9 +115,15 @@ public class MaterialDetailTabPane extends TabSet {
 		desc.setRowSpan(3);
 		
 		SelectItem type = new SelectItem("type", "ชนิด");
+		weight = new FloatItem("weight", "น้ำหนัก (กรัม)");
+		weight.hide();
+		weight.setRequired(false);
 		StaticTextItem safety = new StaticTextItem("safety", "จำนวนสำรองขั้นต่ำ");
 		StaticTextItem remain = new StaticTextItem("remain", "จำนวนคงเหลือ");
-		TextItem unit = new TextItem("unit", "หน่วย");
+		SelectOtherItem unit = new SelectOtherItem("unit", "หน่วย");
+		unit.setOtherTitle("อื่นๆ..");  
+		unit.setOtherValue("OtherVal");
+		unit.setValueMap("กรัม", "เม็ด", "ชิ้น", "ถุง");
 		
 		mat_name.setRequired(true);
 		type.setRequired(true);
@@ -176,7 +184,7 @@ public class MaterialDetailTabPane extends TabSet {
         safety.setWidth(250);
         remain.setWidth(250);
         editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-        editorForm.setFields(mid, mat_name, desc, type, safety, remain, unit);
+        editorForm.setFields(mid, mat_name, desc, type, weight, safety, remain, unit);
         editorForm.setColWidths(150	, 250); 
         VLayout editor_control = new VLayout();
         editor_control.addMembers(saveButton, cancelButton);
@@ -242,6 +250,15 @@ public class MaterialDetailTabPane extends TabSet {
         		saveButton.setDisabled(false);
         		cancelButton.setDisabled(false);
 //        		profile.invalidateDisplayValueCache();
+        		String type = selectedRecord.getAttributeAsString("type");
+        		if (type.equalsIgnoreCase("แร่เงิน")) {
+        			weight.hide();
+        			weight.setRequired(false);
+        		}
+            	else {
+            		weight.show();
+            		weight.setRequired(true);
+            	}
         		editorForm.editRecord(selectedRecord);
         		//fetchEditItemList(selectedRecord.getAttributeAsString("sup_list"));
         		this.currentMid = selectedRecord.getAttributeAsString("mid");
@@ -262,9 +279,20 @@ public class MaterialDetailTabPane extends TabSet {
         	saveButton.setDisabled(false);
         	cancelButton.setDisabled(false);
 //        	profile.invalidateDisplayValueCache();
+    		String type = selectedRecord.getAttributeAsString("type");
+    		if (type.equalsIgnoreCase("แร่เงิน")) {
+    			weight.hide();
+    			weight.setRequired(false);
+    		}
+        	else {
+        		weight.show();
+        		weight.setRequired(true);
+        	}
+    		
     		editorForm.editRecord(selectedRecord);
 //    		fetchEditItemList(selectedRecord.getAttributeAsString("sup_list"));
     		this.currentMid = selectedRecord.getAttributeAsString("mid");
+    		
         }
     }
     
@@ -279,7 +307,9 @@ public class MaterialDetailTabPane extends TabSet {
 //	    	Double safety = (Double) editorForm.getValue("safety");
 //	    	Double remain = (Double) editorForm.getValue("remain");
 //	    	String unit = (String) editorForm.getValue("unit");
-	    	
+    		String type = editorForm.getValueAsString("type");
+    		Double mweight = null;
+    		if (!type.equalsIgnoreCase("แร่เงิน")) mweight = Double.parseDouble(weight.getValueAsString());
 //	    	User updatedUser = new User(uname, pwd, fname, lname, email, position, title, status);
 //	    	securityService.updateUserOnServer(updatedUser, pname, this.user, new AsyncCallback<Boolean>() {
 //				@Override
@@ -298,9 +328,8 @@ public class MaterialDetailTabPane extends TabSet {
 				    			editorForm.getValueAsString("type"),
 				    			Double.parseDouble(editorForm.getValueAsString("safety")),
 				    	    	Double.parseDouble(editorForm.getValueAsString("remain")),
-				    	    	editorForm.getValueAsString("unit")
-				    	    	//,
-				    	    	//currentChangeSidList
+				    	    	editorForm.getValueAsString("unit"),
+				    	    	mweight
 				    			);
 						materialDataSource.updateData(updateRecord);
 						SC.say("แก้ไขข้อมูลวัตถุดิบเรียบร้อยแล้ว");

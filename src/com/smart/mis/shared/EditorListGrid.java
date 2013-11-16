@@ -236,13 +236,7 @@ public class EditorListGrid extends ListGrid{
             }
             viewImg.setHeight(16);  
             viewImg.setWidth(16);
-            viewImg.addClickHandler(new ClickHandler() {  
-                public void onClick(ClickEvent event) {  
-                    //SC.say("View Icon Clicked for : " + record.getAttribute("quote_id"));
-                    EditWindow.show(record, false, currentUser, 1);
-                }  
-            });  
-
+            
             recordCanvas.addMember(viewImg); 
             return recordCanvas;
             
@@ -285,12 +279,49 @@ public class EditorListGrid extends ListGrid{
             }
             viewImg.setHeight(16);  
             viewImg.setWidth(16);
-            viewImg.addClickHandler(new ClickHandler() {  
-                public void onClick(ClickEvent event) {  
-                    //SC.say("View Icon Clicked for : " + record.getAttribute("quote_id"));
-                    EditWindow.show(record, false, currentUser, 1);
-                }  
-            });  
+
+            recordCanvas.addMember(viewImg); 
+            return recordCanvas;
+            
+        } else if (fieldName.equalsIgnoreCase("createProductionOrderField")) { 
+        	HLayout recordCanvas = new HLayout(3);  
+            recordCanvas.setHeight(22);  
+            recordCanvas.setAlign(Alignment.CENTER);
+            
+        	ImgButton viewImg = new ImgButton();  
+            viewImg.setShowDown(false);  
+            viewImg.setShowRollOver(false);  
+            viewImg.setAlign(Alignment.CENTER); 
+            
+            if (record.getAttributeAsString("status").equalsIgnoreCase("3_approved")) {
+            	viewImg.setSrc("icons/16/process-info-icon.png");  
+    	        viewImg.setPrompt("ออกคำสั่งผลิตสินค้า");
+                viewImg.addClickHandler(new ClickHandler() {  
+                    public void onClick(ClickEvent event) {  
+                        //SC.say("View Icon Clicked for : " + record.getAttribute("quote_id"));
+                        EditWindow.show(record, false, currentUser, 3);
+                    }  
+                });
+            } else if (record.getAttributeAsString("status").equalsIgnoreCase("5_created_order")) {
+            	viewImg.setSrc("icons/16/setting-icon-16.png");  
+    	        viewImg.setPrompt("เรียกดูแผนการผลิต");
+                viewImg.addClickHandler(new ClickHandler() {  
+                    public void onClick(ClickEvent event) {  
+                        //SC.say("View Icon Clicked for : " + record.getAttribute("quote_id"));
+                        EditWindow.show(record, false, currentUser, 1);
+                    }  
+                });
+            } else {
+		        viewImg.setSrc("icons/16/faq-icon-16.png");  
+		        viewImg.setPrompt("สถานะแผนการผลิตไม่ถูกต้อง");
+	            viewImg.addClickHandler(new ClickHandler() {  
+	                public void onClick(ClickEvent event) {  
+	                    SC.say("สถานะแผนการผลิตไม่ถูกต้อง : " + record.getAttributeAsString("status"));
+	                }  
+	            });  
+            }
+            viewImg.setHeight(16);  
+            viewImg.setWidth(16);
 
             recordCanvas.addMember(viewImg); 
             return recordCanvas;

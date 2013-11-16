@@ -36,6 +36,8 @@ import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.form.validator.LengthRangeValidator;
@@ -69,7 +71,7 @@ public class MaterialAdd {
     	editItemGrid = new ListGrid();
         editItemGrid.setEmptyMessage("No Item to show.");
         editItemGrid.setWidth(240);
-        editItemGrid.setHeight(224);
+        editItemGrid.setHeight(270);
         editItemGrid.setCanAcceptDroppedRecords(true);  
         editItemGrid.setCanRemoveRecords(true);  
         editItemGrid.setAutoFetchData(false);  
@@ -128,10 +130,12 @@ public class MaterialAdd {
 		desc.setWidth(300);
 		desc.setRowSpan(3);
 		
-		SelectItem type = new SelectItem("type", "ชนิด");
+		final SelectItem type = new SelectItem("type", "ชนิด");
+		final FloatItem weight = new FloatItem("weight", "น้ำหนัก");
+		weight.setHint("กรัม *");
 		//FloatItem safety = new FloatItem("safety", "จำนวนสำรองขั้นต่ำ");
 		//FloatItem remain = new FloatItem("remain", "จำนวนคงเหลือ");
-		TextItem unit = new TextItem("unit", "หน่วย");
+		final TextItem unit = new TextItem("unit", "หน่วย");
 		
 		type.setRequired(true);
 		//safety.setRequired(true);
@@ -155,7 +159,31 @@ public class MaterialAdd {
         unit.setValidators(cv);
         
 		type.setRequired(true);
-		type.setDefaultValue("แร่เงิน");
+		//type.setDefaultValue("แร่เงิน");
+		type.setEmptyDisplayValue("---โปรดเลือกประเภทวัตถุดิบ---");
+		
+		type.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				String selectType = type.getValueAsString();
+				if (selectType.equalsIgnoreCase("แร่เงิน")) {
+					weight.hide();
+					weight.setRequired(false);
+					unit.setValue("กรัม");
+					unit.setCanEdit(false);
+				} else if (selectType.equalsIgnoreCase("พลอยประดับ") || selectType.equalsIgnoreCase("แมกกาไซต์")) {
+					weight.show();
+					weight.setRequired(true);
+					unit.setValue("เม็ด");
+					unit.setCanEdit(false);
+				} else { 
+					weight.show();
+					weight.setRequired(true);
+					unit.clearValue();
+					unit.setCanEdit(false);
+				}
+			}
+        });
 		
         IButton saveButton = new IButton("บันทึก");  
         saveButton.setAlign(Alignment.CENTER);  
@@ -174,7 +202,11 @@ public class MaterialAdd {
             	SC.confirm("ยืนยันการเพิ่มข้อมูล", "ท่านต้องการเพิ่มวัตถุดิบ " + (String) editorForm.getValue("mat_name") + " หรือไม่ ?", new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
-						if (value) {	
+						if (value && editorForm.validate()) {
+							
+							String type = editorForm.getValueAsString("type");
+				    		Double mweight = null;
+				    		if (!type.equalsIgnoreCase("แร่เงิน")) mweight = Double.parseDouble(weight.getValueAsString());
 //				    		String cid = (String) editorForm.getValue("cid");
 //							String cus_name = (String) editorForm.getValue("cus_name");
 //							String cus_phone = (String) editorForm.getValue("cus_phone");
@@ -203,9 +235,8 @@ public class MaterialAdd {
 								    			0.0,
 								    			//Double.parseDouble(editorForm.getValueAsString("safety")),
 								    	    	//Double.parseDouble(editorForm.getValueAsString("remain")),
-								    	    	editorForm.getValueAsString("unit")
-								    	    	//,
-								    	    	//getAttributeList(editItemGrid, "sid")
+								    	    	editorForm.getValueAsString("unit"),
+								    	    	mweight
 								    			);
 										
 										dataSource.addData(newRecord, new DSCallback() {
@@ -255,7 +286,8 @@ public class MaterialAdd {
         //remain.setWidth(250);
         //editorForm.setFields(mat_name, desc, type, safety, remain, unit);
         editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-        editorForm.setFields(mat_name, desc, type, unit);
+        editorForm.setFields(mat_name, desc, type, weight, unit);
+		weight.hide();
         editorForm.setColWidths(150	, 250);
     	
     	HLayout temp = new HLayout();

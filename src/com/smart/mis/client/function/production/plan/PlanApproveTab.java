@@ -182,6 +182,7 @@ public class PlanApproveTab {
             	search.addCriteria(searchForm.getValuesAsCriteria());
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
           		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "5_created_order"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
           		      search
           		  });
@@ -197,6 +198,7 @@ public class PlanApproveTab {
             public void onClick(ClickEvent event) { 
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
           		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "5_created_order"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
           		  });
                 searchForm.reset();

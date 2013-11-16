@@ -5,6 +5,8 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.production.order.casting.CastingCreateWindow;
+import com.smart.mis.client.function.production.order.casting.CastingViewWindow;
 import com.smart.mis.client.function.production.plan.product.PlanProductDS;
 import com.smart.mis.client.function.production.plan.product.PlanProductData;
 import com.smart.mis.client.function.production.plan.product.PlanProductDetails;
@@ -14,6 +16,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.prodution.ProcessType;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.SaleOrderStatus;
@@ -217,7 +220,10 @@ public class PlanViewWindow extends EditorWindow{
 		planListGrid.setCriteria(ci);
 		
 		PlanProductDS tempView = new PlanProductDS(plan_id);
-		tempView.setTestData(PlanProductDS.getInstance(plan_id).getCacheData());
+		Record[] cachedData = PlanProductDS.getInstance(plan_id).getCacheData();
+		if (cachedData.length != 0) {
+			tempView.setTestData(cachedData);
+		}
 		planListGrid.setDataSource(tempView);
 		planListGrid.setUseAllDataSourceFields(false);
 		
@@ -482,16 +488,24 @@ public class PlanViewWindow extends EditorWindow{
           }
         });
 		
-		final IButton createSaleOrderButton = new IButton("สร้างคำสั่งผลิต");
-		approveButton.setIcon("icons/16/approved.png");
-		createSaleOrderButton.setWidth(120);
-		createSaleOrderButton.addClickHandler(new ClickHandler() {  
+		final IButton createProductionOrderButton = new IButton("สร้างคำสั่งผลิต");
+		createProductionOrderButton.setIcon("icons/16/setting-icon-16.png");
+		createProductionOrderButton.setWidth(120);
+		createProductionOrderButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-            	SC.confirm("ยืนยันการทำรายการ", "ต้องการสร้างรายการขาย หรือไม่?" , new BooleanCallback() {
+            	SC.confirm("ยืนยันการทำรายการ", "ต้องการออกคำสั่งผลิตสินค้า หรือไม่?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							//createJobOrder(main, plan_id, sale_id, planListGrid, currentUser);	
+							Record[] all = planListGrid.getRecords();
+							ArrayList<String> pids = new ArrayList<String>();
+							for (Record product : all) {
+								pids.add(product.getAttributeAsString("pid"));
+							}
+							
+							Integer std_time = ProcessType.getMaxStdTime(pids, "1_casting");
+							createJobOrder(record, currentUser, std_time);
+							main.destroy();
 						}
 					}
             	});
@@ -499,7 +513,7 @@ public class PlanViewWindow extends EditorWindow{
         });
 		
 		if (page == 3) {
-			controls.addMember(createSaleOrderButton);
+			controls.addMember(createProductionOrderButton);
 		} else if (page == 2) {
 			if (!record.getAttributeAsString("status").equalsIgnoreCase("2_waiting_for_approved")){
 				approveButton.disable();
@@ -659,7 +673,7 @@ public class PlanViewWindow extends EditorWindow{
 						DSRequest dsRequest) {
 						//System.out.println("Test " + dsResponse.getStatus());
 						if (dsResponse.getStatus() != 0) {
-							SC.warn("การบันทึกแผนการผลิคล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
+							SC.warn("การบันทึกแผนการผลิตล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
 							main.destroy();
 						} else { 
 							for (PlanProductDetails item : productList) {
@@ -694,15 +708,17 @@ public class PlanViewWindow extends EditorWindow{
 		});
 	}
 	
-//	public void createJobOrder(final Window main, final String plan_id, DynamicForm customer, ListGrid planListGrid, Date delivery, User currentUser, String purchase_id){
-//		
+	public void createJobOrder(ListGridRecord plan, User currentUser, Integer std_time){
+		
+		CastingCreateWindow order = new CastingCreateWindow();
+		order.show(plan, currentUser, std_time);
 //		ListGridRecord[] all = planListGrid.getRecords();
-//		
-////		if (all.length == 0) {
-////			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
-////			return;
-////		}
-//		
+		
+//		if (all.length == 0) {
+//			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
+//			return;
+//		}
+		
 //		Double total_weight = 0.0;
 //		Double total_netExclusive = 0.0;
 //		Integer total_amount = 0;
@@ -794,5 +810,5 @@ public class PlanViewWindow extends EditorWindow{
 //						}
 //				}
 //			});
-//	}
+	}
 }
