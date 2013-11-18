@@ -20,12 +20,12 @@ public class CastingProductDS extends DataSource  {
 
 		 static HashMap<String, CastingProductDS> instance = new HashMap<String, CastingProductDS>();
 	
-		 public static CastingProductDS getInstance(String plan_id){
-				if (instance.containsKey(plan_id)) {
-					return instance.get(plan_id);
+		 public static CastingProductDS getInstance(String job_id){
+				if (instance.containsKey(job_id)) {
+					return instance.get(job_id);
 				} else {
-					CastingProductDS item = new CastingProductDS(plan_id);
-					instance.put(plan_id, item);
+					CastingProductDS item = new CastingProductDS(job_id);
+					instance.put(job_id, item);
 					return item;
 				}
 			}
@@ -55,7 +55,7 @@ public class CastingProductDS extends DataSource  {
 			 setClientOnly(true);
 		 }
 		 
-		 public CastingProductDS(String plan_id){
+		 public CastingProductDS(String job_id){
 			 DataSourceTextField sub_plan_id_field = new DataSourceTextField("sub_plan_id");
 			 sub_plan_id_field.setHidden(true);
 			 DataSourceTextField plan_id_field = new DataSourceTextField("plan_id");
@@ -79,7 +79,7 @@ public class CastingProductDS extends DataSource  {
 			 setFields(sub_plan_id_field, plan_id_field, Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_7_6);
 			 
 			 //setDataURL("smartmis/security/userData");
-			 setTestData(CastingProductData.getRecords(plan_id)); // For edit tab
+			 setTestData(CastingProductData.getRecords(job_id)); // For edit tab
 			 setClientOnly(true);
 		 }
 		 

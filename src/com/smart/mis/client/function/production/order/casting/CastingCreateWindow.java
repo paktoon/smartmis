@@ -66,10 +66,11 @@ public class CastingCreateWindow {
 //	SelectProductList addFunc;
 //	Customer client;
 	Smith smith;
+	Window editWindow;
 	
 	public void show(ListGridRecord record, User currentUser, Integer std_time){
 		smith = new Smith();
-		Window editWindow = new Window();
+		editWindow = new Window();
 		editWindow.setTitle("ข้อมูลคำสั่งผลิต");
 		editWindow.setWidth(670);  
 		editWindow.setHeight(620);
@@ -99,15 +100,15 @@ public class CastingCreateWindow {
 		String created_by = record.getAttributeAsString("created_by");
 		Date created_date = record.getAttributeAsDate("created_date");
 		Double total_weight = record.getAttributeAsDouble("total_weight");
-		Double total_amount = record.getAttributeAsDouble("total_amount");
+		Integer total_amount = record.getAttributeAsInt("total_amount");
 		
-		DynamicForm quotationForm = new DynamicForm();
-		quotationForm.setWidth100(); 
-		quotationForm.setHeight(30);
-		quotationForm.setMargin(5);
-		quotationForm.setIsGroup(true);
-		quotationForm.setNumCols(6);
-		quotationForm.setGroupTitle("ข้อมูลแผนการผลิต");
+		final DynamicForm planForm = new DynamicForm();
+		planForm.setWidth100(); 
+		planForm.setHeight(30);
+		planForm.setMargin(5);
+		planForm.setIsGroup(true);
+		planForm.setNumCols(6);
+		planForm.setGroupTitle("ข้อมูลแผนการผลิต");
 
 		StaticTextItem qid = new StaticTextItem("plan_id", "รหัสแผนการผลิต");
 		StaticTextItem sid = new StaticTextItem("sale_id", "รหัสรายการขาย");
@@ -122,9 +123,9 @@ public class CastingCreateWindow {
 		sts.setValue(ProductionPlanStatus.getDisplay(status));
 		cby.setValue(created_by);
 		cdate.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(created_date));
-		quotationForm.setFields(qid, sid, ddate, sts, cdate ,cby);
-		quotationForm.setColWidths(100,100,100,100,100,100);
-		layout.addMember(quotationForm);
+		planForm.setFields(qid, sid, ddate, sts, cdate ,cby);
+		planForm.setColWidths(100,100,100,100,100,100);
+		layout.addMember(planForm);
 		
 		final DynamicForm smithForm = new DynamicForm();
 		smithForm.setWidth100(); 
@@ -142,7 +143,7 @@ public class CastingCreateWindow {
 			final StaticTextItem smith_id = new StaticTextItem("smid", "รหัสช่าง");
 			final SelectItem smith_name = new SelectItem("name", "ชื่อช่าง");
 			//smith_name.setColSpan(3);
-			final StaticTextItem smith_type = new StaticTextItem("type", "ประเภทช่าง");
+			final StaticTextItem smith_type = new StaticTextItem("type", "ประเภทงาน");
 			
 			smith_name.setOptionDataSource(SmithDS.getInstance());
 			smith_name.setOptionCriteria(new Criterion("type", OperatorId.EQUALS, "หล่อขึ้นรูป"));
@@ -389,9 +390,9 @@ public class CastingCreateWindow {
 		summaryForm.setGroupTitle("สรุปยอดรวม");
 		summaryForm.setColWidths(120, 100);
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
-		StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
-		total_sent_weight.setValue(nf.format(total_weight));
-		StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
+		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
+		total_sent_weight.setValue(nf.format(total_weight * total_amount));
+		final StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
 		total_sent_amount.setValue(nf.format(total_amount));
 		total_sent_weight.setWidth(100);
 		total_sent_amount.setWidth(100);
@@ -418,7 +419,8 @@ public class CastingCreateWindow {
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
             	if (smithForm.validate()) {
-                    SC.say("click order and print");
+                    //SC.say("click order and print");
+                    createCreateOrder(planForm, orderListGrid, sentDate.getValueAsDate(), dueDate.getValueAsDate(), currentUser);
             	}
             	else {
             		SC.warn("กรุณาเลือกข้อมูลช่าง");
@@ -782,7 +784,55 @@ public class CastingCreateWindow {
 //			}
 //		});
 //	}
-//	
+
+	public void createCreateOrder(DynamicForm planForm, ListGrid orderListGrid, Date sent_date, Date due_date, User currentUser) {
+		ListGridRecord[] all = orderListGrid.getRecords();
+		
+		String plan_id = (String) planForm.getField("plan_id").getValue();
+		
+		final String job_id = "JOB70" + Math.round((Math.random() * 100));
+		
+		Double total_sent_weight = 0.0;
+		Integer total_sent_amount = 0;
+		final ArrayList<ListGridRecord> orderProductList = new ArrayList<ListGridRecord>();
+		for (ListGridRecord item : all){
+			
+			String pid = item.getAttributeAsString("pid");
+			String name = item.getAttributeAsString("name");
+			String type = item.getAttributeAsString("type");
+			String unit = item.getAttributeAsString("unit");
+			String details = item.getAttributeAsString("details");
+			Double sent_weight = item.getAttributeAsDouble("weight");
+			Integer sent_amount = item.getAttributeAsInt("plan_amount");
+
+			total_sent_weight += sent_weight;
+			total_sent_amount += sent_amount;
+			
+			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100));
+			ListGridRecord temp = CastingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, sent_weight, sent_amount, true);
+			orderProductList.add(temp);
+		}
+		
+		String status = "1_on_production";
+		ListGridRecord jobOrder = CastingData.createSentRecord(job_id, plan_id, smith, sent_date, due_date, total_sent_weight, total_sent_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), "", "", status);
+		
+		CastingDS.getInstance().addData(jobOrder, new DSCallback() {
+		@Override
+		public void execute(DSResponse dsResponse, Object data,
+				DSRequest dsRequest) {
+				if (dsResponse.getStatus() != 0) {
+					SC.warn("การสร้างคำสั่งผลิตล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
+					editWindow.destroy();
+				} else { 
+					for (ListGridRecord item : orderProductList) {
+						CastingProductDS.getInstance(job_id).addData(item);
+					}
+					editWindow.destroy();
+					SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id);
+				}
+			}
+		});
+	}
 //	public void createDeliveryOrder(final Window main, final String sale_id, String invoice_id, DynamicForm customer, ListGrid orderListGrid, Date delivery, User currentUser){
 //		
 //		ListGridRecord[] all = orderListGrid.getRecords();

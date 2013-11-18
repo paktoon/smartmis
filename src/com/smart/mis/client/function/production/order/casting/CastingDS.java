@@ -1,5 +1,6 @@
 package com.smart.mis.client.function.production.order.casting;
 
+import com.smart.mis.shared.prodution.ProcessStatus;
 import com.smart.mis.shared.sale.QuotationStatus;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
@@ -29,40 +30,38 @@ public class CastingDS extends DataSource {
 	 }
 	 
 	 public CastingDS(){
-		 setID("QuotationDS");
-		 DataSourceTextField Field_1 = new DataSourceTextField("quote_id", "รหัสใบเสนอราคา");
+		 setID("CastingDS");
+		 DataSourceTextField Field_1 = new DataSourceTextField("job_id", "รหัสใบเสนอราคา");
 		 Field_1.setPrimaryKey(true);
+		 DataSourceTextField Field_2 = new DataSourceTextField("plan_id", "รหัสลูกค้า");
 		 
-		 DataSourceTextField Field_2 = new DataSourceTextField("cid", "รหัสลูกค้า");
-		 Field_2.setForeignKey("CustomerDS.cid");
-		 DataSourceTextField Field_2_1 = new DataSourceTextField("cus_name", "ชื่อลูกค้า");
-		 DataSourceTextField Field_2_2 = new DataSourceTextField("payment_model", "วิธีการชำระเงิน");
-		 DataSourceIntegerField Field_2_3 = new DataSourceIntegerField("credit", "เครดิต");
+		 DataSourceTextField Field_3_1 = new DataSourceTextField("smid", "รหัสช่าง");
+		 DataSourceTextField Field_3_2 = new DataSourceTextField("sname", "ชื่อช่าง");
+		 DataSourceTextField Field_3_3 = new DataSourceTextField("semail", "อีเมล");
+		 DataSourceTextField Field_3_4 = new DataSourceTextField("sphone1", "โทรศัทท์ 1");
+		 DataSourceTextField Field_3_5 = new DataSourceTextField("sphone2", "โทรศัทท์ 2");
+		 DataSourceTextField Field_3_6 = new DataSourceTextField("saddress", "ที่อยู่");
+		 DataSourceTextField Field_3_7 = new DataSourceTextField("stype", "ประเภทงาน");
 		 
-		 DataSourceDateField Field_3 = new DataSourceDateField("from", "เริ่ม");
-		 DataSourceDateField Field_4 = new DataSourceDateField("to", "สิ้นสุด");
-		 DataSourceDateField Field_5 = new DataSourceDateField("delivery", "กำหนดส่งสินค้า");
+		 DataSourceTextField Field_4_1 = new DataSourceTextField("sent_date", "ชื่อลูกค้า");
+		 DataSourceTextField Field_4_2 = new DataSourceTextField("due_date", "วิธีการชำระเงิน");
 		 
-		 DataSourceFloatField Field_6 = new DataSourceFloatField("total_weight", "น้ำหนักรวม (กรัม)");
-		 DataSourceIntegerField Field_7 = new DataSourceIntegerField("total_amount", "จำรวนรวม (ชิ้น)");
+		 DataSourceFloatField Field_5 = new DataSourceFloatField("total_sent_weight", "น้ำหนักรวม (กรัม)");
+		 DataSourceIntegerField Field_6 = new DataSourceIntegerField("total_sent_amount", "จำรวนรวม (ชิ้น)");
 		 
-		 DataSourceFloatField Field_8 = new DataSourceFloatField("netExclusive", "ราคารวม (บาท)");
-		 DataSourceFloatField Field_9 = new DataSourceFloatField("tax", "ภาษีมูลค่าเพิ่ม (7%)");
-		 DataSourceFloatField Field_10 = new DataSourceFloatField("netInclusive", "ราคาสุทธิ (บาท)");
+		 DataSourceDateField Field_7 = new DataSourceDateField("created_date", "สร้างวันที่");
+		 DataSourceTextField Field_8 = new DataSourceTextField("created_by", "สร้างโดย");
+		 Field_8.setForeignKey("UserDS.uid");
+		 DataSourceDateField Field_9 = new DataSourceDateField("modified_date", "แก้ไขวันที่");
+		 DataSourceTextField Field_10 = new DataSourceTextField("modified_by", "แก้ไขโดย");
+		 Field_10.setForeignKey("UserDS.uid");
 		 
-		 DataSourceDateField Field_11 = new DataSourceDateField("created_date", "สร้างวันที่");
-		 DataSourceTextField Field_12 = new DataSourceTextField("created_by", "สร้างโดย");
-		 Field_12.setForeignKey("UserDS.uid");
-		 DataSourceDateField Field_13 = new DataSourceDateField("modified_date", "แก้ไขวันที่");
-		 DataSourceTextField Field_14 = new DataSourceTextField("modified_by", "แก้ไขโดย");
-		 Field_14.setForeignKey("UserDS.uid");
-		 
-		 DataSourceTextField Field_15 = new DataSourceTextField("comment", "ความคิดเห็น");
-		 DataSourceEnumField Field_16 = new DataSourceEnumField("status", "สถานะ");
+		 DataSourceTextField Field_11 = new DataSourceTextField("comment", "ความคิดเห็น");
+		 DataSourceEnumField Field_12 = new DataSourceEnumField("status", "สถานะ");
 		 //Field_16.setValueMap("รอแก้ไข" , "รออนุมัติ" , "อนุมัติแล้ว" , "ยกเลิก");
-		 Field_16.setValueMap(QuotationStatus.getValueMap());
+		 Field_12.setValueMap(ProcessStatus.getValueMap());
 		 
-		 setFields(Field_1, Field_2, Field_2_1, Field_2_2, Field_2_3, Field_3, Field_4, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_15, Field_16);
+		 setFields(Field_1, Field_2, Field_3_1, Field_3_2, Field_3_3, Field_3_4, Field_3_5, Field_3_6, Field_3_7, Field_4_1, Field_4_2 ,Field_5, Field_6,  Field_7, Field_8, Field_9, Field_10, Field_11, Field_12);
 		 
 		 //setDataURL("smartmis/security/userData");
 		 setTestData(CastingData.getNewRecords()); // For Test

@@ -9,7 +9,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class CastingData {
 	
-	public static ListGridRecord createSentRecord(String job_id,String plan_id,Smith smith, Date sent_date, Date due_date,Double total_sent_weight,Double total_sent_amount, Date created_date,Date modified_date,String created_by,String modified_by, String comment, String status) {  
+	public static ListGridRecord createSentRecord(String job_id,String plan_id,Smith smith, Date sent_date, Date due_date,Double total_sent_weight,Integer total_sent_amount, Date created_date,Date modified_date,String created_by,String modified_by, String comment, String status) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("job_id", job_id);
         record.setAttribute("plan_id", plan_id);
