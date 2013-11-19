@@ -27,29 +27,29 @@ public class PlanProductData {
         return record;  
     }
     
-    public static ListGridRecord createRecord(String sub_plan_id, String plan_id, String pid, String name, Double weight, String type, String unit, Double size, Double width, Double length, Double height, Double diameter, Double thickness, Integer plan_amount, Boolean status) {  
-        ListGridRecord record = new ListGridRecord();
-        record.setAttribute("sub_plan_id", sub_plan_id);
-        record.setAttribute("plan_id", plan_id);
-        record.setAttribute("pid", pid);
-        record.setAttribute("name",name); 
-        record.setAttribute("weight", weight * plan_amount);
-        record.setAttribute("type", type);  
-        record.setAttribute("unit", unit); 
-        
-        record.setAttribute("size", size);
-        record.setAttribute("width", width);  
-        record.setAttribute("length", length);
-        record.setAttribute("height", height); 
-        record.setAttribute("diameter", diameter);  
-        record.setAttribute("thickness", thickness);
-        
-        record.setAttribute("details", PlanProductDetails.getProductDetails(size, width, length, height, diameter, thickness));
-        
-        record.setAttribute("plan_amount", plan_amount);
-        record.setAttribute("status", status);
-        return record;  
-    }
+//    public static ListGridRecord createRecord(String sub_plan_id, String plan_id, String pid, String name, Double weight, String type, String unit, Double size, Double width, Double length, Double height, Double diameter, Double thickness, Integer plan_amount, Boolean status) {  
+//        ListGridRecord record = new ListGridRecord();
+//        record.setAttribute("sub_plan_id", sub_plan_id);
+//        record.setAttribute("plan_id", plan_id);
+//        record.setAttribute("pid", pid);
+//        record.setAttribute("name",name); 
+//        record.setAttribute("weight", weight);
+//        record.setAttribute("type", type);  
+//        record.setAttribute("unit", unit); 
+//        
+//        record.setAttribute("size", size);
+//        record.setAttribute("width", width);  
+//        record.setAttribute("length", length);
+//        record.setAttribute("height", height); 
+//        record.setAttribute("diameter", diameter);  
+//        record.setAttribute("thickness", thickness);
+//        
+//        record.setAttribute("details", PlanProductDetails.getProductDetails(size, width, length, height, diameter, thickness));
+//        
+//        record.setAttribute("plan_amount", plan_amount);
+//        record.setAttribute("status", status);
+//        return record;  
+//    }
     
     public static ListGridRecord createRecord(PlanProductDetails item) {  
         ListGridRecord record = new ListGridRecord();
@@ -57,7 +57,7 @@ public class PlanProductData {
         record.setAttribute("plan_id", item.plan_id);
         record.setAttribute("pid", item.product_id);
         record.setAttribute("name",item.product_name); 
-        record.setAttribute("weight", item.product_weight * item.plan_amount);
+        record.setAttribute("weight", item.product_weight);
         record.setAttribute("type", item.product_type);  
         record.setAttribute("unit", item.product_unit);
         

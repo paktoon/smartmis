@@ -723,6 +723,7 @@ public class PlanCreateTab {
 		Date delivery = null;
 		String plan_status = "2_waiting_for_approved";
 		//xxxService.xxx(Callback quoteId);
+		System.out.println("Create plan, total_weight = " + total_weight);
 		ListGridRecord newRecord = PlanData.createRecord(plan_id, null, delivery, total_weight, total_amount, new Date(), null, user, null, "", plan_status, reason);
 		// client; - cid
 		// DateForm; - from , to

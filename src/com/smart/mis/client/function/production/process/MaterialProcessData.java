@@ -28,20 +28,30 @@ public class MaterialProcessData {
     	
         if (psid != null && psid.equals( "PS10001")) {
         	return new ListGridRecord[]{ 
-        			createRecord("MP10001","PS10001", "MA10002", "แร่เงิน 92.5%", 0.0, "กรัม")
+        			createRecord("MP10001","PS10001", "MA10002", "แร่เงิน 92.5%", 2.8, "กรัม"),
+        			createRecord("MP10007","PS10001", "MA10001", "แร่เงิน 100%", 2.8, "กรัม")
         	};
-        } else if (psid != null && psid.equals( "PS10004")) {
+        } else if (psid != null && psid.equals( "PS10003")) {
         	return new ListGridRecord[]{ 
-        			createRecord("MP10002","PS10004", "MA20002", "แมกกาไซต์ PP7", 7.0,"เม็ด"),
-        			createRecord("MP10003","PS10004", "MA20004", "แมกกาไซต์ PP12", 2.0, "เม็ด")
+        			createRecord("MP10002","PS10003", "MA20002", "แมกกาไซต์ PP7", 7.0,"เม็ด"),
+        			createRecord("MP10003","PS10003", "MA20004", "แมกกาไซต์ PP12", 2.0, "เม็ด")
         	};
         } else if (psid != null && psid.equals( "PS20001")) {
         	return new ListGridRecord[]{ 
-        			createRecord("MP10001","PS20001", "MA10002", "แร่เงิน 92.5%", 0.0, "กรัม")
+        			createRecord("MP10001","PS20001", "MA10002", "แร่เงิน 92.5%", 2.8, "กรัม"),
+        			createRecord("MP10009","PS20001", "MA10001", "แร่เงิน 100%", 2.8, "กรัม")
+        	};
+        } else if (psid != null && psid.equals( "PS20003")) {
+        	return new ListGridRecord[]{ 
+        			createRecord("MP10004","PS20003", "MA20003", "แมกกาไซต์ PP8", 5.0,"เม็ด")
+        	};
+        } else if (psid != null && psid.equals( "PS10004")) {
+        	return new ListGridRecord[]{ 
+        			createRecord("MP10005","PS10004", "MA20005", "ถุงพลาสติก", 1.0,"ถุง")
         	};
         } else if (psid != null && psid.equals( "PS20004")) {
         	return new ListGridRecord[]{ 
-        			createRecord("MP10002","PS20004", "MA20003", "แมกกาไซต์ PP8", 5.0,"เม็ด")
+        			createRecord("MP10006","PS20004", "MA20005", "ถุงพลาสติก", 1.0,"ถุง")
         	};
         }
         	else return new ListGridRecord[]{};

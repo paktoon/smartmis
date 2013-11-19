@@ -5,12 +5,16 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.production.order.scraping.ScrapingCreateWindow;
 import com.smart.mis.client.function.production.plan.product.PlanProductDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
+import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.prodution.ProcessStatus;
+import com.smart.mis.shared.prodution.ProcessType;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.prodution.Smith;
 import com.smart.mis.shared.security.User;
@@ -18,11 +22,13 @@ import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
+import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.DateRange;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RelativeDate;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
+import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.types.RecordSummaryFunctionType;
 import com.smartgwt.client.types.RowEndEditAction;
@@ -42,6 +48,7 @@ import com.smartgwt.client.widgets.events.FetchDataEvent;
 import com.smartgwt.client.widgets.events.FetchDataHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateItem;
+import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -59,31 +66,23 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 public class CastingViewWindow extends EditorWindow{
 
-//	SelectProductList addFunc;
-//	Customer client;
 	Smith smith;
-	
-	public CastingViewWindow(){
-//		super();
-//		addFunc = new SelectProductList();
-//		setWidth(650);  
-//		setHeight(500);
-//		setShowMinimizeButton(false);
-//		setIsModal(true);
-//		setShowModalMask(true);
-//		setCanDragResize(false);
-//		setCanDragReposition(false);
-//		centerInPage();
-	}
+	Window editWindow;
+	Double total_received_weight;
+	Integer total_received_amount;
+	Double total_paid_wage;
 	
 	public void show(ListGridRecord record, boolean edit, User currentUser, int page){
 		smith = new Smith();
-		Window editWindow = new Window();
-		editWindow.setTitle("ข้อมูลคำสั่งผลิต");
-		editWindow.setWidth(670);  
+		editWindow = new Window();
+		if (page == 2) {
+		editWindow.setTitle("บันทึกรับสินค้าในขั้นตอนการผลิต");
+		} else editWindow.setTitle("ข้อมูลคำสั่งผลิต");
+		editWindow.setWidth(1000);  
 		editWindow.setHeight(620);
 		editWindow.setShowMinimizeButton(false);
 		editWindow.setIsModal(true);
@@ -98,160 +97,99 @@ public class CastingViewWindow extends EditorWindow{
 	}
 	
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
+		
 		VLayout layout = new VLayout();
-		layout.setWidth(650);
+		layout.setWidth(950);
 		layout.setHeight(600);
 		layout.setMargin(10);
 		
-		final String plan_id = record.getAttributeAsString("plan_id");
-		String sale_id = record.getAttributeAsString("sale_id");
-		if (sale_id == null) sale_id= "-";
-		Date delivery = record.getAttributeAsDate("delivery");
+		final String job_id = record.getAttributeAsString("job_id");
+		String plan_id = record.getAttributeAsString("plan_id");
 		String status = record.getAttributeAsString("status");
-		Double total_weight = record.getAttributeAsDouble("total_weight");
-		Double total_amount = record.getAttributeAsDouble("total_amount");
 		
-		DynamicForm quotationForm = new DynamicForm();
-		quotationForm.setWidth100(); 
-		quotationForm.setHeight(30);
-		quotationForm.setMargin(5);
-		quotationForm.setIsGroup(true);
-		quotationForm.setNumCols(6);
-		quotationForm.setGroupTitle("ข้อมูลแผนการผลิต");
+		String created_by = record.getAttributeAsString("created_by");
+		Date created_date = record.getAttributeAsDate("created_date");
+		
+		Date sent_date = record.getAttributeAsDate("sent_date");
+		Date due_date = record.getAttributeAsDate("due_date");
+		Date received_date = record.getAttributeAsDate("received_date");
+		
+		Double sent_weight = record.getAttributeAsDouble("total_sent_weight");
+		Integer sent_amount = record.getAttributeAsInt("total_sent_amount");
+		
+		Double recv_weight = record.getAttributeAsDouble("total_recv_weight");
+		Integer recv_amount = record.getAttributeAsInt("total_recv_amount");
+		Double job_wage = record.getAttributeAsDouble("total_wage");
+		
+		final DynamicForm orderForm = new DynamicForm();
+		orderForm.setWidth100(); 
+		orderForm.setHeight(30);
+		orderForm.setMargin(5);
+		orderForm.setIsGroup(true);
+		orderForm.setNumCols(10);
+		orderForm.setGroupTitle("ข้อมูลแผนการผลิต");
 
+		StaticTextItem jid = new StaticTextItem("job_id", "รหัสคำสั่งผลิต");
 		StaticTextItem qid = new StaticTextItem("plan_id", "รหัสแผนการผลิต");
-		StaticTextItem sid = new StaticTextItem("sale_id", "รหัสรายการขาย");
-		StaticTextItem ddate = new StaticTextItem("delivery", "วันที่กำหนดส่งสินค้า");
+		//StaticTextItem ddate = new StaticTextItem("delivery", "วันที่กำหนดส่งสินค้า");
 		StaticTextItem sts = new StaticTextItem("status", "สถานะ");
-		StaticTextItem tam = new StaticTextItem("total_amount", "จำนวนสินค้าทั้งหมด");
-		StaticTextItem twe = new StaticTextItem("total_weight", "น้ำหนักสินค้าทั้งหมด");
+		StaticTextItem cby = new StaticTextItem("created_by", "สร้างโดย");
+		StaticTextItem cdate = new StaticTextItem("created_date", "สร้างเมื่อ");
+		jid.setValue(job_id);
 		qid.setValue(plan_id);
-		sid.setValue(sale_id);
-		if (delivery != null ) ddate.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(delivery));
-		else ddate.setValue("-");
-		sts.setValue(status);
-		tam.setValue(total_amount);
-		twe.setValue(total_weight);
-		quotationForm.setFields(qid, sid, ddate, sts, tam ,twe);
-		quotationForm.setColWidths(100,100,100,100,100,100);
-		layout.addMember(quotationForm);
+//		if (delivery != null ) ddate.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(delivery));
+//		else ddate.setValue("-");
+		sts.setValue(ProcessStatus.getDisplay(status));
+		cby.setValue(created_by);
+		cdate.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(created_date));
+		orderForm.setFields(jid, qid, sts, cdate ,cby);
+		orderForm.setColWidths(100,80,120,80,80,120,100,100,100,100);
+		layout.addMember(orderForm);
 		
 		final DynamicForm smithForm = new DynamicForm();
 		smithForm.setWidth100(); 
 		smithForm.setHeight(30);
 		smithForm.setMargin(5); 
-		smithForm.setNumCols(6); 
+		smithForm.setNumCols(8); 
 		smithForm.setCellPadding(2);
 		smithForm.setAutoFocus(true);
 		smithForm.setSelectOnFocus(true);
-//		smithForm.setDataSource(SmithDS.getInstance());
-//		smithForm.setUseAllDataSourceFields(false);
+		//smithForm.setDataSource(CastingDS.getInstance());
+		//smithForm.setUseAllDataSourceFields(false);
 		smithForm.setIsGroup(true);
-		smithForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
+		//smithForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 		smithForm.setGroupTitle("ข้อมูลช่าง");
-		if (page == 1) {
-			smithForm.setDataSource(SmithDS.getInstance());
-			smithForm.setUseAllDataSourceFields(false);
-			final StaticTextItem smith_id = new StaticTextItem("smid", "รหัสช่าง");
-			final SelectItem smith_name = new SelectItem("name", "ชื่อช่าง");
-			//smith_name.setColSpan(3);
-			final StaticTextItem smith_type = new StaticTextItem("type", "ประเภทช่าง");
-			smith_name.setOptionDataSource(SmithDS.getInstance());
-			smith_name.setEmptyDisplayValue("--โปรดเลือกช่าง--");
-			smith_name.setPickListWidth(350);
-			smith_name.setWidth(240);
-			smith_name.setRequired(true);
-			smith_name.setHint("*");
-			smith_name.setCriterion(new Criterion("type", OperatorId.EQUALS, "หล่อขึ้นรูป"));
-			ListGridField Field_1 = new ListGridField("smid", 80);  
-	        ListGridField Field_2 = new ListGridField("name", 200);
-	        smith_name.setPickListFields(Field_1, Field_2);
-	        
-	        final StaticTextItem smith_phone1 = new StaticTextItem("phone1", "โทรศัทท์ 1");
-	        final StaticTextItem smith_phone2 = new StaticTextItem("phone2", "โทรศัทท์ 2");
-	        final StaticTextItem smith_email = new StaticTextItem("email", "อีเมล");
-	        final StaticTextItem smith_address = new StaticTextItem("address", "ที่อยู่");
-	        
-	        smith_name.addChangedHandler(new ChangedHandler() {
-				@Override
-				public void onChanged(ChangedEvent event) {
-					Record selected = smith_name.getSelectedRecord();
-					if (selected != null) {
-						String sid = selected.getAttributeAsString("smid");
-						String sname = selected.getAttributeAsString("name");
-						String stype = selected.getAttributeAsString("type");
-						//Contact info
-						//String smith_address = selected.getAttributeAsString("address");
-						String phone1 = selected.getAttributeAsString("phone1");
-						if (phone1 == null) phone1 = "-";
-						String phone2 = selected.getAttributeAsString("phone2");
-						if (phone2 == null) phone2 = "-";
-						String email = selected.getAttributeAsString("email");
-						if (email == null) email = "-";
-						
-						String address = selected.getAttributeAsString("address");
-						String street = selected.getAttributeAsString("street");
-						String city = selected.getAttributeAsString("city");
-						String state = selected.getAttributeAsString("state");
-						String postal = selected.getAttributeAsString("postal");
-						String fullAddress = address;
-						if (street !=null) fullAddress += "ถนน " + street;
-						if (city !=null) fullAddress += "เขต " + street;
-						if (state !=null) fullAddress += "จังหวัด " + street;
-						if (postal !=null) fullAddress += "รหัสไปรษณีย์ " + street;
-						
-						smith.setAttributes(sid, sname, phone1, phone2, email, fullAddress, stype);
-
-						smith_id.setValue(sid);
-						smith_type.setValue(stype);
-						
-						smith_phone1.setValue(phone1);
-						smith_phone2.setValue(phone2);
-						smith_email.setValue(email);
-						smith_address.setValue(fullAddress);
-					}
-				}
-	        });
-	        smithForm.setFields(smith_id, smith_name, smith_type, smith_phone1, smith_phone2, smith_email, smith_address);  
-		} else {
-			smithForm.setDataSource(CastingDS.getInstance());
-			smithForm.setUseAllDataSourceFields(false);
-			
-			final StaticTextItem smith_id = new StaticTextItem("smid", "รหัสช่าง");
-			final StaticTextItem smith_name = new StaticTextItem("sname", "ชื่อช่าง");
-			final StaticTextItem smith_type = new StaticTextItem("stype", "ประเภทช่าง");
-	        final StaticTextItem smith_phone1 = new StaticTextItem("sphone1", "โทรศัทท์ 1");
-	        final StaticTextItem smith_phone2 = new StaticTextItem("sphone2", "โทรศัทท์ 2");
-	        final StaticTextItem smith_email = new StaticTextItem("semail", "อีเมล");
-	        final StaticTextItem smith_address = new StaticTextItem("saddress", "ที่อยู่");
-	        smithForm.setFields(smith_id, smith_name, smith_type, smith_phone1, smith_phone2, smith_email, smith_address);
-			//smithForm.fetchData(new Criterion("smid", OperatorId.EQUALS, smid));
-		}
-		smithForm.setColWidths(100,100,100,100,100,100);
-		//smithForm.editRecord(record);
 		
-//		DynamicForm commentForm = new DynamicForm();
-//		commentForm.setWidth(250); 
-//		commentForm.setHeight(70);
-//		commentForm.setMargin(5);
-//		commentForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-////		commentForm.setIsGroup(true);
-////		commentForm.setGroupTitle("ความคิดเห็น");
-//		
-//		TextAreaItem comment_area = new TextAreaItem();
-//		//comment_area.setShowTitle(false);
-//		comment_area.setTitle("ความคิดเห็น");
-//		comment_area.setTitleOrientation(TitleOrientation.TOP);
-//		comment_area.setHeight(60);
-//		comment_area.setWidth(250);
-//		if (edit) comment_area.setCanEdit(true);
-//		else comment_area.setCanEdit(false);
-//		comment_area.setValue(comment);
-//		commentForm.setFields(comment_area);
+		String smid = record.getAttributeAsString("smid");
+		String sname = record.getAttributeAsString("sname");
+		String semail = record.getAttributeAsString("semail");
+		String sphone1 = record.getAttributeAsString("sphone1");
+		String sphone2 = record.getAttributeAsString("sphone2");
+		String saddress = record.getAttributeAsString("saddress");
+		String stype = record.getAttributeAsString("stype");
+		
+		StaticTextItem smith_id = new StaticTextItem("smid", "รหัสช่าง");
+		smith_id.setValue(smid);
+		StaticTextItem smith_name = new StaticTextItem("name", "ชื่อช่าง");
+		smith_name.setValue(sname);
+		StaticTextItem smith_type = new StaticTextItem("type", "ประเภทงาน");
+		smith_type.setValue(stype);
+		StaticTextItem smith_phone1 = new StaticTextItem("phone1", "โทรศัทท์ 1");
+		smith_phone1.setValue(sphone1);
+	    StaticTextItem smith_phone2 = new StaticTextItem("phone2", "โทรศัทท์ 2");
+	    smith_phone2.setValue(sphone2);
+	    StaticTextItem smith_email = new StaticTextItem("email", "อีเมล");
+	    smith_email.setValue(semail);
+	    StaticTextItem smith_address = new StaticTextItem("address", "ที่อยู่");
+	    smith_address.setValue(saddress);
+	    smith_address.setColSpan(6);
+	        
+	    smithForm.setFields(smith_name, smith_id, smith_type,smith_email, smith_phone1, smith_phone2 , smith_address);  
+
+		smithForm.setColWidths(80,120,100,100,100,100,100,100);
 		
 		HLayout headerLayout = new HLayout();
 		headerLayout.setWidth100();
-		//headerLayout.addMembers(smithForm, commentForm);
 		headerLayout.addMembers(smithForm);
 		layout.addMember(headerLayout);
 		
@@ -262,40 +200,25 @@ public class CastingViewWindow extends EditorWindow{
     	section.setCanCollapse(false);  
         section.setExpanded(true);
         
-//        IButton addButton = new IButton("เพิ่มสินค้า");
-//		addButton.setIcon("[SKIN]actions/add.png");
-//        IButton delButton = new IButton("ลบสินค้า");
-//        delButton.setIcon("icons/16/delete.png");
-//        if (edit) {
-//			section.setControls(addButton, delButton);
-//        }
-		
-        //HLayout itemLayout = new HLayout();
-		final ListGrid orderListGrid = new ListGrid();
+		final ListGrid orderListGrid = getListGrid();
 		orderListGrid.setHeight(230);
-		orderListGrid.setAlternateRecordStyles(true);  
-		orderListGrid.setShowAllRecords(true);  
+		orderListGrid.setAlternateRecordStyles(true);
+		orderListGrid.setShowAllRecords(true);
 		orderListGrid.setAutoFetchData(true);  
-		if (page == 1) orderListGrid.setSelectionType(SelectionStyle.NONE);
+		if (!edit) orderListGrid.setSelectionType(SelectionStyle.NONE);
 		else orderListGrid.setSelectionType(SelectionStyle.SINGLE);
 		orderListGrid.setCanResizeFields(false);
 		orderListGrid.setShowGridSummary(true);
 		orderListGrid.setEditEvent(ListGridEditEvent.CLICK);  
 		orderListGrid.setListEndEditAction(RowEndEditAction.NEXT);
 		orderListGrid.setShowRowNumbers(true);
+		orderListGrid.setCanExpandRecords(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		orderListGrid.setCriteria(ci);
-//		if (edit) {
-//			orderListGrid.setCanRemoveRecords(true);
-//			orderListGrid.setWarnOnRemoval(true);
-//			orderListGrid.setWarnOnRemovalMessage("คุณต้องการลบ รายการสินค้า หรือไม่?");
-//		}
 		
-		PlanProductDS tempView = new PlanProductDS(plan_id);
-		Record[] cachedData = PlanProductDS.getInstance(plan_id).getCacheData();
-		if (cachedData.length != 0) {
-			tempView.setTestData(cachedData);
-		}
+		CastingProductDS tempView = CastingProductDS.getInstance(job_id);
+		tempView.fetchData();
+		
 		orderListGrid.setDataSource(tempView);
 		orderListGrid.setUseAllDataSourceFields(false);
 		
@@ -310,29 +233,31 @@ public class CastingViewWindow extends EditorWindow{
         quoteItemCell_2.setShowGridSummary(true);
         ListGridField quoteItemCell_3 = new ListGridField("unit", 40);
         
-        ListGridNumberField quoteItemCell_4 = new ListGridNumberField("weight", 90);
+        ListGridNumberField quoteItemCell_4 = new ListGridNumberField("sent_weight", 120);
         quoteItemCell_4.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_4.setShowGridSummary(true);
         quoteItemCell_4.setIncludeInRecordSummary(false);
         
-        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("plan_amount", 70);
+        ListGridNumberField quoteItemCell_5 = new ListGridNumberField("sent_amount", 120);
+        quoteItemCell_5.setSummaryFunction(SummaryFunctionType.SUM);
+        quoteItemCell_5.setShowGridSummary(true);
         
-        if (edit) quoteItemCell_6.setCanEdit(true);
+        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("recv_weight", 120);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getNumberFormat());
+        quoteItemCell_6.setType(ListGridFieldType.FLOAT); 
         quoteItemCell_6.setShowGridSummary(true);
+        if (edit) quoteItemCell_6.setCanEdit(true);
         
-        ListGridField quoteItemCell_7 = new ListGridField("details");
-        
-//        ListGridSummaryField quoteItemCell_sum = new ListGridSummaryField("sum_price", 100);
-//
-//        quoteItemCell_sum.setRecordSummaryFunction(RecordSummaryFunctionType.MULTIPLIER);
-//        quoteItemCell_sum.setSummaryFunction(SummaryFunctionType.SUM);
-//        quoteItemCell_sum.setShowGridSummary(true);
-//        quoteItemCell_sum.setCellFormatter(FieldFormatter.getPriceFormat());
-//        quoteItemCell_sum.setAlign(Alignment.RIGHT);
+        ListGridNumberField quoteItemCell_7 = new ListGridNumberField("recv_amount", 120);
+        quoteItemCell_7.setSummaryFunction(SummaryFunctionType.SUM);
+        quoteItemCell_7.setCellFormatter(FieldFormatter.getNumberFormat());
+        quoteItemCell_7.setType(ListGridFieldType.FLOAT);
+        quoteItemCell_7.setShowGridSummary(true);
+        if (edit) quoteItemCell_7.setCanEdit(true);
  
-        orderListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_7, quoteItemCell_6, quoteItemCell_3);
-        //itemLayout.addMember(orderListGrid);
+        orderListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_4, quoteItemCell_5, quoteItemCell_3, quoteItemCell_6, quoteItemCell_7, quoteItemCell_3);
+        
         section.setItems(orderListGrid);
         sectionStack.setSections(section);
 		layout.addMember(sectionStack);
@@ -342,6 +267,7 @@ public class CastingViewWindow extends EditorWindow{
 		
 		final DynamicForm dateForm = new DynamicForm();
 		dateForm.setWidth(300);
+		dateForm.setHeight(75);
 		dateForm.setNumCols(2);
 		dateForm.setMargin(5);
 		dateForm.setIsGroup(true);
@@ -353,68 +279,132 @@ public class CastingViewWindow extends EditorWindow{
 		sentDate.setName("sent_date");
 		sentDate.setTitle("วันที่สั่งผลิต");
 		sentDate.setUseTextField(true);
-		sentDate.setDefaultValue(new Date());
+		sentDate.setDefaultValue(sent_date);
 		sentDate.setCanEdit(false);
 		
 		final DateItem dueDate = new DateItem();
 		dueDate.setName("due_date");
 		dueDate.setTitle("วันที่กำหนดรับของ");
 		dueDate.setUseTextField(true);
-		dueDate.setDefaultValue(new Date());
+		dueDate.setDefaultValue(due_date);
 		dueDate.setCanEdit(false);
 		
-//		final DateItem deliveryDate = new DateItem();
-//		deliveryDate.setName("deliveryDate");
-//		deliveryDate.setTitle("วันที่กำหนดส่งของ");
-//		deliveryDate.setUseTextField(true);
+		final DateItem receivedDate = new DateItem();
+		receivedDate.setName("received_date");
+		receivedDate.setTitle("วันที่บันทึกรับสินค้า");
+		receivedDate.setUseTextField(true);
+		if (page == 2) receivedDate.setDefaultValue(new Date());
+		else if (page == 1) receivedDate.setDefaultValue(received_date);
+		receivedDate.setCanEdit(false);
 		
-//        fromDate.setDefaultChooserDate(from);
-//        fromDate.setValue(from);
-//        toDate.setDefaultChooserDate(to);
-//        toDate.setValue(to);
-//        deliveryDate.setDefaultChooserDate(delivery);
-//        deliveryDate.setValue(delivery);
-//        fromDate.setRequired(true);
-//        fromDate.setHint("*");
-//		toDate.setRequired(true);
-//		toDate.setHint("*");
-//		deliveryDate.setRequired(true);
-//		deliveryDate.setHint("*");
-		
-//		dateForm.setFields(fromDate, toDate, deliveryDate);
-		dateForm.setFields(sentDate, dueDate);
+		dateForm.setFields(sentDate, dueDate, receivedDate);
 		dateForm.setColWidths(130,80);
-		//dateForm.editRecord(record);
 		footerLayout.addMember(dateForm);
 		//******************End
 		
 		//******************Summary
-		final DynamicForm summaryForm = new DynamicForm();
-		summaryForm.setWidth(300);
-		summaryForm.setNumCols(2);
-		summaryForm.setMargin(5);
-		summaryForm.setIsGroup(true);
-		summaryForm.setGroupTitle("สรุปยอดรวม");
-		summaryForm.setColWidths(120, 100);
-		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
-		StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
-		//netExclusive.setValue(nf.format(netEx));
-		//StaticTextItem tax = new StaticTextItem("tax");
-		//tax.setValue(nf.format(netEx * 0.07));
-		StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
-		//netInclusive.setValue(nf.format(netEx * 1.07));
-		//netExclusive.setWidth(100);
+		final DynamicForm summaryForm_1 = new DynamicForm();
+		summaryForm_1.setWidth(200);
+		summaryForm_1.setHeight(75);
+		summaryForm_1.setNumCols(2);
+		summaryForm_1.setMargin(5);
+		summaryForm_1.setIsGroup(true);
+		summaryForm_1.setGroupTitle("สรุปยอดสั่งผลิต");
+		summaryForm_1.setColWidths(120, 80);
+		final NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
+		total_sent_weight.setValue(nf.format(sent_weight));
+		final StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
+		total_sent_amount.setValue(nf.format(sent_amount));
 		total_sent_weight.setWidth(100);
 		total_sent_amount.setWidth(100);
 		total_sent_weight.setTitle("น้ำหนักรวม");
 		total_sent_amount.setTitle("จำนวนรวม");
 		total_sent_weight.setTextAlign(Alignment.RIGHT);
 		total_sent_amount.setTextAlign(Alignment.RIGHT);
-		total_sent_weight.setHint("ชิ้น");
-		total_sent_amount.setHint("กรัม");
-		summaryForm.setFields(total_sent_weight, total_sent_amount);
+		total_sent_weight.setHint("กรัม");
+		total_sent_amount.setHint("ชิ้น");
+		summaryForm_1.setFields(total_sent_amount, total_sent_weight);
 		//summaryForm.editRecord(record);
-		footerLayout.addMember(summaryForm);
+		footerLayout.addMember(summaryForm_1);
+		
+		final DynamicForm summaryForm_2 = new DynamicForm();
+		summaryForm_2.setWidth(200);
+		summaryForm_2.setHeight(75);
+		summaryForm_2.setNumCols(2);
+		summaryForm_2.setMargin(5);
+		summaryForm_2.setIsGroup(true);
+		summaryForm_2.setGroupTitle("สรุปยอดรับสินค้า");
+		summaryForm_2.setColWidths(80, 120);
+		final StaticTextItem total_recv_weight = new StaticTextItem("total_recv_weight");
+		if (recv_weight == null) {
+			total_recv_weight.setDefaultValue(nf.format(0));
+		} else {
+			total_recv_weight.setDefaultValue(nf.format(recv_weight));
+		}
+		final StaticTextItem total_recv_amount = new StaticTextItem("total_recv_amount");
+		if (recv_amount == null) {
+			total_recv_amount.setDefaultValue(nf.format(0));
+		} else {
+			total_recv_amount.setDefaultValue(nf.format(recv_amount));
+		}
+		
+		total_recv_weight.setWidth(100);
+		total_recv_amount.setWidth(100);
+		total_recv_weight.setTitle("น้ำหนักรวม");
+		total_recv_amount.setTitle("จำนวนรวม");
+		total_recv_weight.setTextAlign(Alignment.RIGHT);
+		total_recv_amount.setTextAlign(Alignment.RIGHT);
+		total_recv_weight.setHint("กรัม");
+		total_recv_amount.setHint("ชิ้น");
+		summaryForm_2.setFields(total_recv_amount, total_recv_weight);
+		footerLayout.addMember(summaryForm_2);
+		
+        final DynamicForm summaryForm_3 = new DynamicForm();
+        summaryForm_3.setWidth(240);
+        summaryForm_3.setHeight(75);
+        summaryForm_3.setNumCols(2);
+        summaryForm_3.setMargin(5);
+        summaryForm_3.setIsGroup(true);
+        summaryForm_3.setGroupTitle("สรุปค่าจ้างผลิต");
+        summaryForm_3.setColWidths(80, 70);
+		final FloatItem wage_per_gam = new FloatItem("wage_per_gam");
+		wage_per_gam.setDefaultValue(0.9);
+		if (!edit) wage_per_gam.setCanEdit(false);
+		final StaticTextItem total_wage = new StaticTextItem("total_wage");
+		if (job_wage == null) {
+			total_wage.setDefaultValue(nf.format(0));
+		} else {
+			total_wage.setDefaultValue(nf.format(job_wage));
+		}
+		wage_per_gam.setWidth(80);
+		total_wage.setWidth(80);
+		wage_per_gam.setTitle("ค่าจ้าง");
+		total_wage.setTitle("ค่าจ้างรวม");
+		wage_per_gam.setTextAlign(Alignment.RIGHT);
+		total_wage.setTextAlign(Alignment.RIGHT);
+		wage_per_gam.setHint("บาทต่อกรัม *");
+		total_wage.setHint("บาท");
+		summaryForm_3.setFields(wage_per_gam, total_wage);
+		
+		wage_per_gam.addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (wage_per_gam.validate()) {
+					total_paid_wage = wage_per_gam.getValueAsFloat() * ((Double) total_recv_weight.getValue());
+					total_wage.setValue(nf.format(total_paid_wage));
+				}
+			}});
+		
+		orderListGrid.addCellSavedHandler(new CellSavedHandler() {  
+			@Override
+			public void onCellSaved(CellSavedEvent event) {
+				summaryRecalculate(orderListGrid.getRecords(), summaryForm_2, summaryForm_3, wage_per_gam.getValueAsFloat());
+			}  
+        });
+		
+		footerLayout.addMember(summaryForm_3);
 		
 		layout.addMember(footerLayout);
 		
@@ -423,33 +413,39 @@ public class CastingViewWindow extends EditorWindow{
 		controls.setAlign(Alignment.CENTER);
 		controls.setMargin(5);
 		controls.setMembersMargin(5);
-		final IButton printButton = new IButton("พิมพ์คำสั่งผลิต");
-		printButton.setIcon("icons/16/print.png");
+		final IButton printButton = new IButton("บันทึกรับสินค้า");
+		printButton.setIcon("icons/16/save.png");
 		printButton.setWidth(120);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                SC.say("click print");
-            	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
+                updateOrder(job_id, record, orderListGrid, currentUser);
           }
         });
 		// if (edit || !status.equals("3_approved")) printButton.disable();
 		
-//		final IButton saveButton = new IButton("บันทึกการแก้ไข");
-//		saveButton.setIcon("icons/16/save.png");
-//		saveButton.setWidth(120);
-//		saveButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) { 
-//            	SC.confirm("ยืนยันการทำรายการ", "ต้องการบันทึกการแก้ไขใบเสนอราคา หรือไม่?" , new BooleanCallback() {
-//					@Override
-//					public void execute(Boolean value) {
-//						if (value) {
-//							if (smithForm.validate()) saveQuotation(main, quote_id, smithForm, orderListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
-//						}
-//					}
-//            	});
-//          }
-//        });
-//		if (!edit) saveButton.disable();
+		final IButton createButton = new IButton("ออกคำสั่งแต่งและฝังพลอย");
+		createButton.setIcon("icons/16/print.png");
+		createButton.setWidth(170);
+		createButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+            	SC.confirm("ยืนยันการทำรายการ", "ต้องการออกคำสั่งแต่งและฝังพลอย หรือไม่?" , new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							Record[] all = orderListGrid.getRecords();
+							ArrayList<String> pids = new ArrayList<String>();
+							for (Record product : all) {
+								pids.add(product.getAttributeAsString("pid"));
+							}
+							
+							Integer std_time = ProcessType.getMaxStdTime(pids, "2_scrape");
+							createJobOrder(record, currentUser, std_time);
+							main.destroy();
+						}
+					}
+            	});
+          }
+        });
 		
 		final IButton closeButton = new IButton("ปิด");
 		closeButton.setIcon("icons/16/close.png");
@@ -612,7 +608,8 @@ public class CastingViewWindow extends EditorWindow{
 //			controls.addMember(printButton);
 //			controls.addMember(saveButton);
 //		}
-		controls.addMember(printButton);
+		if (page == 1) controls.addMember(createButton);
+		if (page == 2) controls.addMember(printButton);
 //		if (page == 1 && status.equals("1_waiting_for_production")) controls.addMember(cancelButton);
 //		if (page == 1 && status.equals("3_production_completed")) controls.addMember(deliveryButton);
 		controls.addMember(closeButton);
@@ -686,94 +683,79 @@ public class CastingViewWindow extends EditorWindow{
 		return layout;
 	}
 	
-//	public void summaryPriceRecalculate(ListGridRecord[] all, DynamicForm target){
-//		Double sum_price = 0.0;
-//		for (ListGridRecord record : all) {
-//			sum_price += record.getAttributeAsDouble("sum_price");
-//		}
-//		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
-//		target.getField("netExclusive").setValue(nf.format(sum_price));
-//		target.getField("tax").setValue(nf.format(sum_price * 0.07));
-//		target.getField("netInclusive").setValue(nf.format(sum_price * 1.07));
-//	}
-//	
-//	public void saveQuotation(final Window main, final String quote_id, DynamicForm customer, ListGrid orderListGrid, Date from, Date to, Date delivery, User currentUser){
-//		ListGridRecord[] all = orderListGrid.getRecords();
-//		
-//		if (all.length == 0) {
-//			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
-//			return;
-//		}
-//		
-//		Double total_weight = 0.0;
-//		Double total_netExclusive = 0.0;
-//		Integer total_amount = 0;
-//		//final String quote_id = "QA70" + Math.round((Math.random() * 100));
-//		final ArrayList<QuoteProductDetails> productList = new ArrayList<QuoteProductDetails>();
-//		
-//		for (ListGridRecord item : all){
-//			total_weight += item.getAttributeAsDouble("weight");
-//			total_amount += item.getAttributeAsInt("quote_amount");
-//			total_netExclusive += item.getAttributeAsDouble("sum_price");
-//			
-//			String sub_quote_id = item.getAttributeAsString("sub_quote_id");
-//			String pid = item.getAttributeAsString("pid");
-//			String pname = item.getAttributeAsString("name");
-//			String ptype = item.getAttributeAsString("type");
-//			String psize = item.getAttributeAsString("size");
-//			Double pweight = item.getAttributeAsDouble("weight");
-//			Integer pquote_amount = item.getAttributeAsInt("quote_amount");
-//			String punit = item.getAttributeAsString("unit");
-//			Double pprice = item.getAttributeAsDouble("price");
-//			QuoteProductDetails temp = new QuoteProductDetails();
-//			temp.save(pid, pname, psize, pweight, pprice, ptype, punit);
-//			temp.setID(sub_quote_id, quote_id);
-//			temp.setQuantity(pquote_amount);
-//			productList.add(temp);
-//		}
-//		//System.out.println(total_weight + " " + total_amount + " " + total_netExclusive);
-//			//status
-//			final String quote_status = "2_waiting_for_approved";
-//			
-//			if (customer.getField("cid").getValue() == null || customer.getField("smith_name").getValue() == null) {
-//				SC.warn("ชื่อและรหัสลูกค้าไม่ถุกต้อง");
-//				return;
-//			}
-//			
-//			String cid = (String) customer.getField("cid").getValue();
-//			String smith_name = (String) customer.getField("smith_name").getValue();
-//			String payment_model = (String) customer.getField("payment_model").getValue();
-//			Integer credit = (Integer) customer.getField("credit").getValue();
-//			//System.out.println(cid + " " + smith_name + " " + payment_model + " " + credit);
-//			
-//			ListGridRecord updateRecord = QuotationData.createUpdateRecord(quote_id, cid, smith_name, payment_model, credit, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), currentUser.getFirstName() + " " + currentUser.getLastName(), "", quote_status);
-//			
-//			QuotationDS.getInstance().updateData(updateRecord, new DSCallback() {
-//				@Override
-//				public void execute(DSResponse dsResponse, Object data,
-//						DSRequest dsRequest) {
-//						//System.out.println("Test " + dsResponse.getStatus());
-//						if (dsResponse.getStatus() != 0) {
-//							SC.warn("การบันทึกใบเสนอราคาล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-//							main.destroy();
-//						} else { 
-//							for (QuoteProductDetails item : productList) {
-//								if (item.sub_quote_id == null) {
-//									item.sub_quote_id = "QS80" + Math.round((Math.random() * 100));
-//									ListGridRecord subUpdateRecord = QuoteProductData.createRecord(item);
-//									QuoteProductDS.getInstance(quote_id).addData(subUpdateRecord);
-//								} else  {
-//									ListGridRecord subUpdateRecord = QuoteProductData.createRecord(item);
-//									QuoteProductDS.getInstance(quote_id).updateData(subUpdateRecord);
-//								}
-//							}
-//							SC.warn("แก้ไขใบเสนอราคาเสร็จสิ้น <br> " + "รหัสใบเสนอราคา " + quote_id + "<br> สถานะของใบเสนอราคา " + quote_status);
-//							main.destroy();
-//						}
-//				}
-//			});
-//	}
-//	
+	public void summaryRecalculate(ListGridRecord[] all, DynamicForm target, DynamicForm target_2, Float perGam){
+		total_received_weight = 0.0;
+		total_received_amount = 0;
+		for (ListGridRecord record : all) {
+			String temp_weight = record.getAttribute("recv_weight");
+			String temp_amount = record.getAttribute("recv_amount");
+			
+			Double recv_weight = 0.0;
+			Integer recv_amount = 0;
+			
+			try {
+				if (temp_weight == null) {
+					recv_weight = 0.0;
+				} else {
+					recv_weight = Double.parseDouble(temp_weight);
+				}
+				if (temp_amount == null) {
+					recv_amount = 0;
+				} else {
+					recv_amount = Integer.parseInt(temp_amount);
+				}
+			} catch (Exception e) {
+				SC.warn("กรุณากรอกข้อมูลตัวเลข");
+				return;
+			}
+			
+			total_received_weight += recv_weight;
+			total_received_amount += recv_amount;
+		}
+		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		target.getField("total_recv_weight").setValue(nf.format(total_received_weight));
+		target.getField("total_recv_amount").setValue(nf.format(total_received_amount));
+		target_2.getField("total_wage").setValue(nf.format(total_received_weight * perGam));
+	}
+	
+	public void updateOrder(final String job_id , final ListGridRecord record, ListGrid orderListGrid, User currentUser){
+		final ListGridRecord[] all = orderListGrid.getRecords();
+		
+		for (ListGridRecord item : all){
+			if (item.getAttribute("recv_weight") == null || item.getAttribute("recv_amount") == null) {
+				SC.warn("กรุณากรอกข้อมูลรับสินค้าให้ครบถ้วน");
+				return;
+			}
+		}
+			final String process_status = "2_process_completed";
+			
+			record.setAttribute("status", process_status);
+			record.setAttribute("total_recv_weight", total_received_weight);
+			record.setAttribute("total_recv_amount", total_received_amount);
+			record.setAttribute("total_wage", total_paid_wage);
+			record.setAttribute("modified_date", new Date());
+			record.setAttribute("modified_by", currentUser.getUserName() + " " + currentUser.getLastName());
+			record.setAttribute("received_date", new Date());
+			
+			CastingDS.getInstance().updateData(record, new DSCallback() {
+				@Override
+				public void execute(DSResponse dsResponse, Object data,
+						DSRequest dsRequest) {
+						//System.out.println("Test " + dsResponse.getStatus());
+						if (dsResponse.getStatus() != 0) {
+							SC.warn("การบันทึกสินค้าล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
+							editWindow.destroy();
+						} else { 
+							for (ListGridRecord item : all) {
+								CastingProductDS.getInstance(job_id).updateData(item);
+							}
+							SC.warn("บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการขอเบิกวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + "TBD");
+							editWindow.destroy();
+						}
+				}
+			});
+	}
+	
 //	void updateQuoteStatus(String quote_id, final String status, String comment) {
 //		Record updated = QuotationData.createStatusRecord(quote_id,status,comment);
 //		QuotationDS.getInstance().updateData(updated, new DSCallback() {
@@ -862,4 +844,63 @@ public class CastingViewWindow extends EditorWindow{
 //				}
 //			});
 //	}
+	
+	private ListGrid getListGrid() {
+		return new ListGrid() {  
+            public DataSource getRelatedDataSource(ListGridRecord record) {  
+                //return new CastingMaterialDS(record.getAttributeAsString("psid"), DS.pid);
+                return CastingMaterialDS.getInstance(record.getAttributeAsString("sub_job_id"), record.getAttributeAsString("job_id"));
+            }  
+  
+            @Override  
+            protected Canvas getExpansionComponent(final ListGridRecord record) {  
+  
+                final ListGrid grid = this;  
+  
+                VLayout layout = new VLayout(5);  
+                layout.setPadding(5);  
+  
+                SectionStack sectionStack = new SectionStack();
+            	sectionStack.setWidth(525);
+            	sectionStack.setHeight(100);
+            	SectionStackSection section = new SectionStackSection("รายการวัตถุดิบ");
+            	section.setCanCollapse(false);
+                section.setExpanded(true);
+                
+                final ListGrid materialGrid = new ListGrid();  
+                materialGrid.setWidth(525);  
+                materialGrid.setHeight(100);  
+                materialGrid.setCellHeight(22);  
+                
+                materialGrid.setDataSource(getRelatedDataSource(record));  
+                materialGrid.fetchRelatedData(record, CastingProductDS.getInstance(record.getAttributeAsString("job_id"))); 
+            	
+                materialGrid.setModalEditing(true);  
+                materialGrid.setEditEvent(ListGridEditEvent.CLICK);  
+                materialGrid.setListEndEditAction(RowEndEditAction.NEXT);  
+                materialGrid.setAutoSaveEdits(false);  
+  
+                ListGridField Field_1 = new ListGridField("mid", 150);
+                ListGridField Field_2 = new ListGridField("mat_name", 200);
+                ListGridField editField = new ListGridField("produce_amount", 120);
+                editField.setTitle("ปริมาณที่ใช้ผลิต");
+                editField.setCellFormatter(FieldFormatter.getNumberFormat());
+                ListGridField Field_3 = new ListGridField("unit", 50);
+                
+                materialGrid.setFields(Field_1, Field_2, editField, Field_3);
+                
+	    	      section.setItems(materialGrid);
+	    	      sectionStack.setSections(section);
+    	      
+                layout.addMember(sectionStack);
+  
+                return layout;
+            }  
+		};
+	}
+	
+	public void createJobOrder(ListGridRecord casting, User currentUser, Integer std_time){
+		ScrapingCreateWindow order = new ScrapingCreateWindow();
+		order.show(casting, currentUser, std_time);
+	}
 }

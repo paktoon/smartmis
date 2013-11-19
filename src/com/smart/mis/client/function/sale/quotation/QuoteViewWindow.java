@@ -864,7 +864,7 @@ public class QuoteViewWindow extends EditorWindow{
 				System.out.println("Produce " + pid + " - reserved = " + reserved + " remain = " + remain + ", need for sale = " + psale_amount);
 				if (produce > 0) {
 					//Create sub production order in planProductList
-					total_produce_weight += product.getAttributeAsDouble("weight");
+					total_produce_weight += product.getAttributeAsDouble("weight") * produce;
 					total_produce_amount += produce;
 					//reserved = remain
 					Record product_update = ProductData.createReservedRecord(pid, reserved + remain, 0, product);
@@ -961,7 +961,7 @@ public class QuoteViewWindow extends EditorWindow{
 		Double pthickness = product.getAttributeAsDouble("thickness");
 		
 		PlanProductDetails temp = new PlanProductDetails();
-		temp.save(pid, pname, pweight, ptype, punit, psize, pwidth, plength, pheight, pdiameter, pthickness);
+		temp.save(pid, pname, pweight * pplan_amount, ptype, punit, psize, pwidth, plength, pheight, pdiameter, pthickness);
 		temp.setID(sub_plan_id, plan_id);
 		temp.setQuantity(pplan_amount);
 		

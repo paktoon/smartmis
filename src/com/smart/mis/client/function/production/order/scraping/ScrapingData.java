@@ -1,4 +1,4 @@
-package com.smart.mis.client.function.production.order.casting;
+package com.smart.mis.client.function.production.order.scraping;
 
 import java.util.Date;
 
@@ -7,7 +7,7 @@ import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class CastingData {
+public class ScrapingData {
 	
 	public static ListGridRecord createSentRecord(String job_id,String plan_id,Smith smith, Date sent_date, Date due_date,Double total_sent_weight,Integer total_sent_amount, Date created_date,Date modified_date,String created_by,String modified_by, String comment, String status) {  
         ListGridRecord record = new ListGridRecord();
@@ -40,40 +40,7 @@ public class CastingData {
         return record;  
     }
 	
-//	public static ListGridRecord createReceivedRecord(String job_id,String plan_id,Smith smith, Date sent_date, Date received_date, Date due_date,Double total_sent_weight,Double total_sent_amount, Double total_recv_weight, Double total_recv_amount, Double total_wage, Date created_date,Date modified_date,String created_by,String modified_by, String comment, String status) {  
-//        ListGridRecord record = new ListGridRecord();
-//        record.setAttribute("job_id", job_id);
-//        record.setAttribute("plan_id", plan_id);
-//        record.setAttribute("smid", smith.smid);
-//        
-//        record.setAttribute("sname", smith.name);
-//        record.setAttribute("semail", smith.email);
-//        record.setAttribute("sphone1", smith.phone1);
-//        record.setAttribute("sphone2", smith.phone2);
-//        record.setAttribute("saddress", smith.address);
-//        record.setAttribute("stype", smith.type);
-//        
-//        record.setAttribute("sent_date", sent_date);
-//        record.setAttribute("received_date", received_date);
-//        record.setAttribute("due_date", due_date); // Calculate from std_time
-//        
-//        record.setAttribute("total_sent_weight", total_sent_weight);  
-//        record.setAttribute("total_sent_amount", total_sent_amount); 
-//        
-//        record.setAttribute("total_recv_weight", total_recv_weight);  
-//        record.setAttribute("total_recv_amount", total_recv_amount); 
-//        record.setAttribute("total_wage", total_wage);
-//        
-//        record.setAttribute("created_date", created_date); 
-//        record.setAttribute("created_by", created_by);
-//        record.setAttribute("modified_date", modified_date);
-//        record.setAttribute("modified_by", modified_by);
-//        record.setAttribute("comment", comment);
-//        record.setAttribute("status", status); // received -> to next step, create wage payment, material requisition
-//        return record;  
-//    }
-	
-	public static ListGridRecord createReceivedRecord(ListGridRecord record, Date received_date, Double total_recv_weight, Double total_recv_amount, Double total_wage,Date modified_date,String modified_by, String status) {  
+	public static ListGridRecord createReceivedRecord(ListGridRecord record, Date received_date, Double total_recv_weight, Double total_recv_amount, Double total_wage, Double return_mat,Date modified_date,String modified_by, String status) {  
 //        ListGridRecord record = new ListGridRecord();
 //        record.setAttribute("job_id", job_id);
 //        record.setAttribute("plan_id", plan_id);
@@ -96,6 +63,7 @@ public class CastingData {
         record.setAttribute("total_recv_weight", total_recv_weight);  
         record.setAttribute("total_recv_amount", total_recv_amount); 
         record.setAttribute("total_wage", total_wage);
+        record.setAttribute("return_mat", return_mat);
         
 //        record.setAttribute("created_date", created_date); 
 //        record.setAttribute("created_by", created_by);

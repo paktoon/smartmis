@@ -3,15 +3,11 @@ package com.smart.mis.client.function.production.plan;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.smart.mis.client.function.sale.customer.CustomerDS;
-import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.sale.Customer;
-import com.smart.mis.shared.sale.QuotationStatus;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.AdvancedCriteria;
 import com.smartgwt.client.data.Criterion;
@@ -94,13 +90,13 @@ public class PlanApproveTab {
 		searchForm.setUseAllDataSourceFields(false);
 		searchForm.setGroupTitle("ค้นหาแผนการผลิต");
 		
-		final TextItem quoteText = new TextItem("plan_id", "รหัสแผนการผลิต");
-		quoteText.setWrapTitle(false);
-		quoteText.setOperator(OperatorId.REGEXP);
+		final TextItem planText = new TextItem("plan_id", "รหัสแผนการผลิต");
+		planText.setWrapTitle(false);
+		planText.setOperator(OperatorId.REGEXP);
 		final SelectItem statusSelected = new SelectItem("status", "สถานะ");
 		statusSelected.setWrapTitle(false);
 		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
-		statusSelected.setValueMap(QuotationStatus.getValueMap());
+		statusSelected.setValueMap(ProductionPlanStatus.getFilteredValueMap());
 		statusSelected.setAllowEmptyValue(true);
 		statusSelected.setOperator(OperatorId.EQUALS);
 //		final TextItem cidText = new TextItem("sale_id", "รหัสรายการขาย");
@@ -131,8 +127,8 @@ public class PlanApproveTab {
         to.setDefaultValue(dateRange.getEndDate());
         to.setUseTextField(true);
 
-        //searchForm.setItems(quoteText,statusSelected, cidText, cnameText);
-        searchForm.setItems(quoteText,statusSelected);
+        //searchForm.setItems(planText,statusSelected, cidText, cnameText);
+        searchForm.setItems(planText,statusSelected);
         dateForm.setItems(from, to);
         
 		final ListGrid planListGrid = new EditorListGrid(new PlanViewWindow(), currentUser);
@@ -182,7 +178,9 @@ public class PlanApproveTab {
             	search.addCriteria(searchForm.getValuesAsCriteria());
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
           		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
-          		      new Criterion("status", OperatorId.NOT_EQUAL, "5_created_order"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "5_on_production"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "6_production_completed"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "7_transferred"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
           		      search
           		  });
@@ -198,7 +196,9 @@ public class PlanApproveTab {
             public void onClick(ClickEvent event) { 
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
           		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
-          		      new Criterion("status", OperatorId.NOT_EQUAL, "5_created_order"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "5_on_production"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "6_production_completed"),
+          		      new Criterion("status", OperatorId.NOT_EQUAL, "7_transferred"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
           		  });
                 searchForm.reset();
@@ -207,10 +207,10 @@ public class PlanApproveTab {
           }
         });
 		
-		IButton cancelQuoteButton = new IButton("ยกเลิกแผนการผลิต");
-		cancelQuoteButton.setIcon("icons/16/close.png");
-		cancelQuoteButton.setWidth(150);
-		cancelQuoteButton.addClickHandler(new ClickHandler() {  
+		IButton cancelPlanButton = new IButton("ยกเลิกแผนการผลิต");
+		cancelPlanButton.setIcon("icons/16/close.png");
+		cancelPlanButton.setWidth(150);
+		cancelPlanButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
             	ListGridRecord selected = planListGrid.getSelectedRecord();
             	if (selected == null) {
@@ -246,7 +246,7 @@ public class PlanApproveTab {
           }
         });
 
-		buttonLayout.addMembers(searchButton, listAllButton, cancelQuoteButton);
+		buttonLayout.addMembers(searchButton, listAllButton, cancelPlanButton);
 		reviseLayout.addMember(buttonLayout);
 		
 		VLayout gridLayout = new VLayout();

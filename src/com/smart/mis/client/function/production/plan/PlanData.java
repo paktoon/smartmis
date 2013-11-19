@@ -35,9 +35,9 @@ public class PlanData {
         return record;  
     }
     
-    public static ListGridRecord createUpdateRecord(String plan_id,Double total_weight,Integer total_amount,Date modified_date,String modified_by, String comment, String status) {  
-        ListGridRecord record = new ListGridRecord();
-        record.setAttribute("plan_id", plan_id);
+    public static ListGridRecord createUpdateRecord(ListGridRecord record,Double total_weight,Integer total_amount,Date modified_date,String modified_by, String comment, String status) {  
+        //ListGridRecord record = new ListGridRecord();
+        //record.setAttribute("plan_id", plan_id);
         //record.setAttribute("sale_id",sale_id);  
         //record.setAttribute("cus_name",cus_name);
         //record.setAttribute("payment_model",payment_model);
@@ -57,8 +57,8 @@ public class PlanData {
         return record;  
     }
     
-    public static ListGridRecord createStatusRecord(String plan_id, String status, String comment) {  
-        ListGridRecord record = new ListGridRecord();
+    public static ListGridRecord createStatusRecord(String plan_id, String status, String comment, ListGridRecord planRecord) {  
+        ListGridRecord record = planRecord;
         record.setAttribute("plan_id", plan_id);
         record.setAttribute("status", status);
         record.setAttribute("comment", comment);

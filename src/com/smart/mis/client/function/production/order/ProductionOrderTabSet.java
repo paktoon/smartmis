@@ -17,10 +17,13 @@ public class ProductionOrderTabSet extends TabSet {
 
 		OrderCreateTab createTab = new OrderCreateTab();
 //		OrderReviseTab reviseTab = new OrderReviseTab();
+		CastingTab castingTab = new CastingTab();
+		ScrapingTab scrapingTab = new ScrapingTab();
 //		OrderDeliveryTab deliveryTab = new OrderDeliveryTab();
 		
 		addTab(createTab.getCreateTab(user));
-//		addTab(reviseTab.getReviseTab(user));
+		addTab(castingTab.getReviseTab(user));
+		addTab(scrapingTab.getReviseTab(user));
 //		addTab(deliveryTab.getReviewTab(user));
 //		
 //		if (this.allowApproved) {

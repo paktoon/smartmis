@@ -1,4 +1,4 @@
-package com.smart.mis.client.function.production.order.casting;
+package com.smart.mis.client.function.production.order.scraping;
 
 import com.smart.mis.shared.prodution.ProcessStatus;
 import com.smart.mis.shared.sale.QuotationStatus;
@@ -12,25 +12,25 @@ import com.smartgwt.client.data.fields.DataSourceFloatField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
-public class CastingDS extends DataSource {
+public class ScrapingDS extends DataSource {
 
-	 private static CastingDS instance = null;
+	 private static ScrapingDS instance = null;
 	 
-	 public static CastingDS getInstance() {
+	 public static ScrapingDS getInstance() {
 		 if (instance == null) {
-			 instance = new CastingDS();
+			 instance = new ScrapingDS();
 		 }
 		 
 		 return instance;
 	 }
 	 
-	 public static CastingDS resetInstance() {
-		 instance = new CastingDS();
+	 public static ScrapingDS resetInstance() {
+		 instance = new ScrapingDS();
 		 return instance;
 	 }
 	 
-	 public CastingDS(){
-		 setID("CastingDS");
+	 public ScrapingDS(){
+		 setID("ScrapingDS");
 		 DataSourceTextField Field_1 = new DataSourceTextField("job_id", "รหัสคำสั่งผลิต");
 		 Field_1.setPrimaryKey(true);
 		 DataSourceTextField Field_2 = new DataSourceTextField("plan_id", "รหัสแผนการผลิต");
@@ -53,7 +53,8 @@ public class CastingDS extends DataSource {
 		 DataSourceFloatField Field_6_1 = new DataSourceFloatField("total_recv_weight", "น้ำหนักที่รับ (กรัม)");
 		 DataSourceIntegerField Field_6_2 = new DataSourceIntegerField("total_recv_amount", "จำรวนที่รับ (ชิ้น)");
 		 DataSourceFloatField Field_6_3 = new DataSourceFloatField("total_wage", "ค่าจ้างรวม (บาท)");
-	        
+		 DataSourceFloatField Field_6_4 = new DataSourceFloatField("return_mat", "คืนเนื้อเงิน (กรัม)");
+		 
 		 DataSourceDateField Field_7 = new DataSourceDateField("created_date", "สร้างวันที่");
 		 DataSourceTextField Field_8 = new DataSourceTextField("created_by", "สร้างโดย");
 		 Field_8.setForeignKey("UserDS.uid");
@@ -66,10 +67,10 @@ public class CastingDS extends DataSource {
 		 //Field_16.setValueMap("รอแก้ไข" , "รออนุมัติ" , "อนุมัติแล้ว" , "ยกเลิก");
 		 Field_12.setValueMap(ProcessStatus.getValueMap());
 		 
-		 setFields(Field_1, Field_2, Field_3_1, Field_3_2, Field_3_3, Field_3_4, Field_3_5, Field_3_6, Field_3_7, Field_4_1, Field_4_2, Field_4_3 ,Field_5, Field_6, Field_6_1, Field_6_2, Field_6_3,  Field_7, Field_8, Field_9, Field_10, Field_11, Field_12);
+		 setFields(Field_1, Field_2, Field_3_1, Field_3_2, Field_3_3, Field_3_4, Field_3_5, Field_3_6, Field_3_7, Field_4_1, Field_4_2, Field_4_3 ,Field_5, Field_6, Field_6_1, Field_6_2, Field_6_3, Field_6_4,  Field_7, Field_8, Field_9, Field_10, Field_11, Field_12);
 		 
 		 //setDataURL("smartmis/security/userData");
-		 setTestData(CastingData.getNewRecords()); // For Test
+		 setTestData(ScrapingData.getNewRecords()); // For Test
 		 setClientOnly(true);
 	 }
 	 

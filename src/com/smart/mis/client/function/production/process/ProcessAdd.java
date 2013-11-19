@@ -16,6 +16,7 @@ import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.prodution.ProcessType;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
+import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
@@ -23,6 +24,7 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
+import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
@@ -97,7 +99,7 @@ public class ProcessAdd {
         } else if (process.equalsIgnoreCase("3_abrade")) {
         	selectOtherItem.setValueMap("ดิน-เงา ลงดำ", "ดิน-เงา ไม่ลงดำ", "ดิน-เงา ธรรมดา");
         } else if (process.equalsIgnoreCase("4_packing")) {
-        	//selectOtherItem.setValueMap("xxx", "yyy", "zzz");
+        	selectOtherItem.setValueMap("บรรจุรวม", "แยกบรรจุ");
         }
         selectOtherItem.setWidth(250);
 		
@@ -175,6 +177,15 @@ public class ProcessAdd {
 	        	  
     	      		final SelectItem material = new SelectItem("mid", "วัตถุดิบที่เลือก");
     	      		material.setOptionDataSource(MaterialDS.getInstance());
+    	      		if (process.equalsIgnoreCase("1_casting")) {
+        	      		material.setOptionCriteria(new Criterion("type", OperatorId.EQUALS, "แร่เงิน"));
+    	            } else if (process.equalsIgnoreCase("2_scrape")) {
+        	      		material.setOptionCriteria(new Criterion("type", OperatorId.EQUALS, "พลอยประดับ"));
+    	            } else if (process.equalsIgnoreCase("3_abrade")) {
+        	      		material.setOptionCriteria(new Criterion("type", OperatorId.EQUALS, "แมกกาไซต์"));
+    	            } else if (process.equalsIgnoreCase("4_packing")) {
+        	      		material.setOptionCriteria(new Criterion("type", OperatorId.EQUALS, "อื่นๆ"));
+    	            }
     	      		material.setValueField("mid");
     	      		material.setDisplayField("mat_name");
     	      		material.setPickListWidth(350);

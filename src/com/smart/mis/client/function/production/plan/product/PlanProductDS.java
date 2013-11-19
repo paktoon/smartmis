@@ -39,12 +39,12 @@ public class PlanProductDS extends DataSource  {
 			 DataSourceIntegerField Field_5 = new DataSourceIntegerField("plan_amount", "จำนวน");
 			 DataSourceTextField Field_6 = new DataSourceTextField("unit", "หน่วย");
 			 
-			 DataSourceTextField Field_7_1 = new DataSourceTextField("size", "หน่วย");
-			 DataSourceTextField Field_7_2 = new DataSourceTextField("width", "หน่วย");
-			 DataSourceTextField Field_7_3 = new DataSourceTextField("length", "หน่วย");
-			 DataSourceTextField Field_7_4 = new DataSourceTextField("height", "หน่วย");
-			 DataSourceTextField Field_7_5 = new DataSourceTextField("diameter", "หน่วย");
-			 DataSourceTextField Field_7_6 = new DataSourceTextField("thickness", "หน่วย");
+			 DataSourceTextField Field_7_1 = new DataSourceTextField("size", "ขนาดสินค้า");
+			 DataSourceTextField Field_7_2 = new DataSourceTextField("width", "ความกว้าง");
+			 DataSourceTextField Field_7_3 = new DataSourceTextField("length", "ความยาว");
+			 DataSourceTextField Field_7_4 = new DataSourceTextField("height", "ความสูง");
+			 DataSourceTextField Field_7_5 = new DataSourceTextField("diameter", "เส้นผ่านศูนย์กลาง");
+			 DataSourceTextField Field_7_6 = new DataSourceTextField("thickness", "ความหนา");
 			 
 			 DataSourceTextField Field_7 = new DataSourceTextField("details", "รายละเอียดสินค้า");
 
@@ -69,12 +69,12 @@ public class PlanProductDS extends DataSource  {
 			 DataSourceIntegerField Field_5 = new DataSourceIntegerField("plan_amount", "จำนวน");
 			 DataSourceTextField Field_6 = new DataSourceTextField("unit", "หน่วย");
 			 
-			 DataSourceTextField Field_7_1 = new DataSourceTextField("size", "หน่วย");
-			 DataSourceTextField Field_7_2 = new DataSourceTextField("width", "หน่วย");
-			 DataSourceTextField Field_7_3 = new DataSourceTextField("length", "หน่วย");
-			 DataSourceTextField Field_7_4 = new DataSourceTextField("height", "หน่วย");
-			 DataSourceTextField Field_7_5 = new DataSourceTextField("diameter", "หน่วย");
-			 DataSourceTextField Field_7_6 = new DataSourceTextField("thickness", "หน่วย");
+			 DataSourceTextField Field_7_1 = new DataSourceTextField("size", "ขนาดสินค้า");
+			 DataSourceTextField Field_7_2 = new DataSourceTextField("width", "ความกว้าง");
+			 DataSourceTextField Field_7_3 = new DataSourceTextField("length", "ความยาว");
+			 DataSourceTextField Field_7_4 = new DataSourceTextField("height", "ความสูง");
+			 DataSourceTextField Field_7_5 = new DataSourceTextField("diameter", "เส้นผ่านศูนย์กลาง");
+			 DataSourceTextField Field_7_6 = new DataSourceTextField("thickness", "ความหนา");
 
 			 setFields(sub_plan_id_field, plan_id_field, Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_7_6);
 			 

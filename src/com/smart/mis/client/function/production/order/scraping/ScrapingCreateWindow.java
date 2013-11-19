@@ -1,10 +1,13 @@
-package com.smart.mis.client.function.production.order.casting;
+package com.smart.mis.client.function.production.order.scraping;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.production.order.casting.CastingDS;
+import com.smart.mis.client.function.production.order.casting.CastingData;
+import com.smart.mis.client.function.production.order.casting.CastingProductDS;
 import com.smart.mis.client.function.production.plan.PlanDS;
 import com.smart.mis.client.function.production.plan.PlanData;
 import com.smart.mis.client.function.production.plan.product.PlanProductDS;
@@ -12,7 +15,6 @@ import com.smart.mis.client.function.production.process.MaterialProcessDS;
 import com.smart.mis.client.function.production.process.ProcessListDS;
 import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
-import com.smart.mis.client.function.sale.order.SaleOrderDS;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
@@ -20,7 +22,6 @@ import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.prodution.Smith;
-import com.smart.mis.shared.sale.SaleOrderStatus;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DSCallback;
@@ -68,7 +69,7 @@ import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class CastingCreateWindow {
+public class ScrapingCreateWindow {
 
 //	SelectProductList addFunc;
 //	Customer client;
@@ -100,14 +101,25 @@ public class CastingCreateWindow {
 		layout.setMargin(10);
 		
 		final String plan_id = record.getAttributeAsString("plan_id");
-		String sale_id = record.getAttributeAsString("sale_id");
+		final String job_id = record.getAttributeAsString("job_id");
+		
+		Double total_weight = record.getAttributeAsDouble("total_recv_weight");
+		Integer total_amount = record.getAttributeAsInt("total_recv_amount");
+		
+		PlanDS.getInstance().fetchData();
+		Record[] plan_records = PlanDS.getInstance().applyFilter(PlanDS.getInstance().getCacheData(), new Criterion("plan_id", OperatorId.EQUALS, plan_id));
+		
+		String sale_id = plan_records[0].getAttributeAsString("sale_id");
 		if (sale_id == null) sale_id= "-";
-		Date delivery = record.getAttributeAsDate("delivery");
-		String status = record.getAttributeAsString("status");
-		String created_by = record.getAttributeAsString("created_by");
-		Date created_date = record.getAttributeAsDate("created_date");
-		Double total_weight = record.getAttributeAsDouble("total_weight");
-		Integer total_amount = record.getAttributeAsInt("total_amount");
+		Date delivery = plan_records[0].getAttributeAsDate("delivery");
+		String status = plan_records[0].getAttributeAsString("status");
+		String created_by = plan_records[0].getAttributeAsString("created_by");
+		Date created_date = plan_records[0].getAttributeAsDate("created_date");
+		
+		System.out.println("plan_id " +  plan_id + " casting job_id " + job_id + " total_recv_weight " + total_weight + " total_recv_amount " + total_amount);
+		System.out.println("sale_id " +  sale_id + " delivery " + delivery + " status " + status + " created_by " + created_by + " created_date " + created_date);
+//		Double total_weight = plan_records[0].getAttributeAsDouble("total_weight");
+//		Integer total_amount = plan_records[0].getAttributeAsInt("total_amount");
 		
 		final DynamicForm planForm = new DynamicForm();
 		planForm.setWidth100(); 
@@ -116,7 +128,7 @@ public class CastingCreateWindow {
 		planForm.setIsGroup(true);
 		planForm.setNumCols(6);
 		planForm.setGroupTitle("ข้อมูลแผนการผลิต");
-
+		
 		StaticTextItem qid = new StaticTextItem("plan_id", "รหัสแผนการผลิต");
 		StaticTextItem sid = new StaticTextItem("sale_id", "รหัสรายการขาย");
 		StaticTextItem ddate = new StaticTextItem("delivery", "วันที่กำหนดส่งสินค้า");
@@ -132,6 +144,7 @@ public class CastingCreateWindow {
 		cdate.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(created_date));
 		planForm.setFields(qid, sid, ddate, sts, cdate ,cby);
 		planForm.setColWidths(100,100,100,100,100,100);
+		
 		layout.addMember(planForm);
 		
 		final DynamicForm smithForm = new DynamicForm();
@@ -153,7 +166,7 @@ public class CastingCreateWindow {
 			final StaticTextItem smith_type = new StaticTextItem("type", "ประเภทงาน");
 			
 			smith_name.setOptionDataSource(SmithDS.getInstance());
-			smith_name.setOptionCriteria(new Criterion("type", OperatorId.EQUALS, "หล่อขึ้นรูป"));
+			smith_name.setOptionCriteria(new Criterion("type", OperatorId.EQUALS, "แต่งและฝังพลอยประดับ"));
 			smith_name.setEmptyDisplayValue("--โปรดเลือกช่าง--");
 			smith_name.setPickListWidth(280);
 			smith_name.setWidth(240);
@@ -286,7 +299,7 @@ public class CastingCreateWindow {
 //			orderListGrid.setWarnOnRemovalMessage("คุณต้องการลบ รายการสินค้า หรือไม่?");
 //		}
 		
-		PlanProductDS tempView = PlanProductDS.getInstance(plan_id);
+		CastingProductDS tempView = CastingProductDS.getInstance(job_id);
 		Record[] cachedData = tempView.getCacheData();
 		if (cachedData.length != 0) {
 			tempView.setTestData(cachedData);
@@ -310,7 +323,7 @@ public class CastingCreateWindow {
         quoteItemCell_4.setShowGridSummary(true);
         quoteItemCell_4.setIncludeInRecordSummary(false);
         
-        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("plan_amount", 70);
+        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("recv_amount", 70);
         
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
@@ -398,7 +411,7 @@ public class CastingCreateWindow {
 		summaryForm.setColWidths(120, 100);
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
-		total_sent_weight.setValue(nf.format(total_weight * total_amount));
+		total_sent_weight.setValue(nf.format(total_weight));
 		final StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
 		total_sent_amount.setValue(nf.format(total_amount));
 		total_sent_weight.setWidth(100);
@@ -420,9 +433,9 @@ public class CastingCreateWindow {
 		controls.setAlign(Alignment.CENTER);
 		controls.setMargin(5);
 		controls.setMembersMargin(5);
-		final IButton printButton = new IButton("ออกคำสั่งหล่อขึ้นรูป");
+		final IButton printButton = new IButton("ออกคำสั่งแต่่งและฝังพลอย");
 		printButton.setIcon("icons/16/print.png");
-		printButton.setWidth(150);
+		printButton.setWidth(170);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
             	if (smithForm.validate()) {
@@ -792,11 +805,10 @@ public class CastingCreateWindow {
 //		});
 //	}
 
-	public void createCreateOrder(DynamicForm planForm, ListGrid orderListGrid, Date sent_date, Date due_date, User currentUser, final ListGridRecord planRecord) {
+	public void createCreateOrder(DynamicForm planForm, ListGrid orderListGrid, Date sent_date, Date due_date, final User currentUser, final ListGridRecord previousRecord) {
 		ListGridRecord[] all = orderListGrid.getRecords();
 		
 		final String plan_id = (String) planForm.getField("plan_id").getValue();
-		final String sale_id = (String) planForm.getField("sale_id").getValue();
 		
 		final String job_id = "JOB70" + Math.round((Math.random() * 100));
 		
@@ -810,36 +822,36 @@ public class CastingCreateWindow {
 			String type = item.getAttributeAsString("type");
 			String unit = item.getAttributeAsString("unit");
 			String details = item.getAttributeAsString("details");
-			Double sent_weight = item.getAttributeAsDouble("weight");
-			Integer sent_amount = item.getAttributeAsInt("plan_amount");
+			Double sent_weight = item.getAttributeAsDouble("recv_weight");
+			Integer sent_amount = item.getAttributeAsInt("recv_amount");
 
 			total_sent_weight += sent_weight;
 			total_sent_amount += sent_amount;
 
 			ProcessListDS.getInstance(pid).fetchData();
-			Record[] selectedProcess = ProcessListDS.getInstance(pid).applyFilter(ProcessListDS.getInstance(pid).getCacheData(), new Criterion("type", OperatorId.EQUALS, "1_casting"));
+			Record[] selectedProcess = ProcessListDS.getInstance(pid).applyFilter(ProcessListDS.getInstance(pid).getCacheData(), new Criterion("type", OperatorId.EQUALS, "2_scrape"));
 			Record process = selectedProcess[0];
 			String psid = process.getAttributeAsString("psid");
 			String desc = process.getAttributeAsString("desc");
 			if (desc != null && !desc.equals("")) details += "(" + desc + ")";
 			
 			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100));
-			ListGridRecord temp = CastingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, sent_weight, sent_amount, true);
+			ListGridRecord temp = ScrapingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, sent_weight, sent_amount, true);
 			orderProductList.add(temp);
 			
 			MaterialProcessDS.getInstance(psid, pid).fetchData();
 			Record[] selectedMaterialProcess = MaterialProcessDS.getInstance(psid, pid).getCacheData();
 			
 			for (Record mat : selectedMaterialProcess) {
-				String cm_id = "CM70" + Math.round((Math.random() * 100));
-				CastingMaterialDS.getInstance(sub_job_id, job_id).addData(CastingMaterialData.createRecord(sub_job_id, cm_id,  sent_amount, mat));
+				String cm_id = "SM70" + Math.round((Math.random() * 100));
+				ScrapingMaterialDS.getInstance(sub_job_id, job_id).addData(ScrapingMaterialData.createRecord(sub_job_id, cm_id,  sent_amount, mat));
 			}
 		}
 		
 		String status = "1_on_production";
-		ListGridRecord jobOrder = CastingData.createSentRecord(job_id, plan_id, smith, sent_date, due_date, total_sent_weight, total_sent_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), "", "", status);
+		ListGridRecord jobOrder = ScrapingData.createSentRecord(job_id, plan_id, smith, sent_date, due_date, total_sent_weight, total_sent_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), "", "", status);
 		
-		CastingDS.getInstance().addData(jobOrder, new DSCallback() {
+		ScrapingDS.getInstance().addData(jobOrder, new DSCallback() {
 		@Override
 		public void execute(DSResponse dsResponse, Object data,
 				DSRequest dsRequest) {
@@ -848,27 +860,16 @@ public class CastingCreateWindow {
 					editWindow.destroy();
 				} else { 
 					for (ListGridRecord item : orderProductList) {
-						CastingProductDS.getInstance(job_id).addData(item);
+						ScrapingProductDS.getInstance(job_id).addData(item);
 					}
 					
-					String plan_status = "5_on_production";
-					ListGridRecord update_plan = PlanData.createStatusRecord(plan_id, plan_status, "ออกคำสั่งผลิตแล้ว", planRecord);
-					PlanDS.getInstance().updateData(update_plan);
-					
-					if ( sale_id != null && !sale_id.equalsIgnoreCase("-")) {
-						String sale_status = "2_production_in_progress";
-						
-						SaleOrderDS.getInstance().fetchData();
-						Record[] selected = SaleOrderDS.getInstance().applyFilter(SaleOrderDS.getInstance().getCacheData(), new Criterion("sale_id", OperatorId.EQUALS, sale_id));
-						Record selectedSaleOrder = selected[0];
-						selectedSaleOrder.setAttribute("status", sale_status);
-						SaleOrderDS.getInstance().updateData(selectedSaleOrder);
-						SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> รายการขายเขที่ " + sale_id + " มีสถานะเป็น " + SaleOrderStatus.getDisplay(sale_status));
-					} else {
-						SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id);
-					}
+//					String plan_status = "5_on_production";
+//					ListGridRecord update_plan = PlanData.createStatusRecord(plan_id, plan_status, "ออกคำสั่งผลิตแล้ว", previousRecord);
+					String order_status = "3_to_next_process";
+					ListGridRecord update_order = CastingData.createStatusRecord(new Date(), currentUser.getFirstName() + " " + currentUser.getLastName(), "เสร็จสิ้นขั้นตอนแล้ว", order_status, previousRecord);
+					CastingDS.getInstance().updateData(update_order);
 					editWindow.destroy();
-					
+					SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> สร้างรายการขเบิกวัตถุดิบ เลขที่ TBD");
 				}
 			}
 		});

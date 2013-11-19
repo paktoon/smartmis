@@ -368,7 +368,7 @@ public class PlanViewWindow extends EditorWindow{
 					public void execute(Boolean value) {
 						if (value) {
 							//if (customerForm.validate()) saveQuotation(main, plan_id, customerForm, planListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
-							saveProductionPlan(main, plan_id, planListGrid, currentUser);
+							saveProductionPlan(main, plan_id, planListGrid, currentUser, record);
 						}
 					}
             	});
@@ -395,7 +395,7 @@ public class PlanViewWindow extends EditorWindow{
 					public void execute(Boolean value) {
 						if (value) {
 							//saveQuotation(main, plan_id, customerForm, planListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
-							updatePlanStatus(plan_id, "3_approved", "");
+							updatePlanStatus(plan_id, "3_approved", "", record);
 							main.destroy();
 						}
 					}
@@ -461,7 +461,7 @@ public class PlanViewWindow extends EditorWindow{
 					            public void onClick(ClickEvent event) { 
 					            	String value = selectOtherItem.getValueAsString();
 					            	if (value != null && !value.equalsIgnoreCase("")) {
-						            	updatePlanStatus(plan_id, "1_waiting_for_revised", selectOtherItem.getValueAsString());
+						            	updatePlanStatus(plan_id, "1_waiting_for_revised", selectOtherItem.getValueAsString(), record);
 						            	confirm.destroy();
 						            	main.destroy();
 					            	} else {
@@ -610,7 +610,7 @@ public class PlanViewWindow extends EditorWindow{
 //		target.getField("netInclusive").setValue(nf.format(sum_price * 1.07));
 //	}
 	
-	public void saveProductionPlan(final Window main, final String plan_id, ListGrid planListGrid, User currentUser){
+	public void saveProductionPlan(final Window main, final String plan_id, ListGrid planListGrid, User currentUser, ListGridRecord record){
 		ListGridRecord[] all = planListGrid.getRecords();
 		
 		if (all.length == 0) {
@@ -665,7 +665,7 @@ public class PlanViewWindow extends EditorWindow{
 //			Integer credit = (Integer) customer.getField("credit").getValue();
 			//System.out.println(cid + " " + cus_name + " " + payment_model + " " + credit);
 			
-			ListGridRecord updateRecord = PlanData.createUpdateRecord(plan_id, total_weight, total_amount, new Date(), currentUser.getFirstName() + " " + currentUser.getLastName(), "", plan_status);
+			ListGridRecord updateRecord = PlanData.createUpdateRecord(record, total_weight, total_amount, new Date(), currentUser.getFirstName() + " " + currentUser.getLastName(), "", plan_status);
 			
 			PlanDS.getInstance().updateData(updateRecord, new DSCallback() {
 				@Override
@@ -693,8 +693,8 @@ public class PlanViewWindow extends EditorWindow{
 			});
 	}
 	
-	void updatePlanStatus(String plan_id, final String status, String comment) {
-		Record updated = PlanData.createStatusRecord(plan_id,status,comment);
+	void updatePlanStatus(String plan_id, final String status, String comment, ListGridRecord record) {
+		Record updated = PlanData.createStatusRecord(plan_id,status,comment,record);
 		PlanDS.getInstance().updateData(updated, new DSCallback() {
 			@Override
 			public void execute(DSResponse dsResponse, Object data,
@@ -709,106 +709,7 @@ public class PlanViewWindow extends EditorWindow{
 	}
 	
 	public void createJobOrder(ListGridRecord plan, User currentUser, Integer std_time){
-		
 		CastingCreateWindow order = new CastingCreateWindow();
 		order.show(plan, currentUser, std_time);
-//		ListGridRecord[] all = planListGrid.getRecords();
-		
-//		if (all.length == 0) {
-//			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
-//			return;
-//		}
-		
-//		Double total_weight = 0.0;
-//		Double total_netExclusive = 0.0;
-//		Integer total_amount = 0;
-//		final String sale_id = "SO70" + Math.round((Math.random() * 100));
-//		final String invoice_id = "IN70" + Math.round((Math.random() * 100));
-//		final ArrayList<SaleProductDetails> saleProductList = new ArrayList<SaleProductDetails>();
-//		final ArrayList<SaleProductDetails> invoiceProductList = new ArrayList<SaleProductDetails>();
-//
-//		for (ListGridRecord item : all){
-//			total_weight += item.getAttributeAsDouble("weight");
-//			total_amount += item.getAttributeAsInt("quote_amount");
-//			total_netExclusive += item.getAttributeAsDouble("sum_price");
-//			
-//			String pid = item.getAttributeAsString("pid");
-//			String pname = item.getAttributeAsString("name");
-//			String ptype = item.getAttributeAsString("type");
-//			//String psize = item.getAttributeAsString("size");
-//			Double pweight = item.getAttributeAsDouble("weight");
-//			Integer psale_amount = item.getAttributeAsInt("quote_amount");
-//			String punit = item.getAttributeAsString("unit");
-//			Double pprice = item.getAttributeAsDouble("price");
-//			
-//			String sub_sale_id = "SS80" + Math.round((Math.random() * 1000));
-//			SaleProductDetails temp1 = new SaleProductDetails();
-//			temp1.save(pid, pname, pweight, pprice, ptype, punit);
-//			temp1.setID(sub_sale_id, sale_id);
-//			temp1.setQuantity(psale_amount);
-//			saleProductList.add(temp1);
-//			
-//			String sub_invoice_id = "SI80" + Math.round((Math.random() * 1000));
-//			SaleProductDetails temp2 = new SaleProductDetails();
-//			temp2.save(pid, pname, pweight, pprice, ptype, punit);
-//			temp2.setID(sub_invoice_id, invoice_id);
-//			temp2.setQuantity(psale_amount);
-//			invoiceProductList.add(temp2);
-//			//status
-//		}	
-////			if (customer.getField("cid").getValue() == null || customer.getField("cus_name").getValue() == null) {
-////				SC.warn("ชื่อและรหัสลูกค้าไม่ถุกต้อง");
-////				return;
-////			}
-//
-//			final String sale_status = "1_waiting_for_production";
-//			final String invoice_status = "1_waiting_for_payment";
-//			String cid = (String) customer.getField("cid").getValue();
-//			String cus_name = (String) customer.getField("cus_name").getValue();
-//			String payment_model = (String) customer.getField("payment_model").getValue();
-//			Integer credit = (Integer) customer.getField("credit").getValue();
-//			
-//			DateRange dateRange = new DateRange();  
-//	        dateRange.setRelativeStartDate(RelativeDate.TODAY);
-//	        dateRange.setRelativeEndDate(new RelativeDate("+"+credit+"d"));
-//	        final Date due_date = dateRange.getEndDate();
-//	        
-//			final ListGridRecord saleRecord = SaleOrderData.createRecord(sale_id, plan_id, invoice_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, sale_status, purchase_id, due_date);
-//			ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
-//			
-//			//Auto create invoice
-//			InvoiceDS.getInstance().addData(invoiceRecord, new DSCallback() {
-//				@Override
-//				public void execute(DSResponse dsResponse, Object data,
-//						DSRequest dsRequest) {
-//						if (dsResponse.getStatus() != 0) {
-//							SC.warn("การสร้างรายการขายล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-//							main.destroy();
-//						} else { 
-//							for (SaleProductDetails item : invoiceProductList) {
-//								ListGridRecord subAddRecord = SaleProductData.createRecord(item);
-//								SaleProductDS.getInstance(invoice_id).addData(subAddRecord);
-//							}
-//							
-//							SaleOrderDS.getInstance().addData(saleRecord, new DSCallback() {
-//								@Override
-//								public void execute(DSResponse dsResponse, Object data,
-//										DSRequest dsRequest) {
-//										if (dsResponse.getStatus() != 0) {
-//											SC.warn("การสร้างรายการขายล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-//											main.destroy();
-//										} else { 
-//											for (SaleProductDetails item : saleProductList) {
-//													ListGridRecord subAddRecord = SaleProductData.createRecord(item);
-//													SaleProductDS.getInstance(sale_id).addData(subAddRecord);
-//											}
-//											SC.say("สร้างรายการขายเสร็จสิ้น <br> " + "รหัสรายการขาย " + sale_id + "<br> สถานะของรายการขาย " + SaleOrderStatus.getDisplay(sale_status) + "<br><br> สร้างใบแจ้งหนี้โดยอัตโนมัติ เลขที่ "+ invoice_id + "<br> กำหนดชำระเงินวันที่ " + DateUtil.formatAsShortDate(due_date));
-//											main.destroy();
-//										}
-//								}
-//							});
-//						}
-//				}
-//			});
 	}
 }
