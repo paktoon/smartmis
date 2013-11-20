@@ -47,8 +47,8 @@ public class ScrapingDS extends DataSource {
 		 DataSourceTextField Field_4_2 = new DataSourceTextField("due_date", "วันที่กำหนดรับสินค้า");
 		 DataSourceTextField Field_4_3 = new DataSourceTextField("received_date", "วันที่รับสินค้า");
 		 
-		 DataSourceFloatField Field_5 = new DataSourceFloatField("total_sent_weight", "น้ำหนักที่สั่งผลิต (กรัม)");
-		 DataSourceIntegerField Field_6 = new DataSourceIntegerField("total_sent_amount", "จำนวนที่สั่งผลิต (ชิ้น)");
+		 DataSourceFloatField Field_5 = new DataSourceFloatField("total_sent_weight", "น้ำหนักที่ส่ง (กรัม)");
+		 DataSourceIntegerField Field_6 = new DataSourceIntegerField("total_sent_amount", "จำนวนที่ส่ง (ชิ้น)");
 		 
 		 DataSourceFloatField Field_6_1 = new DataSourceFloatField("total_recv_weight", "น้ำหนักที่รับ (กรัม)");
 		 DataSourceIntegerField Field_6_2 = new DataSourceIntegerField("total_recv_amount", "จำรวนที่รับ (ชิ้น)");

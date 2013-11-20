@@ -13,6 +13,7 @@ import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.prodution.ProcessStatus;
+import com.smart.mis.shared.prodution.ProcessType;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.prodution.Smith;
 import com.smart.mis.shared.security.User;
@@ -111,9 +112,15 @@ public class ScrapingViewWindow extends EditorWindow{
 		
 		Date sent_date = record.getAttributeAsDate("sent_date");
 		Date due_date = record.getAttributeAsDate("due_date");
+		Date received_date = record.getAttributeAsDate("received_date");
 		
 		final Double sent_weight = record.getAttributeAsDouble("total_sent_weight");
 		Integer sent_amount = record.getAttributeAsInt("total_sent_amount");
+		
+		Double recv_weight = record.getAttributeAsDouble("total_recv_weight");
+		Integer recv_amount = record.getAttributeAsInt("total_recv_amount");
+		Double job_wage = record.getAttributeAsDouble("total_wage");
+		Double mat_return = record.getAttributeAsDouble("return_mat");
 		
 		final DynamicForm orderForm = new DynamicForm();
 		orderForm.setWidth100(); 
@@ -278,7 +285,7 @@ public class ScrapingViewWindow extends EditorWindow{
         quoteItemCell_6.setCellFormatter(FieldFormatter.getNumberFormat());
         quoteItemCell_6.setType(ListGridFieldType.FLOAT); 
         quoteItemCell_6.setShowGridSummary(true);
-        quoteItemCell_6.setCanEdit(true);
+        if (edit)  quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setIncludeInRecordSummary(false);
         
         ListGridNumberField quoteItemCell_7 = new ListGridNumberField("recv_amount", 120);
@@ -286,14 +293,14 @@ public class ScrapingViewWindow extends EditorWindow{
         quoteItemCell_7.setCellFormatter(FieldFormatter.getNumberFormat());
         quoteItemCell_7.setType(ListGridFieldType.FLOAT);
         quoteItemCell_7.setShowGridSummary(true);
-        quoteItemCell_7.setCanEdit(true);
+        if (edit)  quoteItemCell_7.setCanEdit(true);
         
         ListGridNumberField quoteItemCell_8 = new ListGridNumberField("wage", 120);
         //quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_8.setCellFormatter(FieldFormatter.getPriceFormat());
         quoteItemCell_8.setType(ListGridFieldType.FLOAT); 
         //quoteItemCell_6.setShowGridSummary(true);
-        quoteItemCell_8.setCanEdit(true);
+        if (edit) quoteItemCell_8.setCanEdit(true);
         
         ListGridSummaryField quoteItemCell_sum = new ListGridSummaryField("sum_wage", 120);
         quoteItemCell_sum.setRecordSummaryFunction(RecordSummaryFunctionType.MULTIPLIER);
@@ -344,7 +351,8 @@ public class ScrapingViewWindow extends EditorWindow{
 		receivedDate.setName("received_date");
 		receivedDate.setTitle("วันที่บันทึกรับสินค้า");
 		receivedDate.setUseTextField(true);
-		receivedDate.setDefaultValue(new Date());
+		if (page == 2) receivedDate.setDefaultValue(new Date());
+		else if (page == 1) receivedDate.setDefaultValue(received_date);
 		receivedDate.setCanEdit(false);
 		
 		dateForm.setFields(sentDate, dueDate, receivedDate);
@@ -388,9 +396,17 @@ public class ScrapingViewWindow extends EditorWindow{
 		summaryForm_2.setGroupTitle("สรุปยอดรับสินค้า");
 		summaryForm_2.setColWidths(80, 120);
 		final StaticTextItem total_recv_weight = new StaticTextItem("total_recv_weight");
-		total_recv_weight.setDefaultValue(nf.format(0));
+		if (recv_weight == null) {
+			total_recv_weight.setDefaultValue(nf.format(0));
+		} else {
+			total_recv_weight.setDefaultValue(nf.format(recv_weight));
+		}
 		final StaticTextItem total_recv_amount = new StaticTextItem("total_recv_amount");
-		total_recv_amount.setDefaultValue(nf.format(0));
+		if (recv_amount == null) {
+			total_recv_amount.setDefaultValue(nf.format(0));
+		} else {
+			total_recv_amount.setDefaultValue(nf.format(recv_amount));
+		}
 		total_recv_weight.setWidth(100);
 		total_recv_amount.setWidth(100);
 		total_recv_weight.setTitle("น้ำหนักรวม");
@@ -411,12 +427,21 @@ public class ScrapingViewWindow extends EditorWindow{
         summaryForm_3.setGroupTitle("สรุปค่าจ้างผลิตและส่วนต่างเนื้อเงิน");
         summaryForm_3.setColWidths(80, 70);
 		final StaticTextItem return_mat = new StaticTextItem("return_mat");
-		return_mat.setDefaultValue(nf.format(0));
+		if (mat_return == null) {
+			return_mat.setDefaultValue(nf.format(0));
+		} else {
+			return_mat.setDefaultValue(nf.format(mat_return));
+		}
 		final StaticTextItem total_wage = new StaticTextItem("total_wage");
-		total_wage.setDefaultValue(nf.format(0));
+		if (job_wage == null) {
+			total_wage.setDefaultValue(nf.format(0));
+		} else {
+			total_wage.setDefaultValue(nf.format(job_wage));
+		}
 		return_mat.setWidth(80);
 		total_wage.setWidth(80);
-		return_mat.setTitle("เนื้อเงินที่ต้องคืน");
+		if (page == 2) return_mat.setTitle("เนื้อเงินที่ต้องคืน");
+		else if (page ==1) return_mat.setTitle("เนื้อเงินที่คืน");
 		total_wage.setTitle("ค่าจ้างผลิตรวม");
 		return_mat.setTextAlign(Alignment.RIGHT);
 		total_wage.setTextAlign(Alignment.RIGHT);
@@ -460,22 +485,30 @@ public class ScrapingViewWindow extends EditorWindow{
         });
 		// if (edit || !status.equals("3_approved")) printButton.disable();
 		
-//		final IButton saveButton = new IButton("บันทึกการแก้ไข");
-//		saveButton.setIcon("icons/16/save.png");
-//		saveButton.setWidth(120);
-//		saveButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) { 
-//            	SC.confirm("ยืนยันการทำรายการ", "ต้องการบันทึกการแก้ไขใบเสนอราคา หรือไม่?" , new BooleanCallback() {
-//					@Override
-//					public void execute(Boolean value) {
-//						if (value) {
-//							if (smithForm.validate()) saveQuotation(main, quote_id, smithForm, orderListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
-//						}
-//					}
-//            	});
-//          }
-//        });
-//		if (!edit) saveButton.disable();
+		final IButton createButton = new IButton("ออกคำสั่งขัดและติดพลอยแมกกาไซต์");
+		createButton.setIcon("icons/16/print.png");
+		createButton.setWidth(200);
+		createButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+            	SC.confirm("ยืนยันการทำรายการ", "ต้องการออกคำสั่งแต่งและฝังพลอย หรือไม่?" , new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							Record[] all = orderListGrid.getRecords();
+							ArrayList<String> pids = new ArrayList<String>();
+							for (Record product : all) {
+								pids.add(product.getAttributeAsString("pid"));
+							}
+							
+							Integer std_time = ProcessType.getMaxStdTime(pids, "3_abrade");
+							//createJobOrder(record, currentUser, std_time);
+							SC.say("To do ออกคำสั่งขัดและติดพลอยแมกกาไซต์ std_time = " +std_time);
+							main.destroy();
+						}
+					}
+            	});
+          }
+        });
 		
 		final IButton closeButton = new IButton("ปิด");
 		closeButton.setIcon("icons/16/close.png");
@@ -638,7 +671,8 @@ public class ScrapingViewWindow extends EditorWindow{
 //			controls.addMember(printButton);
 //			controls.addMember(saveButton);
 //		}
-		controls.addMember(printButton);
+		if (page == 1) controls.addMember(createButton);
+		if (page == 2) controls.addMember(printButton);
 //		if (page == 1 && status.equals("1_waiting_for_production")) controls.addMember(cancelButton);
 //		if (page == 1 && status.equals("3_production_completed")) controls.addMember(deliveryButton);
 		controls.addMember(closeButton);
@@ -934,6 +968,7 @@ public class ScrapingViewWindow extends EditorWindow{
                 ListGridField Field_2 = new ListGridField("mat_name", 200);
                 ListGridField editField = new ListGridField("produce_amount", 120);
                 editField.setTitle("ปริมาณที่ใช้ผลิต");
+                editField.setCellFormatter(FieldFormatter.getNumberFormat());
                 ListGridField Field_3 = new ListGridField("unit", 50);
                 
                 materialGrid.setFields(Field_1, Field_2, editField, Field_3);
@@ -947,4 +982,9 @@ public class ScrapingViewWindow extends EditorWindow{
             }  
 		};
 	}
+
+//	public void createJobOrder(ListGridRecord casting, User currentUser, Integer std_time){
+//		ScrapingCreateWindow order = new ScrapingCreateWindow();
+//		order.show(casting, currentUser, std_time);
+//	}
 }
