@@ -120,6 +120,7 @@ public class CastingViewWindow extends EditorWindow{
 		Double recv_weight = record.getAttributeAsDouble("total_recv_weight");
 		Integer recv_amount = record.getAttributeAsInt("total_recv_amount");
 		Double job_wage = record.getAttributeAsDouble("total_wage");
+		System.out.println("Casting job wage " + job_wage);
 		
 		final DynamicForm orderForm = new DynamicForm();
 		orderForm.setWidth100(); 
@@ -715,7 +716,8 @@ public class CastingViewWindow extends EditorWindow{
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 		target.getField("total_recv_weight").setValue(nf.format(total_received_weight));
 		target.getField("total_recv_amount").setValue(nf.format(total_received_amount));
-		target_2.getField("total_wage").setValue(nf.format(total_received_weight * perGam));
+		total_paid_wage = total_received_weight * perGam;
+		target_2.getField("total_wage").setValue(nf.format(total_paid_wage));
 	}
 	
 	public void updateOrder(final String job_id , final ListGridRecord record, ListGrid orderListGrid, User currentUser){
@@ -749,7 +751,7 @@ public class CastingViewWindow extends EditorWindow{
 							for (ListGridRecord item : all) {
 								CastingProductDS.getInstance(job_id).updateData(item);
 							}
-							SC.warn("บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการขอเบิกวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + "TBD");
+							SC.say("บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการขอเบิกวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + "TBD");
 							editWindow.destroy();
 						}
 				}

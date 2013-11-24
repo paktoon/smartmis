@@ -111,18 +111,27 @@ public class SupplierDetailTabPane extends TabSet {
 		TextItem fax = new TextItem("fax", "หมายเลขโทรสาร");
 		TextItem email = new TextItem("email", "อีเมล");
 
-		TextAreaItem address = new TextAreaItem("address", "ที่อยู่");
-		address.setWidth(300);
-		address.setRowSpan(3);
+		TextItem address = new TextItem("address");
+		TextItem street = new TextItem("street");
+		TextItem city = new TextItem("city");
+		TextItem state = new TextItem("state");
+		IntegerItem postal = new IntegerItem("postal");
+		
 		IntegerItem leadtime = new IntegerItem("leadtime", "ระยะเวลาส่งสินค้า");
 		
 		sup_name.setRequired(true);
 		sup_phone1.setRequired(true);
 		address.setRequired(true);
+		city.setRequired(true);
+		state.setRequired(true);
+		postal.setRequired(true);
 		leadtime.setRequired(true);
 		sup_name.setHint("*");
 		sup_phone1.setHint("*");
 		address.setHint("*");
+		city.setHint("*");
+		state.setHint("*");
+		postal.setHint("*");
 		leadtime.setHint("วัน *");
 		
         saveButton = new IButton("บันทึก");  
@@ -174,20 +183,20 @@ public class SupplierDetailTabPane extends TabSet {
         sup_phone2.setWidth(250);
         email.setWidth(250);
         editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-        editorForm.setFields(id, sup_name, sup_phone1, sup_phone2, fax, email, address, leadtime);
+        editorForm.setFields(id, sup_name, sup_phone1, sup_phone2, fax, email, leadtime, address, street, city, state, postal);
         editorForm.setColWidths(200	, 300); 
         VLayout editor_control = new VLayout();
         editor_control.addMembers(saveButton, cancelButton);
         editor_control.setWidth(200);
-        //outlineForm.addMembers(editorForm, getEditItemList(), editor_control);
-        outlineForm.addMembers(editorForm, editor_control);
+        outlineForm.addMembers(editorForm, getEditItemList(), editor_control);
+        //outlineForm.addMembers(editorForm, editor_control);
         
         Tab viewTab = new Tab("ข้อมูลผู้จำหน่าย");  
         viewTab.setIcon("icons/16/application_form.png");  
         viewTab.setWidth(70);  
         HLayout tempLayout = new HLayout();
-        //tempLayout.addMembers(itemViewer, getViewItemList());
-        tempLayout.addMembers(itemViewer);
+        tempLayout.addMembers(itemViewer, getViewItemList());
+        //tempLayout.addMembers(itemViewer);
         viewTab.setPane(tempLayout);
   
         Tab historyTab = new Tab("ประวัติการจัดซื้อ");
@@ -231,8 +240,8 @@ public class SupplierDetailTabPane extends TabSet {
         if (selectedTab == 0) {  
             //view tab : show empty message  
             itemViewer.setData(new Record[]{selectedRecord});
-            //if (selectedRecord != null) fetchViewItemList(selectedRecord.getAttributeAsString("list"));
-            //else fetchViewItemList("NULL");
+            if (selectedRecord != null) fetchViewItemList(selectedRecord.getAttributeAsString("list"));
+            else fetchViewItemList("NULL");
         } else {  
             // edit tab : show record editor  
         	if (selectedRecord != null) {
@@ -240,10 +249,10 @@ public class SupplierDetailTabPane extends TabSet {
         		cancelButton.setDisabled(false);
 //        		profile.invalidateDisplayValueCache();
         		editorForm.editRecord(selectedRecord);
-        		//fetchEditItemList(selectedRecord.getAttributeAsString("list"));
-        		//this.currentSid = selectedRecord.getAttributeAsString("sid");
+        		fetchEditItemList(selectedRecord.getAttributeAsString("list"));
+        		this.currentSid = selectedRecord.getAttributeAsString("sid");
         	} else {
-      	      //fetchEditItemList("NULL");
+      	      fetchEditItemList("NULL");
         	}
         }  
     }  
@@ -260,8 +269,8 @@ public class SupplierDetailTabPane extends TabSet {
         	cancelButton.setDisabled(false);
 //        	profile.invalidateDisplayValueCache();
     		editorForm.editRecord(selectedRecord);
-    		//fetchEditItemList(selectedRecord.getAttributeAsString("list"));
-    		//this.currentSid = selectedRecord.getAttributeAsString("sid");
+    		fetchEditItemList(selectedRecord.getAttributeAsString("list"));
+    		this.currentSid = selectedRecord.getAttributeAsString("sid");
         }
     }
     
@@ -275,6 +284,11 @@ public class SupplierDetailTabPane extends TabSet {
 	    	String sup_phone2 = editorForm.getValueAsString("sup_phone2");
 	    	String email = editorForm.getValueAsString("email");
 	    	String address = editorForm.getValueAsString("address");
+	    	String street = editorForm.getValueAsString("street");
+			String city = editorForm.getValueAsString("city");
+			String state = editorForm.getValueAsString("state");
+	    	Integer postal = Integer.parseInt(editorForm.getValueAsString("postal"));
+	    	
 	    	Integer leadtime = Integer.parseInt(editorForm.getValueAsString("leadtime"));
 	    	String fax = editorForm.getValueAsString("fax");
 	    	
@@ -296,10 +310,13 @@ public class SupplierDetailTabPane extends TabSet {
 								editorForm.getValueAsString("sup_phone2"),
 								editorForm.getValueAsString("email"),
 								editorForm.getValueAsString("address"),
+								editorForm.getValueAsString("street"),
+								editorForm.getValueAsString("city"),
+								editorForm.getValueAsString("state"),
+								Integer.parseInt(editorForm.getValueAsString("postal")),
 								editorForm.getValueAsString("fax"),
-				    	    	Integer.parseInt(editorForm.getValueAsString("leadtime"))
-				    	    	//,
-				    	    	//currentChangeMidList
+				    	    	Integer.parseInt(editorForm.getValueAsString("leadtime")),
+				    	    	currentChangeMidList
 				    			);
 						supplierDataSource.updateData(updateRecord);
 						SC.say("แก้ไขข้อมูลผู้จำหน่ายเรียบร้อยแล้ว");
@@ -326,7 +343,7 @@ public class SupplierDetailTabPane extends TabSet {
         viewItemGrid = new MaterialListGrid();
         viewItemGrid.setEmptyMessage("No Item to show.");
         viewItemGrid.setUseAllDataSourceFields(false);
-        viewItemGrid.hideFields("type", "safety", "remain", "unit", "sup_list");
+        viewItemGrid.hideFields("type", "safety", "remain", "unit");
         viewItemGrid.setWidth100();
         viewItemGrid.setHeight100();
         
@@ -348,7 +365,7 @@ public class SupplierDetailTabPane extends TabSet {
         editItemGrid = new MaterialListGrid();
         editItemGrid.setEmptyMessage("No Item to show.");
         editItemGrid.setUseAllDataSourceFields(false);
-        editItemGrid.hideFields("type", "safety", "remain", "unit", "sup_list");
+        editItemGrid.hideFields("weight", "type", "safety", "remain", "unit");
         editItemGrid.setWidth100();
         editItemGrid.setHeight100();
         

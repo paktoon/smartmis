@@ -505,6 +505,11 @@ public class PlanCreateTab {
 			public void onClick(ClickEvent event) {
 				//quoteItem
 				//if (customerForm.validate() && dateForm.validate()) {
+					if (planListGrid.getRecords().length == 0) {
+						SC.warn("กรุณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
+						return;
+					}
+					
 					SC.confirm("ยืนยันการสร้างแผนการผลิต", "ต้องการสร้างแผนการผลิต หรือไม่?" , new BooleanCallback() {
 						@Override
 						public void execute(Boolean value) {

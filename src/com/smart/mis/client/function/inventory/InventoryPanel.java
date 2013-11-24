@@ -11,7 +11,7 @@ public class InventoryPanel extends FunctionPanel{
 	private final FunctionWindow outMaterialWindow;
 	private final FunctionWindow inProductWindow;
 	private final FunctionWindow inMaterialWindow;
-	private final FunctionWindow returnRaterialWindow;
+	private final FunctionWindow returnMaterialWindow;
 	private final FunctionWindow allRamainWindow;
 	private final FunctionWindow productRemainWindow;
 	private final FunctionWindow materialRemainWindow;
@@ -26,7 +26,7 @@ public class InventoryPanel extends FunctionPanel{
 		outMaterialWindow = createFuncWindow();
 		inProductWindow = createFuncWindow();
 		inMaterialWindow = createFuncWindow();
-		returnRaterialWindow = createFuncWindow();
+		returnMaterialWindow = createFuncWindow();
 		allRamainWindow = createFuncWindow();
 		productRemainWindow = createFuncWindow();
 		materialRemainWindow = createFuncWindow();
@@ -54,7 +54,7 @@ public class InventoryPanel extends FunctionPanel{
 		} else if (nodeId.equals("34")) {
 			loadWindow(this._main.getInventoryPanel(), this.inMaterialWindow , name, icon);
 		} else if (nodeId.equals("35")) {
-			loadWindow(this._main.getInventoryPanel(), this.returnRaterialWindow , name, icon);
+			loadWindow(this._main.getInventoryPanel(), this.returnMaterialWindow , name, icon);
 		} else if (nodeId.equals("36")) {
 			loadWindow(this._main.getInventoryPanel(), this.allRamainWindow , name, icon);
 		} else if (nodeId.equals("361")) {

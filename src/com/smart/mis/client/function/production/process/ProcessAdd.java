@@ -228,12 +228,16 @@ public class ProcessAdd {
     	                	  String mid = selected.getAttributeAsString("mid");
     	                	  String mat_name = selected.getAttributeAsString("mat_name");
     	                	  Double req_amount = reqAmount.getValueAsFloat().doubleValue();
+    	                	  Double weight = 0.0;
+    	                	  if (process.equalsIgnoreCase("1_casting")) weight = req_amount;
+    	                	  else weight = selected.getAttributeAsDouble("weight") * req_amount;
     	                	  String unit = selected.getAttributeAsString("unit");
     	                	  
 	  	    	        	  Record newRecord = MaterialProcessData.createRecord(
 	  									mid,
 	  									mat_name,
 	  									req_amount,
+	  									weight,
 	  									unit
 	  					    			);
 	  	    	        	  currentDS.addData(newRecord, new DSCallback() {
@@ -400,18 +404,68 @@ public class ProcessAdd {
 		
       	product.setAttribute("pid", product_id);
       	
+      	//System.out.println("List_1 " + List_1.size());
+      	//System.out.println("List_2 " + List_2.size());
+      	//System.out.println("List_3 " + List_3.size());
+      	//System.out.println("List_4 " + List_4.size());
+      	
+      	Double weight_1 = 0.0;
+      	Double weight_2 = 0.0;
+      	Double weight_3 = 0.0;
+      	Double weight_4 = 0.0;
+      	
+      	for (ListGridRecord item : List_1) {
+      		String mat_process_id = "MP70" + Math.round((Math.random() * 100));
+      		item.setAttribute("mpid", mat_process_id);
+      		item.setAttribute("psid", process_id_1);
+      		weight_1 += item.getAttributeAsDouble("weight");
+      		//System.out.println("weight_1 " + weight_1);
+      		MaterialProcessDS.getInstance(process_id_1, product_id).addData(item);
+      	}
+      	
+      	for (ListGridRecord item : List_2) {
+      		String mat_process_id = "MP70" + Math.round((Math.random() * 100));
+      		item.setAttribute("mpid", mat_process_id);
+      		item.setAttribute("psid", process_id_2);
+      		weight_2 += item.getAttributeAsDouble("weight");
+      		//System.out.println("weight_2 " + weight_2);
+      		MaterialProcessDS.getInstance(process_id_2, product_id).addData(item);
+      	}
+      	
+      	for (ListGridRecord item : List_3) {
+      		String mat_process_id = "MP70" + Math.round((Math.random() * 100));
+      		item.setAttribute("mpid", mat_process_id);
+      		item.setAttribute("psid", process_id_3);
+      		weight_3 += item.getAttributeAsDouble("weight");
+      		//System.out.println("weight_3 " + weight_3);
+      		MaterialProcessDS.getInstance(process_id_3, product_id).addData(item);
+      	}
+      	
+      	for (ListGridRecord item : List_4) {
+      		String mat_process_id = "MP70" + Math.round((Math.random() * 100));
+      		item.setAttribute("mpid", mat_process_id);
+      		item.setAttribute("psid", process_id_4);
+      		weight_4 += item.getAttributeAsDouble("weight");
+      		//System.out.println("weight_4 " + weight_4);
+      		MaterialProcessDS.getInstance(process_id_4, product_id).addData(item);
+      	}
+      	
       	ListGridRecord process_1 = processList.get(0);
       	process_1.setAttribute("pid", product_id);
       	process_1.setAttribute("psid", process_id_1);
+      	process_1.setAttribute("weight", weight_1);
       	ListGridRecord process_2 = processList.get(1);
       	process_2.setAttribute("pid", product_id);
       	process_2.setAttribute("psid", process_id_2);
+      	process_2.setAttribute("weight", weight_2);
       	ListGridRecord process_3 = processList.get(2);
       	process_3.setAttribute("pid", product_id);
       	process_3.setAttribute("psid", process_id_3);
+      	process_3.setAttribute("weight", weight_3);
       	ListGridRecord process_4 = processList.get(3);
       	process_4.setAttribute("pid", product_id);
       	process_4.setAttribute("psid", process_id_4);
+      	process_4.setAttribute("weight", weight_4);
       	
       	ProcessListDS.getInstance(product_id).addData(process_1);
       	System.out.println("Add process for pid " + product_id);
@@ -423,39 +477,12 @@ public class ProcessAdd {
       	ProcessListDS.getInstance(product_id).addData(process_4);
       	System.out.println("	psid " + process_id_4);
       	
-      	//System.out.println("List_1 " + List_1.size());
-      	//System.out.println("List_2 " + List_2.size());
-      	//System.out.println("List_3 " + List_3.size());
-      	//System.out.println("List_4 " + List_4.size());
-      	
-      	for (ListGridRecord item : List_1) {
-      		String mat_process_id = "MP70" + Math.round((Math.random() * 100));
-      		item.setAttribute("mpid", mat_process_id);
-      		item.setAttribute("psid", process_id_1);
-      		MaterialProcessDS.getInstance(process_id_1, product_id).addData(item);
-      	}
-      	
-      	for (ListGridRecord item : List_2) {
-      		String mat_process_id = "MP70" + Math.round((Math.random() * 100));
-      		item.setAttribute("mpid", mat_process_id);
-      		item.setAttribute("psid", process_id_2);
-      		MaterialProcessDS.getInstance(process_id_2, product_id).addData(item);
-      	}
-      	
-      	for (ListGridRecord item : List_3) {
-      		String mat_process_id = "MP70" + Math.round((Math.random() * 100));
-      		item.setAttribute("mpid", mat_process_id);
-      		item.setAttribute("psid", process_id_3);
-      		MaterialProcessDS.getInstance(process_id_3, product_id).addData(item);
-      	}
-      	
-      	for (ListGridRecord item : List_4) {
-      		String mat_process_id = "MP70" + Math.round((Math.random() * 100));
-      		item.setAttribute("mpid", mat_process_id);
-      		item.setAttribute("psid", process_id_4);
-      		MaterialProcessDS.getInstance(process_id_4, product_id).addData(item);
-      	}
-      	
+      	product.setAttribute("weight", weight_1 + weight_2 + weight_3 + weight_4);
+//      	product.setAttribute("1_weight", weight_1);
+//      	product.setAttribute("2_weight", weight_2);
+//      	product.setAttribute("3_weight", weight_3);
+//      	product.setAttribute("4_weight", weight_4);
+        
       	ProductDS.getInstance().addData(product, new DSCallback() {
       		//
 			@Override

@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.production.order.abrading.AbradingCreateWindow;
 import com.smart.mis.client.function.production.plan.product.PlanProductDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
@@ -487,7 +488,7 @@ public class ScrapingViewWindow extends EditorWindow{
 		
 		final IButton createButton = new IButton("ออกคำสั่งขัดและติดพลอยแมกกาไซต์");
 		createButton.setIcon("icons/16/print.png");
-		createButton.setWidth(200);
+		createButton.setWidth(220);
 		createButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
             	SC.confirm("ยืนยันการทำรายการ", "ต้องการออกคำสั่งแต่งและฝังพลอย หรือไม่?" , new BooleanCallback() {
@@ -501,8 +502,8 @@ public class ScrapingViewWindow extends EditorWindow{
 							}
 							
 							Integer std_time = ProcessType.getMaxStdTime(pids, "3_abrade");
-							//createJobOrder(record, currentUser, std_time);
-							SC.say("To do ออกคำสั่งขัดและติดพลอยแมกกาไซต์ std_time = " +std_time);
+							createJobOrder(record, currentUser, std_time);
+							//SC.say("To do ออกคำสั่งขัดและติดพลอยแมกกาไซต์ std_time = " +std_time);
 							main.destroy();
 						}
 					}
@@ -833,7 +834,7 @@ public class ScrapingViewWindow extends EditorWindow{
 							for (ListGridRecord item : all) {
 								ScrapingProductDS.getInstance(job_id).updateData(item);
 							}
-							SC.warn("บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " (if any) สร้างรายการขอคืนวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + "TBD");
+							SC.say("บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " (if any) สร้างรายการขอคืนวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + "TBD");
 							editWindow.destroy();
 						}
 				}
@@ -983,8 +984,8 @@ public class ScrapingViewWindow extends EditorWindow{
 		};
 	}
 
-//	public void createJobOrder(ListGridRecord casting, User currentUser, Integer std_time){
-//		ScrapingCreateWindow order = new ScrapingCreateWindow();
-//		order.show(casting, currentUser, std_time);
-//	}
+	public void createJobOrder(ListGridRecord casting, User currentUser, Integer std_time){
+		AbradingCreateWindow order = new AbradingCreateWindow();
+		order.show(casting, currentUser, std_time);
+	}
 }

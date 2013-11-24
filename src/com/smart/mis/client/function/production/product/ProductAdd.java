@@ -109,7 +109,7 @@ public class ProductAdd {
 //        name.setHint("*");
         
         TextItem name_th = new TextItem("name_th", "ชื่อสินค้าภาษาไทย");
-		FloatItem weight = new FloatItem("weight", "น้ำหนัก");
+//		FloatItem weight = new FloatItem("weight", "น้ำหนัก");
 		FloatItem price = new FloatItem("price", "ราคา");
 		
 //		TextAreaItem desc = new TextAreaItem("desc", "คำอธิบาย");
@@ -120,13 +120,13 @@ public class ProductAdd {
 		
 		name.setRequired(true);
 		name_th.setRequired(true);
-		weight.setRequired(true);
+//		weight.setRequired(true);
 		price.setRequired(true);
 		type.setRequired(true);
 		
 		name.setHint("*");
 		name_th.setHint("*");
-		weight.setHint("กรัม *");
+//		weight.setHint("กรัม *");
 		price.setHint("บาท *");
 		type.setHint("*");
 		type.setEmptyDisplayValue("---โปรดเลือก---");
@@ -186,7 +186,7 @@ public class ProductAdd {
 						if (value) {	
 							String name = editorForm.getValueAsString("name");
 					    	String name_th = editorForm.getValueAsString("name_th");
-					    	Double weight = Double.parseDouble(editorForm.getValueAsString("weight"));
+					    	//Double weight = Double.parseDouble(editorForm.getValueAsString("weight"));
 					    	Double price = Double.parseDouble(editorForm.getValueAsString("price"));
 					    	String type = editorForm.getValueAsString("type");
 					    	
@@ -226,7 +226,7 @@ public class ProductAdd {
 										Record newRecord = ProductData.createRecord(
 												editorForm.getValueAsString("name"),
 												editorForm.getValueAsString("name_th"),
-												Double.parseDouble(editorForm.getValueAsString("weight")),
+												//Double.parseDouble(editorForm.getValueAsString("weight")),
 												Double.parseDouble(editorForm.getValueAsString("price")),
 												editorForm.getValueAsString("type"),
 												0,
@@ -284,7 +284,7 @@ public class ProductAdd {
 
         name.setWidth(250);
         name_th.setWidth(250);
-        weight.setWidth(250);
+//        weight.setWidth(250);
         price.setWidth(250);
         type.setWidth(250);
 //        editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
@@ -301,7 +301,8 @@ public class ProductAdd {
         VLayout leftLayout = new VLayout();
         leftLayout.setMembersMargin(5);
         editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-        editorForm.setFields(name, name_th, weight, price, type);
+//        editorForm.setFields(name, name_th, weight, price, type);
+        editorForm.setFields(name, name_th, price, type);
         editorForm.setColWidths(200	, 300);
         sizeForm.setFields(size,width,length,height,diameter,thickness);
         leftLayout.addMembers(editorForm, sizeForm);

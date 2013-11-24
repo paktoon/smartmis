@@ -50,11 +50,15 @@ public class SupplierListGrid extends ListGrid {
         ListGridField field_7 = new ListGridField("leadtime", 150);
         field_7.setAlign(Alignment.CENTER);
         ListGridField field_8 = new ListGridField("address");
+        ListGridField field_8_1 = new ListGridField("street");
+        ListGridField field_8_2 = new ListGridField("city");
+        ListGridField field_8_3 = new ListGridField("state");
+        ListGridField field_8_4 = new ListGridField("postal");
         
-        setFields(field_1, field_2, field_3, field_4, field_5, field_6, field_7, field_8);
+        setFields(field_1, field_2, field_3, field_4, field_5, field_6, field_7, field_8, field_8_1, field_8_2, field_8_3, field_8_4);
         setHoverWidth(200);  
         setHoverHeight(20);
-        hideFields("address");
+        hideFields("address", "street", "city", "state", "postal" );
         //fetchData();
 	}
 	

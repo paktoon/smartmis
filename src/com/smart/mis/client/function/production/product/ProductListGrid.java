@@ -66,7 +66,7 @@ public class ProductListGrid extends ListGrid {
         Field_6.setCellFormatter(FieldFormatter.getNumberFormat());
         field_7.setAlign(Alignment.CENTER);
         
-        setFields(field_1, field_2_1, field_2_2, field_3, field_4_1, field_5, field_5, Field_6, field_7);
+        setFields(field_1, field_2_1, field_2_2, field_3, field_4_1, field_5, Field_6, field_7);
         setHoverWidth(200);  
         setHoverHeight(20);
         hideFields("type");

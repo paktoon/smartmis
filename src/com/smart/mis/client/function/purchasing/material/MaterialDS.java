@@ -33,7 +33,11 @@ public class MaterialDS extends DataSource  {
 		 }
 		 
 		 public MaterialDS(){
-			 setID("MaterialDS");
+			 this("MaterialDS");
+		 }
+		 
+		 public MaterialDS(String ID){
+			 if (ID != null && !ID.equalsIgnoreCase("")) setID(ID);
 			 DataSourceTextField Field_1 = new DataSourceTextField("mid", "รหัสวัตถุดิบ");
 			 Field_1.setPrimaryKey(true);
 			 DataSourceTextField Field_2 = new DataSourceTextField("mat_name", "ชื่อวัตถุดิบ");
@@ -42,15 +46,19 @@ public class MaterialDS extends DataSource  {
 			 Field_4.setValueMap("แร่เงิน", "แมกกาไซต์", "พลอยประดับ", "อื่นๆ");
 			 DataSourceFloatField Field_4_1 = new DataSourceFloatField("weight", "น้ำหนัก (กรัม)");
 			 DataSourceFloatField Field_5 = new DataSourceFloatField("safety", "จำนวนสำรองขั้นต่ำ");
-			 DataSourceFloatField Field_6 = new DataSourceFloatField("remain", "จำนวนคงเหลือ");
+			 DataSourceFloatField Field_6_1 = new DataSourceFloatField("inStock", "จำนวนในคลัง");
+			 DataSourceFloatField Field_6_2 = new DataSourceFloatField("reserved", "จำนวนที่จอง");
+			 DataSourceFloatField Field_6_3 = new DataSourceFloatField("remain", "จำนวนคงเหลือ");
 			 Field_5.setDecimalPad(2);
-			 Field_6.setDecimalPad(2);
+			 Field_6_1.setDecimalPad(2);
+			 Field_6_2.setDecimalPad(2);
+			 Field_6_3.setDecimalPad(2);
 			 DataSourceTextField Field_7 = new DataSourceTextField("unit", "หน่วย");
 			 //DataSourceTextField Field_8 = new DataSourceTextField("sup_list");
 			 //Field_8.setHidden(true);
 			 
 			 //setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_7, Field_8);
-			 setFields(Field_1, Field_2, Field_3, Field_4, Field_4_1, Field_5, Field_6, Field_7);
+			 setFields(Field_1, Field_2, Field_3, Field_4, Field_4_1, Field_5, Field_6_1, Field_6_2, Field_6_3, Field_7);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(MaterialData.getNewRecords()); // For Test

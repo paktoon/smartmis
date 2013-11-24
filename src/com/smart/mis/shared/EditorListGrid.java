@@ -367,6 +367,39 @@ public class EditorListGrid extends ListGrid{
 
             recordCanvas.addMember(viewImg); 
             return recordCanvas;
+        } else if (fieldName.equalsIgnoreCase("transferredProduct")) { 
+        	HLayout recordCanvas = new HLayout(3);  
+            recordCanvas.setHeight(22);  
+            recordCanvas.setAlign(Alignment.CENTER);
+            
+        	ImgButton viewImg = new ImgButton();  
+            viewImg.setShowDown(false);  
+            viewImg.setShowRollOver(false);  
+            viewImg.setAlign(Alignment.CENTER); 
+            
+            if (record.getAttributeAsString("status").equalsIgnoreCase("1_on_production")) {
+            	viewImg.setSrc("icons/16/actions-receive-icon.png");  
+    	        viewImg.setPrompt("โอนสินค้าเข้าคลังสินค้า");
+                viewImg.addClickHandler(new ClickHandler() {  
+                    public void onClick(ClickEvent event) {  
+                        //SC.say("View Icon Clicked for : " + record.getAttribute("quote_id"));
+                        EditWindow.show(record, true, currentUser, 2);
+                    }  
+                });
+            } else {
+		        viewImg.setSrc("icons/16/faq-icon-16.png");  
+		        viewImg.setPrompt("สถานะคำสั่งผลิตไม่ถูกต้อง");
+	            viewImg.addClickHandler(new ClickHandler() {  
+	                public void onClick(ClickEvent event) {  
+	                    SC.say("สถานะคำสั่งผลิตไม่ถูกต้อง : " + record.getAttributeAsString("status"));
+	                }  
+	            });  
+            }
+            viewImg.setHeight(16);  
+            viewImg.setWidth(16);
+
+            recordCanvas.addMember(viewImg); 
+            return recordCanvas;
 //        } else if (fieldName.equals("approveField")) {  
 //            IButton button = new IButton();  
 //            button.setHeight(18);  

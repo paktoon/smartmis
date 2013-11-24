@@ -81,7 +81,7 @@ public class PlanViewWindow extends EditorWindow{
 	public void show(ListGridRecord record, boolean edit, User currentUser, int page){
 		client = new Customer();
 		Window editWindow = new Window();
-		editWindow.setTitle("ข้อมูลแผนการผลิค");
+		editWindow.setTitle("ข้อมูลแผนการผลิต");
 		editWindow.setWidth(690);  
 		editWindow.setHeight(450);
 		editWindow.setShowMinimizeButton(false);

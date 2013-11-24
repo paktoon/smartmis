@@ -102,7 +102,6 @@ public class CastingTab {
 		planText.setOperator(OperatorId.REGEXP);
 		final SelectItem statusSelected = new SelectItem("status", "สถานะ");
 		statusSelected.setWrapTitle(false);
-		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
 		statusSelected.setValueMap(ProcessStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
 		statusSelected.setOperator(OperatorId.EQUALS);
@@ -138,8 +137,9 @@ public class CastingTab {
         //searchForm.setItems(planText, jidText);
         dateForm.setItems(from, to);
         
-		final ListGrid orderListGrid = new EditorListGrid(new CastingViewWindow(), currentUser);
- 
+		//final ListGrid orderListGrid = new EditorListGrid(new CastingViewWindow(), currentUser);
+		final ListGrid orderListGrid = new ListGrid();
+		 
 		orderListGrid.setAutoFetchData(true);  
 		orderListGrid.setCanMultiSort(true);
 		
@@ -151,11 +151,12 @@ public class CastingTab {
 		
 		orderListGrid.setDataSource(CastingDS.getInstance());
 		orderListGrid.setInitialSort(new SortSpecifier[]{  
+				new SortSpecifier("status", SortDirection.DESCENDING),
                 new SortSpecifier("created_date", SortDirection.DESCENDING)  
         });
 		orderListGrid.setUseAllDataSourceFields(false);
-		orderListGrid.setGroupByField("status");
-		orderListGrid.setGroupStartOpen(GroupStartOpen.ALL);
+		//orderListGrid.setGroupByField("status");
+		//orderListGrid.setGroupStartOpen(GroupStartOpen.ALL);
 		
 		ListGridField job_id = new ListGridField("job_id" , 120);
 		ListGridField plan_id = new ListGridField("plan_id" , 120);
@@ -172,17 +173,17 @@ public class CastingTab {
 		ListGridField sent_date = new ListGridField("sent_date", 100);
 		ListGridField due_date = new ListGridField("due_date", 100);
 		
-		ListGridField iconField = new ListGridField("receivedOrder", "รับสินค้า", 100);
+//		ListGridField iconField = new ListGridField("receivedOrder", "รับสินค้า", 100);
 		
-		orderListGrid.setFields(status, job_id, plan_id, sname, sent_date, due_date, iconField);
-		
-		orderListGrid.hideField("status");
+		//orderListGrid.setFields(status, job_id, plan_id, sname, sent_date, due_date, iconField);
+		orderListGrid.setFields(status, job_id, plan_id, sname, sent_date, due_date);
+		//orderListGrid.hideField("status");
 		
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMargin(10);
 		buttonLayout.setMembersMargin(5);
 		buttonLayout.setHeight(30);
-		IButton searchButton = new IButton("ค้นหาคำสั่้งผลิต");
+		IButton searchButton = new IButton("ค้นหาคำสั่งผลิต");
 		searchButton.setIcon("icons/16/icon_view.png");
 		searchButton.setWidth(120);
 		searchButton.addClickHandler(new ClickHandler() {  
@@ -214,47 +215,64 @@ public class CastingTab {
           }
         });
 		
-//		IButton cancelQuoteButton = new IButton("ยกเลิกแผนการผลิต");
-//		cancelQuoteButton.setIcon("icons/16/close.png");
-//		cancelQuoteButton.setWidth(150);
-//		cancelQuoteButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) { 
-//            	ListGridRecord selected = orderListGrid.getSelectedRecord();
-//            	if (selected == null) {
-//            		SC.warn("กรุณาเลือกแผนการผลิตที่ต้องการยกเลิก");
-//            		return;
-//            	}
-//            	SC.confirm("ยืนยันการทำรายการ", "ต้องการยกเลิกแผนการผลิต หรือไม่?" , new BooleanCallback() {
-//					@Override
-//					public void execute(Boolean value) {
-//						if (value) {
-//							ListGridRecord selected = orderListGrid.getSelectedRecord();
-//			            	if (selected != null) {
-//			            		//Do something with DB
-//			            		selected.setAttribute("status", "ยกเลิก");
-//			            		orderListGrid.updateData(selected);
-//			            		orderListGrid.removeSelectedData(new DSCallback() {
-//									@Override
-//									public void execute(DSResponse dsResponse, Object data,
-//											DSRequest dsRequest) {
-//											if (dsResponse.getStatus() != 0) {
-//												SC.warn("การยกเลิกแผนการผลิต ล้มเหลว");
-//											} else { 
-//												SC.warn("การยกเลิกแผนการผลิต เสร็จสมบูรณ์");
-//											}
-//									}
-//								}, null);
-//			            	} else {
-//			            		SC.warn("กรุณาเลือกรายการที่ต้องการลบ");
-//			            	}
-//						}
-//					}
-//            	});
-//          }
-//        });
-
+		HLayout empty = new HLayout();
+		empty.setWidth("*");
+		
+		IButton printOrderButton = new IButton("พิมพ์คำสั่งผลิต");
+		printOrderButton.setIcon("icons/16/print.png");
+		printOrderButton.setWidth(150);
+		printOrderButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+            	ListGridRecord selected = orderListGrid.getSelectedRecord();
+            	if (selected == null) {
+            		SC.warn("กรุณาเลือกคำสั่งผลิต");
+            		return;
+            	}
+            	SC.say("Click print Todo");
+          }
+        });
+		
+		IButton receiveOrderButton = new IButton("รับสินค้า");
+		receiveOrderButton.setIcon("icons/16/actions-receive-icon.png");
+		receiveOrderButton.setWidth(100);
+		receiveOrderButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+            	ListGridRecord selected = orderListGrid.getSelectedRecord();
+            	if (selected == null) {
+            		SC.warn("กรุณาเลือกคำสั่งผลิต");
+            		return;
+            	}
+            	
+            	if (selected.getAttributeAsString("status").equalsIgnoreCase("1_on_production")) {
+            		CastingViewWindow receiveWindow = new CastingViewWindow();
+            		receiveWindow.show(selected, true, currentUser, 2);
+            	} else {
+            		SC.warn("รับสินค้าในขั้นตอนผลิตแล้ว");
+            	}
+          }
+        });
+		
+		IButton createOrderButton = new IButton("ออกคำสั่งแต่งและฝังพลอย");
+		createOrderButton.setIcon("icons/16/next.png");
+		createOrderButton.setWidth(170);
+		createOrderButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+            	ListGridRecord selected = orderListGrid.getSelectedRecord();
+            	if (selected == null) {
+            		SC.warn("กรุณาเลือกคำสั่งผลิต");
+            		return;
+            	}
+            	
+            	if (selected.getAttributeAsString("status").equalsIgnoreCase("2_process_completed")) {
+            		CastingViewWindow receiveWindow = new CastingViewWindow();
+            		receiveWindow.show(selected, false, currentUser, 1);
+            	} else {
+            		SC.warn("การผลิตสินค้ายังไม่เสร็จสิ้น");
+            	}
+          }
+        });
 //		buttonLayout.addMembers(searchButton, listAllButton, cancelQuoteButton);
-		buttonLayout.addMembers(searchButton, listAllButton);
+		buttonLayout.addMembers(searchButton, listAllButton, empty, printOrderButton, receiveOrderButton, createOrderButton);
 		
 		//leftLayout.addMembers(searchForm, buttonLayout);
 		searchLayout.addMembers(searchForm, dateForm);

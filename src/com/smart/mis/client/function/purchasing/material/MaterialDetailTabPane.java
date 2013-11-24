@@ -118,8 +118,8 @@ public class MaterialDetailTabPane extends TabSet {
 		weight = new FloatItem("weight", "น้ำหนัก (กรัม)");
 		weight.hide();
 		weight.setRequired(false);
-		StaticTextItem safety = new StaticTextItem("safety", "จำนวนสำรองขั้นต่ำ");
-		StaticTextItem remain = new StaticTextItem("remain", "จำนวนคงเหลือ");
+		FloatItem safety = new FloatItem("safety", "จำนวนสำรองขั้นต่ำ");
+		//StaticTextItem remain = new StaticTextItem("remain", "จำนวนคงเหลือ");
 		SelectOtherItem unit = new SelectOtherItem("unit", "หน่วย");
 		unit.setOtherTitle("อื่นๆ..");  
 		unit.setOtherValue("OtherVal");
@@ -128,10 +128,10 @@ public class MaterialDetailTabPane extends TabSet {
 		mat_name.setRequired(true);
 		type.setRequired(true);
 		safety.setRequired(true);
-		remain.setRequired(true);
+		//remain.setRequired(true);
 		mat_name.setHint("*");
 		type.setHint("*");
-		//safety.setHint("*");
+		safety.setHint("*");
 		//remain.setHint("*");
 		
         saveButton = new IButton("บันทึก");  
@@ -182,9 +182,10 @@ public class MaterialDetailTabPane extends TabSet {
         desc.setWidth(250);
         type.setWidth(250);
         safety.setWidth(250);
-        remain.setWidth(250);
+        //remain.setWidth(250);
         editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-        editorForm.setFields(mid, mat_name, desc, type, weight, safety, remain, unit);
+        //editorForm.setFields(mid, mat_name, desc, type, weight, safety, remain, unit);
+        editorForm.setFields(mid, mat_name, desc, type, weight, safety, unit);
         editorForm.setColWidths(150	, 250); 
         VLayout editor_control = new VLayout();
         editor_control.addMembers(saveButton, cancelButton);
@@ -321,15 +322,14 @@ public class MaterialDetailTabPane extends TabSet {
 //					if (result)
 //					{
 						//System.out.println("*** Update result => " + result);
-						Record updateRecord = MaterialData.createRecord(
+						Record updateRecord = MaterialData.createUpdatedRecord(
 								editorForm.getValueAsString("mid"),
 				    			editorForm.getValueAsString("mat_name"),
 				    			editorForm.getValueAsString("desc"),
 				    			editorForm.getValueAsString("type"),
-				    			Double.parseDouble(editorForm.getValueAsString("safety")),
-				    	    	Double.parseDouble(editorForm.getValueAsString("remain")),
 				    	    	editorForm.getValueAsString("unit"),
-				    	    	mweight
+				    	    	mweight,
+				    			Double.parseDouble(editorForm.getValueAsString("safety"))
 				    			);
 						materialDataSource.updateData(updateRecord);
 						SC.say("แก้ไขข้อมูลวัตถุดิบเรียบร้อยแล้ว");

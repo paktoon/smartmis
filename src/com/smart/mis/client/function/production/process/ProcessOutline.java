@@ -47,7 +47,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 public class ProcessOutline extends VLayout {
 	
 	//public DynamicForm editorForm;
-    public ProcessOutline(final ProcessListDS DS) {
+    public ProcessOutline(final ProcessListDS DS, final Record product) {
     	
         final ListGrid process = processListGrid(DS);
         //on refresh
@@ -151,13 +151,19 @@ public class ProcessOutline extends VLayout {
         saveButton.setIcon("icons/16/save.png");
         saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
-            	RecordList selected = process.getRecordList();
+            	//RecordList selected = process.getRecordList();
             	SC.confirm("ยืนยันการแก้ไขข้อมูล ขั้นตอนการผลิต", "ท่านต้องการแก้ไขข้อมูล ขั้นตอนการผลิต หรือไม่ ?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
 			            	//saveData(selected);
 							process.saveAllEdits();
+							Double weight = 0.0;
+							for (ListGridRecord item : process.getRecords()) {
+								weight += item.getAttributeAsDouble("weight");
+							}
+							product.setAttribute("weight", weight);
+							ProductDS.getInstance().updateData(product);
 						}
 					}
             		
@@ -316,8 +322,10 @@ public class ProcessOutline extends VLayout {
 		    	                	  String mat_name = selected.getAttributeAsString("mat_name");
 		    	                	  Double req_amount = reqAmount.getValueAsFloat().doubleValue();
 		    	                	  String unit = selected.getAttributeAsString("unit");
-			    	                  //SC.warn("psid = " + psid + " pid = " + pid + " mid = " + mid + " mat_name = " + mat_name + " req_amount = " + req_amount);
-			    	                  
+		    	                	  Double weight = 0.0;
+		    	                	  if (selected.getAttributeAsString("type").equalsIgnoreCase("แร่เงิน")) weight = req_amount;
+		    	                	  else weight = selected.getAttributeAsDouble("weight") * req_amount;
+		    	                	  
 			  	    	        	  MaterialProcessDS currentDS = MaterialProcessDS.getInstance(psid, pid);
 			  	    	        	  Record newRecord = MaterialProcessData.createRecord(
 			  									"MP70" + Math.round((Math.random() * 100)),
@@ -325,6 +333,7 @@ public class ProcessOutline extends VLayout {
 			  									mid,
 			  									mat_name,
 			  									req_amount,
+			  									weight,
 			  									unit
 			  					    			);
 			  	    	        	currentDS.addData(newRecord, new DSCallback() {
@@ -376,6 +385,11 @@ public class ProcessOutline extends VLayout {
         					public void execute(Boolean value) {
         						if (value) {
         	                        materialGrid.saveAllEdits();
+        	                        Double weight = 0.0;
+        	                        for (ListGridRecord item : materialGrid.getRecords()) {
+        	                        	weight += item.getAttributeAsDouble("weight");
+        	                        }
+        	                        record.setAttribute("weight", weight);
         						}
         					}
                     	});

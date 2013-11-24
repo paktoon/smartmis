@@ -89,7 +89,7 @@ public class MaterialAdd {
 		winModel.setTitle("เพิ่มวัตถุดิบ");
 		//winModel.setAutoSize(true);	
 		winModel.setWidth(570);
-		winModel.setHeight(315);
+		winModel.setHeight(330);
 		winModel.setHeaderIcon("[SKIN]actions/add.png");
 		winModel.setShowMinimizeButton(false);
 		winModel.setIsModal(true);
@@ -133,16 +133,16 @@ public class MaterialAdd {
 		final SelectItem type = new SelectItem("type", "ชนิด");
 		final FloatItem weight = new FloatItem("weight", "น้ำหนัก");
 		weight.setHint("กรัม *");
-		//FloatItem safety = new FloatItem("safety", "จำนวนสำรองขั้นต่ำ");
+		FloatItem safety = new FloatItem("safety", "จำนวนสำรองขั้นต่ำ");
 		//FloatItem remain = new FloatItem("remain", "จำนวนคงเหลือ");
 		final TextItem unit = new TextItem("unit", "หน่วย");
 		
 		type.setRequired(true);
-		//safety.setRequired(true);
+		safety.setRequired(true);
 		//remain.setRequired(true);
 		type.setHint("*");
 		//Validate number field
-		//safety.setHint("* มากกว่าหรือเท่ากับ 0");
+		safety.setHint("* มากกว่าหรือเท่ากับ 0");
 		//remain.setHint("* มากกว่าหรือเท่ากับ 0");
 		IntegerRangeValidator integerRangeValidator = new IntegerRangeValidator();  
         integerRangeValidator.setMin(0);
@@ -231,12 +231,11 @@ public class MaterialAdd {
 								    			editorForm.getValueAsString("mat_name"),
 								    			editorForm.getValueAsString("desc"),
 								    			editorForm.getValueAsString("type"),
-								    			0.0,
-								    			0.0,
-								    			//Double.parseDouble(editorForm.getValueAsString("safety")),
-								    	    	//Double.parseDouble(editorForm.getValueAsString("remain")),
 								    	    	editorForm.getValueAsString("unit"),
-								    	    	mweight
+								    	    	mweight,
+								    	    	Double.parseDouble(editorForm.getValueAsString("safety")),
+								    			0.0,
+								    			0.0
 								    			);
 										
 										dataSource.addData(newRecord, new DSCallback() {
@@ -286,7 +285,7 @@ public class MaterialAdd {
         //remain.setWidth(250);
         //editorForm.setFields(mat_name, desc, type, safety, remain, unit);
         editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-        editorForm.setFields(mat_name, desc, type, weight, unit);
+        editorForm.setFields(mat_name, desc, type, weight, safety, unit);
 		weight.hide();
         editorForm.setColWidths(150	, 250);
     	
@@ -300,64 +299,64 @@ public class MaterialAdd {
         winModel.show();
 	}
 	
-	private String getAttributeList(ListGrid grid, String fieldName){
-		String list = "";
-		boolean isStart = true;
-		for (ListGridRecord record : grid.getRecords()) {
-			if (isStart) {
-				list += record.getAttributeAsString(fieldName);
-				isStart = false;
-			} else {
-				list += "|" + record.getAttributeAsString(fieldName);
-			}
-		}
-		return list;
-	}
-	
-	private HStack getEditItemList(){
-    	//Grid
-   	 ListGridField[] defaultField = new ListGridField[] {new ListGridField("sid", 80), new ListGridField("sup_name")};
-   	 final ListGrid selectItemGrid = new ListGrid();
-   	selectItemGrid.setEmptyMessage("No Item to show.");
-   	selectItemGrid.setWidth(240);
-   	selectItemGrid.setHeight(224);
-   	selectItemGrid.setCanDragRecordsOut(true);
-   	selectItemGrid.setAutoFetchData(false);
-   	selectItemGrid.setUseAllDataSourceFields(false);
-   	selectItemGrid.setDataSource(SupplierDS.getInstance());
-   	selectItemGrid.setDragDataAction(DragDataAction.COPY); 
-   	selectItemGrid.setDefaultFields(defaultField);
-       
-   	HStack hStack = new HStack(10);  
-       hStack.setHeight(160);  
-       
-       VStack vStack = new VStack(); 
-       Label topLabel = new Label("ผู้จำหน่ายที่มีในระบบ");
-       topLabel.setHeight(30);
-       vStack.addMember(topLabel);
-       vStack.addMember(selectItemGrid);
-       
-       hStack.addMember(vStack);
-       
-       TransferImgButton arrowImg = new TransferImgButton(TransferImgButton.RIGHT);  
-       arrowImg.addClickHandler(new ClickHandler() {  
-           public void onClick(ClickEvent event) {  
-           	editItemGrid.transferSelectedData(selectItemGrid);  
-           }  
-       });  
-       hStack.addMember(arrowImg);
-       
-       VStack vStack2 = new VStack();
-       Label topLabel2 = new Label("ผู้จำหน่ายที่เลือก");
-       topLabel2.setHeight(30);
-       vStack2.addMember(topLabel2);
-       vStack2.addMember(editItemGrid);
-       
-       hStack.addMember(vStack2);
-       
-       editItemGrid.fetchData();
-		selectItemGrid.fetchData();
-		
-       return hStack;
-	}
+//	private String getAttributeList(ListGrid grid, String fieldName){
+//		String list = "";
+//		boolean isStart = true;
+//		for (ListGridRecord record : grid.getRecords()) {
+//			if (isStart) {
+//				list += record.getAttributeAsString(fieldName);
+//				isStart = false;
+//			} else {
+//				list += "|" + record.getAttributeAsString(fieldName);
+//			}
+//		}
+//		return list;
+//	}
+//	
+//	private HStack getEditItemList(){
+//    	//Grid
+//   	 ListGridField[] defaultField = new ListGridField[] {new ListGridField("sid", 80), new ListGridField("sup_name")};
+//   	 final ListGrid selectItemGrid = new ListGrid();
+//   	selectItemGrid.setEmptyMessage("No Item to show.");
+//   	selectItemGrid.setWidth(240);
+//   	selectItemGrid.setHeight(224);
+//   	selectItemGrid.setCanDragRecordsOut(true);
+//   	selectItemGrid.setAutoFetchData(false);
+//   	selectItemGrid.setUseAllDataSourceFields(false);
+//   	selectItemGrid.setDataSource(SupplierDS.getInstance());
+//   	selectItemGrid.setDragDataAction(DragDataAction.COPY); 
+//   	selectItemGrid.setDefaultFields(defaultField);
+//       
+//   	HStack hStack = new HStack(10);  
+//       hStack.setHeight(160);  
+//       
+//       VStack vStack = new VStack(); 
+//       Label topLabel = new Label("ผู้จำหน่ายที่มีในระบบ");
+//       topLabel.setHeight(30);
+//       vStack.addMember(topLabel);
+//       vStack.addMember(selectItemGrid);
+//       
+//       hStack.addMember(vStack);
+//       
+//       TransferImgButton arrowImg = new TransferImgButton(TransferImgButton.RIGHT);  
+//       arrowImg.addClickHandler(new ClickHandler() {  
+//           public void onClick(ClickEvent event) {  
+//           	editItemGrid.transferSelectedData(selectItemGrid);  
+//           }  
+//       });  
+//       hStack.addMember(arrowImg);
+//       
+//       VStack vStack2 = new VStack();
+//       Label topLabel2 = new Label("ผู้จำหน่ายที่เลือก");
+//       topLabel2.setHeight(30);
+//       vStack2.addMember(topLabel2);
+//       vStack2.addMember(editItemGrid);
+//       
+//       hStack.addMember(vStack2);
+//       
+//       editItemGrid.fetchData();
+//		selectItemGrid.fetchData();
+//		
+//       return hStack;
+//	}
 }

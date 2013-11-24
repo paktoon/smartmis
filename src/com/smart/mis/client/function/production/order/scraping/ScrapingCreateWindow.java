@@ -323,7 +323,8 @@ public class ScrapingCreateWindow {
         quoteItemCell_4.setShowGridSummary(true);
         quoteItemCell_4.setIncludeInRecordSummary(false);
         
-        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("recv_amount", 70);
+        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("recv_amount", 90);
+        quoteItemCell_6.setTitle("จำนสนสินค้าที่สั่งผลิต");
         
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
@@ -822,10 +823,9 @@ public class ScrapingCreateWindow {
 			String type = item.getAttributeAsString("type");
 			String unit = item.getAttributeAsString("unit");
 			String details = item.getAttributeAsString("details");
-			Double sent_weight = item.getAttributeAsDouble("recv_weight");
+			Double recv_weight = item.getAttributeAsDouble("recv_weight");
 			Integer sent_amount = item.getAttributeAsInt("recv_amount");
 
-			total_sent_weight += sent_weight;
 			total_sent_amount += sent_amount;
 
 			ProcessListDS.getInstance(pid).fetchData();
@@ -833,10 +833,14 @@ public class ScrapingCreateWindow {
 			Record process = selectedProcess[0];
 			String psid = process.getAttributeAsString("psid");
 			String desc = process.getAttributeAsString("desc");
+			Double sent_weight =  process.getAttributeAsDouble("weight") * sent_amount; 
+
+			total_sent_weight += sent_weight + recv_weight;
+			
 			if (desc != null && !desc.equals("")) details += "(" + desc + ")";
 			
 			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100));
-			ListGridRecord temp = ScrapingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, sent_weight, sent_amount, true);
+			ListGridRecord temp = ScrapingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, sent_weight + recv_weight, sent_amount, true);
 			orderProductList.add(temp);
 			
 			MaterialProcessDS.getInstance(psid, pid).fetchData();

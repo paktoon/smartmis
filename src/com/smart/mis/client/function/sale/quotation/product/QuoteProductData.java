@@ -68,7 +68,7 @@ public class QuoteProductData {
         	};
         } else if (quote_id != null && (quote_id.equals( "QA10004") || quote_id.equals( "QA10008") || quote_id.equals( "QA10012"))) {
         	return new ListGridRecord[]{ 
-        			createRecord("QS10005",quote_id, "PD10007","Plain silver necklaces", 5.6, 50.0, "necklace","เส้น",10, true)
+        			createRecord("QS10005",quote_id, "PD10007","Plain silver necklaces", 5.6, 50.0, "necklace","เส้น",100, true)
         	};
         }
         	else return new ListGridRecord[]{};

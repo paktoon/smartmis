@@ -16,20 +16,20 @@ import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 
 public class MaterialListGrid extends ListGrid {
 
-//	@Override
-//	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
-//		if (getFieldName(colNum).equals("cus_type")) {
-//			if (record.getAttributeAsString("cus_type").equalsIgnoreCase("ลูกค้าทั่วไป")) {
-//				return "font-weight:bold; color:#287fd6;";
-//			} else if (record.getAttributeAsString("cus_type").equalsIgnoreCase("ลูกค้าประจำ")) {  
-//                return "font-weight:bold; color:#d64949;";  
-//            } else {  
-//                return super.getCellCSSText(record, rowNum, colNum);  
-//            }
-//		} else {  
-//            return super.getCellCSSText(record, rowNum, colNum);  
-//        } 
-//	}
+	@Override
+	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
+		if (getFieldName(colNum).equals("remain")) {
+			if (record.getAttributeAsDouble("remain") <= record.getAttributeAsDouble("safety")) {
+				return "font-weight:bold; color:#d64949;"; 
+			} else if (record.getAttributeAsDouble("remain") > record.getAttributeAsDouble("safety")) {  
+				return "font-weight:bold; color:#287fd6;";
+            } else {  
+                return super.getCellCSSText(record, rowNum, colNum);  
+            }
+		} else {  
+            return super.getCellCSSText(record, rowNum, colNum);  
+        } 
+	}
 	
 	public MaterialListGrid() {
 		setWidth100();  
@@ -42,7 +42,7 @@ public class MaterialListGrid extends ListGrid {
         setCanResizeFields(false);
         setCanEdit(false);
         setDataSource(MaterialDS.getInstance());
-        setUseAllDataSourceFields(true);
+        setUseAllDataSourceFields(false);
         
         setGroupStartOpen(GroupStartOpen.ALL);
         setGroupByField("type"); 
@@ -51,6 +51,7 @@ public class MaterialListGrid extends ListGrid {
         ListGridField field_2 = new ListGridField("mat_name",200);
         field_2.setShowHover(true);
         ListGridField field_3 = new ListGridField("desc");
+        ListGridField field_3_1 = new ListGridField("weight");
         ListGridField field_4 = new ListGridField("type",100);
         ListGridField field_5 = new ListGridField("safety",150);
         ListGridField field_6 = new ListGridField("remain",150);
@@ -65,7 +66,7 @@ public class MaterialListGrid extends ListGrid {
         field_7.setAlign(Alignment.CENTER);
         
         //setFields(field_1, field_2, field_3, field_4, field_5, field_6, field_7, field_8);
-        setFields(field_1, field_2, field_3, field_4, field_5, field_6, field_7);
+        setFields(field_1, field_2, field_3, field_3_1, field_4, field_5, field_6, field_7);
         setHoverWidth(200);  
         setHoverHeight(20);
         hideFields("type");

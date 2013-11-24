@@ -135,8 +135,9 @@ public class OrderCreateTab {
         searchForm.setItems(quoteText, cidText);
         dateForm.setItems(from, to);
         
-		final ListGrid planListGrid = new EditorListGrid(new PlanViewWindow(), currentUser);
- 
+		//final ListGrid planListGrid = new EditorListGrid(new PlanViewWindow(), currentUser);
+		final ListGrid planListGrid = new ListGrid();
+		 
 		planListGrid.setAutoFetchData(true);  
 		planListGrid.setCanMultiSort(true);
 		
@@ -148,6 +149,7 @@ public class OrderCreateTab {
 		
 		planListGrid.setDataSource(PlanDS.getInstance());
 		planListGrid.setInitialSort(new SortSpecifier[]{  
+				new SortSpecifier("status", SortDirection.DESCENDING),  
                 new SortSpecifier("created_date", SortDirection.DESCENDING)  
         });
 		planListGrid.setUseAllDataSourceFields(false);
@@ -164,11 +166,12 @@ public class OrderCreateTab {
 		total_weight.setCellFormatter(FieldFormatter.getNumberFormat());
 		total_weight.setAlign(Alignment.RIGHT);
 		ListGridField created_date = new ListGridField("created_date", 100);
-		ListGridField iconField = new ListGridField("createProductionOrderField", "ออกคำสั่งผลิต", 100);
+		//ListGridField iconField = new ListGridField("createProductionOrderField", "ออกคำสั่งผลิต", 100);
 		
-		planListGrid.setFields(status, plan_id, reason, total_amount, total_weight, created_date, iconField);
+		//planListGrid.setFields(status, plan_id, reason, total_amount, total_weight, created_date, iconField);
+		planListGrid.setFields(status, plan_id, reason, total_amount, total_weight, created_date);
 		
-		planListGrid.hideField("status");
+		//planListGrid.hideField("status");
 		
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMargin(10);
@@ -206,47 +209,26 @@ public class OrderCreateTab {
           }
         });
 		
-//		IButton cancelQuoteButton = new IButton("ยกเลิกแผนการผลิต");
-//		cancelQuoteButton.setIcon("icons/16/close.png");
-//		cancelQuoteButton.setWidth(150);
-//		cancelQuoteButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) { 
-//            	ListGridRecord selected = planListGrid.getSelectedRecord();
-//            	if (selected == null) {
-//            		SC.warn("กรุณาเลือกแผนการผลิตที่ต้องการยกเลิก");
-//            		return;
-//            	}
-//            	SC.confirm("ยืนยันการทำรายการ", "ต้องการยกเลิกแผนการผลิต หรือไม่?" , new BooleanCallback() {
-//					@Override
-//					public void execute(Boolean value) {
-//						if (value) {
-//							ListGridRecord selected = planListGrid.getSelectedRecord();
-//			            	if (selected != null) {
-//			            		//Do something with DB
-//			            		selected.setAttribute("status", "ยกเลิก");
-//			            		planListGrid.updateData(selected);
-//			            		planListGrid.removeSelectedData(new DSCallback() {
-//									@Override
-//									public void execute(DSResponse dsResponse, Object data,
-//											DSRequest dsRequest) {
-//											if (dsResponse.getStatus() != 0) {
-//												SC.warn("การยกเลิกแผนการผลิต ล้มเหลว");
-//											} else { 
-//												SC.warn("การยกเลิกแผนการผลิต เสร็จสมบูรณ์");
-//											}
-//									}
-//								}, null);
-//			            	} else {
-//			            		SC.warn("กรุณาเลือกรายการที่ต้องการลบ");
-//			            	}
-//						}
-//					}
-//            	});
-//          }
-//        });
+//		HLayout empty = new HLayout();
+//		empty.setWidth("*");
+		
+		IButton createOrderButton = new IButton("ออกคำสั่งผลิต");
+		createOrderButton.setIcon("icons/16/process-info-icon.png");
+		createOrderButton.setWidth(150);
+		createOrderButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+            	ListGridRecord selected = planListGrid.getSelectedRecord();
+            	if (selected == null) {
+            		SC.warn("กรุณาเลือกแผนการผลิตที่ต้องการออกคำสั่งผลิต");
+            		return;
+            	}
+            	PlanViewWindow createWindow = new PlanViewWindow();
+            	createWindow.show(selected, false, currentUser, 3);
+          }
+        });
 
 //		buttonLayout.addMembers(searchButton, listAllButton, cancelQuoteButton);
-		buttonLayout.addMembers(searchButton, listAllButton);
+		buttonLayout.addMembers(searchButton, listAllButton, createOrderButton);
 		
 		leftLayout.addMembers(searchForm, buttonLayout);
 		searchLayout.addMembers(leftLayout, dateForm);

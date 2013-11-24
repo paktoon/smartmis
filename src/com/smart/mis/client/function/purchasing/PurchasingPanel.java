@@ -10,6 +10,7 @@ import com.smart.mis.client.function.purchasing.material.MaterialAdd;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDetailTabPane;
 import com.smart.mis.client.function.purchasing.material.MaterialListGrid;
+import com.smart.mis.client.function.purchasing.request.PurchaseRequestTabSet;
 import com.smart.mis.client.function.purchasing.supplier.SupplierAdd;
 import com.smart.mis.client.function.purchasing.supplier.SupplierDS;
 import com.smart.mis.client.function.purchasing.supplier.SupplierData;
@@ -19,6 +20,8 @@ import com.smart.mis.client.function.sale.customer.CustomerAdd;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.customer.CustomerDetailTabPane;
 import com.smart.mis.client.function.sale.customer.CustomerListGrid;
+import com.smart.mis.client.function.sale.quotation.QuotationTabSet;
+import com.smart.mis.shared.security.Role;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -36,11 +39,11 @@ public class PurchasingPanel extends FunctionPanel{
 	
 	private final FunctionWindow materialWindow;
 	private final FunctionWindow supplierWindow;
+	private final FunctionWindow purchaseRequestWindow;
 	private final FunctionWindow purchaseOrderWindow;
-	private final FunctionWindow saleOrderWindow;
 	//private final FunctionWindow reportWindow;
+	private final FunctionWindow subPurcharseRequestReportWindow;
 	private final FunctionWindow subPurcharseOrderReportWindow;
-	private final FunctionWindow subSaleOrderReportWindow;
 	
 	private final SupplierListGrid supplierGrid = new SupplierListGrid();
 	private final MaterialListGrid materialGrid = new MaterialListGrid();
@@ -49,15 +52,16 @@ public class PurchasingPanel extends FunctionPanel{
 		super(main, "ระบบการจัดซื้อวัตถุดิบ", 4);
 		materialWindow = createFuncWindow();
 		supplierWindow = createFuncWindow();
+		purchaseRequestWindow = createFuncWindow();
 		purchaseOrderWindow = createFuncWindow();
-		saleOrderWindow = createFuncWindow();
 		
 		//reportWindow = createFuncWindow();
+		subPurcharseRequestReportWindow = createFuncWindow();
 		subPurcharseOrderReportWindow = createFuncWindow();
-		subSaleOrderReportWindow = createFuncWindow();
 		
 		prepareSupplierWindow();
 		prepareMeterialWindow();
+		prepareRequestWindow();
 	}
 
 	@Override
@@ -73,16 +77,16 @@ public class PurchasingPanel extends FunctionPanel{
 		} else if (nodeId.equals("42")) {
 			loadWindow(this._main.getPurchasingPanel(), this.supplierWindow , name, icon);
 		} else if (nodeId.equals("43")) {
-			loadWindow(this._main.getPurchasingPanel(), this.purchaseOrderWindow , name, icon);
+			loadWindow(this._main.getPurchasingPanel(), this.purchaseRequestWindow , name, icon);
 		} else if (nodeId.equals("44")) {
-			loadWindow(this._main.getPurchasingPanel(), this.saleOrderWindow , name, icon);
+			loadWindow(this._main.getPurchasingPanel(), this.purchaseOrderWindow , name, icon);
 		} else if (nodeId.equals("45")) {
 			//loadWindow(this._main.getPurchasingPanel(), this.reportWindow , name, icon);
 			//Do nothing
 		} else if (nodeId.equals("451")) {
-			loadWindow(this._main.getPurchasingPanel(), this.subPurcharseOrderReportWindow , name, icon);
+			loadWindow(this._main.getPurchasingPanel(), this.subPurcharseRequestReportWindow , name, icon);
 		} else if (nodeId.equals("452")) {
-			loadWindow(this._main.getPurchasingPanel(), this.subSaleOrderReportWindow , name, icon);
+			loadWindow(this._main.getPurchasingPanel(), this.subPurcharseOrderReportWindow , name, icon);
 		} else init();
 	}
 	
@@ -219,5 +223,16 @@ public class PurchasingPanel extends FunctionPanel{
         functionLayout.setHeight100();
         functionLayout.setMembers(functionStack);
         this.supplierWindow.addItem(functionLayout);
+	}
+	
+	private void prepareRequestWindow(){
+		byte currentRole = this._main.getCurrentUser().getProfile().getRole();
+		Boolean allow = checkPermFlag(currentRole, Role.ADMIN) || checkPermFlag(currentRole, Role.OWNER);
+		PurchaseRequestTabSet requestTab = new PurchaseRequestTabSet(allow, this._main.getCurrentUser());
+		this.purchaseRequestWindow.addItem(requestTab);
+	}
+	
+	private boolean checkPermFlag(byte flag, byte checked){
+		return (flag & checked) == checked;
 	}
 }

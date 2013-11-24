@@ -76,7 +76,7 @@ public class ProductDetailTabPane extends ImageTabPane {
     	setHeight("70%");
     	this.ListGrid = Grid;
     	this.DataSource = DS;
-    	psOutline = new ProcessOutline(ProcessListDS.getInstance(null));
+    	psOutline = new ProcessOutline(ProcessListDS.getInstance(null), null);
     	viewProductImage = new Img(this.currentViewImgUrl);
     	editProductImage = new Img(this.currentEditImgUrl);
     	currentRecord = new Record();
@@ -113,7 +113,7 @@ public class ProductDetailTabPane extends ImageTabPane {
         pid.setRequired(true);
 		TextItem name = new TextItem("name", "ชื่อสินค้าภาษาอังกฤษ");
 		TextItem name_th = new TextItem("name_th", "ชื่อสินค้าภาษาไทย");
-		FloatItem weight = new FloatItem("weight", "น้ำหนัก");
+		//FloatItem weight = new FloatItem("weight", "น้ำหนัก");
 		FloatItem price = new FloatItem("price", "ราคา");
 		final SelectItem type = new SelectItem("type", "ประเภท");
 		
@@ -127,13 +127,13 @@ public class ProductDetailTabPane extends ImageTabPane {
 		
 		name.setRequired(true);
 		name_th.setRequired(true);
-		weight.setRequired(true);
+		//weight.setRequired(true);
 		price.setRequired(true);
 		type.setRequired(true);
 		
 		name.setHint("*");
 		name_th.setHint("*");
-		weight.setHint("กรัม *");
+		//weight.setHint("กรัม *");
 		price.setHint("บาท *");
 		type.setHint("*");
 		
@@ -209,13 +209,14 @@ public class ProductDetailTabPane extends ImageTabPane {
         
         name.setWidth(250);
         name_th.setWidth(250);
-        weight.setWidth(250);
+        //weight.setWidth(250);
         price.setWidth(250);
         type.setWidth(250);
         
         VLayout leftLayout = new VLayout();
         editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-        editorForm.setFields(pid, name, name_th, weight, price, type);
+        //editorForm.setFields(pid, name, name_th, weight, price, type);
+        editorForm.setFields(pid, name, name_th, price, type);
         editorForm.setColWidths(200	, 300);
         sizeForm.setFields(size,width,length,height,diameter,thickness);
         leftLayout.addMembers(editorForm, sizeForm);
@@ -274,7 +275,7 @@ public class ProductDetailTabPane extends ImageTabPane {
         } else if (selectedTab == 2) {  
             // edit tab : show new record editor, or empty message  
             if (selectedRecord != null) {  
-            	psOutline = new ProcessOutline(ProcessListDS.getInstance(null));
+            	psOutline = new ProcessOutline(ProcessListDS.getInstance(null), null);
                 updateTab(2, psOutline);
             } else {  
                 updateTab(2, psOutline);  
@@ -316,7 +317,7 @@ public class ProductDetailTabPane extends ImageTabPane {
             // edit tab : show new record editor, or empty message  
             if (selectedRecord != null) {  
                 String pid = selectedRecord.getAttributeAsString("pid");
-            	psOutline = new ProcessOutline(ProcessListDS.getInstance(pid));
+            	psOutline = new ProcessOutline(ProcessListDS.getInstance(pid), selectedRecord);
                 updateTab(2, psOutline);
             } else {  
                 updateTab(2, psOutline); 
@@ -352,7 +353,7 @@ public class ProductDetailTabPane extends ImageTabPane {
         		sizeForm.editRecord(selectedRecord);
         } else if (selectedTab == 2) { 
                 String pid = selectedRecord.getAttributeAsString("pid");
-            	psOutline = new ProcessOutline(ProcessListDS.getInstance(pid));
+            	psOutline = new ProcessOutline(ProcessListDS.getInstance(pid), selectedRecord);
                 updateTab(2, psOutline);
         }
     }
@@ -364,7 +365,7 @@ public class ProductDetailTabPane extends ImageTabPane {
     		String pid = editorForm.getValueAsString("pid");
 			String name = editorForm.getValueAsString("name");
 	    	String name_th = editorForm.getValueAsString("name_th");
-	    	Double weight = Double.parseDouble(editorForm.getValueAsString("weight"));
+	    	//Double weight = Double.parseDouble(editorForm.getValueAsString("weight"));
 	    	Double price = Double.parseDouble(editorForm.getValueAsString("price"));
 	    	String type = editorForm.getValueAsString("type");
 	    	
@@ -406,7 +407,7 @@ public class ProductDetailTabPane extends ImageTabPane {
 								editorForm.getValueAsString("pid"),
 								editorForm.getValueAsString("name"),
 								editorForm.getValueAsString("name_th"),
-								Double.parseDouble(editorForm.getValueAsString("weight")),
+								//Double.parseDouble(editorForm.getValueAsString("weight")),
 								Double.parseDouble(editorForm.getValueAsString("price")),
 								editorForm.getValueAsString("type"),
 								currentEditImgUrl,

@@ -16,20 +16,16 @@ public class ProductionOrderTabSet extends TabSet {
 		setHeight100();
 
 		OrderCreateTab createTab = new OrderCreateTab();
-//		OrderReviseTab reviseTab = new OrderReviseTab();
 		CastingTab castingTab = new CastingTab();
 		ScrapingTab scrapingTab = new ScrapingTab();
-//		OrderDeliveryTab deliveryTab = new OrderDeliveryTab();
+		AbradingTab abradingTab = new AbradingTab();
+		PackingTab packingTab = new PackingTab();
 		
 		addTab(createTab.getCreateTab(user));
 		addTab(castingTab.getReviseTab(user));
 		addTab(scrapingTab.getReviseTab(user));
-//		addTab(deliveryTab.getReviewTab(user));
-//		
-//		if (this.allowApproved) {
-//			QuoteApproveTab approveTab = new QuoteApproveTab();
-//			addTab(approveTab.getApproveTab(user));
-//		}
+		addTab(abradingTab.getReviseTab(user));
+		addTab(packingTab.getReviseTab(user));
 		
 	}
 }

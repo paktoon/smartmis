@@ -7,8 +7,8 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class SupplierData {
 
-    //public static ListGridRecord createRecord(String id, String name, String phone1, String phone2, String email, String address, String fax, Integer leadtime, String itemList) {  
-    public static ListGridRecord createRecord(String id, String name, String phone1, String phone2, String email, String address, String fax, Integer leadtime) {  
+    public static ListGridRecord createRecord(String id, String name, String phone1, String phone2, String email, String address, String street, String city, String state, Integer postal, String fax, Integer leadtime, String itemList) {  
+    //public static ListGridRecord createRecord(String id, String name, String phone1, String phone2, String email, String address, String fax, Integer leadtime) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("sid", id);
         record.setAttribute("sup_name", name);  
@@ -16,9 +16,13 @@ public class SupplierData {
         record.setAttribute("sup_phone2", phone2);
         record.setAttribute("email", email);  
         record.setAttribute("address", address);
+        record.setAttribute("street", street);
+        record.setAttribute("city", city);
+        record.setAttribute("state", state);
+        record.setAttribute("postal", postal);
         record.setAttribute("fax", fax);  
         record.setAttribute("leadtime", leadtime);
-        //record.setAttribute("list", itemList);
+        record.setAttribute("list", itemList);
         return record;  
     }
     
@@ -31,16 +35,16 @@ public class SupplierData {
     
     public static ListGridRecord[] getNewRecords() {
     	return new ListGridRecord[]{ 
-//    			createRecord("SU10001","บริษัท 99GOLDS","022588888", "0892222244", "webmaster@woeldmark.co.th", "392/21 สุขุมวิท 20 แขวงคลองเตย เขตคลองเตย กทม 10110", "023456124", 7, "MA10001|MA10002"),
-//    			createRecord("SU10002","ห้างทอง น่ำเชียง","0894774443", "0894774443", "tamrong@hotmail.com", "56/12-6 อาคารบิสโก้ ซอยทรัพย์ ถนนทรัพย์ แขวงสี่พระยา เขตบางรัก กทม 10500", "023456124", 7, "MA10001|MA10002"),
-//    			createRecord("SU10003","ร้าน วีวี่เจมส์","0815582721", "0815582122", "taechiraya@gmail.com", "90/156 หมู่ 14 บางกรวย-ไทรน้อย ตำบลบางบัวทอง อำเภอบางบัวทอง นนทบุรี 11110", "023456124", 15, "MA20001|MA20002|MA20003"),
-//    			createRecord("SU10004","มายด์ แอนด์ ลีน่าเครื่องประดับ","074732040", "0899777702", "mljewelry_stones@hotmail.com", "2 ซอยบรรจบ สตูลธานี ตำบลพิมาน อำเภอเมืองสตูล สตูล 91000", "023456124", 15, "MA20001|MA20002|MA20003"),
-//    			createRecord("SU10005","บริษัท เครื่องประดับอิรอส จำกัด","027495044", "027495044", "", "67/23 หมู่ 12 ซอยอุดมสุข 23 สุขุมวิท 103 แขวงบางนา เขตบางนา กทม 10260", "023456124", 3 , "MA20001|MA20002|MA20003"),
-    			createRecord("SU10001","บริษัท 99GOLDS","022588888", "0892222244", "webmaster@woeldmark.co.th", "392/21 สุขุมวิท 20 แขวงคลองเตย เขตคลองเตย กทม 10110", "023456124", 7),
-    			createRecord("SU10002","ห้างทอง น่ำเชียง","0894774443", "0894774443", "tamrong@hotmail.com", "56/12-6 อาคารบิสโก้ ซอยทรัพย์ ถนนทรัพย์ แขวงสี่พระยา เขตบางรัก กทม 10500", "023456124", 7),
-    			createRecord("SU10003","ร้าน วีวี่เจมส์","0815582721", "0815582122", "taechiraya@gmail.com", "90/156 หมู่ 14 บางกรวย-ไทรน้อย ตำบลบางบัวทอง อำเภอบางบัวทอง นนทบุรี 11110", "023456124", 15),
-    			createRecord("SU10004","มายด์ แอนด์ ลีน่าเครื่องประดับ","074732040", "0899777702", "mljewelry_stones@hotmail.com", "2 ซอยบรรจบ สตูลธานี ตำบลพิมาน อำเภอเมืองสตูล สตูล 91000", "023456124", 15),
-    			createRecord("SU10005","บริษัท เครื่องประดับอิรอส จำกัด","027495044", "027495044", "", "67/23 หมู่ 12 ซอยอุดมสุข 23 สุขุมวิท 103 แขวงบางนา เขตบางนา กทม 10260", "023456124", 3),
+    			createRecord("SU10001","บริษัท 99GOLDS","022588888", "0892222244", "webmaster@woeldmark.co.th", "392/21","สุขุมวิท 20", "คลองเตย", "กทม", 10110, "023456124", 7, "MA10001|MA10002"),
+    			createRecord("SU10002","ห้างทอง น่ำเชียง","0894774443", "0894774443", "tamrong@hotmail.com", "56/12-6 อาคารบิสโก้ ซอยทรัพย์", "ถนนทรัพย์", "บางรัก", "กทม", 10500, "023456124", 7, "MA10001|MA10002"),
+    			createRecord("SU10003","ร้าน วีวี่เจมส์","0815582721", "0815582122", "taechiraya@gmail.com", "90/156 หมู่ 14", "บางกรวย-ไทรน้อย", "บางบัวทอง", "นนทบุรี", 11110, "023456124", 15, "MA20001|MA20002|MA20003"),
+    			createRecord("SU10004","มายด์ แอนด์ ลีน่าเครื่องประดับ","074732040", "0899777702", "mljewelry_stones@hotmail.com", "2 ซอยบรรจบ สตูลธานี", "",  "เมืองสตูล", "สตูล", 91000, "023456124", 15, "MA20001|MA20002|MA20003"),
+    			createRecord("SU10005","บริษัท เครื่องประดับอิรอส จำกัด","027495044", "027495044", "", "67/23 หมู่ 12 ซอยอุดมสุข 23", "สุขุมวิท 103", "บางนา", "กทม", 10260, "023456124", 3 , "MA20001|MA20002|MA20003"),
+//    			createRecord("SU10001","บริษัท 99GOLDS","022588888", "0892222244", "webmaster@woeldmark.co.th", "392/21 สุขุมวิท 20 แขวงคลองเตย เขตคลองเตย กทม 10110", "023456124", 7),
+//    			createRecord("SU10002","ห้างทอง น่ำเชียง","0894774443", "0894774443", "tamrong@hotmail.com", "56/12-6 อาคารบิสโก้ ซอยทรัพย์ ถนนทรัพย์ แขวงสี่พระยา เขตบางรัก กทม 10500", "023456124", 7),
+//    			createRecord("SU10003","ร้าน วีวี่เจมส์","0815582721", "0815582122", "taechiraya@gmail.com", "90/156 หมู่ 14 บางกรวย-ไทรน้อย ตำบลบางบัวทอง อำเภอบางบัวทอง นนทบุรี 11110", "023456124", 15),
+//    			createRecord("SU10004","มายด์ แอนด์ ลีน่าเครื่องประดับ","074732040", "0899777702", "mljewelry_stones@hotmail.com", "2 ซอยบรรจบ สตูลธานี ตำบลพิมาน อำเภอเมืองสตูล สตูล 91000", "023456124", 15),
+//    			createRecord("SU10005","บริษัท เครื่องประดับอิรอส จำกัด","027495044", "027495044", "", "67/23 หมู่ 12 ซอยอุดมสุข 23 สุขุมวิท 103 แขวงบางนา เขตบางนา กทม 10260", "023456124", 3),
     	};
     }
     

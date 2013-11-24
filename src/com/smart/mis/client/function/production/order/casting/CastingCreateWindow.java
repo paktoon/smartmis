@@ -398,7 +398,7 @@ public class CastingCreateWindow {
 		summaryForm.setColWidths(120, 100);
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
-		total_sent_weight.setValue(nf.format(total_weight * total_amount));
+		total_sent_weight.setValue(nf.format(total_weight));
 		final StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
 		total_sent_amount.setValue(nf.format(total_amount));
 		total_sent_weight.setWidth(100);
@@ -810,10 +810,9 @@ public class CastingCreateWindow {
 			String type = item.getAttributeAsString("type");
 			String unit = item.getAttributeAsString("unit");
 			String details = item.getAttributeAsString("details");
-			Double sent_weight = item.getAttributeAsDouble("weight");
+			//Double sent_weight = item.getAttributeAsDouble("weight");
 			Integer sent_amount = item.getAttributeAsInt("plan_amount");
 
-			total_sent_weight += sent_weight;
 			total_sent_amount += sent_amount;
 
 			ProcessListDS.getInstance(pid).fetchData();
@@ -821,6 +820,10 @@ public class CastingCreateWindow {
 			Record process = selectedProcess[0];
 			String psid = process.getAttributeAsString("psid");
 			String desc = process.getAttributeAsString("desc");
+			Double sent_weight =  process.getAttributeAsDouble("weight") * sent_amount; 
+			
+			total_sent_weight += sent_weight;
+			
 			if (desc != null && !desc.equals("")) details += "(" + desc + ")";
 			
 			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100));
@@ -867,6 +870,7 @@ public class CastingCreateWindow {
 					} else {
 						SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id);
 					}
+					
 					editWindow.destroy();
 					
 				}
