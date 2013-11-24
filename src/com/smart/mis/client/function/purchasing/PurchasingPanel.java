@@ -10,6 +10,7 @@ import com.smart.mis.client.function.purchasing.material.MaterialAdd;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDetailTabPane;
 import com.smart.mis.client.function.purchasing.material.MaterialListGrid;
+import com.smart.mis.client.function.purchasing.order.PurchaseOrderTabSet;
 import com.smart.mis.client.function.purchasing.request.PurchaseRequestTabSet;
 import com.smart.mis.client.function.purchasing.supplier.SupplierAdd;
 import com.smart.mis.client.function.purchasing.supplier.SupplierDS;
@@ -20,6 +21,7 @@ import com.smart.mis.client.function.sale.customer.CustomerAdd;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.customer.CustomerDetailTabPane;
 import com.smart.mis.client.function.sale.customer.CustomerListGrid;
+import com.smart.mis.client.function.sale.order.SaleOrderTabSet;
 import com.smart.mis.client.function.sale.quotation.QuotationTabSet;
 import com.smart.mis.shared.security.Role;
 import com.smartgwt.client.types.Alignment;
@@ -62,6 +64,7 @@ public class PurchasingPanel extends FunctionPanel{
 		prepareSupplierWindow();
 		prepareMeterialWindow();
 		prepareRequestWindow();
+		prepareOrderWindow();
 	}
 
 	@Override
@@ -230,6 +233,11 @@ public class PurchasingPanel extends FunctionPanel{
 		Boolean allow = checkPermFlag(currentRole, Role.ADMIN) || checkPermFlag(currentRole, Role.OWNER);
 		PurchaseRequestTabSet requestTab = new PurchaseRequestTabSet(allow, this._main.getCurrentUser());
 		this.purchaseRequestWindow.addItem(requestTab);
+	}
+	
+	private void prepareOrderWindow(){
+		PurchaseOrderTabSet orderTab = new PurchaseOrderTabSet(this._main.getCurrentUser());
+		this.purchaseOrderWindow.addItem(orderTab);
 	}
 	
 	private boolean checkPermFlag(byte flag, byte checked){

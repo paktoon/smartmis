@@ -1,4 +1,4 @@
-package com.smart.mis.client.function.purchasing.request;
+package com.smart.mis.client.function.purchasing.order;
 
 import java.util.Date;
 
@@ -6,11 +6,14 @@ import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class PurchaseRequestData {
+public class PurchaseOrderData {
 	// --> Quote Object + ItemQuote Object
 	// Quote - quote id , cid , from, to ,delivery , total_weight, total_amount, netExclusive, tax, netInclusive, created_date, modified_date, created_by, modified_by, comment, status [waiting_for_approved, waiting_for_revised, approved, removed] --> to data store
-    public static ListGridRecord createRecord(String request_id,String sid, String sup_name, String quote_id, String payment_model, Integer credit,Date from, Date to, Date delivery ,Double total_weight,Double total_amount,Double netExclusive,Date created_date,Date modified_date,String created_by,String modified_by, String comment, String status) {  
+    public static ListGridRecord createRecord(String order_id,String request_id,String sid, String sup_name, String quote_id, String payment_model, Integer credit, Date received_date, Date returned_date, Date delivery ,Double total_weight,Double total_amount,Double netExclusive,Date created_date,Date modified_date,String created_by,String modified_by, String comment, String status, String payment_status) {  
         ListGridRecord record = new ListGridRecord();
+        
+        record.setAttribute("order_id", order_id);
+        
         record.setAttribute("request_id", request_id);
         record.setAttribute("sid",sid);  
         record.setAttribute("sup_name",sup_name);
@@ -18,8 +21,9 @@ public class PurchaseRequestData {
         record.setAttribute("quote_id", quote_id);
         record.setAttribute("payment_model",payment_model);
         record.setAttribute("credit",credit);
-        record.setAttribute("from", from); 
-        record.setAttribute("to", to);
+        
+        record.setAttribute("received_date", received_date); 
+        record.setAttribute("returned_date", returned_date);
         
         record.setAttribute("delivery", delivery);
         record.setAttribute("total_weight", total_weight);  
@@ -33,11 +37,15 @@ public class PurchaseRequestData {
         record.setAttribute("modified_by", modified_by);
         record.setAttribute("comment", comment);
         record.setAttribute("status", status);
+        record.setAttribute("payment_status", payment_status);
         return record;  
     }
     
-    public static ListGridRecord createUpdateRecord(String request_id,String sid, String quote_id, String sup_name, String payment_model, Integer credit,Date from, Date to, Date delivery ,Double total_weight,Double total_amount,Double netExclusive,Date modified_date,String modified_by, String comment, String status) {  
+    public static ListGridRecord createUpdateRecord(String order_id, String request_id,String sid, String quote_id, String sup_name, String payment_model, Integer credit, Date received_date, Date returned_date, Date delivery ,Double total_weight,Double total_amount,Double netExclusive,Date modified_date,String modified_by, String comment, String status, String payment_status) {  
         ListGridRecord record = new ListGridRecord();
+        
+        record.setAttribute("order_id", order_id);
+        
         record.setAttribute("request_id", request_id);
         record.setAttribute("sid",sid);  
         record.setAttribute("sup_name",sup_name);
@@ -45,8 +53,9 @@ public class PurchaseRequestData {
         record.setAttribute("quote_id", quote_id);
         record.setAttribute("payment_model",payment_model);
         record.setAttribute("credit",credit);
-        record.setAttribute("from", from); 
-        record.setAttribute("to", to);
+        
+        record.setAttribute("received_date", received_date); 
+        record.setAttribute("returned_date", returned_date);
         
         record.setAttribute("delivery", delivery);
         record.setAttribute("total_weight", total_weight);  
@@ -58,16 +67,15 @@ public class PurchaseRequestData {
         record.setAttribute("modified_by", modified_by);
         record.setAttribute("comment", comment);
         record.setAttribute("status", status);
+        record.setAttribute("payment_status", payment_status);
         return record;  
     }
     
-    public static ListGridRecord createStatusRecord(String request_id, String status, String comment, String user) {  
+    public static ListGridRecord createStatusRecord(String order_id, String status, String payment_status) {  
         ListGridRecord record = new ListGridRecord();
-        record.setAttribute("request_id", request_id);
+        record.setAttribute("order_id", order_id);
         record.setAttribute("status", status);
-        record.setAttribute("comment", comment);
-        record.setAttribute("modified_date", new Date());
-        record.setAttribute("modified_by", user);
+        record.setAttribute("payment_status", payment_status);
         return record;  
     }
     

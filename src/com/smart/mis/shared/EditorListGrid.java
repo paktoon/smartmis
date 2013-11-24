@@ -400,6 +400,50 @@ public class EditorListGrid extends ListGrid{
 
             recordCanvas.addMember(viewImg); 
             return recordCanvas;
+        } else if (fieldName.equalsIgnoreCase("createPurchaseOrderField")) { 
+        	HLayout recordCanvas = new HLayout(3);  
+            recordCanvas.setHeight(22);  
+            recordCanvas.setAlign(Alignment.CENTER);
+            
+        	ImgButton viewImg = new ImgButton();  
+            viewImg.setShowDown(false);  
+            viewImg.setShowRollOver(false);  
+            viewImg.setAlign(Alignment.CENTER); 
+	        viewImg.setSrc("icons/16/approved.png");  
+	        viewImg.setPrompt("ออกคำสั่งซื้อ");
+            viewImg.setHeight(16);  
+            viewImg.setWidth(16);  
+            viewImg.addClickHandler(new ClickHandler() {  
+                public void onClick(ClickEvent event) {  
+                    //SC.say("View Icon Clicked for : " + record.getAttribute("quote_id"));
+                    EditWindow.show(record, false, currentUser, 3);
+                }  
+            });  
+
+            recordCanvas.addMember(viewImg); 
+            return recordCanvas;  
+        } else if (fieldName.equalsIgnoreCase("viewPurchaseOrderField")) { 
+        	HLayout recordCanvas = new HLayout(3);  
+            recordCanvas.setHeight(22);  
+            recordCanvas.setAlign(Alignment.CENTER);
+            
+        	ImgButton viewImg = new ImgButton();  
+            viewImg.setShowDown(false);  
+            viewImg.setShowRollOver(false);  
+            viewImg.setAlign(Alignment.CENTER); 
+            viewImg.setHeight(16);  
+            viewImg.setWidth(16);  
+            
+            viewImg.setSrc("icons/16/icon_view.png");  
+    	    viewImg.setPrompt("เรียกดูรายละเอียด");
+            viewImg.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+                  EditWindow.show(record, false, currentUser, 1);
+               }  
+            });
+            
+            recordCanvas.addMember(viewImg); 
+            return recordCanvas; 
 //        } else if (fieldName.equals("approveField")) {  
 //            IButton button = new IButton();  
 //            button.setHeight(18);  

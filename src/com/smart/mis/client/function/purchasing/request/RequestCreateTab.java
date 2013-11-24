@@ -70,7 +70,7 @@ public class RequestCreateTab {
 	ListGridSummaryField requestItemCell_sum;
 	Supplier client = new Supplier();
 	RequestMaterialDS requestDS;
-	String material_list = "NONE";
+	String material_list = null;
 	
 	MaterialDS tempDS = new MaterialDS("");
 	
@@ -237,7 +237,7 @@ public class RequestCreateTab {
 					sup_fax.setValue(supplier_fax);
 					
 					materialForm.enable();
-					tempDS.filterData(new Criterion("mid", OperatorId.REGEXP, material_list));
+					tempDS.fetchData(new Criterion("mid", OperatorId.REGEXP, material_list));
 				}
 			}
         });
