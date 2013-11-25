@@ -3,7 +3,10 @@ package com.smart.mis.client.function.financial;
 import com.smart.mis.client.MainPage;
 import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionWindow;
+import com.smart.mis.client.function.financial.receipt.ReceiptLayout;
+import com.smart.mis.client.function.sale.invoice.InvoiceTabSet;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 //--Function--
 public class FinancialPanel extends FunctionPanel{
@@ -25,6 +28,8 @@ public class FinancialPanel extends FunctionPanel{
 		//reportWindow = createFuncWindow();
 		subReceiptReportWindow = createFuncWindow();
 		subDisbusementReportWindow = createFuncWindow();
+		
+		prepareReceiptWindow();
 	}
 
 	@Override
@@ -49,5 +54,10 @@ public class FinancialPanel extends FunctionPanel{
 		} else if (nodeId.equals("542")) {
 			loadWindow(this._main.getFinancialPanel(), this.subDisbusementReportWindow , name, icon);
 		} else init();
+	}
+	
+	private void prepareReceiptWindow(){
+		VLayout receiptLayout = new ReceiptLayout(this._main.getCurrentUser());
+		this.cashReceiptWindow.addItem(receiptLayout);
 	}
 }

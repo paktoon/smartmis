@@ -26,7 +26,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
-import com.smartgwt.client.widgets.form.fields.FloatItem;
+import com.smartgwt.client.widgets.form.fields.DoubleItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -55,7 +55,7 @@ public class ProductAdd {
     private final Img editProductImage;
     
     private SelectItem size;
-    private FloatItem width, length, height, diameter, thickness;
+    private DoubleItem width, length, height, diameter, thickness;
     
 	public ProductAdd(DataSource DS, ProductListGrid ListGrid, ProductDetailTabPane TabPane, String user){
 		this.DS = DS;
@@ -109,8 +109,8 @@ public class ProductAdd {
 //        name.setHint("*");
         
         TextItem name_th = new TextItem("name_th", "ชื่อสินค้าภาษาไทย");
-//		FloatItem weight = new FloatItem("weight", "น้ำหนัก");
-		FloatItem price = new FloatItem("price", "ราคา");
+//		DoubleItem weight = new DoubleItem("weight", "น้ำหนัก");
+		DoubleItem price = new DoubleItem("price", "ราคา");
 		
 //		TextAreaItem desc = new TextAreaItem("desc", "คำอธิบาย");
 //		desc.setWidth(300);
@@ -144,11 +144,11 @@ public class ProductAdd {
 		
 		size = new SelectItem("size", "ขนาดสินค้า");
 		size.setValueMap("5.0","5.5","6.0","6.5","7.0","7.5","8.0","8.5","9.0");
-		width = new FloatItem("width", "ความกว้าง");
-		length = new FloatItem("length", "ความยาว");
-		height = new FloatItem("height", "ความสูง");
-		diameter = new FloatItem("diameter", "เส้นผ่าศูนย์กลาง");
-		thickness = new FloatItem("thickness", "ความหนา");
+		width = new DoubleItem("width", "ความกว้าง");
+		length = new DoubleItem("length", "ความยาว");
+		height = new DoubleItem("height", "ความสูง");
+		diameter = new DoubleItem("diameter", "เส้นผ่าศูนย์กลาง");
+		thickness = new DoubleItem("thickness", "ความหนา");
 		
 		size.setHint("[ขนาดมาตรฐาน USA]");
 		width.setHint("ซม.");

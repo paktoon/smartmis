@@ -27,7 +27,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
-import com.smartgwt.client.widgets.form.fields.FloatItem;
+import com.smartgwt.client.widgets.form.fields.DoubleItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -131,10 +131,10 @@ public class MaterialAdd {
 		desc.setRowSpan(3);
 		
 		final SelectItem type = new SelectItem("type", "ชนิด");
-		final FloatItem weight = new FloatItem("weight", "น้ำหนัก");
+		final DoubleItem weight = new DoubleItem("weight", "น้ำหนัก");
 		weight.setHint("กรัม *");
-		FloatItem safety = new FloatItem("safety", "จำนวนสำรองขั้นต่ำ");
-		//FloatItem remain = new FloatItem("remain", "จำนวนคงเหลือ");
+		DoubleItem safety = new DoubleItem("safety", "จำนวนสำรองขั้นต่ำ");
+		//DoubleItem remain = new DoubleItem("remain", "จำนวนคงเหลือ");
 		final TextItem unit = new TextItem("unit", "หน่วย");
 		
 		type.setRequired(true);

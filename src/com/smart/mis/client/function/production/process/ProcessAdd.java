@@ -37,6 +37,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.DoubleItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
@@ -198,7 +199,7 @@ public class ProcessAdd {
     	            Field_3.setCellFormatter(FieldFormatter.getNumberFormat());
     	            Field_3.setAlign(Alignment.CENTER);
     	            material.setPickListFields(Field_1, Field_2, Field_3, Field_4);
-    	            final FloatItem reqAmount = new FloatItem("req_amount", "จำนวนที่ใช้ในการผลิต ต่อชิ้น");
+    	            final DoubleItem reqAmount = new DoubleItem("req_amount", "จำนวนที่ใช้ในการผลิต ต่อชิ้น");
     	            reqAmount.disable();
     	            reqAmount.setDefaultValue(0.0);
     	            reqAmount.setTextAlign(Alignment.RIGHT);
@@ -227,7 +228,7 @@ public class ProcessAdd {
     	                  if (selected != null && addForm.validate()) {
     	                	  String mid = selected.getAttributeAsString("mid");
     	                	  String mat_name = selected.getAttributeAsString("mat_name");
-    	                	  Double req_amount = reqAmount.getValueAsFloat().doubleValue();
+    	                	  Double req_amount = reqAmount.getValueAsDouble();
     	                	  Double weight = 0.0;
     	                	  if (process.equalsIgnoreCase("1_casting")) weight = req_amount;
     	                	  else weight = selected.getAttributeAsDouble("weight") * req_amount;

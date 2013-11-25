@@ -26,7 +26,7 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.TransferImgButton;
 import com.smartgwt.client.widgets.form.DynamicForm;  
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
-import com.smartgwt.client.widgets.form.fields.FloatItem;
+import com.smartgwt.client.widgets.form.fields.DoubleItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SelectOtherItem;
@@ -66,7 +66,7 @@ public class MaterialDetailTabPane extends TabSet {
     private IButton saveButton, cancelButton;
     private String currentMid = null;
     public String currentChangeSidList = null;
-    FloatItem weight;
+    DoubleItem weight;
     
     private final MaterialSupplierChange changeFunc = new MaterialSupplierChange(this);
 //    private final SecurityServiceAsync securityService = GWT.create(SecurityService.class);
@@ -115,10 +115,10 @@ public class MaterialDetailTabPane extends TabSet {
 		desc.setRowSpan(3);
 		
 		SelectItem type = new SelectItem("type", "ชนิด");
-		weight = new FloatItem("weight", "น้ำหนัก (กรัม)");
+		weight = new DoubleItem("weight", "น้ำหนัก (กรัม)");
 		weight.hide();
 		weight.setRequired(false);
-		FloatItem safety = new FloatItem("safety", "จำนวนสำรองขั้นต่ำ");
+		DoubleItem safety = new DoubleItem("safety", "จำนวนสำรองขั้นต่ำ");
 		//StaticTextItem remain = new StaticTextItem("remain", "จำนวนคงเหลือ");
 		SelectOtherItem unit = new SelectOtherItem("unit", "หน่วย");
 		unit.setOtherTitle("อื่นๆ..");  

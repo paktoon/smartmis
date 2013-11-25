@@ -48,6 +48,7 @@ import com.smartgwt.client.widgets.events.FetchDataEvent;
 import com.smartgwt.client.widgets.events.FetchDataHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateItem;
+import com.smartgwt.client.widgets.form.fields.DoubleItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -369,7 +370,7 @@ public class CastingViewWindow extends EditorWindow{
         summaryForm_3.setIsGroup(true);
         summaryForm_3.setGroupTitle("สรุปค่าจ้างผลิต");
         summaryForm_3.setColWidths(80, 70);
-		final FloatItem wage_per_gam = new FloatItem("wage_per_gam");
+		final DoubleItem wage_per_gam = new DoubleItem("wage_per_gam");
 		wage_per_gam.setDefaultValue(0.9);
 		if (!edit) wage_per_gam.setCanEdit(false);
 		final StaticTextItem total_wage = new StaticTextItem("total_wage");
@@ -393,7 +394,7 @@ public class CastingViewWindow extends EditorWindow{
 			@Override
 			public void onChanged(ChangedEvent event) {
 				if (wage_per_gam.validate()) {
-					total_paid_wage = wage_per_gam.getValueAsFloat() * ((Double) total_recv_weight.getValue());
+					total_paid_wage = wage_per_gam.getValueAsDouble() * ((Double) total_recv_weight.getValue());
 					total_wage.setValue(nf.format(total_paid_wage));
 				}
 			}});
@@ -401,7 +402,7 @@ public class CastingViewWindow extends EditorWindow{
 		orderListGrid.addCellSavedHandler(new CellSavedHandler() {  
 			@Override
 			public void onCellSaved(CellSavedEvent event) {
-				summaryRecalculate(orderListGrid.getRecords(), summaryForm_2, summaryForm_3, wage_per_gam.getValueAsFloat());
+				summaryRecalculate(orderListGrid.getRecords(), summaryForm_2, summaryForm_3, wage_per_gam.getValueAsDouble());
 			}  
         });
 		
@@ -684,7 +685,7 @@ public class CastingViewWindow extends EditorWindow{
 		return layout;
 	}
 	
-	public void summaryRecalculate(ListGridRecord[] all, DynamicForm target, DynamicForm target_2, Float perGam){
+	public void summaryRecalculate(ListGridRecord[] all, DynamicForm target, DynamicForm target_2, Double perGam){
 		total_received_weight = 0.0;
 		total_received_amount = 0;
 		for (ListGridRecord record : all) {

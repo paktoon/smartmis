@@ -38,28 +38,10 @@ public class InvoiceData {
         return record;  
     }
     
-//    public static ListGridRecord createUpdateRecord(String sale_id, String quote_id,String cid, String cus_name, String payment_model, Integer credit, Date delivery ,Double total_weight,Integer total_amount,Double netExclusive,Date modified_date,String modified_by, String status, String purchase_id) {  
-//        ListGridRecord record = new ListGridRecord();
-//        record.setAttribute("sale_id", sale_id);
-//        record.setAttribute("quote_id", quote_id);
-//        record.setAttribute("cid",cid);  
-//        record.setAttribute("cus_name",cus_name);
-//        record.setAttribute("payment_model",payment_model);
-//        record.setAttribute("credit",credit);
-//        //record.setAttribute("from", from); 
-//        //record.setAttribute("to", to);
-//        record.setAttribute("delivery", delivery);
-//        record.setAttribute("total_weight", total_weight);  
-//        record.setAttribute("total_amount", total_amount); 
-//        record.setAttribute("netExclusive", netExclusive);
-//        record.setAttribute("tax", netExclusive * 0.07);
-//        record.setAttribute("netInclusive", netExclusive * 1.07);
-//        record.setAttribute("modified_date", modified_date);
-//        record.setAttribute("modified_by", modified_by);
-//        //record.setAttribute("comment", comment);
-//        record.setAttribute("status", status);
-//        return record;  
-//    }
+    public static ListGridRecord createReceiptRecord(ListGridRecord record, Double receivedInclusive) {
+        record.setAttribute("receivedInclusive", receivedInclusive);
+        return record;  
+    }
     
     public static ListGridRecord createStatusRecord(String invoice_id, String status) {  
         ListGridRecord record = new ListGridRecord();

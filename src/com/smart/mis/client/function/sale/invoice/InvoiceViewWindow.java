@@ -48,6 +48,8 @@ import com.smartgwt.client.widgets.events.FetchDataEvent;
 import com.smartgwt.client.widgets.events.FetchDataHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateItem;
+import com.smartgwt.client.widgets.form.fields.DoubleItem;
+import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -114,7 +116,7 @@ public class InvoiceViewWindow extends EditorWindow{
 		Integer credit = record.getAttributeAsInt("credit");
 		final String sale_id = record.getAttributeAsString("sale_id");
 		Date delivery = record.getAttributeAsDate("delivery");
-		Double netEx = record.getAttributeAsDouble("netExclusive");
+		final Double netEx = record.getAttributeAsDouble("netExclusive");
 		
 		String status = record.getAttributeAsString("status");
 		//String created_by = record.getAttributeAsString("created_by");
@@ -441,33 +443,23 @@ public class InvoiceViewWindow extends EditorWindow{
 		controls.setAlign(Alignment.CENTER);
 		controls.setMargin(5);
 		controls.setMembersMargin(5);
-		final IButton printButton = new IButton("พิมพ์รายการขาย");
+		final IButton printButton = new IButton("พิมพ์ใบแจ้งหนี้");
 		printButton.setIcon("icons/16/print.png");
 		printButton.setWidth(120);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                SC.say("click print");
-            	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
+                SC.say("click print invoice");
           }
         });
-		// if (edit || !status.equals("3_approved")) printButton.disable();
 		
-//		final IButton saveButton = new IButton("บันทึกการแก้ไข");
-//		saveButton.setIcon("icons/16/save.png");
-//		saveButton.setWidth(120);
-//		saveButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) { 
-//            	SC.confirm("ยืนยันการทำรายการ", "ต้องการบันทึกการแก้ไขใบเสนอราคา หรือไม่?" , new BooleanCallback() {
-//					@Override
-//					public void execute(Boolean value) {
-//						if (value) {
-//							if (customerForm.validate()) saveQuotation(main, quote_id, customerForm, saleListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
-//						}
-//					}
-//            	});
-//          }
-//        });
-//		if (!edit) saveButton.disable();
+		final IButton printReceipt = new IButton("พิมพ์ใบเสร็จ");
+		printReceipt.setIcon("icons/16/print.png");
+		printReceipt.setWidth(120);
+		printReceipt.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+                SC.say("click print receipt");
+          }
+        });
 		
 		final IButton closeButton = new IButton("ปิด");
 		closeButton.setIcon("icons/16/close.png");
@@ -478,34 +470,102 @@ public class InvoiceViewWindow extends EditorWindow{
           }
         });
 		
-//		final IButton cancelButton = new IButton("ยกเลิกรายการขาย");
-//		cancelButton.setIcon("icons/16/delete.png");
-//		cancelButton.setWidth(120);
-//		cancelButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) { 
-//            	SC.confirm("ยืนยันการยกเลิกรายการขาย", "ต้องการยกเลิกรายการขาย หรือไม่?" , new BooleanCallback() {
-//					@Override
-//					public void execute(Boolean value) {
-//						if (value) {
-//			            		record.setAttribute("status", "4_canceled");
-//			            		//saleListGrid.updateData(record);
-//			            		//SaleOrderDS.getInstance().updateData(record);
-//			            		SaleOrderDS.getInstance().updateData(record, new DSCallback() {
-//									@Override
-//									public void execute(DSResponse dsResponse, Object data,
-//											DSRequest dsRequest) {
-//											if (dsResponse.getStatus() != 0) {
-//												SC.warn("การยกเลิกรายการขาย ล้มเหลว");
-//											} else { 
-//												SC.warn("การยกเลิกรายการขาย เสร็จสมบูรณ์");
-//											}
-//									}
-//								});
-//						}
-//					}
-//            	});
-//          }
-//        });
+		final IButton receiptButton = new IButton("บันทึกรับชำระเงิน");
+		receiptButton.setIcon("icons/16/save.png");
+		receiptButton.setWidth(120);
+		receiptButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+
+				final Window confirm = new Window();
+				confirm.setTitle("รายละเอียดการรับชำระเงิน");
+				confirm.setWidth(350);
+				confirm.setHeight(200);
+				confirm.setShowMinimizeButton(false);
+				confirm.setIsModal(true);
+				confirm.setShowModalMask(true);
+				confirm.setCanDragResize(false);
+				confirm.setCanDragReposition(false);
+				confirm.centerInPage();
+				VLayout receiptLayout = new VLayout();
+				receiptLayout.setMargin(10);
+				
+				final DynamicForm receiptForm = new DynamicForm();
+				receiptForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
+				StaticTextItem need_payment = new StaticTextItem("need_payment", "ยอดที่ต้องชำระ");
+				NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+				need_payment.setValue(nf.format(netEx * 1.07));
+				need_payment.setHint("บาท");
+				final DoubleItem received_payment = new DoubleItem("received_payment", "ยอดที่รับชำระ");
+				StaticTextItem received_date = new StaticTextItem("received_date", "วันที่รับชำระเงิน");
+				received_date.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(new Date()));
+				StaticTextItem received_by = new StaticTextItem("received_by", "รับชำระเงินโดย");
+				received_by.setValue(currentUser.getFirstName() + " " + currentUser.getLastName());
+				
+				received_payment.setRequired(true);
+				received_payment.setHint("บาท *");
+				
+				receiptForm.setFields(need_payment, received_payment, received_date, received_by);
+				
+				receiptLayout.addMember(receiptForm);
+				
+				HLayout controlLayout = new HLayout();
+		        controlLayout.setMargin(10);
+		        controlLayout.setMembersMargin(10);
+		        controlLayout.setAlign(Alignment.CENTER);
+		        IButton confirmButton = new IButton("บันทึก");
+		        confirmButton.setIcon("icons/16/save.png");
+		        IButton cancelButton = new IButton("ยกเลิก");
+		        cancelButton.setIcon("icons/16/close.png");
+		        controlLayout.addMember(confirmButton);
+		        controlLayout.addMember(cancelButton);
+		        confirmButton.addClickHandler(new ClickHandler() {  
+		            public void onClick(ClickEvent event) { 
+		            	if (!receiptForm.validate() || received_payment.getValueAsDouble() < (netEx * 1.07)) {
+		            		SC.warn("ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบข้อมูลใหม่อีกครั้ง");
+		            		received_payment.clearValue();
+		            		return;
+		            	}
+		            	
+		            	SC.confirm("ยืนยันการบันทึกรับชำระเงิน", "ต้องการบันทึกรับชำระเงินหรือไม่?" , new BooleanCallback() {
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+					            		record.setAttribute("status", "2_paid");
+										record.setAttribute("receivedInclusive", received_payment.getValueAsDouble());
+					            		record.setAttribute("modified_date", new Date());
+					            		record.setAttribute("modified_by", currentUser.getFirstName() + " " + currentUser.getLastName());
+					            		InvoiceDS.getInstance().updateData(record, new DSCallback() {
+											@Override
+											public void execute(DSResponse dsResponse, Object data,
+													DSRequest dsRequest) {
+													if (dsResponse.getStatus() != 0) {
+														SC.warn("การบันทึกรับชำระเงิน ล้มเหลว");
+													} else { 
+														SC.warn("การบันทึกรับชำระเงิน เสร็จสมบูรณ์");
+														confirm.destroy();
+														main.destroy();
+													}
+											}
+										});
+								}
+							}
+		            	});
+		          }
+		        });
+		        
+		        cancelButton.addClickHandler(new ClickHandler() {  
+		            public void onClick(ClickEvent event) { 
+		            	confirm.destroy();
+		          }
+		        });
+		        
+		        receiptLayout.addMember(controlLayout);
+		        
+		        confirm.addItem(receiptLayout);
+		        
+		        confirm.show();
+          }
+        });
 		
 //		final IButton approveButton = new IButton("อนุมัติ");
 //		//approveButton.setIcon("icons/16/approved.png");
@@ -590,8 +650,9 @@ public class InvoiceViewWindow extends EditorWindow{
 //			controls.addMember(printButton);
 //			controls.addMember(saveButton);
 //		}
-		controls.addMember(printButton);
-		//if (!status.equals("1_waiting_for_production")) controls.addMember(cancelButton);
+		if (page == 1) controls.addMember(printButton);
+		if (page == 2) controls.addMember(receiptButton);
+		if (page == 3) controls.addMember(printReceipt);
 		controls.addMember(closeButton);
 		layout.addMember(controls);
 		

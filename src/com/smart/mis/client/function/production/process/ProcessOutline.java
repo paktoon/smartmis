@@ -26,6 +26,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.DoubleItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -291,7 +292,7 @@ public class ProcessOutline extends VLayout {
 		    	            Field_3.setCellFormatter(FieldFormatter.getNumberFormat());
 		    	            Field_3.setAlign(Alignment.CENTER);
 		    	            material.setPickListFields(Field_1, Field_2, Field_3, Field_4);
-		    	            final FloatItem reqAmount = new FloatItem("req_amount", "จำนวนที่ใช้ในการผลิต ต่อชิ้น");
+		    	            final DoubleItem reqAmount = new DoubleItem("req_amount", "จำนวนที่ใช้ในการผลิต ต่อชิ้น");
 		    	            reqAmount.disable();
 		    	            reqAmount.setDefaultValue(0.0);
 		    	            reqAmount.setTextAlign(Alignment.RIGHT);
@@ -320,7 +321,7 @@ public class ProcessOutline extends VLayout {
 		    	                  if (selected != null && addForm.validate()) {
 		    	                	  String mid = selected.getAttributeAsString("mid");
 		    	                	  String mat_name = selected.getAttributeAsString("mat_name");
-		    	                	  Double req_amount = reqAmount.getValueAsFloat().doubleValue();
+		    	                	  Double req_amount = reqAmount.getValueAsDouble();
 		    	                	  String unit = selected.getAttributeAsString("unit");
 		    	                	  Double weight = 0.0;
 		    	                	  if (selected.getAttributeAsString("type").equalsIgnoreCase("แร่เงิน")) weight = req_amount;

@@ -38,6 +38,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateItem;
+import com.smartgwt.client.widgets.form.fields.DoubleItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -308,7 +309,7 @@ public class RequestCreateTab {
         final StaticTextItem ptype = new StaticTextItem("type", "ประเภทวัตถุดิบ");
         ptype.setValueMap(ProductType.getValueMap());
         
-        final FloatItem quantity = new FloatItem("quantity", "จำนวน");
+        final DoubleItem quantity = new DoubleItem("quantity", "จำนวน");
         quantity.setRequired(true);
         quantity.setHint("*");
         quantity.disable();
@@ -318,7 +319,7 @@ public class RequestCreateTab {
         
         final StaticTextItem pname_th = new StaticTextItem("desc", "คำอธิบาย");
         
-        final FloatItem pprice = new FloatItem("price" , "ราคา");
+        final DoubleItem pprice = new DoubleItem("price" , "ราคา");
         pprice.setRequired(true);
         pprice.setHint("*");
         pprice.disable();
@@ -378,7 +379,7 @@ public class RequestCreateTab {
 		addButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {
 	            if (materialForm.validate() && requestMaterial.check()) {
-					ListGridRecord addProduct = requestMaterial.convertToRecord(quantity.getValueAsFloat().doubleValue(), pprice.getValueAsFloat().doubleValue());
+					ListGridRecord addProduct = requestMaterial.convertToRecord(quantity.getValueAsDouble(), pprice.getValueAsDouble());
 					requestDS.addData(addProduct, new DSCallback() {
 						@Override
 						public void execute(DSResponse dsResponse, Object data,

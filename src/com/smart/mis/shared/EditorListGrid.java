@@ -239,7 +239,55 @@ public class EditorListGrid extends ListGrid{
             
             recordCanvas.addMember(viewImg); 
             return recordCanvas;
+        } else if (fieldName.equalsIgnoreCase("receiptInvoiceField")) { 
+        	HLayout recordCanvas = new HLayout(3);  
+            recordCanvas.setHeight(22);  
+            recordCanvas.setAlign(Alignment.CENTER);
             
+        	ImgButton viewImg = new ImgButton();  
+            viewImg.setShowDown(false);  
+            viewImg.setShowRollOver(false);  
+            viewImg.setAlign(Alignment.CENTER); 
+            
+            if (record.getAttributeAsString("status").equalsIgnoreCase("3_over_due")) {
+            	viewImg.setSrc("icons/16/danger-icon.png");  
+    	        viewImg.setPrompt("เรียกดูใบชำระหนี้");
+                viewImg.addClickHandler(new ClickHandler() {  
+                    public void onClick(ClickEvent event) {  
+                        EditWindow.show(record, false, currentUser, 1); // print invoice
+                    }  
+                });
+            } if (record.getAttributeAsString("status").equalsIgnoreCase("2_paid")) {
+            	viewImg.setSrc("icons/16/approve.png");  
+    	        viewImg.setPrompt("พิมพ์ใบเสร็จรับเงิน");
+                viewImg.addClickHandler(new ClickHandler() {  
+                    public void onClick(ClickEvent event) {  
+                        EditWindow.show(record, false, currentUser, 3); // print receipt
+                    }  
+                });
+            } if (record.getAttributeAsString("status").equalsIgnoreCase("1_waiting_for_payment")) {
+            	viewImg.setSrc("icons/16/coins.png");  
+    	        viewImg.setPrompt("บันทึกการชำระเงิน");
+                viewImg.addClickHandler(new ClickHandler() {  
+                    public void onClick(ClickEvent event) {  
+                        EditWindow.show(record, false, currentUser, 2); 
+                    }  
+                });
+            } else {
+            	viewImg.setSrc("icons/16/print.png");  
+    	        viewImg.setPrompt("เรียกดูหรือพิมพ์ใบแจ้งหนี้");
+                viewImg.addClickHandler(new ClickHandler() {  
+                    public void onClick(ClickEvent event) {  
+                        //SC.say("View Icon Clicked for : " + record.getAttribute("quote_id"));
+                        EditWindow.show(record, false, currentUser, 1);
+                    }  
+                });
+            }
+            viewImg.setHeight(16);  
+            viewImg.setWidth(16);
+            
+            recordCanvas.addMember(viewImg); 
+            return recordCanvas;   
         } else if (fieldName.equalsIgnoreCase("viewDeliveryField")) { 
         	HLayout recordCanvas = new HLayout(3);  
             recordCanvas.setHeight(22);  
