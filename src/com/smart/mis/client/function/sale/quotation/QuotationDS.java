@@ -44,7 +44,7 @@ public class QuotationDS extends DataSource {
 		 DataSourceDateField Field_5 = new DataSourceDateField("delivery", "กำหนดส่งสินค้า");
 		 
 		 DataSourceFloatField Field_6 = new DataSourceFloatField("total_weight", "น้ำหนักรวม (กรัม)");
-		 DataSourceIntegerField Field_7 = new DataSourceIntegerField("total_amount", "จำรวนรวม (ชิ้น)");
+		 DataSourceIntegerField Field_7 = new DataSourceIntegerField("total_amount", "จำนวนรวม (ชิ้น)");
 		 
 		 DataSourceFloatField Field_8 = new DataSourceFloatField("netExclusive", "ราคารวม (บาท)");
 		 DataSourceFloatField Field_9 = new DataSourceFloatField("tax", "ภาษีมูลค่าเพิ่ม (7%)");

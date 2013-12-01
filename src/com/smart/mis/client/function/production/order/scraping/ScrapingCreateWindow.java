@@ -864,6 +864,7 @@ public class ScrapingCreateWindow {
 					editWindow.destroy();
 				} else { 
 					for (ListGridRecord item : orderProductList) {
+						System.out.println("Debug : " + item.getAttributeAsString("sub_job_id"));
 						ScrapingProductDS.getInstance(job_id).addData(item);
 					}
 					

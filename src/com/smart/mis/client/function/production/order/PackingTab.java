@@ -163,15 +163,19 @@ public class PackingTab {
 		ListGridField job_id = new ListGridField("job_id" , 120);
 		ListGridField plan_id = new ListGridField("plan_id" , 120);
 		//ListGridField sname = new ListGridField("sname");
-		ListGridField status = new ListGridField("status");
+		ListGridField status = new ListGridField("status", 100);
 		
 		ListGridField sent_date = new ListGridField("sent_date", 100);
-		ListGridField due_date = new ListGridField("due_date", 100);
+		//ListGridField due_date = new ListGridField("due_date", 100);
 		
+		ListGridField total_sent_weight = new ListGridField("total_sent_weight");
+		total_sent_weight.setCellFormatter(FieldFormatter.getNumberFormat());
+		ListGridField total_sent_amount = new ListGridField("total_sent_amount");
+		total_sent_amount.setCellFormatter(FieldFormatter.getNumberFormat());
 		//ListGridField iconField = new ListGridField("transferredProduct", "โอนสินค้า", 100);
 		
 		//orderListGrid.setFields(status, job_id, plan_id, sent_date, due_date, iconField);
-		orderListGrid.setFields(status, job_id, plan_id, sent_date, due_date);
+		orderListGrid.setFields(status, job_id, plan_id, sent_date, total_sent_weight, total_sent_amount);
 		
 		//orderListGrid.hideField("status");
 		
@@ -248,9 +252,9 @@ public class PackingTab {
 //          }
 //        });
 		
-		IButton createOrderButton = new IButton("โอนสินค้า");
+		IButton createOrderButton = new IButton("โอนสินค้าเข้าคลัง");
 		createOrderButton.setIcon("icons/16/next.png");
-		createOrderButton.setWidth(170);
+		createOrderButton.setWidth(150);
 		createOrderButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
             	ListGridRecord selected = orderListGrid.getSelectedRecord();

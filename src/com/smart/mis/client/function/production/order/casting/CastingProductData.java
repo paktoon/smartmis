@@ -25,7 +25,7 @@ public class CastingProductData {
         return record;  
     }
     
-    public static ListGridRecord createReceivedRecord(ListGridRecord record, Double recv_weight, Integer recv_amount) {  
+    public static ListGridRecord createReceivedRecord(ListGridRecord record, Double recv_weight, Integer recv_amount, Double wage) {  
 //        ListGridRecord record = new ListGridRecord();
 //        record.setAttribute("sub_job_id", sub_job_id);
 //        record.setAttribute("job_id", job_id);
@@ -40,6 +40,9 @@ public class CastingProductData {
         
         record.setAttribute("recv_weight", recv_weight);
         record.setAttribute("recv_amount", recv_amount);
+        
+        record.setAttribute("wage", wage);
+        record.setAttribute("sum_wage", wage * recv_amount);
         
 //        record.setAttribute("status", status);
         return record;  

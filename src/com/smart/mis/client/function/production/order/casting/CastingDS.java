@@ -51,7 +51,7 @@ public class CastingDS extends DataSource {
 		 DataSourceIntegerField Field_6 = new DataSourceIntegerField("total_sent_amount", "จำนวนที่สั่งผลิต (ชิ้น)");
 		 
 		 DataSourceFloatField Field_6_1 = new DataSourceFloatField("total_recv_weight", "น้ำหนักที่รับ (กรัม)");
-		 DataSourceIntegerField Field_6_2 = new DataSourceIntegerField("total_recv_amount", "จำรวนที่รับ (ชิ้น)");
+		 DataSourceIntegerField Field_6_2 = new DataSourceIntegerField("total_recv_amount", "จำนวนที่รับ (ชิ้น)");
 		 DataSourceFloatField Field_6_3 = new DataSourceFloatField("total_wage", "ค่าจ้างรวม (บาท)");
 	        
 		 DataSourceDateField Field_7 = new DataSourceDateField("created_date", "สร้างวันที่");

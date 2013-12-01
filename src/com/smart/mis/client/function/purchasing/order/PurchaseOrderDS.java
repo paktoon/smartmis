@@ -65,11 +65,17 @@ public class PurchaseOrderDS extends DataSource {
 		 DataSourceTextField Field_15 = new DataSourceTextField("comment", "ความคิดเห็น");
 		 DataSourceEnumField Field_16 = new DataSourceEnumField("status", "สถานะ");
 		 DataSourceEnumField Field_17 = new DataSourceEnumField("payment_status", "สถานะการชำระเงิน");
+		 DataSourceEnumField Field_18 = new DataSourceEnumField("received_status", "สถานะการรับวัตถุดิบ");
 		 //Field_16.setValueMap("รอแก้ไข" , "รออนุมัติ" , "อนุมัติแล้ว" , "ยกเลิก");
 		 Field_16.setValueMap(PurchaseOrderStatus.getValueMap());
+		 Field_17.setValueMap(PurchaseOrderStatus.getValuePaymentMap());
+		 Field_18.setValueMap(PurchaseOrderStatus.getValueReceivedMap());
+		 DataSourceFloatField Field_19 = new DataSourceFloatField("paidInclusive", "ยอดเงินที่ชำระ (บาท)");
+		 DataSourceDateField Field_20 = new DataSourceDateField("paid_date", "วันที่ชำระเงิน");
+		 DataSourceTextField Field_21 = new DataSourceTextField("paid_by", "ชำระเงินโดย");
 		 
 		 //setFields(Field_1, Field_1_1, Field_2_1, Field_2_2, Field_3_1,Field_3_2,Field_3_3, Field_3, Field_4, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_15, Field_16);
-		 setFields(Field_1, Field_1_1, Field_2_1, Field_2_2, Field_3_1,Field_3_2,Field_3_3,Field_3, Field_4, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_15, Field_16, Field_17);
+		 setFields(Field_1, Field_1_1, Field_2_1, Field_2_2, Field_3_1,Field_3_2,Field_3_3,Field_3, Field_4, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_15, Field_16, Field_17, Field_18, Field_19, Field_20, Field_21);
 		 
 		 //setDataURL("smartmis/security/userData");
 		 setTestData(PurchaseOrderData.getNewRecords()); // For Test

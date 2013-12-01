@@ -13,6 +13,7 @@ import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.purchasing.PurchaseOrderStatus;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.SaleOrderStatus;
 import com.smart.mis.shared.security.User;
@@ -104,7 +105,7 @@ public class OrderReviseTab {
 		final SelectItem statusSelected = new SelectItem("status", "สถานะ");
 		statusSelected.setWrapTitle(false);
 		//statusSelected.setValueMap("รอผลิต", "กำลังผลิต", "พร้อมนำส่ง", "อยู่ระหว่างนำส่ง", "นำส่งแล้ว");
-		statusSelected.setValueMap(SaleOrderStatus.getValueMap());
+		statusSelected.setValueMap(PurchaseOrderStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("sid", "รหัสผู้จำหน่าย");

@@ -5,8 +5,9 @@ import java.util.LinkedHashMap;
 public class Country {
 	
 	static LinkedHashMap<String, String> countryMap;
-	static LinkedHashMap<String, String> valueMap;
 	static LinkedHashMap<String, String> valueIcons;
+	static LinkedHashMap<String, String> nameThaiMap;
+	static LinkedHashMap<String, String> nameEnglistMap;
 	
 	static {
 		countryMap  = new LinkedHashMap<String, String>(); 
@@ -25,21 +26,21 @@ public class Country {
 		countryMap.put("SP", "ยุโรป");   
 		countryMap.put("TC", "เอเซีย"); 
         
-		valueMap = new LinkedHashMap<String, String>();  
-        valueMap.put("TH", "ไทย");  
-        valueMap.put("US", "อเมริกา");  
-        valueMap.put("CH", "จีน");  
-        valueMap.put("JA", "ญี่ปุ่น");  
-        valueMap.put("IN", "อินเดีย");  
-        valueMap.put("GM", "เยอรมัน");  
-        valueMap.put("FR", "ฝรั่งเศส");  
-        valueMap.put("IT", "อิตาลี");  
-        valueMap.put("RS", "รัสเซีย");  
-        valueMap.put("BR", "บราซิล");  
-        valueMap.put("CA", "แคนนาดา");  
-        valueMap.put("MX", "เม็กซิโก");  
-        valueMap.put("SP", "สเปน");  
-        valueMap.put("TC", "สหรัฐอาหรับเอมิเรตส์");
+		nameThaiMap = new LinkedHashMap<String, String>();  
+		nameThaiMap.put("TH", "ไทย");  
+		nameThaiMap.put("US", "อเมริกา");  
+		nameThaiMap.put("CH", "จีน");  
+		nameThaiMap.put("JA", "ญี่ปุ่น");  
+		nameThaiMap.put("IN", "อินเดีย");  
+		nameThaiMap.put("GM", "เยอรมัน");  
+		nameThaiMap.put("FR", "ฝรั่งเศส");  
+		nameThaiMap.put("IT", "อิตาลี");  
+		nameThaiMap.put("RS", "รัสเซีย");  
+		nameThaiMap.put("BR", "บราซิล");  
+		nameThaiMap.put("CA", "แคนนาดา");  
+		nameThaiMap.put("MX", "เม็กซิโก");  
+		nameThaiMap.put("SP", "สเปน");  
+		nameThaiMap.put("TC", "สหรัฐอาหรับเอมิเรตส์");
         
         valueIcons = new LinkedHashMap<String, String>();
         valueIcons.put("TH", "TH");
@@ -56,14 +57,38 @@ public class Country {
         valueIcons.put("MX", "MX");  
         valueIcons.put("SP", "SP"); 
         valueIcons.put("TC", "TC");
+        
+        nameEnglistMap = new LinkedHashMap<String, String>();  
+        nameEnglistMap.put("TH", "Thai");  
+        nameEnglistMap.put("US", "United State of America");  
+        nameEnglistMap.put("CH", "China");  
+        nameEnglistMap.put("JA", "Japan");  
+        nameEnglistMap.put("IN", "India");  
+        nameEnglistMap.put("GM", "Germany");  
+        nameEnglistMap.put("FR", "France");  
+        nameEnglistMap.put("IT", "Italy");  
+        nameEnglistMap.put("RS", "Russia");  
+        nameEnglistMap.put("BR", "Brazil");  
+        nameEnglistMap.put("CA", "Canada");  
+        nameEnglistMap.put("MX", "Mexico");  
+        nameEnglistMap.put("SP", "Spain");  
+        nameEnglistMap.put("TC", "United Arab Emirates");
 	}
 	
 	public static String getContinient(String contryName) {
 		return countryMap.get(contryName);
 	}
 	
+	public static String getThaiCountryName(String contryName) {
+		return nameThaiMap.get(contryName);
+	}
+	
+	public static String getEnglishCountryName(String contryName) {
+		return nameEnglistMap.get(contryName);
+	}
+	
 	public static LinkedHashMap<String, String> getValueMap() {
-        return valueMap;
+        return nameThaiMap;
 	}
 	
 	public static LinkedHashMap<String, String> getValueIcons() {

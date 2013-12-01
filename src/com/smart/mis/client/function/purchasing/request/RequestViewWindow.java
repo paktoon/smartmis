@@ -891,6 +891,7 @@ public class RequestViewWindow extends EditorWindow{
 			//For sale and invoice
 			String order_status = "1_created_order";
 			String payment_status = "1_waiting_for_payment";
+			String received_status = "1_waiting_for_received";
 //			if (planProductList.size() != 0) {
 //				sale_status = "1_waiting_for_production";
 //			}
@@ -906,7 +907,7 @@ public class RequestViewWindow extends EditorWindow{
 //	        dateRange.setRelativeEndDate(new RelativeDate("+"+credit+"d"));
 //	        final Date due_date = dateRange.getEndDate();
 	        
-			final ListGridRecord orderRecord = PurchaseOrderData.createRecord(order_id, request_id, sid, sup_name, quote_id, payment_model, credit, null, null, delivery, total_weight, total_amount, total_netExclusive, new Date(), request_record.getAttributeAsDate("modified_date"), currentUser.getFirstName() + " " + currentUser.getLastName(), request_record.getAttribute("modified_by"), "", order_status, payment_status);
+			final ListGridRecord orderRecord = PurchaseOrderData.createRecord(order_id, request_id, sid, sup_name, quote_id, payment_model, credit, null, null, delivery, total_weight, total_amount, total_netExclusive, new Date(), request_record.getAttributeAsDate("modified_date"), currentUser.getFirstName() + " " + currentUser.getLastName(), request_record.getAttribute("modified_by"), "", order_status, payment_status, received_status);
 //			final ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, sup_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
 			
 			PurchaseOrderDS.getInstance().addData(orderRecord, new DSCallback() {

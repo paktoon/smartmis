@@ -47,7 +47,12 @@ public class DeliveryDS extends DataSource {
 		 //DataSourceDateField Field_5_1 = new DataSourceDateField("due_date", "กำหนดชำระเงิน");
 		 
 		 DataSourceFloatField Field_6 = new DataSourceFloatField("total_weight", "น้ำหนักรวม (กรัม)");
-		 DataSourceIntegerField Field_7 = new DataSourceIntegerField("total_amount", "จำรวนรวม (ชิ้น)");
+		 DataSourceIntegerField Field_7 = new DataSourceIntegerField("total_amount", "จำนวนรวม (ชิ้น)");
+		 
+		 DataSourceFloatField Field_8 = new DataSourceFloatField("total_issued_weight", "น้ำหนักที่เบิกรวม (กรัม)");
+		 DataSourceIntegerField Field_9 = new DataSourceIntegerField("total_issued_amount", "จำนวนที่เบิกรวม (ชิ้น)");
+		 DataSourceDateField Field_10_1 = new DataSourceDateField("issued_date", "เบิกสินค้าวันที่");
+		 DataSourceTextField Field_10_2 = new DataSourceTextField("issued_by", "จ่ายสินค้าโดย");
 		 
 //		 DataSourceFloatField Field_8 = new DataSourceFloatField("netExclusive", "ราคารวม (บาท)");
 //		 DataSourceFloatField Field_9 = new DataSourceFloatField("tax", "ภาษีมูลค่าเพิ่ม (7%)");
@@ -63,10 +68,12 @@ public class DeliveryDS extends DataSource {
 		 //DataSourceTextField Field_15 = new DataSourceTextField("comment", "ความคิดเห็น");
 		 //DataSourceTextField Field_16 = new DataSourceTextField("status", "สถานะ");
 		 DataSourceEnumField Field_16 = new DataSourceEnumField("status", "สถานะ");
+		 DataSourceEnumField Field_17 = new DataSourceEnumField("issued_status", "สถานะ");
 		 //Field_16.setValueMap("กำลังนำส่ง", "นำส่งแล้ว");
 		 Field_16.setValueMap(DeliveryStatus.getValueMap());
+		 Field_17.setValueMap(DeliveryStatus.getIssueValueMap());
 		 
-		 setFields(Field_0, Field_1, Field_1_1, Field_2, Field_2_1, Field_5, Field_6 ,Field_7, Field_11, Field_12, Field_13, Field_14, Field_16);
+		 setFields(Field_0, Field_1, Field_1_1, Field_2, Field_2_1, Field_5, Field_6 ,Field_7, Field_8, Field_9, Field_10_1, Field_10_2, Field_11, Field_12, Field_13, Field_14, Field_16,Field_17);
 		 
 		 //setDataURL("smartmis/security/userData");
 		 setTestData(DeliveryData.getNewRecords()); // For Test

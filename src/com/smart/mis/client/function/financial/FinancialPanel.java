@@ -3,8 +3,9 @@ package com.smart.mis.client.function.financial;
 import com.smart.mis.client.MainPage;
 import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionWindow;
+import com.smart.mis.client.function.financial.disburse.material.DisbursePurchaseLayout;
+import com.smart.mis.client.function.financial.disburse.wage.WageLayout;
 import com.smart.mis.client.function.financial.receipt.ReceiptLayout;
-import com.smart.mis.client.function.sale.invoice.InvoiceTabSet;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -30,6 +31,8 @@ public class FinancialPanel extends FunctionPanel{
 		subDisbusementReportWindow = createFuncWindow();
 		
 		prepareReceiptWindow();
+		prepareDisburseMaterialWindow();
+		prepareDisburseWageWindow();
 	}
 
 	@Override
@@ -60,4 +63,15 @@ public class FinancialPanel extends FunctionPanel{
 		VLayout receiptLayout = new ReceiptLayout(this._main.getCurrentUser());
 		this.cashReceiptWindow.addItem(receiptLayout);
 	}
+	
+	private void prepareDisburseMaterialWindow(){
+		VLayout disburseLayout = new DisbursePurchaseLayout(this._main.getCurrentUser());
+		this.disburseMaterialWindow.addItem(disburseLayout);
+	}
+	
+	private void prepareDisburseWageWindow(){
+		VLayout disburseLayout = new WageLayout(this._main.getCurrentUser());
+		this.disburseWageWindow.addItem(disburseLayout);
+	}
+	
 }

@@ -44,14 +44,14 @@ public class PackingDS extends DataSource {
 //		 DataSourceTextField Field_3_7 = new DataSourceTextField("stype", "ประเภทงาน");
 		 
 		 DataSourceTextField Field_4_1 = new DataSourceTextField("sent_date", "วันที่เริ่มผลิต");
-		 DataSourceTextField Field_4_2 = new DataSourceTextField("due_date", "วันที่กำหนดโอนสินค้า");
-		 DataSourceTextField Field_4_3 = new DataSourceTextField("transferred_date", "วันที่โอนสินค้า");
+		 DataSourceTextField Field_4_2 = new DataSourceTextField("due_date", "วันที่กำหนดส่งสินค้า");
+		 DataSourceTextField Field_4_3 = new DataSourceTextField("transfer_date", "วันที่โอนสินค้า");
 		 
 		 DataSourceFloatField Field_5 = new DataSourceFloatField("total_sent_weight", "น้ำหนักสินค้า (กรัม)");
 		 DataSourceIntegerField Field_6 = new DataSourceIntegerField("total_sent_amount", "จำนวนสินค้า (ชิ้น)");
 		 
 //		 DataSourceFloatField Field_6_1 = new DataSourceFloatField("total_recv_weight", "น้ำหนักที่รับ (กรัม)");
-//		 DataSourceIntegerField Field_6_2 = new DataSourceIntegerField("total_recv_amount", "จำรวนที่รับ (ชิ้น)");
+//		 DataSourceIntegerField Field_6_2 = new DataSourceIntegerField("total_recv_amount", "จำนวนที่รับ (ชิ้น)");
 //		 DataSourceFloatField Field_6_3 = new DataSourceFloatField("total_wage", "ค่าจ้างรวม (บาท)");
 //		 DataSourceFloatField Field_6_4 = new DataSourceFloatField("return_mat", "คืนเนื้อเงิน (กรัม)");
 		 

@@ -5,6 +5,10 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.financial.disburse.wage.WageDS;
+import com.smart.mis.client.function.financial.disburse.wage.WageData;
+import com.smart.mis.client.function.financial.disburse.wage.WageItemDS;
+import com.smart.mis.client.function.financial.disburse.wage.WageItemData;
 import com.smart.mis.client.function.production.order.scraping.ScrapingCreateWindow;
 import com.smart.mis.client.function.production.plan.product.PlanProductDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
@@ -52,6 +56,7 @@ import com.smartgwt.client.widgets.form.fields.DoubleItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -76,6 +81,7 @@ public class CastingViewWindow extends EditorWindow{
 	Double total_received_weight;
 	Integer total_received_amount;
 	Double total_paid_wage;
+	Double wage_per_gam;
 	
 	public void show(ListGridRecord record, boolean edit, User currentUser, int page){
 		smith = new Smith();
@@ -119,6 +125,11 @@ public class CastingViewWindow extends EditorWindow{
 		Integer sent_amount = record.getAttributeAsInt("total_sent_amount");
 		
 		Double recv_weight = record.getAttributeAsDouble("total_recv_weight");
+		if (recv_weight == null) {
+			total_received_weight = 0.0; 
+		} else {
+			total_received_weight = recv_weight;
+		}
 		Integer recv_amount = record.getAttributeAsInt("total_recv_amount");
 		Double job_wage = record.getAttributeAsDouble("total_wage");
 		System.out.println("Casting job wage " + job_wage);
@@ -370,8 +381,11 @@ public class CastingViewWindow extends EditorWindow{
         summaryForm_3.setIsGroup(true);
         summaryForm_3.setGroupTitle("สรุปค่าจ้างผลิต");
         summaryForm_3.setColWidths(80, 70);
-		final DoubleItem wage_per_gam = new DoubleItem("wage_per_gam");
+		final SpinnerItem  wage_per_gam = new SpinnerItem("wage_per_gam");
 		wage_per_gam.setDefaultValue(0.9);
+		wage_per_gam.setMin(0.1);  
+		wage_per_gam.setMax(10.0);
+		wage_per_gam.setStep(0.1d);
 		if (!edit) wage_per_gam.setCanEdit(false);
 		final StaticTextItem total_wage = new StaticTextItem("total_wage");
 		if (job_wage == null) {
@@ -394,7 +408,7 @@ public class CastingViewWindow extends EditorWindow{
 			@Override
 			public void onChanged(ChangedEvent event) {
 				if (wage_per_gam.validate()) {
-					total_paid_wage = wage_per_gam.getValueAsDouble() * ((Double) total_recv_weight.getValue());
+					total_paid_wage = Double.parseDouble(wage_per_gam.getValueAsString()) * total_received_weight;
 					total_wage.setValue(nf.format(total_paid_wage));
 				}
 			}});
@@ -402,7 +416,7 @@ public class CastingViewWindow extends EditorWindow{
 		orderListGrid.addCellSavedHandler(new CellSavedHandler() {  
 			@Override
 			public void onCellSaved(CellSavedEvent event) {
-				summaryRecalculate(orderListGrid.getRecords(), summaryForm_2, summaryForm_3, wage_per_gam.getValueAsDouble());
+				summaryRecalculate(orderListGrid.getRecords(), summaryForm_2, summaryForm_3, Double.parseDouble(wage_per_gam.getValueAsString()));
 			}  
         });
 		
@@ -717,6 +731,7 @@ public class CastingViewWindow extends EditorWindow{
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 		target.getField("total_recv_weight").setValue(nf.format(total_received_weight));
 		target.getField("total_recv_amount").setValue(nf.format(total_received_amount));
+		wage_per_gam = perGam;
 		total_paid_wage = total_received_weight * perGam;
 		target_2.getField("total_wage").setValue(nf.format(total_paid_wage));
 	}
@@ -731,14 +746,17 @@ public class CastingViewWindow extends EditorWindow{
 			}
 		}
 			final String process_status = "2_process_completed";
+			final String user = currentUser.getFirstName() + " " + currentUser.getLastName();
 			
 			record.setAttribute("status", process_status);
 			record.setAttribute("total_recv_weight", total_received_weight);
 			record.setAttribute("total_recv_amount", total_received_amount);
 			record.setAttribute("total_wage", total_paid_wage);
 			record.setAttribute("modified_date", new Date());
-			record.setAttribute("modified_by", currentUser.getUserName() + " " + currentUser.getLastName());
+			record.setAttribute("modified_by", user);
 			record.setAttribute("received_date", new Date());
+			
+			final String wage_id = createWagePayment(record, user);
 			
 			CastingDS.getInstance().updateData(record, new DSCallback() {
 				@Override
@@ -750,103 +768,31 @@ public class CastingViewWindow extends EditorWindow{
 							editWindow.destroy();
 						} else { 
 							for (ListGridRecord item : all) {
+								item.setAttribute("wage", wage_per_gam);
+								item.setAttribute("sum_wage", item.getAttributeAsDouble("recv_weight") * wage_per_gam);
 								CastingProductDS.getInstance(job_id).updateData(item);
+								createWageItemPayment(item, wage_id);
 							}
-							SC.say("บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการขอเบิกวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + "TBD");
+							SC.say("บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการขอเบิกวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + wage_id);
 							editWindow.destroy();
 						}
 				}
 			});
 	}
 	
-//	void updateQuoteStatus(String quote_id, final String status, String comment) {
-//		Record updated = QuotationData.createStatusRecord(quote_id,status,comment);
-//		QuotationDS.getInstance().updateData(updated, new DSCallback() {
-//			@Override
-//			public void execute(DSResponse dsResponse, Object data,
-//					DSRequest dsRequest) {
-//					if (dsResponse.getStatus() != 0) {
-//						SC.warn("การอนุมัติใบเสนอราคาล้มเหลว");
-//					} else { 
-//						SC.warn("แก้ไขสถานะใบเสนอราคา \"" + status + "\" เสร็จสิ้น");
-//					}
-//			}
-//		});
-//	}
-//	
-//	public void createDeliveryOrder(final Window main, final String sale_id, String invoice_id, DynamicForm customer, ListGrid orderListGrid, Date delivery, User currentUser){
-//		
-//		ListGridRecord[] all = orderListGrid.getRecords();
-//		
-////		if (all.length == 0) {
-////			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
-////			return;
-////		}
-//		
-//		Double total_weight = 0.0;
-//		Double total_netExclusive = 0.0;
-//		Integer total_amount = 0;
-//		final String delivery_id = "DL70" + Math.round((Math.random() * 100));
-//		//final String invoice_id = "IN70" + Math.round((Math.random() * 100));
-//		final ArrayList<SaleProductDetails> saleProductList = new ArrayList<SaleProductDetails>();
-//		//final ArrayList<SaleProductDetails> invoiceProductList = new ArrayList<SaleProductDetails>();
-//
-//		for (ListGridRecord item : all){
-//			total_weight += item.getAttributeAsDouble("weight");
-//			total_amount += item.getAttributeAsInt("sale_amount");
-//			total_netExclusive += item.getAttributeAsDouble("sum_price");
-//			
-//			String pid = item.getAttributeAsString("pid");
-//			String pname = item.getAttributeAsString("name");
-//			String ptype = item.getAttributeAsString("type");
-//			//String psize = item.getAttributeAsString("size");
-//			Double pweight = item.getAttributeAsDouble("weight");
-//			Integer psale_amount = item.getAttributeAsInt("sale_amount");
-//			String punit = item.getAttributeAsString("unit");
-//			Double pprice = item.getAttributeAsDouble("price");
-//			
-//			String sub_sale_id = "SS80" + Math.round((Math.random() * 1000));
-//			SaleProductDetails temp = new SaleProductDetails();
-//			temp.save(pid, pname, pweight, pprice, ptype, punit);
-//			temp.setID(sub_sale_id, delivery_id);
-//			temp.setQuantity(psale_amount);
-//			saleProductList.add(temp);
-//		}	
-//
-//			final String delivery_status = "1_on_delivery";
-//			String cid = (String) customer.getField("cid").getValue();
-//			String smith_name = (String) customer.getField("smith_name").getValue();
-////			String payment_model = (String) customer.getField("payment_model").getValue();
-////			Integer credit = (Integer) customer.getField("credit").getValue();
-//			
-////			DateRange dateRange = new DateRange();  
-////	        dateRange.setRelativeStartDate(RelativeDate.TODAY);
-////	        dateRange.setRelativeEndDate(new RelativeDate("+"+credit+"d"));
-////	        final Date due_date = dateRange.getEndDate();
-//	        
-//			final ListGridRecord deliveryRecord = DeliveryData.createRecord(delivery_id, sale_id, invoice_id, cid, smith_name, delivery, total_weight, total_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, delivery_status, new Date(), null, "");
-//			//ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, smith_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
-//			
-//			//Auto create invoice
-//			DeliveryDS.getInstance().addData(deliveryRecord, new DSCallback() {
-//				@Override
-//				public void execute(DSResponse dsResponse, Object data,
-//						DSRequest dsRequest) {
-//						if (dsResponse.getStatus() != 0) {
-//							SC.warn("การสร้างรายการนำส่งสินค้าล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-//							main.destroy();
-//						} else { 
-//							for (SaleProductDetails item : saleProductList) {
-//								ListGridRecord subAddRecord = SaleProductData.createRecord(item);
-//								SaleProductDS.getInstance(delivery_id).addData(subAddRecord);
-//							}
-//							ListGridRecord saleRecord = SaleOrderData.createStatusRecord(sale_id, "4_on_delivery");
-//							SaleOrderDS.getInstance().updateData(saleRecord);
-//							main.destroy();
-//						}
-//				}
-//			});
-//	}
+	String createWagePayment(ListGridRecord record, String user) {
+		String wage_id = "WP70" + Math.round((Math.random() * 100));
+		String status = "1_waiting_for_payment";
+		ListGridRecord newRecord = WageData.createRecord(record, wage_id, new Date(), user, status);
+		WageDS.getInstance().addData(newRecord);
+		return wage_id;
+	}
+	
+	void createWageItemPayment(ListGridRecord record, String wage_id) {
+		String sub_wage_id = "SWP70" + Math.round((Math.random() * 100));
+		ListGridRecord newRecord = WageItemData.createRecord(record, sub_wage_id, wage_id, true);
+		WageItemDS.getInstance(wage_id).addData(newRecord);
+	}
 	
 	private ListGrid getListGrid() {
 		return new ListGrid() {  

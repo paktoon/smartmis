@@ -9,7 +9,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 public class InvoiceData {
 	// --> Quote Object + ItemQuote Object
 	// Quote - quote id , cid , from, to ,delivery , total_weight, total_amount, netExclusive, tax, netInclusive, created_date, modified_date, created_by, modified_by, comment, status [waiting_for_approved, waiting_for_revised, approved, removed] --> to data store
-    public static ListGridRecord createRecord(String invoice_id, String sale_id ,String cid, String cus_name, String payment_model, Integer credit, Date delivery ,Double total_weight,Integer total_amount,Double netExclusive,Date created_date,Date modified_date,String created_by,String modified_by, String status, String purchase_id, Date due_date, Date payment_date) {  
+    public static ListGridRecord createRecord(String invoice_id, String sale_id ,String cid, String cus_name, String payment_model, Integer credit, Date delivery ,Double total_weight,Integer total_amount,Double netExclusive,Date created_date,Date modified_date,String created_by,String modified_by, String status, String purchase_id, Date due_date,Date paid_date) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("invoice_id", invoice_id);
         record.setAttribute("sale_id", sale_id);
@@ -34,7 +34,7 @@ public class InvoiceData {
         record.setAttribute("status", status); // รอชำระเงิน, ชำระเงินแล้ว, เกินกำหนดชำระเงิน
         record.setAttribute("purchase_id", purchase_id);
         record.setAttribute("due_date", due_date);
-        record.setAttribute("payment_date", payment_date);
+        record.setAttribute("paid_date", paid_date);
         return record;  
     }
     

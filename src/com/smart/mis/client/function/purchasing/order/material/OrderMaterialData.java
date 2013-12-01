@@ -48,6 +48,12 @@ public class OrderMaterialData {
         return record;   
     }
     
+    public static ListGridRecord createReceivedRecord(ListGridRecord record, Double received_weight, Double received_amount) {
+        record.setAttribute("received_weight", received_weight);
+        record.setAttribute("received_amount", received_amount);
+        return record;  
+    }
+    
     public static ListGridRecord[] getNewRecords() {
     	return new ListGridRecord[]{};
     }

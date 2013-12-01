@@ -15,6 +15,7 @@ import com.smart.mis.client.function.sale.order.product.SaleProductDetails;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductData;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDetails;
+import com.smart.mis.shared.Country;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
@@ -112,6 +113,9 @@ public class InvoiceViewWindow extends EditorWindow{
 
 		final String invoice_id = record.getAttributeAsString("invoice_id");
 		String cid = record.getAttributeAsString("cid");
+
+		String fullAddress = getCustomerFullAddress(cid);
+		
 		String payment_model = record.getAttributeAsString("payment_model");
 		Integer credit = record.getAttributeAsInt("credit");
 		final String sale_id = record.getAttributeAsString("sale_id");
@@ -157,98 +161,19 @@ public class InvoiceViewWindow extends EditorWindow{
 		customerForm.setIsGroup(true);
 		customerForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 		customerForm.setGroupTitle("ข้อมูลลูกค้า");
-//		if (edit) {
-//			final StaticTextItem cus_id = new StaticTextItem("cid", "รหัสลูกค้า");
-//			final SelectItem cus_name = new SelectItem("cus_name", "ชื่อลูกค้า");
-//			cus_name.setColSpan(3);
-//			final StaticTextItem cus_type = new StaticTextItem("cus_type", "ประเภทลูกค้า");
-//			cus_name.setOptionDataSource(CustomerDS.getInstance());
-//			cus_name.setEmptyDisplayValue("--โปรดเลือกลูกค้า--");
-//			cus_name.setPickListWidth(350);
-//			cus_name.setWidth(240);
-//			cus_name.setRequired(true);
-//			cus_name.setHint("*");
-//			ListGridField Field_1 = new ListGridField("cid", 80);  
-//	        ListGridField Field_2 = new ListGridField("cus_name", 200);  
-//	        ListGridField Field_3 = new ListGridField("cus_type", 70);
-//	        cus_name.setPickListFields(Field_1, Field_2, Field_3);
-//	        
-//	        final SelectItem cus_payment_model = new SelectItem("payment_model", "วิธีการชำระเงิน");
-//	        cus_payment_model.setValueMap("เงินสด", "แคชเชียร์เช็ค");
-//			//paymentModel.setEmptyDisplayValue("--โปรดเลือกวิธีชำระเงิน--");
-//	        cus_payment_model.setDefaultValue(payment_model);
-//	        cus_payment_model.setWidth(100);
-//			final IntegerItem cus_credit = new IntegerItem("credit","เครดิต");
-//			cus_credit.setRequired(true);
-//			cus_credit.setHint("วัน*");
-//			cus_credit.setWidth(50);
-//			cus_credit.setTextAlign(Alignment.LEFT);
-//			cus_credit.setDefaultValue(credit);
-//			
-//	        cus_name.addChangedHandler(new ChangedHandler() {
-//				@Override
-//				public void onChanged(ChangedEvent event) {
-//					Record selected = cus_name.getSelectedRecord();
-//					if (selected != null) {
-//						String customer_id = selected.getAttributeAsString("cid");
-//						String customer_name = selected.getAttributeAsString("cus_name");
-//						String customer_type = selected.getAttributeAsString("cus_type");
-//						//Contact info
-//						String customer_address = selected.getAttributeAsString("address");
-//						String customer_phone = selected.getAttributeAsString("cus_phone");
-//						String contact_name = selected.getAttributeAsString("contact_name");
-//						String contact_phone = selected.getAttributeAsString("contact_phone");
-//						String contact_email = selected.getAttributeAsString("contact_email");
-//						String zone = selected.getAttributeAsString("zone");
-//						
-//						client.setAttributes(customer_id, customer_name, customer_phone, contact_name, contact_phone, contact_email, customer_address, customer_type, zone);
-//
-//						if(customer_type.equalsIgnoreCase("ลูกค้าประจำ")) {
-//							cus_credit.enable();
-//						} else {
-//							cus_credit.setValue(0);
-//							cus_credit.disable();
-//						}
-//						
-//						cus_id.setValue(customer_id);
-//						cus_type.setValue(customer_type);
-//					}
-//				}
-//	        });
-//	        
-//	        cus_payment_model.addChangedHandler(new ChangedHandler() {
-//				@Override
-//				public void onChanged(ChangedEvent event) {
-//					if (cus_payment_model.validate()) {
-//						client.setPaymentModel(cus_payment_model.getValueAsString());
-//					}
-//				}
-//	        });
-//			
-//	        cus_credit.addChangedHandler(new ChangedHandler() {
-//				@Override
-//				public void onChanged(ChangedEvent event) {
-//					if (cus_credit.validate()) {
-//						client.setCredit(cus_credit.getValueAsInteger());
-//					}
-//				}
-//	        });
-//			
-//	        customerForm.setFields(cus_id, cus_type, cus_name, cus_payment_model, cus_credit );
-////	        customerForm.setFields(cus_id, cus_type, cus_name );
-//		} else {
 			final StaticTextItem cus_id = new StaticTextItem("cid", "รหัสลูกค้า");
 			final StaticTextItem cus_name = new StaticTextItem("cus_name", "ชื่อลูกค้า");
 			cus_name.setColSpan(4);
 			final StaticTextItem cus_type = new StaticTextItem("cus_type", "ประเภทลูกค้า");
+			final StaticTextItem cus_address = new StaticTextItem("fullAddress", "ที่อยู่");
+			cus_address.setColSpan(4);
+			cus_address.setDefaultValue(fullAddress);
 			final StaticTextItem cus_payment_model = new StaticTextItem("payment_model", "วิธีการชำระเงิน");
 			cus_payment_model.setDefaultValue(payment_model);
 			final StaticTextItem cus_credit = new StaticTextItem("credit", "เครดิต");
 			cus_credit.setDefaultValue(credit);
 			cus_credit.setHint("วัน");
-			customerForm.setFields(cus_id,cus_type, cus_name, cus_payment_model, cus_credit);
-			//customerForm.setFields(cus_id,cus_type, cus_name);
-//		}
+			customerForm.setFields(cus_id,cus_type, cus_name, cus_address, cus_payment_model, cus_credit);
 		customerForm.setColWidths(100,100,100,100,100,100);
 		customerForm.fetchData(new Criterion("cid", OperatorId.EQUALS, cid));
 		//customerForm.editRecord(record);
@@ -532,8 +457,8 @@ public class InvoiceViewWindow extends EditorWindow{
 								if (value) {
 					            		record.setAttribute("status", "2_paid");
 										record.setAttribute("receivedInclusive", received_payment.getValueAsDouble());
-					            		record.setAttribute("modified_date", new Date());
-					            		record.setAttribute("modified_by", currentUser.getFirstName() + " " + currentUser.getLastName());
+					            		record.setAttribute("paid_date", new Date());
+					            		record.setAttribute("paid_by", currentUser.getFirstName() + " " + currentUser.getLastName());
 					            		InvoiceDS.getInstance().updateData(record, new DSCallback() {
 											@Override
 											public void execute(DSResponse dsResponse, Object data,
@@ -723,181 +648,34 @@ public class InvoiceViewWindow extends EditorWindow{
         
 		return layout;
 	}
-	
-//	public void summaryPriceRecalculate(ListGridRecord[] all, DynamicForm target){
-//		Double sum_price = 0.0;
-//		for (ListGridRecord record : all) {
-//			sum_price += record.getAttributeAsDouble("sum_price");
-//		}
-//		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
-//		target.getField("netExclusive").setValue(nf.format(sum_price));
-//		target.getField("tax").setValue(nf.format(sum_price * 0.07));
-//		target.getField("netInclusive").setValue(nf.format(sum_price * 1.07));
-//	}
-//	
-//	public void saveQuotation(final Window main, final String quote_id, DynamicForm customer, ListGrid saleListGrid, Date from, Date to, Date delivery, User currentUser){
-//		ListGridRecord[] all = saleListGrid.getRecords();
-//		
-//		if (all.length == 0) {
-//			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
-//			return;
-//		}
-//		
-//		Double total_weight = 0.0;
-//		Double total_netExclusive = 0.0;
-//		Integer total_amount = 0;
-//		//final String quote_id = "QA70" + Math.round((Math.random() * 100));
-//		final ArrayList<QuoteProductDetails> productList = new ArrayList<QuoteProductDetails>();
-//		
-//		for (ListGridRecord item : all){
-//			total_weight += item.getAttributeAsDouble("weight");
-//			total_amount += item.getAttributeAsInt("quote_amount");
-//			total_netExclusive += item.getAttributeAsDouble("sum_price");
-//			
-//			String sub_quote_id = item.getAttributeAsString("sub_quote_id");
-//			String pid = item.getAttributeAsString("pid");
-//			String pname = item.getAttributeAsString("name");
-//			String ptype = item.getAttributeAsString("type");
-//			String psize = item.getAttributeAsString("size");
-//			Double pweight = item.getAttributeAsDouble("weight");
-//			Integer pquote_amount = item.getAttributeAsInt("quote_amount");
-//			String punit = item.getAttributeAsString("unit");
-//			Double pprice = item.getAttributeAsDouble("price");
-//			QuoteProductDetails temp = new QuoteProductDetails();
-//			temp.save(pid, pname, psize, pweight, pprice, ptype, punit);
-//			temp.setID(sub_quote_id, quote_id);
-//			temp.setQuantity(pquote_amount);
-//			productList.add(temp);
-//		}
-//		//System.out.println(total_weight + " " + total_amount + " " + total_netExclusive);
-//			//status
-//			final String quote_status = "2_waiting_for_approved";
-//			
-//			if (customer.getField("cid").getValue() == null || customer.getField("cus_name").getValue() == null) {
-//				SC.warn("ชื่อและรหัสลูกค้าไม่ถุกต้อง");
-//				return;
-//			}
-//			
-//			String cid = (String) customer.getField("cid").getValue();
-//			String cus_name = (String) customer.getField("cus_name").getValue();
-//			String payment_model = (String) customer.getField("payment_model").getValue();
-//			Integer credit = (Integer) customer.getField("credit").getValue();
-//			//System.out.println(cid + " " + cus_name + " " + payment_model + " " + credit);
-//			
-//			ListGridRecord updateRecord = QuotationData.createUpdateRecord(quote_id, cid, cus_name, payment_model, credit, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), currentUser.getFirstName() + " " + currentUser.getLastName(), "", quote_status);
-//			
-//			QuotationDS.getInstance().updateData(updateRecord, new DSCallback() {
-//				@Override
-//				public void execute(DSResponse dsResponse, Object data,
-//						DSRequest dsRequest) {
-//						//System.out.println("Test " + dsResponse.getStatus());
-//						if (dsResponse.getStatus() != 0) {
-//							SC.warn("การบันทึกใบเสนอราคาล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-//							main.destroy();
-//						} else { 
-//							for (QuoteProductDetails item : productList) {
-//								if (item.sub_quote_id == null) {
-//									item.sub_quote_id = "QS80" + Math.round((Math.random() * 100));
-//									ListGridRecord subUpdateRecord = QuoteProductData.createRecord(item);
-//									QuoteProductDS.getInstance(quote_id).addData(subUpdateRecord);
-//								} else  {
-//									ListGridRecord subUpdateRecord = QuoteProductData.createRecord(item);
-//									QuoteProductDS.getInstance(quote_id).updateData(subUpdateRecord);
-//								}
-//							}
-//							SC.warn("แก้ไขใบเสนอราคาเสร็จสิ้น <br> " + "รหัสใบเสนอราคา " + quote_id + "<br> สถานะของใบเสนอราคา " + quote_status);
-//							main.destroy();
-//						}
-//				}
-//			});
-//	}
-//	
-//	void updateQuoteStatus(String quote_id, final String status, String comment) {
-//		Record updated = QuotationData.createStatusRecord(quote_id,status,comment);
-//		QuotationDS.getInstance().updateData(updated, new DSCallback() {
-//			@Override
-//			public void execute(DSResponse dsResponse, Object data,
-//					DSRequest dsRequest) {
-//					if (dsResponse.getStatus() != 0) {
-//						SC.warn("การอนุมัติใบเสนอราคาล้มเหลว");
-//					} else { 
-//						SC.warn("แก้ไขสถานะใบเสนอราคา \"" + status + "\" เสร็จสิ้น");
-//					}
-//			}
-//		});
-//	}
-//	
-//	public void createSaleOrder(final Window main, final String quote_id, DynamicForm customer, ListGrid saleListGrid, Date delivery, User currentUser, String purchase_id){
-//		
-//		ListGridRecord[] all = saleListGrid.getRecords();
-//		
-////		if (all.length == 0) {
-////			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
-////			return;
-////		}
-//		
-//		Double total_weight = 0.0;
-//		Double total_netExclusive = 0.0;
-//		Integer total_amount = 0;
-//		final String sale_id = "SO70" + Math.round((Math.random() * 100));
-//		final ArrayList<SaleProductDetails> productList = new ArrayList<SaleProductDetails>();
-//		
-//		for (ListGridRecord item : all){
-//			total_weight += item.getAttributeAsDouble("weight");
-//			total_amount += item.getAttributeAsInt("quote_amount");
-//			total_netExclusive += item.getAttributeAsDouble("sum_price");
-//			
-//			String sub_sale_id = "SS80" + Math.round((Math.random() * 100));
-//			String pid = item.getAttributeAsString("pid");
-//			String pname = item.getAttributeAsString("name");
-//			String ptype = item.getAttributeAsString("type");
-//			String psize = item.getAttributeAsString("size");
-//			Double pweight = item.getAttributeAsDouble("weight");
-//			Integer psale_amount = item.getAttributeAsInt("quote_amount");
-//			String punit = item.getAttributeAsString("unit");
-//			Double pprice = item.getAttributeAsDouble("price");
-//			SaleProductDetails temp = new SaleProductDetails();
-//			temp.save(pid, pname, psize, pweight, pprice, ptype, punit);
-//			temp.setID(sub_sale_id, sale_id);
-//			temp.setQuantity(psale_amount);
-//			productList.add(temp);
-//			//status
-//		}	
-////			if (customer.getField("cid").getValue() == null || customer.getField("cus_name").getValue() == null) {
-////				SC.warn("ชื่อและรหัสลูกค้าไม่ถุกต้อง");
-////				return;
-////			}
-//
-//			final String sale_status = "1_waiting_for_production";
-//			String cid = (String) customer.getField("cid").getValue();
-//			String cus_name = (String) customer.getField("cus_name").getValue();
-//			String payment_model = (String) customer.getField("payment_model").getValue();
-//			Integer credit = (Integer) customer.getField("credit").getValue();
-//			
-//			ListGridRecord newRecord = SaleOrderData.createRecord(sale_id, quote_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, sale_status, purchase_id);
-//			
-//			SaleOrderDS.getInstance().addData(newRecord, new DSCallback() {
-//				@Override
-//				public void execute(DSResponse dsResponse, Object data,
-//						DSRequest dsRequest) {
-//						if (dsResponse.getStatus() != 0) {
-//							SC.warn("การสร้างรายการขายล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-//							main.destroy();
-//						} else { 
-//							for (SaleProductDetails item : productList) {
-//								//if (item.sub_sale_id == null) {
-//									//item.sub_sale_id = "SS80" + Math.round((Math.random() * 100));
-//									ListGridRecord subUpdateRecord = SaleProductData.createRecord(item);
-//									SaleProductDS.getInstance(sale_id).addData(subUpdateRecord);
-//								//} else  {
-//								//	ListGridRecord subUpdateRecord = SaleProductData.createRecord(item);
-//								//	SaleProductDS.getInstance(sale_id).updateData(subUpdateRecord);
-//								//}
-//							}
-//							SC.warn("สร้างรายการขายเสร็จสิ้น <br> " + "รหัสรายการขาย " + quote_id + "<br> สถานะของรายการขาย " + sale_status);
-//							main.destroy();
-//						}
-//				}
-//			});
-//	}
+
+	String getCustomerFullAddress(String cid) {
+		CustomerDS.getInstance().fetchData();
+		Record[] records = CustomerDS.getInstance().applyFilter(CustomerDS.getInstance().getCacheData(), new Criterion("cid", OperatorId.EQUALS, cid));
+		Record selected = records[0];
+		String address = selected.getAttributeAsString("address");
+		String street = selected.getAttributeAsString("street");
+		String city = selected.getAttributeAsString("city");
+		String state = selected.getAttributeAsString("state");
+		String postal = selected.getAttributeAsString("postal");
+		String country = selected.getAttributeAsString("country");
+		
+		if (country.equalsIgnoreCase("TH")) {
+			String fullAddress = address;
+			if (street !=null) fullAddress += " ถนน " + street;
+			if (city !=null) fullAddress += " เขต " + city;
+			if (state !=null) fullAddress += " จังหวัด " + state;
+			if (postal !=null) fullAddress += " รหัสไปรษณีย์ " + postal;
+			if (country !=null) fullAddress += " ประเทศ " + Country.getThaiCountryName(country);
+			return fullAddress;
+		} else {
+			String fullAddress = address;
+			if (street !=null) fullAddress += " ,Street " + street;
+			if (city !=null) fullAddress += " ,City " + city;
+			if (state !=null) fullAddress += " ,State " + state;
+			if (postal !=null) fullAddress += " ,Postal " + postal;
+			if (country !=null) fullAddress += " ,Country " + Country.getEnglishCountryName(country);
+			return fullAddress;
+		}
+	}
 }

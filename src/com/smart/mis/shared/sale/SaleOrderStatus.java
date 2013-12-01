@@ -11,8 +11,9 @@ public class SaleOrderStatus {
         valueMap.put("1_waiting_for_production", "รอผลิต");  
         valueMap.put("2_production_in_progress", "กำลังผลิต");  
         valueMap.put("3_production_completed", "พร้อมนำส่ง");  
+        valueMap.put("3_waiting_for_issued", "รอเบิกสินค้า");  
         valueMap.put("4_on_delivery", "อยู่ระหว่างนำส่ง");  
-        valueMap.put("5_delivery_completed", "นำส่งแล้ว");  
+        valueMap.put("5_delivery_completed", "นำส่งแล้ว");
         valueMap.put("6_canceled", "ยกเลิก");
 	}
 	

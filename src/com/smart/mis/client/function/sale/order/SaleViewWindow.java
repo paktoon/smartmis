@@ -5,9 +5,11 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.production.plan.PlanDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryData;
+import com.smart.mis.client.function.sale.delivery.DeliveryItemDS;
 import com.smart.mis.client.function.sale.invoice.InvoiceDS;
 import com.smart.mis.client.function.sale.invoice.InvoiceData;
 import com.smart.mis.client.function.sale.order.SaleOrderDS;
@@ -484,9 +486,9 @@ public class SaleViewWindow extends EditorWindow{
           }
         });
 		
-		final IButton deliveryButton = new IButton("นำส่งสินค้า");
+		final IButton deliveryButton = new IButton("สร้างรายการส่งสินค้า");
 		deliveryButton.setIcon("icons/16/truck-icon-16.png");
-		deliveryButton.setWidth(120);
+		deliveryButton.setWidth(150);
 		deliveryButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
             	SC.confirm("ยืนยันการสร้างรายการนำส่งสินค้า", "ต้องการสร้างรายการนำส่งสินค้า หรือไม่?" , new BooleanCallback() {
@@ -815,7 +817,7 @@ public class SaleViewWindow extends EditorWindow{
 //	
 	public void createDeliveryOrder(final Window main, final String sale_id, String invoice_id, DynamicForm customer, ListGrid saleListGrid, Date delivery, User currentUser){
 		
-		ListGridRecord[] all = saleListGrid.getRecords();
+		final ListGridRecord[] all = saleListGrid.getRecords();
 		
 //		if (all.length == 0) {
 //			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
@@ -827,32 +829,35 @@ public class SaleViewWindow extends EditorWindow{
 		Integer total_amount = 0;
 		final String delivery_id = "DL70" + Math.round((Math.random() * 100));
 		//final String invoice_id = "IN70" + Math.round((Math.random() * 100));
-		final ArrayList<SaleProductDetails> saleProductList = new ArrayList<SaleProductDetails>();
+//		final ArrayList<SaleProductDetails> saleProductList = new ArrayList<SaleProductDetails>();
 		//final ArrayList<SaleProductDetails> invoiceProductList = new ArrayList<SaleProductDetails>();
 
 		for (ListGridRecord item : all){
-			total_weight += item.getAttributeAsDouble("weight");
+			total_weight += item.getAttributeAsDouble("weight") * item.getAttributeAsInt("sale_amount");
 			total_amount += item.getAttributeAsInt("sale_amount");
 			total_netExclusive += item.getAttributeAsDouble("sum_price");
 			
-			String pid = item.getAttributeAsString("pid");
-			String pname = item.getAttributeAsString("name");
-			String ptype = item.getAttributeAsString("type");
-			//String psize = item.getAttributeAsString("size");
-			Double pweight = item.getAttributeAsDouble("weight");
-			Integer psale_amount = item.getAttributeAsInt("sale_amount");
-			String punit = item.getAttributeAsString("unit");
-			Double pprice = item.getAttributeAsDouble("price");
-			
-			String sub_sale_id = "SS80" + Math.round((Math.random() * 1000));
-			SaleProductDetails temp = new SaleProductDetails();
-			temp.save(pid, pname, pweight, pprice, ptype, punit);
-			temp.setID(sub_sale_id, delivery_id);
-			temp.setQuantity(psale_amount);
-			saleProductList.add(temp);
+//			String pid = item.getAttributeAsString("pid");
+//			String pname = item.getAttributeAsString("name");
+//			String ptype = item.getAttributeAsString("type");
+//			//String psize = item.getAttributeAsString("size");
+//			Double pweight = item.getAttributeAsDouble("weight");
+//			Integer psale_amount = item.getAttributeAsInt("sale_amount");
+//			String punit = item.getAttributeAsString("unit");
+//			Double pprice = item.getAttributeAsDouble("price");
+//			
+//			String sub_sale_id = "SS80" + Math.round((Math.random() * 1000));
+//			SaleProductDetails temp = new SaleProductDetails();
+//			temp.save(pid, pname, pweight, pprice, ptype, punit);
+//			temp.setID(sub_sale_id, delivery_id);
+//			temp.setQuantity(psale_amount);
+//			saleProductList.add(temp);
 		}	
 
-			final String delivery_status = "1_on_delivery";
+			//final String delivery_status = "1_on_delivery";
+			final String delivery_status = "0_product_request";
+			final String issued_status = "0_product_request";
+			
 			String cid = (String) customer.getField("cid").getValue();
 			String cus_name = (String) customer.getField("cus_name").getValue();
 //			String payment_model = (String) customer.getField("payment_model").getValue();
@@ -862,8 +867,7 @@ public class SaleViewWindow extends EditorWindow{
 //	        dateRange.setRelativeStartDate(RelativeDate.TODAY);
 //	        dateRange.setRelativeEndDate(new RelativeDate("+"+credit+"d"));
 //	        final Date due_date = dateRange.getEndDate();
-	        
-			final ListGridRecord deliveryRecord = DeliveryData.createRecord(delivery_id, sale_id, invoice_id, cid, cus_name, delivery, total_weight, total_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, delivery_status, new Date(), null, "");
+			final ListGridRecord deliveryRecord = DeliveryData.createRecord(delivery_id, sale_id, invoice_id, cid, cus_name, delivery, total_weight, total_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, delivery_status, issued_status, new Date(), null, "");
 			//ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
 			
 			//Auto create invoice
@@ -875,12 +879,24 @@ public class SaleViewWindow extends EditorWindow{
 							SC.warn("การสร้างรายการนำส่งสินค้าล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
 							main.destroy();
 						} else { 
-							for (SaleProductDetails item : saleProductList) {
-								ListGridRecord subAddRecord = SaleProductData.createRecord(item);
-								SaleProductDS.getInstance(delivery_id).addData(subAddRecord);
+//							for (SaleProductDetails item : saleProductList) {
+//								ListGridRecord subAddRecord = SaleProductData.createRecord(item);
+//								SaleProductDS.getInstance(delivery_id).addData(subAddRecord);
+//							}
+							
+							for (ListGridRecord item : all) {
+								item.setAttribute("delivery_id", delivery_id);
+								String sub_delivery_id = "SD80" + Math.round((Math.random() * 1000));
+								item.setAttribute("sub_delivery_id", sub_delivery_id);
+								Integer sale_amount = item.getAttributeAsInt("sale_amount");
+								Double weight = item.getAttributeAsDouble("weight");
+								item.setAttribute("sale_weight", sale_amount * weight);
+								DeliveryItemDS.getInstance(delivery_id).addData(item);
 							}
-							ListGridRecord saleRecord = SaleOrderData.createStatusRecord(sale_id, "4_on_delivery");
+							
+							ListGridRecord saleRecord = SaleOrderData.createStatusRecord(sale_id, "3_waiting_for_issued");
 							SaleOrderDS.getInstance().updateData(saleRecord);
+							//final String delivery_status = "1_on_delivery";
 							main.destroy();
 						}
 				}

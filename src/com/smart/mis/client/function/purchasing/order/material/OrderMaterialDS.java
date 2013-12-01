@@ -36,13 +36,16 @@ public class OrderMaterialDS extends DataSource  {
 			 Field_1.setPrimaryKey(true);
 			 DataSourceTextField Field_2 = new DataSourceTextField("mat_name", "รายการวัตถุดิบ");
 			 DataSourceTextField Field_3 = new DataSourceTextField("type", "ประเภท");
-			 DataSourceFloatField Field_5 = new DataSourceFloatField("weight", "น้ำหนักรวม (กรัม)");
-			 DataSourceFloatField Field_6 = new DataSourceFloatField("request_amount", "จำนวน");
+			 DataSourceFloatField Field_5 = new DataSourceFloatField("weight", "น้ำหนักที่สั่งรวม (กรัม)");
+			 DataSourceFloatField Field_6 = new DataSourceFloatField("request_amount", "จำนวนที่สั่งรวม");
 			 DataSourceTextField Field_7 = new DataSourceTextField("unit", "หน่วย");
 			 DataSourceFloatField Field_8 = new DataSourceFloatField("price", "ราคา (บาท)");
 			 DataSourceFloatField Field_9 = new DataSourceFloatField("sum_price", "ราคารวม (บาท)");
 			 
-			 setFields(Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9);
+			 DataSourceFloatField Field_10 = new DataSourceFloatField("received_weight", "น้ำหนักที่รับรวม (กรัม)");
+			 DataSourceFloatField Field_11 = new DataSourceFloatField("received_amount", "จำนวนที่รับรวม");
+			 
+			 setFields(Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(new ListGridRecord[]{}); // For create tab
@@ -64,11 +67,14 @@ public class OrderMaterialDS extends DataSource  {
 			 DataSourceTextField Field_7 = new DataSourceTextField("unit", "หน่วย");
 			 DataSourceFloatField Field_8 = new DataSourceFloatField("price", "ราคา (บาท)");
 			 DataSourceFloatField Field_9 = new DataSourceFloatField("sum_price", "ราคารวม (บาท)");
+
+			 DataSourceFloatField Field_10 = new DataSourceFloatField("received_weight", "น้ำหนักที่รับรวม (กรัม)");
+			 DataSourceFloatField Field_11 = new DataSourceFloatField("received_amount", "จำนวนที่รับรวม");
 			 
-			 setFields(sub_request_id_field, request_id_field, Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9);
+			 setFields(sub_request_id_field, request_id_field, Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11);
 			 
 			 //setDataURL("smartmis/security/userData");
-			 setTestData(RequestMaterialData.getRecords(order_id)); // For edit tab
+			 setTestData(OrderMaterialData.getRecords(order_id)); // For edit tab
 			 setClientOnly(true);
 		 }
 		 

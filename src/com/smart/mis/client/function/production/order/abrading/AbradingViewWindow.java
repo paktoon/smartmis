@@ -5,6 +5,10 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.financial.disburse.wage.WageDS;
+import com.smart.mis.client.function.financial.disburse.wage.WageData;
+import com.smart.mis.client.function.financial.disburse.wage.WageItemDS;
+import com.smart.mis.client.function.financial.disburse.wage.WageItemData;
 import com.smart.mis.client.function.production.order.packing.PackingCreateWindow;
 import com.smart.mis.client.function.production.plan.product.PlanProductDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
@@ -812,6 +816,7 @@ public class AbradingViewWindow extends EditorWindow{
 			}
 		}
 			final String process_status = "2_process_completed";
+			final String user = currentUser.getFirstName() + " " + currentUser.getLastName();
 			
 			record.setAttribute("status", process_status);
 			record.setAttribute("total_recv_weight", total_received_weight);
@@ -819,8 +824,10 @@ public class AbradingViewWindow extends EditorWindow{
 			record.setAttribute("total_wage", total_paid_wage);
 			record.setAttribute("return_mat", total_return_mat);
 			record.setAttribute("modified_date", new Date());
-			record.setAttribute("modified_by", currentUser.getUserName() + " " + currentUser.getLastName());
+			record.setAttribute("modified_by", user);
 			record.setAttribute("received_date", new Date());
+			
+			final String wage_id = createWagePayment(record, user);
 			
 			AbradingDS.getInstance().updateData(record, new DSCallback() {
 				@Override
@@ -833,12 +840,27 @@ public class AbradingViewWindow extends EditorWindow{
 						} else { 
 							for (ListGridRecord item : all) {
 								AbradingProductDS.getInstance(job_id).updateData(item);
+								createWageItemPayment(item, wage_id);
 							}
-							SC.say("บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " (if any) สร้างรายการขอคืนวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + "TBD");
+							SC.say("บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " (if any) สร้างรายการขอคืนวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + wage_id);
 							editWindow.destroy();
 						}
 				}
 			});
+	}
+	
+	String createWagePayment(ListGridRecord record, String user) {
+		String wage_id = "WP70" + Math.round((Math.random() * 100));
+		String status = "1_waiting_for_payment";
+		ListGridRecord newRecord = WageData.createRecord(record, wage_id, new Date(), user, status);
+		WageDS.getInstance().addData(newRecord);
+		return wage_id;
+	}
+	
+	void createWageItemPayment(ListGridRecord record, String wage_id) {
+		String sub_wage_id = "SWP70" + Math.round((Math.random() * 100));
+		ListGridRecord newRecord = WageItemData.createRecord(record, sub_wage_id, wage_id, true);
+		WageItemDS.getInstance(wage_id).addData(newRecord);
 	}
 	
 //	void updateQuoteStatus(String quote_id, final String status, String comment) {

@@ -3,7 +3,12 @@ package com.smart.mis.client.function.inventory;
 import com.smart.mis.client.MainPage;
 import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionWindow;
+import com.smart.mis.client.function.financial.receipt.ReceiptLayout;
+import com.smart.mis.client.function.inventory.material.received.ReceivedPurchaseLayout;
+import com.smart.mis.client.function.inventory.product.request.DeliveryOrderLayout;
+import com.smart.mis.client.function.inventory.product.transfer.TransferLayout;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 public class InventoryPanel extends FunctionPanel{
 	
@@ -35,6 +40,10 @@ public class InventoryPanel extends FunctionPanel{
 		SubInventoryReportWindow = createFuncWindow();
 		SubInOutProductReportWindow = createFuncWindow();
 		SubInOutMaterialReportWindow = createFuncWindow();
+		
+		prepareTransferWindow();
+		prepareOutProductWindow();
+		prepareInMaterialWindow();
 	}
 
 	@Override
@@ -71,5 +80,20 @@ public class InventoryPanel extends FunctionPanel{
 		} else if (nodeId.equals("373")) {
 			loadWindow(this._main.getInventoryPanel(), this.SubInOutMaterialReportWindow , name, icon);
 		} else init();
+	}
+	
+	private void prepareTransferWindow(){
+		VLayout transferLayout = new TransferLayout(this._main.getCurrentUser());
+		this.inProductWindow.addItem(transferLayout);
+	}
+	
+	private void prepareOutProductWindow(){
+		VLayout deliveryOrderLayout = new DeliveryOrderLayout(this._main.getCurrentUser());
+		this.outProductWindow.addItem(deliveryOrderLayout);
+	}
+	
+	private void prepareInMaterialWindow(){
+		VLayout purhaseOrderLayout = new ReceivedPurchaseLayout(this._main.getCurrentUser());
+		this.inMaterialWindow.addItem(purhaseOrderLayout);
 	}
 }

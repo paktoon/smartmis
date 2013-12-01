@@ -14,6 +14,7 @@ import com.smart.mis.client.function.purchasing.request.material.RequestMaterial
 import com.smart.mis.client.function.purchasing.request.material.RequestMaterialData;
 import com.smart.mis.client.function.purchasing.request.material.RequestMaterialDetails;
 import com.smart.mis.client.function.purchasing.supplier.SupplierDS;
+import com.smart.mis.client.function.sale.invoice.InvoiceDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
@@ -52,6 +53,7 @@ import com.smartgwt.client.widgets.events.FetchDataEvent;
 import com.smartgwt.client.widgets.events.FetchDataHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateItem;
+import com.smartgwt.client.widgets.form.fields.DoubleItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SelectOtherItem;
@@ -116,7 +118,7 @@ public class OrderViewWindow extends EditorWindow{
 		
 		String payment_model = record.getAttributeAsString("payment_model");
 		Integer credit = record.getAttributeAsInt("credit");
-		Double netEx = record.getAttributeAsDouble("netExclusive");
+		final Double netEx = record.getAttributeAsDouble("netExclusive");
 		//String comment = record.getAttributeAsString("comment");
 		//System.out.println(payment_model + " " + credit);
 		//System.out.println(from + " " + to + " " + delivery + " " + netEx);
@@ -444,6 +446,105 @@ public class OrderViewWindow extends EditorWindow{
           }
         });
 		
+		final IButton paidButton = new IButton("บันทึกจ่ายชำระเงิน");
+		paidButton.setIcon("icons/16/save.png");
+		paidButton.setWidth(120);
+		paidButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+
+				final Window confirm = new Window();
+				confirm.setTitle("รายละเอียดการจ่ายชำระเงิน");
+				confirm.setWidth(350);
+				confirm.setHeight(200);
+				confirm.setShowMinimizeButton(false);
+				confirm.setIsModal(true);
+				confirm.setShowModalMask(true);
+				confirm.setCanDragResize(false);
+				confirm.setCanDragReposition(false);
+				confirm.centerInPage();
+				VLayout receiptLayout = new VLayout();
+				receiptLayout.setMargin(10);
+				
+				final DynamicForm receiptForm = new DynamicForm();
+				receiptForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
+				StaticTextItem need_payment = new StaticTextItem("need_payment", "ยอดที่ต้องชำระ");
+				NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+				need_payment.setValue(nf.format(netEx * 1.07));
+				need_payment.setHint("บาท");
+				final DoubleItem paid_payment = new DoubleItem("paid_payment", "ยอดที่จ่ายชำระ");
+				StaticTextItem paid_date = new StaticTextItem("paid_date", "วันที่จ่ายชำระเงิน");
+				paid_date.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(new Date()));
+				StaticTextItem paid_by = new StaticTextItem("paid_by", "รับชำระเงินโดย");
+				paid_by.setValue(currentUser.getFirstName() + " " + currentUser.getLastName());
+				
+				paid_payment.setRequired(true);
+				paid_payment.setHint("บาท *");
+				
+				receiptForm.setFields(need_payment, paid_payment, paid_date, paid_by);
+				
+				receiptLayout.addMember(receiptForm);
+				
+				HLayout controlLayout = new HLayout();
+		        controlLayout.setMargin(10);
+		        controlLayout.setMembersMargin(10);
+		        controlLayout.setAlign(Alignment.CENTER);
+		        IButton confirmButton = new IButton("บันทึก");
+		        confirmButton.setIcon("icons/16/save.png");
+		        IButton cancelButton = new IButton("ยกเลิก");
+		        cancelButton.setIcon("icons/16/close.png");
+		        controlLayout.addMember(confirmButton);
+		        controlLayout.addMember(cancelButton);
+		        confirmButton.addClickHandler(new ClickHandler() {  
+		            public void onClick(ClickEvent event) { 
+		            	if (!receiptForm.validate() || paid_payment.getValueAsDouble() < (netEx * 1.07)) {
+		            		SC.warn("ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบข้อมูลใหม่อีกครั้ง");
+		            		paid_payment.clearValue();
+		            		return;
+		            	}
+		            	
+		            	SC.confirm("ยืนยันการบันทึกจ่ายชำระเงิน", "ต้องการบันทึกจ่ายชำระเงินหรือไม่?" , new BooleanCallback() {
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+					            		record.setAttribute("payment_status", "2_paid");
+										record.setAttribute("paidInclusive", paid_payment.getValueAsDouble());
+					            		record.setAttribute("paid_date", new Date());
+					            		record.setAttribute("paid_by", currentUser.getFirstName() + " " + currentUser.getLastName());
+					            		PurchaseOrderDS.getInstance().updateData(record, new DSCallback() {
+											@Override
+											public void execute(DSResponse dsResponse, Object data,
+													DSRequest dsRequest) {
+													if (dsResponse.getStatus() != 0) {
+														SC.warn("การบันทึกจ่ายชำระเงิน ล้มเหลว");
+													} else { 
+														SC.warn("การบันทึกจ่ายชำระเงิน เสร็จสมบูรณ์");
+														confirm.destroy();
+														main.destroy();
+													}
+											}
+										});
+								}
+							}
+		            	});
+		          }
+		        });
+		        
+		        cancelButton.addClickHandler(new ClickHandler() {  
+		            public void onClick(ClickEvent event) { 
+		            	confirm.destroy();
+		          }
+		        });
+		        
+		        receiptLayout.addMember(controlLayout);
+		        
+		        confirm.addItem(receiptLayout);
+		        
+		        confirm.show();
+          }
+        });
+		
+		if (record.getAttributeAsString("payment_status").equalsIgnoreCase("2_paid")) paidButton.disable();
+		
 //		final IButton approveButton = new IButton("อนุมัติ");
 //		//approveButton.setIcon("icons/16/approved.png");
 //		approveButton.setWidth(120);
@@ -579,7 +680,8 @@ public class OrderViewWindow extends EditorWindow{
 //			controls.addMember(printButton);
 //			controls.addMember(saveButton);
 //		}
-		controls.addMember(printButton);
+		if (page == 1) controls.addMember(printButton);
+		if (page == 2) controls.addMember(paidButton);
 		controls.addMember(closeButton);
 		layout.addMember(controls);
 		

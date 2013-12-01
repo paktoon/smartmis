@@ -5,6 +5,16 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.financial.disburse.wage.WageDS;
+import com.smart.mis.client.function.financial.disburse.wage.WageData;
+import com.smart.mis.client.function.financial.disburse.wage.WageItemDS;
+import com.smart.mis.client.function.financial.disburse.wage.WageItemData;
+import com.smart.mis.client.function.inventory.product.transfer.TransferDS;
+import com.smart.mis.client.function.inventory.product.transfer.TransferData;
+import com.smart.mis.client.function.inventory.product.transfer.TransferItemDS;
+import com.smart.mis.client.function.inventory.product.transfer.TransferItemData;
+import com.smart.mis.client.function.production.plan.PlanDS;
+import com.smart.mis.client.function.production.plan.PlanData;
 import com.smart.mis.client.function.production.plan.product.PlanProductDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
@@ -112,7 +122,7 @@ public class PackingViewWindow extends EditorWindow{
 		
 		Date sent_date = record.getAttributeAsDate("sent_date");
 		Date due_date = record.getAttributeAsDate("due_date");
-		Date transferred_date = record.getAttributeAsDate("transferred_date");
+		Date transfer_date = record.getAttributeAsDate("transfer_date");
 		
 		final Double sent_weight = record.getAttributeAsDouble("total_sent_weight");
 		Integer sent_amount = record.getAttributeAsInt("total_sent_amount");
@@ -353,7 +363,7 @@ public class PackingViewWindow extends EditorWindow{
 		transferredDate.setTitle("วันที่โอนสินค้า");
 		transferredDate.setUseTextField(true);
 		if (page == 2) transferredDate.setDefaultValue(new Date());
-		else if (page == 1) transferredDate.setDefaultValue(transferred_date);
+		else if (page == 1) transferredDate.setDefaultValue(transfer_date);
 		transferredDate.setCanEdit(false);
 		
 		dateForm.setFields(sentDate, dueDate, transferredDate);
@@ -811,16 +821,17 @@ public class PackingViewWindow extends EditorWindow{
 //				return;
 //			}
 //		}
+			final String plan_id = record.getAttributeAsString("plan_id");
+			
 			final String process_status = "3_to_next_process";
+			final String user = currentUser.getFirstName() + " " + currentUser.getLastName();
 			
 			record.setAttribute("status", process_status);
-//			record.setAttribute("total_recv_weight", total_received_weight);
-//			record.setAttribute("total_recv_amount", total_received_amount);
-//			record.setAttribute("total_wage", total_paid_wage);
-//			record.setAttribute("return_mat", total_return_mat);
 			record.setAttribute("modified_date", new Date());
-			record.setAttribute("modified_by", currentUser.getUserName() + " " + currentUser.getLastName());
-			record.setAttribute("transferred_date", new Date());
+			record.setAttribute("modified_by", user);
+			record.setAttribute("transfer_date", new Date());
+			
+			final String transfer_id = createTransfer(record, user);
 			
 			PackingDS.getInstance().updateData(record, new DSCallback() {
 				@Override
@@ -831,14 +842,36 @@ public class PackingViewWindow extends EditorWindow{
 							SC.warn("การโอนสินค้าล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
 							editWindow.destroy();
 						} else { 
-//							for (ListGridRecord item : all) {
-//								PackingProductDS.getInstance(job_id).updateData(item);
-//							}
-							SC.say("บันทึกโอนสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการโอนสินค้าเข้าคลัสินค้าโดยอัตโนมัติ หมายเลข " + "TBD");
+							for (ListGridRecord item : all) {
+								//PackingProductDS.getInstance(job_id).updateData(item);
+								createTransferItem(item, transfer_id);
+							}
+							
+							PlanDS.getInstance().fetchData();
+							Record[] plan_records = PlanDS.getInstance().applyFilter(PlanDS.getInstance().getCacheData(), new Criterion("plan_id", OperatorId.EQUALS, plan_id));
+							Record updated = plan_records[0];
+							updated.setAttribute("status", "6_production_completed");
+							PlanDS.getInstance().updateData(updated);
+							
+							SC.say("บันทึกโอนสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการโอนสินค้าเข้าคลังสินค้าโดยอัตโนมัติ หมายเลข " + transfer_id);
 							editWindow.destroy();
 						}
 				}
 			});
+	}
+	
+	String createTransfer(ListGridRecord record, String user) {
+		String transfer_id = "TF70" + Math.round((Math.random() * 100));
+		String status = "1_sent";
+		ListGridRecord newRecord = TransferData.createRecord(record, transfer_id, new Date(), user, status);
+		TransferDS.getInstance().addData(newRecord);
+		return transfer_id;
+	}
+	
+	void createTransferItem(ListGridRecord record, String transfer_id) {
+		String sub_transfer_id = "STFP70" + Math.round((Math.random() * 100));
+		ListGridRecord newRecord = TransferItemData.createRecord(record, sub_transfer_id, transfer_id, true);
+		TransferItemDS.getInstance(transfer_id).addData(newRecord);
 	}
 	
 //	void updateQuoteStatus(String quote_id, final String status, String comment) {
