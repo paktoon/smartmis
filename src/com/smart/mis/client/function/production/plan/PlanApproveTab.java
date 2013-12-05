@@ -178,9 +178,9 @@ public class PlanApproveTab {
             	search.addCriteria(searchForm.getValuesAsCriteria());
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
           		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
-          		      new Criterion("status", OperatorId.NOT_EQUAL, "5_on_production"),
-          		      new Criterion("status", OperatorId.NOT_EQUAL, "6_production_completed"),
-          		      new Criterion("status", OperatorId.NOT_EQUAL, "7_transferred"),
+          		      //new Criterion("status", OperatorId.NOT_EQUAL, "5_on_production"),
+          		      //new Criterion("status", OperatorId.NOT_EQUAL, "6_production_completed"),
+          		      //new Criterion("status", OperatorId.NOT_EQUAL, "7_transferred"),
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
           		      search
           		  });

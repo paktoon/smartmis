@@ -5,6 +5,8 @@ import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionWindow;
 import com.smart.mis.client.function.financial.receipt.ReceiptLayout;
 import com.smart.mis.client.function.inventory.material.received.ReceivedPurchaseLayout;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestLayout;
+import com.smart.mis.client.function.inventory.material.returns.ReturnLayout;
 import com.smart.mis.client.function.inventory.product.request.DeliveryOrderLayout;
 import com.smart.mis.client.function.inventory.product.transfer.TransferLayout;
 import com.smartgwt.client.types.Alignment;
@@ -44,6 +46,8 @@ public class InventoryPanel extends FunctionPanel{
 		prepareTransferWindow();
 		prepareOutProductWindow();
 		prepareInMaterialWindow();
+		prepareReturnMaterialWindow();
+		prepareRequestMaterialWindow();
 	}
 
 	@Override
@@ -95,5 +99,15 @@ public class InventoryPanel extends FunctionPanel{
 	private void prepareInMaterialWindow(){
 		VLayout purhaseOrderLayout = new ReceivedPurchaseLayout(this._main.getCurrentUser());
 		this.inMaterialWindow.addItem(purhaseOrderLayout);
+	}
+	
+	private void prepareReturnMaterialWindow(){
+		VLayout returnLayout = new ReturnLayout(this._main.getCurrentUser());
+		this.returnMaterialWindow.addItem(returnLayout);
+	}
+	
+	private void prepareRequestMaterialWindow(){
+		VLayout requestLayout = new MaterialRequestLayout(this._main.getCurrentUser());
+		this.outMaterialWindow.addItem(requestLayout);
 	}
 }

@@ -9,6 +9,8 @@ import com.smart.mis.client.function.financial.disburse.wage.WageDS;
 import com.smart.mis.client.function.financial.disburse.wage.WageData;
 import com.smart.mis.client.function.financial.disburse.wage.WageItemDS;
 import com.smart.mis.client.function.financial.disburse.wage.WageItemData;
+import com.smart.mis.client.function.inventory.material.returns.ReturnDS;
+import com.smart.mis.client.function.inventory.material.returns.ReturnData;
 import com.smart.mis.client.function.production.order.packing.PackingCreateWindow;
 import com.smart.mis.client.function.production.plan.product.PlanProductDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
@@ -166,8 +168,8 @@ public class AbradingViewWindow extends EditorWindow{
 		//smithForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 		smithForm.setGroupTitle("ข้อมูลช่าง");
 		
-		String smid = record.getAttributeAsString("smid");
-		String sname = record.getAttributeAsString("sname");
+		final String smid = record.getAttributeAsString("smid");
+		final String sname = record.getAttributeAsString("sname");
 		String semail = record.getAttributeAsString("semail");
 		String sphone1 = record.getAttributeAsString("sphone1");
 		String sphone2 = record.getAttributeAsString("sphone2");
@@ -258,7 +260,7 @@ public class AbradingViewWindow extends EditorWindow{
 //		}
 		
 		AbradingProductDS tempView = AbradingProductDS.getInstance(job_id);
-		tempView.fetchData();
+		tempView.refreshData();
 		
 		orderListGrid.setDataSource(tempView);
 		orderListGrid.setUseAllDataSourceFields(false);
@@ -485,7 +487,44 @@ public class AbradingViewWindow extends EditorWindow{
 		printButton.setWidth(120);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                updateOrder(job_id, record, orderListGrid, currentUser);
+            	final ListGridRecord[] all = orderListGrid.getRecords();
+        		for (ListGridRecord item : all){
+        			if (item.getAttribute("recv_weight") == null || item.getAttribute("recv_amount") == null) {
+        				SC.warn("กรุณากรอกข้อมูลรับสินค้าให้ครบถ้วน");
+        				return;
+        			}
+        		}
+        		
+        		if (total_return_mat > 0.0) {
+        			NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+        			SC.confirm("มีรายการคืนวัตถุดิบ", "มีรายการวัตถุดิบที่ต้องคืน <br><br> แร่เงิน 92.5% จำนวน " + nf.format(total_return_mat) + " กรัม <br> ต้องการสร้างรายการคืนวัตถุดิบหรือไม่?" , new BooleanCallback() {
+    					@Override
+    					public void execute(Boolean value) {
+    						if (value) {
+    							final String return_id = "RT70" + Math.round((Math.random() * 100));
+    							//job_id
+    							MaterialDS.getInstance().refreshData();
+    							Record[] selected = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 92.5%"));
+    							ListGridRecord newReturn = ReturnData.createRecord(return_id, job_id, smid, sname, selected[0].getAttributeAsString("mid"), selected[0].getAttributeAsString("mat_name"), total_return_mat, null, new Date(), null, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "1_return");
+    							ReturnDS.getInstance().addData(newReturn, new DSCallback() {
+    								@Override
+    								public void execute(DSResponse dsResponse, Object data,
+    										DSRequest dsRequest) {
+    										//System.out.println("Test " + dsResponse.getStatus());
+    										if (dsResponse.getStatus() != 0) {
+    											SC.warn("การบันทึกรายการคืนวัตถุดิบล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
+    											editWindow.destroy();
+    										} else {
+    											updateOrder(job_id, record, orderListGrid, currentUser, return_id);
+    										}
+    								}
+    							});
+    						}
+    					}
+                	});
+        		} else {
+        			updateOrder(job_id, record, orderListGrid, currentUser, null);
+        		}
           }
         });
 		// if (edit || !status.equals("3_approved")) printButton.disable();
@@ -806,15 +845,9 @@ public class AbradingViewWindow extends EditorWindow{
 		}
 	}
 	
-	public void updateOrder(final String job_id , final ListGridRecord record, ListGrid orderListGrid, User currentUser){
+	public void updateOrder(final String job_id , final ListGridRecord record, ListGrid orderListGrid, User currentUser, final String return_id){
 		final ListGridRecord[] all = orderListGrid.getRecords();
 		
-		for (ListGridRecord item : all){
-			if (item.getAttribute("recv_weight") == null || item.getAttribute("recv_amount") == null) {
-				SC.warn("กรุณากรอกข้อมูลรับสินค้าให้ครบถ้วน");
-				return;
-			}
-		}
 			final String process_status = "2_process_completed";
 			final String user = currentUser.getFirstName() + " " + currentUser.getLastName();
 			
@@ -842,8 +875,18 @@ public class AbradingViewWindow extends EditorWindow{
 								AbradingProductDS.getInstance(job_id).updateData(item);
 								createWageItemPayment(item, wage_id);
 							}
-							SC.say("บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " (if any) สร้างรายการขอคืนวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + wage_id);
-							editWindow.destroy();
+							
+							String message = "บันทึกรับสินค้าเสร็จสิ้น <br><br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + wage_id;
+							if (return_id != null) message = "บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการขอคืนวัตถุดิบโดยอัตโนมัติ หมายเลข " + return_id + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + wage_id;
+							//SC.openDataSourceGenerator();
+							SC.say(message, new BooleanCallback(){
+								@Override
+								public void execute(Boolean value) {
+									if (value) {
+										editWindow.destroy();
+									}
+								}
+							} );
 						}
 				}
 			});

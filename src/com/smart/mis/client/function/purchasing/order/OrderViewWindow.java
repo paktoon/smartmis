@@ -149,7 +149,7 @@ public class OrderViewWindow extends EditorWindow{
 		layout.addMember(quotationForm);
 		
 		//Prepare supplier data - SupplierDS.getInstance()
-		SupplierDS.getInstance().fetchData();
+		SupplierDS.getInstance().refreshData();
 		Record[] selectedSupplier = SupplierDS.getInstance().applyFilter(SupplierDS.getInstance().getCacheData(), new Criterion("sid", OperatorId.EQUALS, supplier_id));
 		
 		String fullAddress = "no data found, please contact admin";

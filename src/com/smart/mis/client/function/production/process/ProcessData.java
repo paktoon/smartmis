@@ -30,17 +30,17 @@ public class ProcessData {
     
     if (pid != null && (pid.equals( "PD10001") || pid.equals( "PD10002") || pid.equals( "PD10003"))) {
     	return new ListGridRecord[]{ 
-    			createDummyRecord("PS10001","1_casting", "สั่งเทียน", 3, "PD10001", 1, 5.6),
-    			createDummyRecord("PS10002","2_scrape", "ไม่ฝังพลอย", 3, "PD10001", 2, 0.0),
-    			createDummyRecord("PS10003","3_abrade", "ดิน-เงา ลงดำ", 3, "PD10001", 3, 1.08),
-    			createDummyRecord("PS10004","4_packing", "บรรจุรวม", 1, "PD10001", 4, 0.12)
+    			createDummyRecord("PS10001","1_casting", "สั่งเทียน", 3, pid, 1, 5.6),
+    			createDummyRecord("PS10002","2_scrape", "ไม่ฝังพลอย", 3, pid, 2, 0.0),
+    			createDummyRecord("PS10003","3_abrade", "ดิน-เงา ลงดำ", 3, pid, 3, 1.08),
+    			createDummyRecord("PS10004","4_packing", "บรรจุรวม", 1, pid, 4, 0.12)
     	};
     } else if (pid != null && (pid.equals( "PD10004") || pid.equals( "PD10005") || pid.equals( "PD10006") || pid.equals( "PD10007"))) {
     	return new ListGridRecord[]{ 
-    			createDummyRecord("PS20001","1_casting", "ใช้แบบเดิม", 3, "PD10004", 1, 5.6),
-    			createDummyRecord("PS20002","2_scrape", "ไม่ฝังพลอย", 3, "PD10004", 2, 0.0),
-    			createDummyRecord("PS20003","3_abrade", "ดิน-เงา ไม่ลงดำ", 3, "PD10004", 3, 0.6),
-    			createDummyRecord("PS20004","4_packing", "แยกบรรจุ", 1, "PD10004", 4, 0.12)
+    			createDummyRecord("PS20001","1_casting", "ใช้แบบเดิม", 3, pid, 1, 5.6),
+    			createDummyRecord("PS20002","2_scrape", "ไม่ฝังพลอย", 3, pid, 2, 0.0),
+    			createDummyRecord("PS20003","3_abrade", "ดิน-เงา ไม่ลงดำ", 3, pid, 3, 0.6),
+    			createDummyRecord("PS20004","4_packing", "แยกบรรจุ", 1, pid, 4, 0.12)
     	};
     } 
     	else return new ListGridRecord[]{};

@@ -12,6 +12,12 @@ public class AbradingMaterialData {
         return record;  
     }
     
+	public static ListGridRecord createRecord(Record material, Integer amount) {  
+        ListGridRecord record = (ListGridRecord) material;
+        record.setAttribute("produce_amount", amount * material.getAttributeAsDouble("req_amount"));
+        return record;  
+    }
+	
     //For test only
     public static ListGridRecord[] getNewRecords(String sub_job_id) {
     	return new ListGridRecord[]{};

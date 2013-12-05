@@ -8,10 +8,16 @@ public class CastingMaterialData {
         ListGridRecord record = (ListGridRecord) material;
         record.setAttribute("cm_id", cm_id);
         record.setAttribute("sub_job_id", sub_job_id);
-        record.setAttribute("produce_amount", amount * material.getAttributeAsDouble("weight"));
+        record.setAttribute("produce_amount", amount * material.getAttributeAsDouble("req_amount"));
         return record;  
     }
     
+	public static ListGridRecord createRecord(Record material, Integer amount) {  
+        ListGridRecord record = (ListGridRecord) material;
+        record.setAttribute("produce_amount", amount * material.getAttributeAsDouble("req_amount"));
+        return record;  
+    }
+	
     //For test only
     public static ListGridRecord[] getNewRecords(String sub_job_id) {
     	return new ListGridRecord[]{};

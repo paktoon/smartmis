@@ -263,7 +263,7 @@ public class PackingViewWindow extends EditorWindow{
 //		}
 		
 		PackingProductDS tempView = PackingProductDS.getInstance(job_id);
-		tempView.fetchData();
+		tempView.refreshData();
 		
 		orderListGrid.setDataSource(tempView);
 		orderListGrid.setUseAllDataSourceFields(false);
@@ -847,12 +847,12 @@ public class PackingViewWindow extends EditorWindow{
 								createTransferItem(item, transfer_id);
 							}
 							
-							PlanDS.getInstance().fetchData();
+							PlanDS.getInstance().refreshData();
 							Record[] plan_records = PlanDS.getInstance().applyFilter(PlanDS.getInstance().getCacheData(), new Criterion("plan_id", OperatorId.EQUALS, plan_id));
 							Record updated = plan_records[0];
 							updated.setAttribute("status", "6_production_completed");
 							PlanDS.getInstance().updateData(updated);
-							
+
 							SC.say("บันทึกโอนสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการโอนสินค้าเข้าคลังสินค้าโดยอัตโนมัติ หมายเลข " + transfer_id);
 							editWindow.destroy();
 						}

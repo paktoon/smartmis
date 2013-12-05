@@ -7,7 +7,7 @@ import com.smart.mis.client.function.production.plan.product.PlanProductDetails;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class ScrapingProductData {
-
+    
     public static ListGridRecord createSentRecord(String sub_job_id, String job_id, String pid, String name, String type, String unit, String details, Double sent_weight, Integer sent_amount, Boolean status) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("sub_job_id", sub_job_id);

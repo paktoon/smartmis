@@ -1,6 +1,11 @@
 package com.smart.mis.client.function;
 
 import com.smart.mis.client.MainPage;
+import com.smart.mis.client.function.production.product.ProductDS;
+import com.smart.mis.client.function.production.smith.SmithDS;
+import com.smart.mis.client.function.purchasing.material.MaterialDS;
+import com.smart.mis.client.function.purchasing.supplier.SupplierDS;
+import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
@@ -67,8 +72,17 @@ public abstract class FunctionPanel {
 	}
 	
 	protected void loadWindow (VLayout panel, FunctionWindow window, String name, String icon) {
+		RefreshMasterData();
 		window.setTitle(this._funcName + " > " + name);
 		window.setHeaderIcon(icon);
 		panel.setMembers(window);
+	}
+	
+	protected void RefreshMasterData(){
+		CustomerDS.getInstance().refreshData();
+		ProductDS.getInstance().refreshData();
+		MaterialDS.getInstance().refreshData();
+		SupplierDS.getInstance().refreshData();
+		SmithDS.getInstance().refreshData();
 	}
 }

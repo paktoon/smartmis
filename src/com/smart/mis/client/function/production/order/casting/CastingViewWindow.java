@@ -230,7 +230,7 @@ public class CastingViewWindow extends EditorWindow{
 		orderListGrid.setCriteria(ci);
 		
 		CastingProductDS tempView = CastingProductDS.getInstance(job_id);
-		tempView.fetchData();
+		tempView.refreshData();
 		
 		orderListGrid.setDataSource(tempView);
 		orderListGrid.setUseAllDataSourceFields(false);
@@ -773,8 +773,18 @@ public class CastingViewWindow extends EditorWindow{
 								CastingProductDS.getInstance(job_id).updateData(item);
 								createWageItemPayment(item, wage_id);
 							}
-							SC.say("บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการขอเบิกวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + wage_id);
-							editWindow.destroy();
+							
+							//String request_id = createSilverRequisition(total_received_weight);
+							
+							String message = "บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการขอเบิกวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + wage_id;
+							SC.say(message, new BooleanCallback(){
+								@Override
+								public void execute(Boolean value) {
+									if (value) {
+										editWindow.destroy();
+									}
+								}
+							} );
 						}
 				}
 			});
@@ -793,6 +803,10 @@ public class CastingViewWindow extends EditorWindow{
 		ListGridRecord newRecord = WageItemData.createRecord(record, sub_wage_id, wage_id, true);
 		WageItemDS.getInstance(wage_id).addData(newRecord);
 	}
+	
+//	String createSilverRequisition(Double total_received_weight) {
+//		String request_id = "MR70" + Math.round((Math.random() * 100));
+//	}
 	
 	private ListGrid getListGrid() {
 		return new ListGrid() {  

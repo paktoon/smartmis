@@ -1,4 +1,4 @@
-package com.smart.mis.client.function.inventory.material.returns;
+package com.smart.mis.client.function.inventory.material.requisition;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +19,7 @@ import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.inventory.RequisitionStatus;
 import com.smart.mis.shared.inventory.ReturnStatus;
 import com.smart.mis.shared.purchasing.PurchaseOrderStatus;
 import com.smart.mis.shared.sale.Customer;
@@ -83,9 +84,9 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import com.smartgwt.client.widgets.cube.CubeGrid;
 
-public class ReturnLayout extends VLayout {
+public class MaterialRequestLayout extends VLayout {
 	
-	public ReturnLayout(final User currentUser){
+	public MaterialRequestLayout(final User currentUser){
 		//Tab reviseTab = new Tab("ข้อมูลใบแจ้งหนี้", "icons/16/search-good-icon.png");
 		//VLayout reviseLayout = new VLayout();
 		//reviseLayout.
@@ -105,17 +106,17 @@ public class ReturnLayout extends VLayout {
 		searchForm.setAutoFocus(true);
 		searchForm.setSelectOnFocus(true);
 		searchForm.setIsGroup(true);
-		searchForm.setDataSource(ReturnDS.getInstance());
+		searchForm.setDataSource(MaterialRequestDS.getInstance());
 		searchForm.setUseAllDataSourceFields(false);
-		searchForm.setGroupTitle("ค้นหารายการคืนวัตถุดิบ");
+		searchForm.setGroupTitle("ค้นหารายการเบิกวัตถุดิบ");
 		
-		final TextItem saleText = new TextItem("return_id", "รหัสคืนวัตถุดิบ");
+		final TextItem saleText = new TextItem("mat_request_id", "รหัสเบิกวัตถุดิบ");
 		saleText.setWrapTitle(false);
 		saleText.setOperator(OperatorId.REGEXP);
 		final SelectItem statusSelected = new SelectItem("status", "สถานะ");
 		statusSelected.setWrapTitle(false);
 		//statusSelected.setValueMap("รอผลิต", "กำลังผลิต", "พร้อมนำส่ง", "อยู่ระหว่างนำส่ง", "นำส่งแล้ว");
-		statusSelected.setValueMap(ReturnStatus.getValueMap());
+		statusSelected.setValueMap(RequisitionStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("job_id", "รหัสคำสั่งผลิต");
@@ -133,7 +134,7 @@ public class ReturnLayout extends VLayout {
 		dateForm.setCellPadding(2);
 		dateForm.setSelectOnFocus(true);
 		dateForm.setIsGroup(true);
-		dateForm.setGroupTitle("วันที่ขอคืนวัตถุดิบ");
+		dateForm.setGroupTitle("วันที่ขอเบิกวัตถุดิบ");
 		DateRange dateRange = new DateRange();  
         dateRange.setRelativeStartDate(new RelativeDate("-1m"));
         dateRange.setRelativeEndDate(RelativeDate.TODAY);
@@ -157,7 +158,7 @@ public class ReturnLayout extends VLayout {
 		returnListGrid.setCanMultiSort(true);
 		//returnListGrid.setCriteria(new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"));
 		
-		returnListGrid.setDataSource(ReturnDS.getInstance());
+		returnListGrid.setDataSource(MaterialRequestDS.getInstance());
 		returnListGrid.setInitialSort(new SortSpecifier[]{ 
                 new SortSpecifier("status", SortDirection.ASCENDING),
                 new SortSpecifier("created_date", SortDirection.DESCENDING)  
@@ -166,14 +167,14 @@ public class ReturnLayout extends VLayout {
 		returnListGrid.setGroupByField("status");
 		returnListGrid.setGroupStartOpen(GroupStartOpen.ALL);
 		
-		ListGridField sale_id = new ListGridField("return_id" , 100);
+		ListGridField sale_id = new ListGridField("mat_request_id" , 100);
 		ListGridField quote_id = new ListGridField("job_id" , 100);
-		ListGridField cus_name = new ListGridField("sm_name", 180);
+		ListGridField cus_name = new ListGridField("sname", 180);
 		ListGridField status = new ListGridField("status", 80);
-		ListGridField total_amount = new ListGridField("total_return_weight");
+		ListGridField total_amount = new ListGridField("total_request_amount");
 		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
 		total_amount.setAlign(Alignment.RIGHT);
-		ListGridField created_date = new ListGridField("return_date");
+		ListGridField created_date = new ListGridField("req_date");
 		
 		returnListGrid.setFields(status, sale_id, quote_id, cus_name, total_amount, created_date);
 		
@@ -185,7 +186,7 @@ public class ReturnLayout extends VLayout {
 		buttonLayout.setMargin(10);
 		buttonLayout.setMembersMargin(5);
 		buttonLayout.setHeight(30);
-		IButton searchButton = new IButton("ค้นหาคำขอคืนวัตถุดิบ");
+		IButton searchButton = new IButton("ค้นหาคำขอเบิกวัตถุดิบ");
 		searchButton.setIcon("icons/16/icon_view.png");
 		searchButton.setWidth(150);
 		searchButton.addClickHandler(new ClickHandler() {  
@@ -229,14 +230,14 @@ public class ReturnLayout extends VLayout {
             		SC.warn("กรุณาเลือกรายการ");
             		return;
             	}
-            	ReturnViewWindow returnWindow = new ReturnViewWindow();
-            	returnWindow.show(selected, false, currentUser, 1);
+            	RequestViewWindow requestWindow = new RequestViewWindow();
+            	requestWindow.show(selected, false, currentUser, 1);
           }
         });
 		
-		IButton receiveOrderButton = new IButton("บันทึกรับวัตถุดิบ");
+		IButton receiveOrderButton = new IButton("บันทึกเบิกจ่ายวัตถุดิบ");
 		receiveOrderButton.setIcon("icons/16/actions-receive-icon.png");
-		receiveOrderButton.setWidth(120);
+		receiveOrderButton.setWidth(150);
 		receiveOrderButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
             	ListGridRecord selected = returnListGrid.getSelectedRecord();
@@ -245,11 +246,11 @@ public class ReturnLayout extends VLayout {
             		return;
             	}
             	
-            	if (selected.getAttributeAsString("status").equalsIgnoreCase("1_return")) {
-            		ReturnViewWindow returnWindow = new ReturnViewWindow();
-            		returnWindow.show(selected, true, currentUser, 2);
+            	if (selected.getAttributeAsString("status").equalsIgnoreCase("1_requested")) {
+            		RequestViewWindow requestWindow = new RequestViewWindow();
+            		requestWindow.show(selected, true, currentUser, 2);
             	} else {
-            		SC.warn("รับวัตถุดิบแล้ว");
+            		SC.warn("จ่ายวัตถุดิบแล้ว");
             	}
           }
         });

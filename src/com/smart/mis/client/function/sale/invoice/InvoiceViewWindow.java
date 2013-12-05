@@ -650,7 +650,7 @@ public class InvoiceViewWindow extends EditorWindow{
 	}
 
 	String getCustomerFullAddress(String cid) {
-		CustomerDS.getInstance().fetchData();
+		CustomerDS.getInstance().refreshData();
 		Record[] records = CustomerDS.getInstance().applyFilter(CustomerDS.getInstance().getCacheData(), new Criterion("cid", OperatorId.EQUALS, cid));
 		Record selected = records[0];
 		String address = selected.getAttributeAsString("address");

@@ -265,7 +265,7 @@ public class TransferViewWindow extends EditorWindow{
 //		}
 		
 		TransferItemDS tempView = TransferItemDS.getInstance(transfer_id);
-		tempView.fetchData();
+		tempView.refreshData();
 		
 		orderListGrid.setDataSource(tempView);
 		orderListGrid.setUseAllDataSourceFields(false);
@@ -832,7 +832,7 @@ public class TransferViewWindow extends EditorWindow{
 	}
 	
 	boolean updatePlanAndSale(String plan_id) {
-		PlanDS.getInstance().fetchData();
+		PlanDS.getInstance().refreshData();
 		Record[] plan_records = PlanDS.getInstance().applyFilter(PlanDS.getInstance().getCacheData(), new Criterion("plan_id", OperatorId.EQUALS, plan_id));
 		//Record updated = PlanData.createStatusRecord(plan_id, "7_transferred", "", (ListGridRecord) plan_records[0]);
 		Record updated = plan_records[0];
@@ -840,7 +840,7 @@ public class TransferViewWindow extends EditorWindow{
 		PlanDS.getInstance().updateData(updated);
 		String sale_id = updated.getAttributeAsString("sale_id");
 		if (sale_id != null) {
-			//SaleOrderDS.getInstance().fetchData();
+			//SaleOrderDS.getInstance().refreshData();
 			//Record[] sale_records = SaleOrderDS.getInstance().applyFilter(SaleOrderDS.getInstance().getCacheData(), new Criterion("sale_id", OperatorId.EQUALS, sale_id));
 			ListGridRecord saleRecord = SaleOrderData.createStatusRecord(sale_id, "3_production_completed");
 			SaleOrderDS.getInstance().updateData(saleRecord);
@@ -854,7 +854,7 @@ public class TransferViewWindow extends EditorWindow{
 		String pid = record.getAttributeAsString("pid");
 		Integer recv_amount = record.getAttributeAsInt("recv_amount");
 		
-		ProductDS.getInstance().fetchData();
+		ProductDS.getInstance().refreshData();
 		Record[] updated_records = ProductDS.getInstance().applyFilter(ProductDS.getInstance().getCacheData(), new Criterion("pid", OperatorId.EQUALS, pid));
 		Record updated = updated_records[0];
 		Integer inStock = updated.getAttributeAsInt("inStock") + recv_amount;

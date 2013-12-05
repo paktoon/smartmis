@@ -42,7 +42,7 @@ public class ProcessType {
 		System.out.println("Getting max std_time for process " + value);
 		for (String pid : pids){
 			System.out.println("	pid " + pid);
-			ProcessListDS.getInstance(pid).fetchData();
+			ProcessListDS.getInstance(pid).refreshData();
 			Record[] processList = ProcessListDS.getInstance(pid).getCacheData();
 			for (Record process : processList) {
 				String type = process.getAttributeAsString("type");

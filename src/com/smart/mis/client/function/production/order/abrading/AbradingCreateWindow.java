@@ -2,9 +2,17 @@ package com.smart.mis.client.function.production.order.abrading;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestDS;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestData;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestItemDS;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestItemData;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestItemDetails;
+import com.smart.mis.client.function.production.order.casting.CastingDS;
+import com.smart.mis.client.function.production.order.casting.CastingMaterialData;
 import com.smart.mis.client.function.production.order.scraping.ScrapingDS;
 import com.smart.mis.client.function.production.order.scraping.ScrapingData;
 import com.smart.mis.client.function.production.order.scraping.ScrapingProductDS;
@@ -15,6 +23,7 @@ import com.smart.mis.client.function.production.process.MaterialProcessDS;
 import com.smart.mis.client.function.production.process.ProcessListDS;
 import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
+import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
@@ -106,7 +115,7 @@ public class AbradingCreateWindow {
 		Double total_weight = record.getAttributeAsDouble("total_recv_weight");
 		Integer total_amount = record.getAttributeAsInt("total_recv_amount");
 		
-		PlanDS.getInstance().fetchData();
+		PlanDS.getInstance().refreshData();
 		Record[] plan_records = PlanDS.getInstance().applyFilter(PlanDS.getInstance().getCacheData(), new Criterion("plan_id", OperatorId.EQUALS, plan_id));
 		
 		String sale_id = plan_records[0].getAttributeAsString("sale_id");
@@ -280,7 +289,8 @@ public class AbradingCreateWindow {
 //        }
 		
         //HLayout itemLayout = new HLayout();
-		final ListGrid orderListGrid = new ListGrid();
+		//final ListGrid orderListGrid = new ListGrid();
+		final ListGrid orderListGrid = getListGrid();
 		orderListGrid.setHeight(230);
 		orderListGrid.setAlternateRecordStyles(true);  
 		orderListGrid.setShowAllRecords(true);  
@@ -291,6 +301,7 @@ public class AbradingCreateWindow {
 		orderListGrid.setEditEvent(ListGridEditEvent.CLICK);  
 		orderListGrid.setListEndEditAction(RowEndEditAction.NEXT);
 		orderListGrid.setShowRowNumbers(true);
+		orderListGrid.setCanExpandRecords(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		orderListGrid.setCriteria(ci);
 //		if (edit) {
@@ -816,6 +827,8 @@ public class AbradingCreateWindow {
 		Double total_sent_weight = 0.0;
 		Integer total_sent_amount = 0;
 		final ArrayList<ListGridRecord> orderProductList = new ArrayList<ListGridRecord>();
+		final HashMap<String, MaterialRequestItemDetails> matRequest = new HashMap<String, MaterialRequestItemDetails>();
+		
 		for (ListGridRecord item : all){
 			
 			String pid = item.getAttributeAsString("pid");
@@ -828,7 +841,7 @@ public class AbradingCreateWindow {
 
 			total_sent_amount += sent_amount;
 
-			ProcessListDS.getInstance(pid).fetchData();
+			ProcessListDS.getInstance(pid).refreshData();
 			Record[] selectedProcess = ProcessListDS.getInstance(pid).applyFilter(ProcessListDS.getInstance(pid).getCacheData(), new Criterion("type", OperatorId.EQUALS, "3_abrade"));
 			Record process = selectedProcess[0];
 			String psid = process.getAttributeAsString("psid");
@@ -843,16 +856,26 @@ public class AbradingCreateWindow {
 			ListGridRecord temp = AbradingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, sent_weight + recv_weight, sent_amount, true);
 			orderProductList.add(temp);
 			
-			MaterialProcessDS.getInstance(psid, pid).fetchData();
+			MaterialProcessDS.getInstance(psid, pid).refreshData();
 			Record[] selectedMaterialProcess = MaterialProcessDS.getInstance(psid, pid).getCacheData();
 			
 			for (Record mat : selectedMaterialProcess) {
 				String cm_id = "SM70" + Math.round((Math.random() * 100));
+				String mid = mat.getAttributeAsString("mid");
 				AbradingMaterialDS.getInstance(sub_job_id, job_id).addData(AbradingMaterialData.createRecord(sub_job_id, cm_id,  sent_amount, mat));
+				
+				if (matRequest.containsKey(mid)) {
+					matRequest.get(mid).addAmount(mat, sent_amount);
+				} else {
+					matRequest.put(mid, new MaterialRequestItemDetails(mat, sent_amount));
+				}
 			}
 		}
 		
 		String status = "1_on_production";
+		if (matRequest.size() != 0) {
+			status = "0_request_mat";
+		}
 		ListGridRecord jobOrder = AbradingData.createSentRecord(job_id, plan_id, smith, sent_date, due_date, total_sent_weight, total_sent_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), "", "", status);
 		
 		AbradingDS.getInstance().addData(jobOrder, new DSCallback() {
@@ -872,83 +895,131 @@ public class AbradingCreateWindow {
 					String order_status = "3_to_next_process";
 					ListGridRecord update_order = ScrapingData.createStatusRecord(new Date(), currentUser.getFirstName() + " " + currentUser.getLastName(), "เสร็จสิ้นขั้นตอนแล้ว", order_status, previousRecord);
 					ScrapingDS.getInstance().updateData(update_order);
-					editWindow.destroy();
-					SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> สร้างรายการขเบิกวัตถุดิบ เลขที่ TBD");
+					
+					String message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id;
+					if (matRequest.size() != 0) {
+						final String request_id = "MR70" + Math.round((Math.random() * 100));
+						createMaterialRequest(request_id, job_id, smith, currentUser.getFirstName() + " " + currentUser.getLastName(), matRequest);
+						message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> สร้างรายการขอเบิกวัตถุดิบ เลขที่ " + request_id;
+					}
+					
+					SC.say(message, new BooleanCallback(){
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								editWindow.destroy();
+							}
+						}
+					} );
+//					ScrapingDS.getInstance().updateData(update_order, new DSCallback() {
+//						@Override
+//						public void execute(DSResponse dsResponse, Object data,
+//								DSRequest dsRequest) {
+//							if (dsResponse.getStatus() != 0) {
+//								SC.warn("การสร้างคำสั่งผลิตล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
+//								editWindow.destroy();
+//							} else {
+//								editWindow.destroy();
+//								SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> สร้างรายการขอเบิกวัตถุดิบ เลขที่ TBD");
+//							}
+//						}});
 				}
 			}
 		});
 	}
-//	public void createDeliveryOrder(final Window main, final String sale_id, String invoice_id, DynamicForm customer, ListGrid orderListGrid, Date delivery, User currentUser){
-//		
-//		ListGridRecord[] all = orderListGrid.getRecords();
-//		
-////		if (all.length == 0) {
-////			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
-////			return;
-////		}
-//		
-//		Double total_weight = 0.0;
-//		Double total_netExclusive = 0.0;
-//		Integer total_amount = 0;
-//		final String delivery_id = "DL70" + Math.round((Math.random() * 100));
-//		//final String invoice_id = "IN70" + Math.round((Math.random() * 100));
-//		final ArrayList<SaleProductDetails> saleProductList = new ArrayList<SaleProductDetails>();
-//		//final ArrayList<SaleProductDetails> invoiceProductList = new ArrayList<SaleProductDetails>();
-//
-//		for (ListGridRecord item : all){
-//			total_weight += item.getAttributeAsDouble("weight");
-//			total_amount += item.getAttributeAsInt("sale_amount");
-//			total_netExclusive += item.getAttributeAsDouble("sum_price");
-//			
-//			String pid = item.getAttributeAsString("pid");
-//			String pname = item.getAttributeAsString("name");
-//			String ptype = item.getAttributeAsString("type");
-//			//String psize = item.getAttributeAsString("size");
-//			Double pweight = item.getAttributeAsDouble("weight");
-//			Integer psale_amount = item.getAttributeAsInt("sale_amount");
-//			String punit = item.getAttributeAsString("unit");
-//			Double pprice = item.getAttributeAsDouble("price");
-//			
-//			String sub_sale_id = "SS80" + Math.round((Math.random() * 1000));
-//			SaleProductDetails temp = new SaleProductDetails();
-//			temp.save(pid, pname, pweight, pprice, ptype, punit);
-//			temp.setID(sub_sale_id, delivery_id);
-//			temp.setQuantity(psale_amount);
-//			saleProductList.add(temp);
-//		}	
-//
-//			final String delivery_status = "1_on_delivery";
-//			String cid = (String) customer.getField("cid").getValue();
-//			String smith_name = (String) customer.getField("smith_name").getValue();
-////			String payment_model = (String) customer.getField("payment_model").getValue();
-////			Integer credit = (Integer) customer.getField("credit").getValue();
-//			
-////			DateRange dateRange = new DateRange();  
-////	        dateRange.setRelativeStartDate(RelativeDate.TODAY);
-////	        dateRange.setRelativeEndDate(new RelativeDate("+"+credit+"d"));
-////	        final Date due_date = dateRange.getEndDate();
-//	        
-//			final ListGridRecord deliveryRecord = DeliveryData.createRecord(delivery_id, sale_id, invoice_id, cid, smith_name, delivery, total_weight, total_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, delivery_status, new Date(), null, "");
-//			//ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, smith_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
-//			
-//			//Auto create invoice
-//			DeliveryDS.getInstance().addData(deliveryRecord, new DSCallback() {
-//				@Override
-//				public void execute(DSResponse dsResponse, Object data,
-//						DSRequest dsRequest) {
-//						if (dsResponse.getStatus() != 0) {
-//							SC.warn("การสร้างรายการนำส่งสินค้าล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-//							main.destroy();
-//						} else { 
-//							for (SaleProductDetails item : saleProductList) {
-//								ListGridRecord subAddRecord = SaleProductData.createRecord(item);
-//								SaleProductDS.getInstance(delivery_id).addData(subAddRecord);
-//							}
-//							ListGridRecord saleRecord = SaleOrderData.createStatusRecord(sale_id, "4_on_delivery");
-//							SaleOrderDS.getInstance().updateData(saleRecord);
-//							main.destroy();
-//						}
-//				}
-//			});
-//	}
+	
+	public void createMaterialRequest(String request_id, String job_id, Smith smith,String user, HashMap<String, MaterialRequestItemDetails> matRequest){
+		Double totel_request_amount = 0.0;
+//		System.out.println("Size " + matRequest.size());
+		for (MaterialRequestItemDetails item : matRequest.values()) {
+			totel_request_amount += item.getAmount();
+			final String sub_request_id = "SMR70" + Math.round((Math.random() * 100));
+//			System.out.println("Debug ---");
+//			System.out.println("--- " + item.material_id);
+//			System.out.println("--- " + item.material_name);
+//			System.out.println("--- " + item.material_unit);
+//			System.out.println("--- " + item.request_amount);
+			ListGridRecord newRecord = MaterialRequestItemData.createRecord(sub_request_id, request_id, item);
+			MaterialRequestItemDS.getInstance(request_id).addData(newRecord);
+			
+			MaterialDS.getInstance().refreshData();
+			Record[] updated_records = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mid", OperatorId.EQUALS, item.material_id));
+			Record updated = updated_records[0];
+			Double remain = updated.getAttributeAsDouble("remain") - item.getAmount();
+			updated.setAttribute("remain", remain);
+			Double reserved = updated.getAttributeAsDouble("reserved") + item.getAmount();
+			updated.setAttribute("reserved", reserved);
+			MaterialDS.getInstance().updateData(updated);
+		}
+		
+		ListGridRecord newRecord = MaterialRequestData.createRecord(request_id, job_id, smith, "3_abrade", new Date(), totel_request_amount, new Date(), null, user, null, "1_requested");
+		MaterialRequestDS.getInstance().addData(newRecord);
+	}
+	
+	private ListGrid getListGrid() {
+		return new ListGrid() {  
+//            public DataSource getRelatedDataSource(ListGridRecord record) {  
+//                //return new CastingMaterialDS(record.getAttributeAsString("psid"), DS.pid);
+//                return ScrapingMaterialDS.getInstance(record.getAttributeAsString("sub_job_id"), record.getAttributeAsString("job_id"));
+//            }  
+  
+            @Override  
+            protected Canvas getExpansionComponent(final ListGridRecord record) {  
+  
+                final ListGrid grid = this;  
+  
+                VLayout layout = new VLayout(5);  
+                layout.setPadding(5);  
+  
+                SectionStack sectionStack = new SectionStack();
+            	sectionStack.setWidth(525);
+            	sectionStack.setHeight(100);
+            	SectionStackSection section = new SectionStackSection("รายการวัตถุดิบ");
+            	section.setCanCollapse(false);
+                section.setExpanded(true);
+                
+                final ListGrid materialGrid = new ListGrid();  
+                materialGrid.setWidth(525);  
+                materialGrid.setHeight(100);  
+                materialGrid.setCellHeight(22);  
+                
+                String pid = record.getAttributeAsString("pid");
+    			Integer sent_amount = record.getAttributeAsInt("recv_amount");
+    			
+    			ProcessListDS.getInstance(pid).refreshData();
+    			Record[] selectedProcess = ProcessListDS.getInstance(pid).applyFilter(ProcessListDS.getInstance(pid).getCacheData(), new Criterion("type", OperatorId.EQUALS, "3_abrade"));
+    			Record process = selectedProcess[0];
+    			String psid = process.getAttributeAsString("psid");
+    			MaterialProcessDS.getInstance(psid, pid).refreshData();
+    			Record[] selectedMaterialProcess = MaterialProcessDS.getInstance(psid, pid).getCacheData();
+    			
+    			//System.out.println("MaterialList for " + pid);
+    			//System.out.println("MaterialList size : " + selectedMaterialProcess.length);
+    			ArrayList<ListGridRecord> materialList = new ArrayList<ListGridRecord>();
+    			for (Record material : selectedMaterialProcess) {
+    				materialList.add(AbradingMaterialData.createRecord(material, sent_amount));
+    			}
+    			
+                materialGrid.setRecords(materialList.toArray(new ListGridRecord[]{}));
+  
+                ListGridField Field_1 = new ListGridField("mid", 150);
+                Field_1.setTitle("รหัสวัตถุดิบ");
+                ListGridField Field_2 = new ListGridField("mat_name", 200);
+                Field_2.setTitle("ชื่อวัตถุดิบ");
+                ListGridField editField = new ListGridField("produce_amount", 120);
+                editField.setTitle("ปริมาณที่ใช้ผลิต");
+                editField.setCellFormatter(FieldFormatter.getNumberFormat());
+                ListGridField Field_3 = new ListGridField("unit", 50);
+                Field_3.setTitle("หน่วย");
+                materialGrid.setFields(Field_1, Field_2, editField, Field_3);
+                
+	    	    section.setItems(materialGrid);
+	    	    sectionStack.setSections(section);
+    	      
+                layout.addMember(sectionStack);
+  
+                return layout;
+            }  
+		};
+	}
 }

@@ -552,7 +552,7 @@ public class RequestViewWindow extends EditorWindow{
 		String pid = record.getAttributeAsString("pid");
 		Integer issued_amount = record.getAttributeAsInt("issued_amount");
 		
-		ProductDS.getInstance().fetchData();
+		ProductDS.getInstance().refreshData();
 		Record[] updated_records = ProductDS.getInstance().applyFilter(ProductDS.getInstance().getCacheData(), new Criterion("pid", OperatorId.EQUALS, pid));
 		Record updated = updated_records[0];
 		Integer inStock = updated.getAttributeAsInt("inStock") - issued_amount;
@@ -563,7 +563,7 @@ public class RequestViewWindow extends EditorWindow{
 	}
 	
 	String getCustomerFullAddress(String cid) {
-		CustomerDS.getInstance().fetchData();
+		CustomerDS.getInstance().refreshData();
 		Record[] records = CustomerDS.getInstance().applyFilter(CustomerDS.getInstance().getCacheData(), new Criterion("cid", OperatorId.EQUALS, cid));
 		Record selected = records[0];
 		String address = selected.getAttributeAsString("address");

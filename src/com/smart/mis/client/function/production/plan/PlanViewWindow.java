@@ -702,6 +702,7 @@ public class PlanViewWindow extends EditorWindow{
 					if (dsResponse.getStatus() != 0) {
 						SC.warn("การอนุมัติแผนการผลิคล้มเหลว");
 					} else { 
+						PlanDS.getInstance().refreshData();
 						SC.say("แก้ไขสถานะแผนการผลิต \"" + ProductionPlanStatus.getDisplay(status) + "\" เสร็จสิ้น");
 					}
 			}

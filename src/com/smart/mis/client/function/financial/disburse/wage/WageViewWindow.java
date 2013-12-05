@@ -246,8 +246,7 @@ public class WageViewWindow extends EditorWindow{
 //		}
 		
 		WageItemDS tempView = WageItemDS.getInstance(wage_id);
-		tempView.fetchData();
-		
+		tempView.refreshData();
 		orderListGrid.setDataSource(tempView);
 		orderListGrid.setUseAllDataSourceFields(false);
 		
