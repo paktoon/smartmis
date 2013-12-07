@@ -495,36 +495,43 @@ public class AbradingViewWindow extends EditorWindow{
         			}
         		}
         		
-        		if (total_return_mat > 0.0) {
-        			NumberFormat nf = NumberFormat.getFormat("#,##0.00");
-        			SC.confirm("มีรายการคืนวัตถุดิบ", "มีรายการวัตถุดิบที่ต้องคืน <br><br> แร่เงิน 92.5% จำนวน " + nf.format(total_return_mat) + " กรัม <br> ต้องการสร้างรายการคืนวัตถุดิบหรือไม่?" , new BooleanCallback() {
-    					@Override
-    					public void execute(Boolean value) {
-    						if (value) {
-    							final String return_id = "RT70" + Math.round((Math.random() * 100));
-    							//job_id
-    							MaterialDS.getInstance().refreshData();
-    							Record[] selected = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 92.5%"));
-    							ListGridRecord newReturn = ReturnData.createRecord(return_id, job_id, smid, sname, selected[0].getAttributeAsString("mid"), selected[0].getAttributeAsString("mat_name"), total_return_mat, null, new Date(), null, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "1_return");
-    							ReturnDS.getInstance().addData(newReturn, new DSCallback() {
-    								@Override
-    								public void execute(DSResponse dsResponse, Object data,
-    										DSRequest dsRequest) {
-    										//System.out.println("Test " + dsResponse.getStatus());
-    										if (dsResponse.getStatus() != 0) {
-    											SC.warn("การบันทึกรายการคืนวัตถุดิบล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-    											editWindow.destroy();
-    										} else {
-    											updateOrder(job_id, record, orderListGrid, currentUser, return_id);
-    										}
-    								}
-    							});
-    						}
-    					}
-                	});
-        		} else {
-        			updateOrder(job_id, record, orderListGrid, currentUser, null);
-        		}
+        		SC.confirm("ยืนยันการบันทึกรับสินค้า", "ต้องการบันทึกรับสินค้าหรือไม่?" , new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							if (total_return_mat > 0.0) {
+			        			NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+			        			SC.confirm("มีรายการคืนวัตถุดิบ", "มีรายการวัตถุดิบที่ต้องคืน <br><br> แร่เงิน 92.5% จำนวน " + nf.format(total_return_mat) + " กรัม <br> ต้องการสร้างรายการคืนวัตถุดิบหรือไม่?" , new BooleanCallback() {
+			    					@Override
+			    					public void execute(Boolean value) {
+			    						if (value) {
+			    							final String return_id = "RT70" + Math.round((Math.random() * 100));
+			    							//job_id
+			    							MaterialDS.getInstance().refreshData();
+			    							Record[] selected = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 92.5%"));
+			    							ListGridRecord newReturn = ReturnData.createRecord(return_id, job_id, smid, sname, selected[0].getAttributeAsString("mid"), selected[0].getAttributeAsString("mat_name"), total_return_mat, null, new Date(), null, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "1_return");
+			    							ReturnDS.getInstance().addData(newReturn, new DSCallback() {
+			    								@Override
+			    								public void execute(DSResponse dsResponse, Object data,
+			    										DSRequest dsRequest) {
+			    										//System.out.println("Test " + dsResponse.getStatus());
+			    										if (dsResponse.getStatus() != 0) {
+			    											SC.warn("การบันทึกรายการคืนวัตถุดิบล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
+			    											editWindow.destroy();
+			    										} else {
+			    											updateOrder(job_id, record, orderListGrid, currentUser, return_id);
+			    										}
+			    								}
+			    							});
+			    						}
+			    					}
+			                	});
+			        		} else {
+			        			updateOrder(job_id, record, orderListGrid, currentUser, null);
+			        		}
+						}
+					}
+            	});
           }
         });
 		// if (edit || !status.equals("3_approved")) printButton.disable();
@@ -534,7 +541,7 @@ public class AbradingViewWindow extends EditorWindow{
 		createButton.setWidth(150);
 		createButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-            	SC.confirm("ยืนยันการทำรายการ", "ต้องการออกคำสั่งแต่งและฝังพลอย หรือไม่?" , new BooleanCallback() {
+            	SC.confirm("ยืนยันการทำรายการ", "ต้องการออกคำสั่งบรรจุสินค้า หรือไม่?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

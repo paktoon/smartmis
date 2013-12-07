@@ -92,7 +92,7 @@ public class TransferViewWindow extends EditorWindow{
 		editWindow.setTitle("บันทึกรับโอนสินค้าจากการผลิต");
 		} else editWindow.setTitle("ข้อมูลรายการโอนสินค้า");
 		editWindow.setWidth(950);  
-		editWindow.setHeight(620);
+		editWindow.setHeight(550);
 		editWindow.setShowMinimizeButton(false);
 		editWindow.setIsModal(true);
 		editWindow.setShowModalMask(true);
@@ -109,7 +109,7 @@ public class TransferViewWindow extends EditorWindow{
 		
 		VLayout layout = new VLayout();
 		layout.setWidth(920);
-		layout.setHeight(600);
+		layout.setHeight(530);
 		layout.setMargin(10);
 		
 		final String transfer_id = record.getAttributeAsString("transfer_id");
@@ -332,7 +332,7 @@ public class TransferViewWindow extends EditorWindow{
 		footerLayout.setHeight(100);
 		
 		final DynamicForm endForm = new DynamicForm();
-		endForm.setWidth(330);
+		endForm.setWidth(400);
 		endForm.setNumCols(4);
 		endForm.setMargin(5);
 		endForm.setIsGroup(true);
@@ -483,7 +483,14 @@ public class TransferViewWindow extends EditorWindow{
 		receiveButton.setWidth(120);
 		receiveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                updateTransfer(transfer_id, record, orderListGrid, currentUser);
+            	SC.confirm("ยืนยันการบันทึกรับโอนสินค้า", "ต้องการบันทึกรับโอนสินค้าหรือไม่?" , new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+			                updateTransfer(transfer_id, record, orderListGrid, currentUser);
+						}
+					}
+            	});
           }
         });
 		// if (edit || !status.equals("3_approved")) printButton.disable();

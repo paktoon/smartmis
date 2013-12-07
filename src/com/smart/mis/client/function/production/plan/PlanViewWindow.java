@@ -347,16 +347,16 @@ public class PlanViewWindow extends EditorWindow{
 		controls.setAlign(Alignment.CENTER);
 		controls.setMargin(5);
 		controls.setMembersMargin(5);
-		final IButton printButton = new IButton("พิมพ์แผนการผลิค");
-		printButton.setIcon("icons/16/print.png");
-		printButton.setWidth(120);
-		printButton.addClickHandler(new ClickHandler() {  
-            public void onClick(ClickEvent event) { 
-                SC.warn("click print");
-            	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
-          }
-        });
-		if (edit || !status.equals("3_approved")) printButton.disable();
+//		final IButton printButton = new IButton("พิมพ์แผนการผลิค");
+//		printButton.setIcon("icons/16/print.png");
+//		printButton.setWidth(120);
+//		printButton.addClickHandler(new ClickHandler() {  
+//            public void onClick(ClickEvent event) { 
+//                SC.warn("click print");
+//            	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
+//          }
+//        });
+//		if (edit || !status.equals("3_approved")) printButton.disable();
 		
 		final IButton saveButton = new IButton("บันทึกการแก้ไข");
 		saveButton.setIcon("icons/16/save.png");
@@ -525,7 +525,7 @@ public class PlanViewWindow extends EditorWindow{
 				controls.addMember(disapproveButton);
 			}
 		} else {
-			controls.addMember(printButton);
+			//controls.addMember(printButton);
 			controls.addMember(saveButton);
 		}
 		controls.addMember(closeButton);
@@ -646,7 +646,7 @@ public class PlanViewWindow extends EditorWindow{
 			
 			PlanProductDetails temp = new PlanProductDetails();
 			temp.save(pid, pname, pweight, ptype, punit, psize, pwidth, plength, pheight, pdiameter, pthickness);
-			temp.setID(sub_plan_id, plan_id);
+			temp.setID(sub_plan_id);
 			temp.setQuantity(pplan_amount);
 			productList.add(temp);
 		}
@@ -679,14 +679,14 @@ public class PlanViewWindow extends EditorWindow{
 							for (PlanProductDetails item : productList) {
 								if (item.sub_plan_id == null) {
 									item.sub_plan_id = "QS80" + Math.round((Math.random() * 100));
-									ListGridRecord subUpdateRecord = PlanProductData.createRecord(item);
+									ListGridRecord subUpdateRecord = PlanProductData.createRecord(item, plan_id);
 									PlanProductDS.getInstance(plan_id).addData(subUpdateRecord);
 								} else  {
-									ListGridRecord subUpdateRecord = PlanProductData.createRecord(item);
+									ListGridRecord subUpdateRecord = PlanProductData.createRecord(item, plan_id);
 									PlanProductDS.getInstance(plan_id).updateData(subUpdateRecord);
 								}
 							}
-							SC.say("แก้ไขแผนการผลิคเสร็จสิ้น <br> " + "รหัสแผนการผลิค " + plan_id + "<br> สถานะของแผนการผลิค " + ProductionPlanStatus.getDisplay(plan_status));
+							SC.say("แก้ไขแผนการผลิตเสร็จสิ้น <br> " + "รหัสแผนการผลิต " + plan_id + "<br> สถานะของแผนการผลิต " + ProductionPlanStatus.getDisplay(plan_status));
 							main.destroy();
 						}
 				}

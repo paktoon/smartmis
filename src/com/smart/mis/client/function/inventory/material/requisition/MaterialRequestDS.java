@@ -2,6 +2,7 @@ package com.smart.mis.client.function.inventory.material.requisition;
 
 import com.smart.mis.shared.inventory.RequisitionStatus;
 import com.smart.mis.shared.prodution.ProcessStatus;
+import com.smart.mis.shared.prodution.ProcessType;
 import com.smart.mis.shared.sale.QuotationStatus;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
@@ -42,7 +43,8 @@ public class MaterialRequestDS extends DataSource {
 		 
 		 DataSourceTextField Field_4_1 = new DataSourceTextField("req_date", "วันที่ขอเบิก");
 		 DataSourceTextField Field_4_2 = new DataSourceTextField("issue_date", "วันที่จ่ายวัตถุดิบ");
-		 DataSourceTextField Field_4_3 = new DataSourceTextField("req_type", "ประเภทงาน");
+		 DataSourceEnumField Field_4_3 = new DataSourceEnumField("req_type", "ประเภทงาน");
+		 Field_4_3.setValueMap(ProcessType.getValueMap());
 		 
 		 DataSourceFloatField Field_6 = new DataSourceFloatField("total_request_amount", "จำนวนที่ขอเบิก (หน่วย)");
 		 

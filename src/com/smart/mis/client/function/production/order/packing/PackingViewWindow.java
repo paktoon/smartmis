@@ -93,7 +93,7 @@ public class PackingViewWindow extends EditorWindow{
 		editWindow.setTitle("ข้อมูลรายการบรรจุสินค้า");
 		} else editWindow.setTitle("ข้อมูลคำสั่งผลิต");
 		editWindow.setWidth(650);  
-		editWindow.setHeight(600);
+		editWindow.setHeight(550);
 		editWindow.setShowMinimizeButton(false);
 		editWindow.setIsModal(true);
 		editWindow.setShowModalMask(true);
@@ -110,7 +110,7 @@ public class PackingViewWindow extends EditorWindow{
 		
 		VLayout layout = new VLayout();
 		layout.setWidth(630);
-		layout.setHeight(600);
+		layout.setHeight(530);
 		layout.setMargin(10);
 		
 		final String job_id = record.getAttributeAsString("job_id");

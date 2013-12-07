@@ -144,8 +144,9 @@ public class RequestViewWindow extends EditorWindow{
 		req_date.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(request_date));
 		smid.setValue(smith_id);
 		smname.setValue(smith_name);
+		smid.setColSpan(4);
 		quotationForm.setFields(orid, rqid, sts, req_date, smid, smname);
-		quotationForm.setColWidths(80,80,100,100,100,100,100,100);
+		quotationForm.setColWidths(100,80,100,80,100,100,100,100);
 		layout.addMember(quotationForm);
 		
 //		//Prepare supplier data - SupplierDS.getInstance()
@@ -314,7 +315,7 @@ public class RequestViewWindow extends EditorWindow{
 		
 		final DynamicForm endForm = new DynamicForm();
 		endForm.setWidth(380);
-		endForm.setHeight(75);
+		//endForm.setHeight(75);
 		endForm.setNumCols(4);
 		endForm.setMargin(5);
 		endForm.setIsGroup(true);
@@ -349,12 +350,12 @@ public class RequestViewWindow extends EditorWindow{
 		//******************Summary
 		final DynamicForm summaryForm_1 = new DynamicForm();
 		summaryForm_1.setWidth(250);
-		summaryForm_1.setHeight(75);
+		//summaryForm_1.setHeight(75);
 		summaryForm_1.setNumCols(2);
 		summaryForm_1.setMargin(5);
 		summaryForm_1.setIsGroup(true);
 		summaryForm_1.setGroupTitle("สรุปยอดสั่งจ่ายวัตถุดิบ");
-		summaryForm_1.setColWidths(120, 80);
+		//summaryForm_1.setColWidths(120, 80);
 		final NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 		final StaticTextItem total_request_amount = new StaticTextItem("total_request_amount");
 		total_request_amount.setValue(nf.format(request_amount));
@@ -437,7 +438,7 @@ public class RequestViewWindow extends EditorWindow{
 		issueButton.setWidth(150);
 		issueButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-            	SC.confirm("ยืนยันการทำรายการ", "ต้องการบันทึกรับวัตถุดิบ หรือไม่?" , new BooleanCallback() {
+            	SC.confirm("ยืนยันการทำรายการ", "ต้องการบันทึกสั่งจ่ายวัตถุดิบ หรือไม่?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
@@ -565,17 +566,19 @@ public class RequestViewWindow extends EditorWindow{
         record.setAttribute("job_id", job_id);
         record.setAttribute("status", status);
         
-		if (job_type.equalsIgnoreCase("1_casting")) {
-			CastingDS.getInstance().updateData(record);
-		} else if (job_type.equalsIgnoreCase("2_scrape")) {
+//		if (job_type.equalsIgnoreCase("1_casting")) {
+//			CastingDS.getInstance().updateData(record);
+//		} else 
+		if (job_type.equalsIgnoreCase("2_scrape")) {
 			ScrapingDS.getInstance().updateData(record);
 		} else if (job_type.equalsIgnoreCase("3_abrade")) {
 			AbradingDS.getInstance().updateData(record);
 		} else if (job_type.equalsIgnoreCase("4_packing")) {
 			PackingDS.getInstance().updateData(record);
-		} else {
-			SC.warn("ประเภทงานไม่ถูกต้อง " + job_id + ":" + job_type);
-		}
+		} 
+//		else {
+//			SC.warn("ประเภทงานไม่ถูกต้อง " + job_id + ":" + job_type);
+//		}
 	}
 	
 	void updateStock(ListGridRecord record) {

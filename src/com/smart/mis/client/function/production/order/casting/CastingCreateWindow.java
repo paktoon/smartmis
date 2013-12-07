@@ -2,9 +2,11 @@ package com.smart.mis.client.function.production.order.casting;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestItemDetails;
 import com.smart.mis.client.function.production.order.scraping.ScrapingMaterialDS;
 import com.smart.mis.client.function.production.order.scraping.ScrapingMaterialData;
 import com.smart.mis.client.function.production.plan.PlanDS;
@@ -14,12 +16,14 @@ import com.smart.mis.client.function.production.process.MaterialProcessDS;
 import com.smart.mis.client.function.production.process.ProcessListDS;
 import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
+import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.client.function.sale.order.SaleOrderDS;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.WaitingCallback;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.prodution.Smith;
 import com.smart.mis.shared.sale.SaleOrderStatus;
@@ -430,8 +434,14 @@ public class CastingCreateWindow {
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
             	if (smithForm.validate()) {
-                    //SC.say("click order and print");
-                    createCreateOrder(planForm, orderListGrid, sentDate.getValueAsDate(), dueDate.getValueAsDate(), currentUser, record);
+                	SC.confirm("ยืนยันการออกคำสั่งหล่อขึ้นรูป", "ต้องการออกคำสั่งหล่อขึ้นรูป หรือไม่?" , new BooleanCallback() {
+    					@Override
+    					public void execute(Boolean value) {
+    						if (value) {
+    							createCreateOrder(planForm, orderListGrid, sentDate.getValueAsDate(), dueDate.getValueAsDate(), currentUser, record);
+    						}
+    					}
+                	});
             	}
             	else {
             		SC.warn("กรุณาเลือกข้อมูลช่าง");
@@ -801,12 +811,14 @@ public class CastingCreateWindow {
 		
 		final String plan_id = (String) planForm.getField("plan_id").getValue();
 		final String sale_id = (String) planForm.getField("sale_id").getValue();
+		System.out.println(plan_id);
 		
 		final String job_id = "JOB70" + Math.round((Math.random() * 100));
 		
 		Double total_sent_weight = 0.0;
 		Integer total_sent_amount = 0;
 		final ArrayList<ListGridRecord> orderProductList = new ArrayList<ListGridRecord>();
+		
 		for (ListGridRecord item : all){
 			
 			String pid = item.getAttributeAsString("pid");
@@ -843,6 +855,28 @@ public class CastingCreateWindow {
 			}
 		}
 		
+		//Required
+		ArrayList<Record> outOfStock = checkStock(total_sent_weight);
+		if (outOfStock.size() != 0) {
+			String msg = "การสร้างคำสั่งผลิตล้มเหลว ปริมาณวัตถุดิบไม่เพียงพอต่อการผลิต";
+			
+			for (Record item : outOfStock){
+				String mat_name = item.getAttributeAsString("mat_name");
+				Double remain = item.getAttributeAsDouble("remain");
+				String unit = item.getAttributeAsString("unit");
+				msg += "<br> <br>" + mat_name + " จำนวน " + (total_sent_weight / 2) + " " + unit + " คงเหลือ " + remain + " " + unit; 
+			}
+			SC.warn(msg);
+			return;
+		}
+		//End
+		
+		String plan_status = "5_on_production";
+		ListGridRecord update_plan = PlanData.createStatusRecord(plan_id, plan_status, "ออกคำสั่งผลิตแล้ว", planRecord);
+		System.out.println("update plan : " + update_plan.getAttributeAsString("plan_id") + " status: " + update_plan.getAttributeAsString("status"));
+		PlanDS.getInstance().updateData(update_plan);
+		PlanDS.getInstance().refreshData();
+		
 		String status = "1_on_production";
 		ListGridRecord jobOrder = CastingData.createSentRecord(job_id, plan_id, smith, sent_date, due_date, total_sent_weight, total_sent_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), "", "", status);
 		
@@ -857,26 +891,83 @@ public class CastingCreateWindow {
 					for (ListGridRecord item : orderProductList) {
 						CastingProductDS.getInstance(job_id).addData(item);
 					}
+					//SC.showPrompt("กำลังบันทึกข้อมูล");
 					
-					String plan_status = "5_on_production";
-					ListGridRecord update_plan = PlanData.createStatusRecord(plan_id, plan_status, "ออกคำสั่งผลิตแล้ว", planRecord);
-					PlanDS.getInstance().updateData(update_plan);
-					
+//					planRecord.setAttribute("status", plan_status);
+//					planRecord.setAttribute("comment", "ออกคำสั่งผลิตแล้ว");
+//					PlanDS.getInstance().refreshData();
+//					PlanDS.getInstance().updateData(planRecord, new DSCallback() {
+//
+//						@Override
+//						public void execute(DSResponse dsResponse, Object data,
+//								DSRequest dsRequest) {
+//							
+//							//SC.clearPrompt();
+//							
+//							if ( sale_id != null && !sale_id.equalsIgnoreCase("-")) {
+//								final String sale_status = "2_production_in_progress";
+//								
+//								SaleOrderDS.getInstance().refreshData();
+//								Record[] selected = SaleOrderDS.getInstance().applyFilter(SaleOrderDS.getInstance().getCacheData(), new Criterion("sale_id", OperatorId.EQUALS, sale_id));
+//								Record selectedSaleOrder = selected[0];
+//								selectedSaleOrder.setAttribute("status", sale_status);
+//								SaleOrderDS.getInstance().updateData(selectedSaleOrder, new DSCallback() {
+//									@Override
+//									public void execute(DSResponse dsResponse,
+//											Object data, DSRequest dsRequest) {
+//											SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> รายการขายเขที่ " + sale_id + " มีสถานะเป็น " + SaleOrderStatus.getDisplay(sale_status), new BooleanCallback(){
+//												@Override
+//												public void execute(Boolean value) {
+//													if (value) {
+//														editWindow.destroy();
+//													}
+//												}
+//											} );
+//									}
+//								});
+//							} else {
+//								SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id, new BooleanCallback(){
+//									@Override
+//									public void execute(Boolean value) {
+//										if (value) {
+//											editWindow.destroy();
+//										}
+//									}
+//								} );
+//							}
+//						}
+//					});
 					if ( sale_id != null && !sale_id.equalsIgnoreCase("-")) {
-						String sale_status = "2_production_in_progress";
+						final String sale_status = "2_production_in_progress";
 						
 						SaleOrderDS.getInstance().refreshData();
 						Record[] selected = SaleOrderDS.getInstance().applyFilter(SaleOrderDS.getInstance().getCacheData(), new Criterion("sale_id", OperatorId.EQUALS, sale_id));
 						Record selectedSaleOrder = selected[0];
 						selectedSaleOrder.setAttribute("status", sale_status);
-						SaleOrderDS.getInstance().updateData(selectedSaleOrder);
-						SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> รายการขายเขที่ " + sale_id + " มีสถานะเป็น " + SaleOrderStatus.getDisplay(sale_status));
+						SaleOrderDS.getInstance().updateData(selectedSaleOrder, new DSCallback() {
+							@Override
+							public void execute(DSResponse dsResponse,
+									Object data, DSRequest dsRequest) {
+									SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> รายการขายเขที่ " + sale_id + " มีสถานะเป็น " + SaleOrderStatus.getDisplay(sale_status), new BooleanCallback(){
+										@Override
+										public void execute(Boolean value) {
+											if (value) {
+												editWindow.destroy();
+											}
+										}
+									} );
+							}
+						});
 					} else {
-						SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id);
+						SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id, new BooleanCallback(){
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+									editWindow.destroy();
+								}
+							}
+						} );
 					}
-					
-					editWindow.destroy();
-					
 				}
 			}
 		});
@@ -943,5 +1034,18 @@ public class CastingCreateWindow {
                 return layout;
             }  
 		};
+	}
+	
+	private ArrayList<Record> checkStock(Double total_weight){
+
+		ArrayList<Record> outOfStock = new ArrayList<Record>();
+		MaterialDS.getInstance().refreshData();
+		Record[] silver100 = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 100%"));
+		Record[] silver925 = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 92.5%"));
+		
+		if (silver100[0].getAttributeAsDouble("remain") < (total_weight / 2)) outOfStock.add(silver100[0]);
+		if (silver925[0].getAttributeAsDouble("remain") < (total_weight / 2)) outOfStock.add(silver925[0]);	
+		
+		return outOfStock;
 	}
 }

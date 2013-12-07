@@ -244,7 +244,7 @@ public class ScrapingTab {
             		ScrapingViewWindow receiveWindow = new ScrapingViewWindow();
             		receiveWindow.show(selected, true, currentUser, 2);
             	} else {
-            		SC.warn("รับสินค้าในขั้นตอนผลิตแล้ว");
+            		SC.warn("สถานะของคำสั่งผลิตไม่เหมาะสม \"" + ProcessStatus.getDisplay(selected.getAttributeAsString("status")) + "\"");
             	}
           }
         });

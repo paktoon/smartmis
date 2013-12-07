@@ -51,10 +51,10 @@ public class PlanProductData {
 //        return record;  
 //    }
     
-    public static ListGridRecord createRecord(PlanProductDetails item) {  
+    public static ListGridRecord createRecord(PlanProductDetails item, String plan_id) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("sub_plan_id", item.sub_plan_id);
-        record.setAttribute("plan_id", item.plan_id);
+        record.setAttribute("plan_id", plan_id);
         record.setAttribute("pid", item.product_id);
         record.setAttribute("name",item.product_name); 
         record.setAttribute("weight", item.product_weight);

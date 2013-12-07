@@ -267,7 +267,7 @@ public class PackingTab {
             		PackingViewWindow transferWindow = new PackingViewWindow();
             		transferWindow.show(selected, true, currentUser, 2);
             	} else {
-            		SC.warn("การผลิตสินค้ายังไม่เสร็จสิ้น");
+            		SC.warn("สถานะของคำสั่งผลิตไม่เหมาะสม \"" + ProcessStatus.getDisplay(selected.getAttributeAsString("status")) + "\"");
             	}
           }
         });

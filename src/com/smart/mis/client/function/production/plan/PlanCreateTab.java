@@ -15,6 +15,7 @@ import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.prodution.ProductType;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.security.User;
+import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
@@ -23,6 +24,7 @@ import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RelativeDate;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
+import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.types.RecordSummaryFunctionType;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.types.SelectionStyle;
@@ -220,6 +222,7 @@ public class PlanCreateTab {
         final StaticTextItem pid = new StaticTextItem("pid" , "รหัสสินค้า");
         final SelectItem pname = new SelectItem("name", "ชื่อสินค้า");
         pname.setOptionDataSource(ProductDS.getInstance());
+        pname.setOptionCriteria(new Criterion("makeToOrder", OperatorId.EQUALS, false));
         pname.setEmptyDisplayValue("--โปรดเลือกสินค้า--");
         pname.setPickListWidth(420);
         pname.setWidth(240);
@@ -694,7 +697,6 @@ public class PlanCreateTab {
 		Double total_weight = 0.0;
 		//Double total_netExclusive = 0.0;
 		Integer total_amount = 0;
-		final String plan_id = "PL70" + Math.round((Math.random() * 100));
 		final ArrayList<PlanProductDetails> productList = new ArrayList<PlanProductDetails>();
 		for (ListGridRecord item : all){
 			total_weight += item.getAttributeAsDouble("weight");
@@ -718,7 +720,7 @@ public class PlanCreateTab {
 			
 			PlanProductDetails temp = new PlanProductDetails();
 			temp.save(pid, pname, pweight, ptype, punit, psize, pwidth, plength, pheight, pdiameter, pthickness);
-			temp.setID(sub_plan_id, plan_id);
+			temp.setID(sub_plan_id);
 			temp.setQuantity(pplan_amount);
 			productList.add(temp);
 		}
@@ -729,6 +731,7 @@ public class PlanCreateTab {
 		String plan_status = "2_waiting_for_approved";
 		//xxxService.xxx(Callback quoteId);
 		System.out.println("Create plan, total_weight = " + total_weight);
+		final String plan_id = "PL70" + Math.round((Math.random() * 100));
 		ListGridRecord newRecord = PlanData.createRecord(plan_id, null, delivery, total_weight, total_amount, new Date(), null, user, null, "", plan_status, reason);
 		// client; - cid
 		// DateForm; - from , to
@@ -744,7 +747,7 @@ public class PlanCreateTab {
 						SC.warn("การสร้างแผนการผลิตล้มเหลว");
 					} else { 
 						for (PlanProductDetails item : productList) {
-							ListGridRecord subNewRecord = PlanProductData.createRecord(item);
+							ListGridRecord subNewRecord = PlanProductData.createRecord(item, plan_id);
 							PlanProductDS.getInstance(plan_id).addData(subNewRecord);
 							//System.out.println("add data " + item.sub_plan_id);
 						}

@@ -11,6 +11,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.financial.WagePaymentStatus;
 import com.smart.mis.shared.prodution.ProcessStatus;
 import com.smart.mis.shared.prodution.ProcessType;
@@ -84,7 +85,7 @@ public class WageViewWindow extends EditorWindow{
 		editWindow.setTitle("บันทึกชำระค่าจ้างผลิต");
 		} else editWindow.setTitle("ข้อมูลรายการชำระค่าจ้างผลิต");
 		editWindow.setWidth(850);  
-		editWindow.setHeight(550);
+		editWindow.setHeight(540);
 		editWindow.setShowMinimizeButton(false);
 		editWindow.setIsModal(true);
 		editWindow.setShowModalMask(true);
@@ -99,9 +100,9 @@ public class WageViewWindow extends EditorWindow{
 	
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
 		
-		VLayout layout = new VLayout();
+		final VLayout layout = new VLayout();
 		layout.setWidth(820);
-		layout.setHeight(550);
+		layout.setHeight(520);
 		layout.setMargin(10);
 
 		String wage_id = record.getAttributeAsString("wage_id");
@@ -388,11 +389,11 @@ public class WageViewWindow extends EditorWindow{
 		
 		final DynamicForm summaryForm_2 = new DynamicForm();
 		summaryForm_2.setWidth100();
-		summaryForm_2.setHeight(30);
+		//summaryForm_2.setHeight(30);
 		summaryForm_2.setNumCols(6);
 		summaryForm_2.setMargin(5);
 		summaryForm_2.setIsGroup(true);
-		summaryForm_2.setGroupTitle("สรุปยอดสั่งสินค้า");
+		summaryForm_2.setGroupTitle("สรุปยอดสั่งผลิตสินค้า");
 		//summaryForm_2.setColWidths(100, 100, 100, 100, 100, 100);
 		final NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 		final StaticTextItem total_recv_weight = new StaticTextItem("total_recv_weight");
@@ -480,7 +481,7 @@ public class WageViewWindow extends EditorWindow{
 				confirm.setShowMinimizeButton(false);
 				confirm.setIsModal(true);
 				confirm.setShowModalMask(true);
-				confirm.setCanDragResize(false);
+				confirm.setCanDragResize(false); 
 				confirm.setCanDragReposition(false);
 				confirm.centerInPage();
 				VLayout receiptLayout = new VLayout();
@@ -541,7 +542,21 @@ public class WageViewWindow extends EditorWindow{
 													} else { 
 														SC.warn("การบันทึกจ่ายชำระเงิน เสร็จสมบูรณ์");
 														confirm.destroy();
-														main.destroy();
+														
+														SC.confirm("พิมพ์ใบสำคัญจ่ายค่าจ้างวัตถุดิบ", "ต้องการพิมพ์ใบสำคัญจ่ายค่าจ้างวัตถุดิบหรือไม่?" , new BooleanCallback() {
+
+															@Override
+															public void execute(
+																	Boolean value) {
+																	if(value) {
+																		VLayout printLayout = new VLayout(10);
+														            	printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
+														            	printLayout.addMember(layout);
+														            	Canvas.showPrintPreview(printLayout);
+																	}
+													            	main.destroy();
+															}});
+														//main.destroy();
 													}
 											}
 										});
@@ -565,15 +580,20 @@ public class WageViewWindow extends EditorWindow{
           }
         });
 		
-		final IButton printButton = new IButton("พิมพ์คำขอชำระค่าจ้างผลิต");
+		final IButton printButton = new IButton("พิมพ์ใบสำคัญจ่าย");
 		printButton.setIcon("icons/16/print.png");
 		printButton.setWidth(150);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                SC.say("Click print");
+                //SC.say("Click print");
+                VLayout printLayout = new VLayout(10);
+            	printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
+            	printLayout.addMember(layout);
+            	Canvas.showPrintPreview(printLayout);
+            	main.destroy();
           }
         });
-//		// if (edit || !status.equals("3_approved")) printButton.disable();
+		// if (edit || !status.equals("3_approved")) printButton.disable();
 //		
 //		final IButton createButton = new IButton("บรรจุสินค้า");
 //		createButton.setIcon("icons/16/print.png");
@@ -764,6 +784,7 @@ public class WageViewWindow extends EditorWindow{
 //		if (page == 1) controls.addMember(createButton);
 //		if (page == 2) 
 		if (record.getAttributeAsString("status").equalsIgnoreCase("2_paid")) saveButton.disable();
+		if (!record.getAttributeAsString("status").equalsIgnoreCase("2_paid")) printButton.disable();
 		controls.addMember(saveButton);
 		controls.addMember(printButton);
 //		if (page == 1 && status.equals("1_waiting_for_production")) controls.addMember(cancelButton);

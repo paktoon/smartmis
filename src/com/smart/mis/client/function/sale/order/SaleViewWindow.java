@@ -449,15 +449,15 @@ public class SaleViewWindow extends EditorWindow{
 		controls.setAlign(Alignment.CENTER);
 		controls.setMargin(5);
 		controls.setMembersMargin(5);
-		final IButton printButton = new IButton("พิมพ์รายการขาย");
-		printButton.setIcon("icons/16/print.png");
-		printButton.setWidth(120);
-		printButton.addClickHandler(new ClickHandler() {  
-            public void onClick(ClickEvent event) { 
-                SC.say("click print");
-            	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
-          }
-        });
+//		final IButton printButton = new IButton("พิมพ์รายการขาย");
+//		printButton.setIcon("icons/16/print.png");
+//		printButton.setWidth(120);
+//		printButton.addClickHandler(new ClickHandler() {  
+//            public void onClick(ClickEvent event) { 
+//                SC.say("click print");
+//            	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
+//          }
+//        });
 		// if (edit || !status.equals("3_approved")) printButton.disable();
 		
 //		final IButton saveButton = new IButton("บันทึกการแก้ไข");
@@ -638,7 +638,7 @@ public class SaleViewWindow extends EditorWindow{
 //			controls.addMember(printButton);
 //			controls.addMember(saveButton);
 //		}
-		controls.addMember(printButton);
+//		controls.addMember(printButton);
 		if (page == 1 && status.equals("1_waiting_for_production")) controls.addMember(cancelButton);
 		if (page == 1 && status.equals("3_production_completed")) controls.addMember(deliveryButton);
 		controls.addMember(closeButton);

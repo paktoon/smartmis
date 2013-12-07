@@ -396,15 +396,15 @@ public class RequestViewWindow extends EditorWindow{
 		controls.setAlign(Alignment.CENTER);
 		controls.setMargin(5);
 		controls.setMembersMargin(5);
-		final IButton printButton = new IButton("พิมพ์รายการเบิกสินค้า");
-		printButton.setIcon("icons/16/print.png");
-		printButton.setWidth(150);
-		printButton.addClickHandler(new ClickHandler() {  
-            public void onClick(ClickEvent event) { 
-                SC.say("click print");
-            	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
-          }
-        });
+//		final IButton printButton = new IButton("พิมพ์รายการเบิกสินค้า");
+//		printButton.setIcon("icons/16/print.png");
+//		printButton.setWidth(150);
+//		printButton.addClickHandler(new ClickHandler() {  
+//            public void onClick(ClickEvent event) { 
+//                SC.say("click print");
+//            	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
+//          }
+//        });
 		
 		final IButton issueButton = new IButton("สั่งจ่ายสินค้า");
 		issueButton.setIcon("icons/16/save.png");
@@ -435,7 +435,7 @@ public class RequestViewWindow extends EditorWindow{
           }
         });
 		
-		controls.addMember(printButton);
+		//controls.addMember(printButton);
 		if (page == 2 && issued_status.equals("0_product_request")) controls.addMember(issueButton);
 		controls.addMember(closeButton);
 		layout.addMember(controls);

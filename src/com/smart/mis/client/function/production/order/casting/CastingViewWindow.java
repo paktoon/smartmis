@@ -2,6 +2,7 @@ package com.smart.mis.client.function.production.order.casting;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
@@ -9,8 +10,14 @@ import com.smart.mis.client.function.financial.disburse.wage.WageDS;
 import com.smart.mis.client.function.financial.disburse.wage.WageData;
 import com.smart.mis.client.function.financial.disburse.wage.WageItemDS;
 import com.smart.mis.client.function.financial.disburse.wage.WageItemData;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestDS;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestData;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestItemDS;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestItemData;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestItemDetails;
 import com.smart.mis.client.function.production.order.scraping.ScrapingCreateWindow;
 import com.smart.mis.client.function.production.plan.product.PlanProductDS;
+import com.smart.mis.client.function.production.process.ProcessListDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.shared.EditorWindow;
@@ -180,6 +187,9 @@ public class CastingViewWindow extends EditorWindow{
 		String sphone2 = record.getAttributeAsString("sphone2");
 		String saddress = record.getAttributeAsString("saddress");
 		String stype = record.getAttributeAsString("stype");
+		
+		smith.smid = smid;
+		smith.name = sname;
 		
 		StaticTextItem smith_id = new StaticTextItem("smid", "รหัสช่าง");
 		smith_id.setValue(smid);
@@ -434,7 +444,15 @@ public class CastingViewWindow extends EditorWindow{
 		printButton.setWidth(120);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                updateOrder(job_id, record, orderListGrid, currentUser);
+            	
+            	SC.confirm("ยืนยันการบันทึกรับสินค้า", "ต้องการบันทึกรับสินค้า หรือไม่?" , new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+			                updateOrder(job_id, record, orderListGrid, currentUser);
+						}
+					}
+            	});
           }
         });
 		// if (edit || !status.equals("3_approved")) printButton.disable();
@@ -758,6 +776,11 @@ public class CastingViewWindow extends EditorWindow{
 			
 			final String wage_id = createWagePayment(record, user);
 			
+			//Create Material Request total_recv_weight / 2 -> Silver 92.5% + 100%
+			//final HashMap<String, MaterialRequestItemDetails> matRequest = new HashMap<String, MaterialRequestItemDetails>();
+			final String request_id = "MR70" + Math.round((Math.random() * 100));
+			createMaterialRequest(request_id, job_id, smith, currentUser.getFirstName() + " " + currentUser.getLastName(), total_received_weight);
+
 			CastingDS.getInstance().updateData(record, new DSCallback() {
 				@Override
 				public void execute(DSResponse dsResponse, Object data,
@@ -773,10 +796,9 @@ public class CastingViewWindow extends EditorWindow{
 								CastingProductDS.getInstance(job_id).updateData(item);
 								createWageItemPayment(item, wage_id);
 							}
-							
 							//String request_id = createSilverRequisition(total_received_weight);
 							
-							String message = "บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการขอเบิกวัตถุดิบโดยอัตโนมัติ หมายเลข " + "TBD" + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + wage_id;
+							String message = "บันทึกรับสินค้าเสร็จสิ้น <br><br> " + " สร้างรายการขอเบิกวัตถุดิบโดยอัตโนมัติ หมายเลข " + request_id + "<br> สร้างรายการขอเบิกค่าจ้างผลิตโดยอัตโนมัติ หมายเลข " + wage_id;
 							SC.say(message, new BooleanCallback(){
 								@Override
 								public void execute(Boolean value) {
@@ -804,9 +826,36 @@ public class CastingViewWindow extends EditorWindow{
 		WageItemDS.getInstance(wage_id).addData(newRecord);
 	}
 	
-//	String createSilverRequisition(Double total_received_weight) {
-//		String request_id = "MR70" + Math.round((Math.random() * 100));
-//	}
+	public void createMaterialRequest(String request_id, String job_id, Smith smith,String user, Double total_received_weight){
+		
+		MaterialDS.getInstance().refreshData();
+		Record[] silver100 = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 100%"));
+		Record[] silver925 = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 92.5%"));
+		
+		MaterialRequestItemDetails[] matRequest = new MaterialRequestItemDetails[] {
+				new MaterialRequestItemDetails(silver100[0], total_received_weight / 2, silver100[0].getAttributeAsDouble("remain")),
+				new MaterialRequestItemDetails(silver925[0], total_received_weight / 2, silver100[0].getAttributeAsDouble("remain"))
+		};
+		
+		Double totel_request_amount = 0.0;
+		for (MaterialRequestItemDetails item : matRequest) {
+			totel_request_amount += item.getAmount();
+			final String sub_request_id = "SMR70" + Math.round((Math.random() * 100));
+			ListGridRecord newRecord = MaterialRequestItemData.createRecord(sub_request_id, request_id, item);
+			MaterialRequestItemDS.getInstance(request_id).addData(newRecord);
+			
+			MaterialDS.getInstance().refreshData();
+			Record[] updated_records = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mid", OperatorId.EQUALS, item.material_id));
+			Record updated = updated_records[0];
+			Double remain = updated.getAttributeAsDouble("remain") - item.getAmount();
+			updated.setAttribute("remain", remain);
+			Double reserved = updated.getAttributeAsDouble("reserved") + item.getAmount();
+			updated.setAttribute("reserved", reserved);
+			MaterialDS.getInstance().updateData(updated);
+		}
+		ListGridRecord newRecord = MaterialRequestData.createRecord(request_id, job_id, smith, "1_casting", new Date(), totel_request_amount, new Date(), null, user, null, "1_requested");
+		MaterialRequestDS.getInstance().addData(newRecord);
+	}
 	
 	private ListGrid getListGrid() {
 		return new ListGrid() {  

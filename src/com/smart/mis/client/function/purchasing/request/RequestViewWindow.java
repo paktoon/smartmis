@@ -460,16 +460,16 @@ public class RequestViewWindow extends EditorWindow{
 		controls.setAlign(Alignment.CENTER);
 		controls.setMargin(5);
 		controls.setMembersMargin(5);
-		final IButton printButton = new IButton("พิมพ์ใบเสนอซื้อ");
-		printButton.setIcon("icons/16/print.png");
-		printButton.setWidth(120);
-		printButton.addClickHandler(new ClickHandler() {  
-            public void onClick(ClickEvent event) { 
-                SC.warn("click print");
-            	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
-          }
-        });
-		if (edit || !status.equals("3_approved")) printButton.disable();
+//		final IButton printButton = new IButton("พิมพ์ใบเสนอซื้อ");
+//		printButton.setIcon("icons/16/print.png");
+//		printButton.setWidth(120);
+//		printButton.addClickHandler(new ClickHandler() {  
+//            public void onClick(ClickEvent event) { 
+//                SC.warn("click print");
+//            	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
+//          }
+//        });
+//		if (edit || !status.equals("3_approved")) printButton.disable();
 		
 		final IButton saveButton = new IButton("บันทึกการแก้ไข");
 		saveButton.setIcon("icons/16/save.png");
@@ -629,7 +629,7 @@ public class RequestViewWindow extends EditorWindow{
 				controls.addMember(disapproveButton);
 			}
 		} else {
-			controls.addMember(printButton);
+			//controls.addMember(printButton);
 			controls.addMember(saveButton);
 		}
 		controls.addMember(closeButton);

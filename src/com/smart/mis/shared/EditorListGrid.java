@@ -268,15 +268,15 @@ public class EditorListGrid extends ListGrid{
                         EditWindow.show(record, false, currentUser, 1); // print invoice
                     }  
                 });
-            } if (record.getAttributeAsString("status").equalsIgnoreCase("2_paid")) {
-            	viewImg.setSrc("icons/16/approve.png");  
+            } else if (record.getAttributeAsString("status").equalsIgnoreCase("2_paid")) {
+            	viewImg.setSrc("icons/16/print.png");  
     	        viewImg.setPrompt("พิมพ์ใบเสร็จรับเงิน");
                 viewImg.addClickHandler(new ClickHandler() {  
                     public void onClick(ClickEvent event) {  
                         EditWindow.show(record, false, currentUser, 3); // print receipt
                     }  
                 });
-            } if (record.getAttributeAsString("status").equalsIgnoreCase("1_waiting_for_payment")) {
+            } else if (record.getAttributeAsString("status").equalsIgnoreCase("1_waiting_for_payment")) {
             	viewImg.setSrc("icons/16/coins.png");  
     	        viewImg.setPrompt("บันทึกการชำระเงิน");
                 viewImg.addClickHandler(new ClickHandler() {  

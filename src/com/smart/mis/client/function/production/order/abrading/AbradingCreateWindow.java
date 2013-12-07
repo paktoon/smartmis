@@ -451,8 +451,14 @@ public class AbradingCreateWindow {
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
             	if (smithForm.validate()) {
-                    //SC.say("click order and print");
-                    createCreateOrder(planForm, orderListGrid, sentDate.getValueAsDate(), dueDate.getValueAsDate(), currentUser, record);
+                	SC.confirm("ยืนยันการออกคำสั่งขัดและติดพลอยแมกกาไซต์", "ต้องการออกคำสั่งขัดและติดพลอยแมกกาไซต์ หรือไม่?" , new BooleanCallback() {
+    					@Override
+    					public void execute(Boolean value) {
+    						if (value) {
+    		                    createCreateOrder(planForm, orderListGrid, sentDate.getValueAsDate(), dueDate.getValueAsDate(), currentUser, record);
+    						}
+    					}
+                	});
             	}
             	else {
             		SC.warn("กรุณาเลือกข้อมูลช่าง");
@@ -862,15 +868,31 @@ public class AbradingCreateWindow {
 			for (Record mat : selectedMaterialProcess) {
 				String cm_id = "SM70" + Math.round((Math.random() * 100));
 				String mid = mat.getAttributeAsString("mid");
+				
+				Record[] materail = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mid", OperatorId.EQUALS, mid));
+				Double remain = materail[0].getAttributeAsDouble("remain");
+				
 				AbradingMaterialDS.getInstance(sub_job_id, job_id).addData(AbradingMaterialData.createRecord(sub_job_id, cm_id,  sent_amount, mat));
 				
 				if (matRequest.containsKey(mid)) {
 					matRequest.get(mid).addAmount(mat, sent_amount);
 				} else {
-					matRequest.put(mid, new MaterialRequestItemDetails(mat, sent_amount));
+					matRequest.put(mid, new MaterialRequestItemDetails(mat, sent_amount, remain));
 				}
 			}
 		}
+		
+		//Required
+		ArrayList<MaterialRequestItemDetails> outOfStock = checkStock(matRequest);
+		if (outOfStock.size() != 0) {
+			String msg = "การสร้างคำสั่งผลิตล้มเหลว ปริมาณวัตถุดิบไม่เพียงพอต่อการผลิต";
+			for (MaterialRequestItemDetails item : outOfStock){
+				msg += "<br>	ต้องการ " + item.material_name + " จำนวน " + item.request_amount + " " + item.material_unit + " คงเหลือ " + item.remain + " " + item.material_unit; 
+			}
+			SC.warn(msg);
+			return;
+		}
+		//End
 		
 		String status = "1_on_production";
 		if (matRequest.size() != 0) {
@@ -890,39 +912,50 @@ public class AbradingCreateWindow {
 						AbradingProductDS.getInstance(job_id).addData(item);
 					}
 					
-//					String plan_status = "5_on_production";
-//					ListGridRecord update_plan = PlanData.createStatusRecord(plan_id, plan_status, "ออกคำสั่งผลิตแล้ว", previousRecord);
+					SC.showPrompt("กำลังบันทึกข้อมูล");
+
 					String order_status = "3_to_next_process";
 					ListGridRecord update_order = ScrapingData.createStatusRecord(new Date(), currentUser.getFirstName() + " " + currentUser.getLastName(), "เสร็จสิ้นขั้นตอนแล้ว", order_status, previousRecord);
-					ScrapingDS.getInstance().updateData(update_order);
-					
-					String message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id;
-					if (matRequest.size() != 0) {
-						final String request_id = "MR70" + Math.round((Math.random() * 100));
-						createMaterialRequest(request_id, job_id, smith, currentUser.getFirstName() + " " + currentUser.getLastName(), matRequest);
-						message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> สร้างรายการขอเบิกวัตถุดิบ เลขที่ " + request_id;
-					}
-					
-					SC.say(message, new BooleanCallback(){
+					ScrapingDS.getInstance().updateData(update_order, new DSCallback() {
+
 						@Override
-						public void execute(Boolean value) {
-							if (value) {
-								editWindow.destroy();
+						public void execute(DSResponse dsResponse, Object data,
+								DSRequest dsRequest) {
+							String message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id;
+							if (matRequest.size() != 0) {
+								final String request_id = "MR70" + Math.round((Math.random() * 100));
+								createMaterialRequest(request_id, job_id, smith, currentUser.getFirstName() + " " + currentUser.getLastName(), matRequest);
+								message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> สร้างรายการขอเบิกวัตถุดิบ เลขที่ " + request_id;
 							}
+							SC.clearPrompt();
+							
+							SC.say(message, new BooleanCallback(){
+								@Override
+								public void execute(Boolean value) {
+									if (value) {
+										editWindow.destroy();
+									}
+								}
+							} );
 						}
-					} );
-//					ScrapingDS.getInstance().updateData(update_order, new DSCallback() {
+						
+					});
+					
+//					String message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id;
+//					if (matRequest.size() != 0) {
+//						final String request_id = "MR70" + Math.round((Math.random() * 100));
+//						createMaterialRequest(request_id, job_id, smith, currentUser.getFirstName() + " " + currentUser.getLastName(), matRequest);
+//						message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> สร้างรายการขอเบิกวัตถุดิบ เลขที่ " + request_id;
+//					}
+//					
+//					SC.say(message, new BooleanCallback(){
 //						@Override
-//						public void execute(DSResponse dsResponse, Object data,
-//								DSRequest dsRequest) {
-//							if (dsResponse.getStatus() != 0) {
-//								SC.warn("การสร้างคำสั่งผลิตล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
+//						public void execute(Boolean value) {
+//							if (value) {
 //								editWindow.destroy();
-//							} else {
-//								editWindow.destroy();
-//								SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> สร้างรายการขอเบิกวัตถุดิบ เลขที่ TBD");
 //							}
-//						}});
+//						}
+//					} );
 				}
 			}
 		});
@@ -1021,5 +1054,13 @@ public class AbradingCreateWindow {
                 return layout;
             }  
 		};
+	}
+	
+	private ArrayList<MaterialRequestItemDetails> checkStock(HashMap<String, MaterialRequestItemDetails> matRequest){
+		ArrayList<MaterialRequestItemDetails> outOfStock = new ArrayList<MaterialRequestItemDetails>();
+		for (MaterialRequestItemDetails item : matRequest.values()) {
+			if (item.request_amount > item.remain) outOfStock.add(item);
+		}
+		return outOfStock;
 	}
 }

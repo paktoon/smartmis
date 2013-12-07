@@ -56,8 +56,10 @@ public class ProductDS extends DataSource  {
 			 DataSourceTextField Field_9_4 = new DataSourceTextField("height", "ความสูง (มม.)");
 			 DataSourceTextField Field_9_5 = new DataSourceTextField("diameter", "เส้นผ่าศูนย์กลาง (มม.)");
 			 DataSourceTextField Field_9_6 = new DataSourceTextField("thickness", "ความหนา (มม.)");
+
+			 DataSourceBooleanField Field_10 = new DataSourceBooleanField("makeToOrder", "ผลิตตามคำสั่งซื้อเท่านั้น");
 			 
-			 setFields(Field_1, Field_2_1, Field_2_2, Field_3, Field_4_1, Field_5, Field_7_1, Field_7_2, Field_7_3, Field_6, Field_8, Field_9_1, Field_9_2, Field_9_3,Field_9_4,Field_9_5, Field_9_6);
+			 setFields(Field_1, Field_2_1, Field_2_2, Field_3, Field_4_1, Field_5, Field_7_1, Field_7_2, Field_7_3, Field_6, Field_8, Field_9_1, Field_9_2, Field_9_3,Field_9_4,Field_9_5, Field_9_6, Field_10);
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(ProductData.getNewRecords()); // For Test
 			 setClientOnly(true);

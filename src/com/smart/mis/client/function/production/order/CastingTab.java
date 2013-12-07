@@ -247,7 +247,7 @@ public class CastingTab {
             		CastingViewWindow receiveWindow = new CastingViewWindow();
             		receiveWindow.show(selected, true, currentUser, 2);
             	} else {
-            		SC.warn("รับสินค้าในขั้นตอนผลิตแล้ว");
+            		SC.warn("สถานะของคำสั่งผลิตไม่เหมาะสม \"" + ProcessStatus.getDisplay(selected.getAttributeAsString("status")) + "\"");
             	}
           }
         });

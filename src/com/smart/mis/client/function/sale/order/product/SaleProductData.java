@@ -35,10 +35,10 @@ public class SaleProductData {
         return record;  
     }
     
-    public static ListGridRecord createRecord(SaleProductDetails item) {  
+    public static ListGridRecord createRecord(SaleProductDetails item, String ref_id) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("sub_sale_id", item.sub_id);
-        record.setAttribute("sale_id", item.ref_id);
+        record.setAttribute("sale_id", ref_id);
         record.setAttribute("pid", item.product_id);
         record.setAttribute("name",item.product_name);  
         //record.setAttribute("size", item.product_size); 

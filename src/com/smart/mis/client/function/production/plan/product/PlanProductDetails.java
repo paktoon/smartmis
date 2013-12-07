@@ -4,7 +4,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class PlanProductDetails {
 	public String sub_plan_id;
-	String plan_id;
+	//String plan_id;
 	
 	String product_id;
 	String product_name;
@@ -37,9 +37,13 @@ public class PlanProductDetails {
 		this.product_thickness = thickness;
 	}
 	
-	public void setID(String sub_plan_id, String plan_id) {
+//	public void setID(String sub_plan_id, String plan_id) {
+//		this.sub_plan_id = sub_plan_id;
+//		this.plan_id = plan_id;
+//	}
+	
+	public void setID(String sub_plan_id) {
 		this.sub_plan_id = sub_plan_id;
-		this.plan_id = plan_id;
 	}
 	
 	public void setQuantity(Integer plan_amount) {
@@ -52,7 +56,6 @@ public class PlanProductDetails {
 	
 	public void clear(){
 		sub_plan_id = null;
-		plan_id = null;
 		
 		product_id = null;
 		product_name = null;

@@ -11,6 +11,7 @@ import com.smart.mis.shared.Country;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.DeliveryStatus;
 import com.smart.mis.shared.security.User;
@@ -87,7 +88,7 @@ public class DeliveryViewWindow extends EditorWindow{
 	}
 	
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
-		VLayout layout = new VLayout();
+		final VLayout layout = new VLayout();
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
@@ -357,8 +358,13 @@ public class DeliveryViewWindow extends EditorWindow{
 		printButton.setWidth(150);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                SC.say("click print");
+                //SC.say("click print");
             	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
+                VLayout printLayout = new VLayout(10);
+            	printLayout.addMember(new PrintHeader("ใบนำส่งสินค้า"));
+            	printLayout.addMember(layout);
+            	Canvas.showPrintPreview(printLayout);
+            	main.destroy();
           }
         });
 		

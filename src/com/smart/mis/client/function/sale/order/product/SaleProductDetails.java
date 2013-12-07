@@ -4,7 +4,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class SaleProductDetails {
 	public String sub_id;
-	String ref_id;
+	//String ref_id;
 	
 	String product_id;
 	String product_name;
@@ -31,9 +31,13 @@ public class SaleProductDetails {
 		this.product_unit = unit;
 	}
 	
-	public void setID(String sub_id, String ref_id) {
+//	public void setID(String sub_id, String ref_id) {
+//		this.sub_id = sub_id;
+//		this.ref_id = ref_id;
+//	}
+	
+	public void setID(String sub_id) {
 		this.sub_id = sub_id;
-		this.ref_id = ref_id;
 	}
 	
 	public void setQuantity(Integer sale_amount) {
@@ -46,7 +50,7 @@ public class SaleProductDetails {
 	
 	public void clear(){
 		sub_id = null;
-		ref_id = null;
+	//	ref_id = null;
 		
 		product_id = null;
 		product_name = null;

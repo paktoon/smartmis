@@ -19,6 +19,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.purchasing.PurchaseOrderStatus;
 import com.smart.mis.shared.purchasing.PurchaseRequestStatus;
 import com.smart.mis.shared.purchasing.Supplier;
@@ -102,7 +103,7 @@ public class OrderViewWindow extends EditorWindow{
 	}
 	
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
-		VLayout layout = new VLayout();
+		final VLayout layout = new VLayout();
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
@@ -414,8 +415,13 @@ public class OrderViewWindow extends EditorWindow{
 		printButton.setWidth(120);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                SC.warn("click print");
+                //SC.warn("click print");
             	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
+                VLayout printLayout = new VLayout(10);
+            	printLayout.addMember(new PrintHeader("ใบสั่งซื้อ"));
+            	printLayout.addMember(layout);
+            	Canvas.showPrintPreview(printLayout);
+            	main.destroy();
           }
         });
 //		if (edit || !status.equals("3_approved")) printButton.disable();

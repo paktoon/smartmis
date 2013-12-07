@@ -2,6 +2,9 @@ package com.smart.mis.client.function.production.product;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
+import com.smart.mis.client.function.production.plan.product.PlanProductDS;
+import com.smart.mis.client.function.production.plan.product.PlanProductData;
+import com.smart.mis.client.function.production.plan.product.PlanProductDetails;
 import com.smart.mis.client.function.production.process.ProcessData;
 import com.smart.mis.client.function.production.process.ProcessListDS;
 import com.smart.mis.client.function.production.process.ProcessOutline;
@@ -14,6 +17,9 @@ import com.smart.mis.shared.image.ImageUpload;
 import com.smart.mis.shared.security.PermissionProfile;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
+import com.smartgwt.client.data.DSCallback;
+import com.smartgwt.client.data.DSRequest;
+import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;  
 import com.smartgwt.client.data.Record;  
 import com.smartgwt.client.types.Alignment;  
@@ -43,6 +49,7 @@ import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.MatchesFieldValidator;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.MouseOverEvent;
@@ -116,6 +123,7 @@ public class ProductDetailTabPane extends ImageTabPane {
 		//DoubleItem weight = new DoubleItem("weight", "น้ำหนัก");
 		DoubleItem price = new DoubleItem("price", "ราคา");
 		final SelectItem type = new SelectItem("type", "ประเภท");
+		CheckboxItem makeToOrder = new CheckboxItem("makeToOrder", "ผลิตตามคำสั่งซื้อเท่านั้น");
 		
 		type.addChangedHandler(new ChangedHandler() {
 			@Override
@@ -216,7 +224,7 @@ public class ProductDetailTabPane extends ImageTabPane {
         VLayout leftLayout = new VLayout();
         editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
         //editorForm.setFields(pid, name, name_th, weight, price, type);
-        editorForm.setFields(pid, name, name_th, price, type);
+        editorForm.setFields(pid, name, name_th, price, type, makeToOrder);
         editorForm.setColWidths(200	, 300);
         sizeForm.setFields(size,width,length,height,diameter,thickness);
         leftLayout.addMembers(editorForm, sizeForm);
@@ -368,9 +376,9 @@ public class ProductDetailTabPane extends ImageTabPane {
 	    	//Double weight = Double.parseDouble(editorForm.getValueAsString("weight"));
 	    	Double price = Double.parseDouble(editorForm.getValueAsString("price"));
 	    	String type = editorForm.getValueAsString("type");
+	    	Boolean makeToOrder = Boolean.parseBoolean(editorForm.getValueAsString("makeToOrder"));
+	    	System.out.println("makeToOrder : " + makeToOrder);
 	    	
-//	    	Integer inStock = currentRecord.getAttributeAsInt("inStock");
-//	    	Integer reserved = currentRecord.getAttributeAsInt("reserved");
 	    	Double size = null;
 	    	Double width = null;
 	    	Double length = null;
@@ -416,9 +424,22 @@ public class ProductDetailTabPane extends ImageTabPane {
 								length,
 								height,
 								diameter,
-								thickness
+								thickness,
+								makeToOrder
 				    			);
-						DataSource.updateData(updateRecord);
+						DataSource.updateData(updateRecord, new DSCallback() {
+
+							@Override
+							public void execute(DSResponse dsResponse,
+									Object data, DSRequest dsRequest) {
+								if (dsResponse.getStatus() != 0) {
+									SC.warn("การสร้างแผนการผลิตล้มเหลว");
+								} else {
+									SC.say("แก้ไขข้อมูลสินค้าเรียบร้อยแล้ว");
+								}
+							}
+							
+						});
 						this.currentViewImgUrl = this.currentEditImgUrl;
 						changeEditImg();
 						changeViewImg();

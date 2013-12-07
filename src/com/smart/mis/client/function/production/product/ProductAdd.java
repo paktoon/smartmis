@@ -101,22 +101,11 @@ public class ProductAdd {
         editorForm.setGroupTitle("ข้อมูลสินค้า");
         editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 		TextItem name = new TextItem("name", "ชื่อสินค้าภาษาอังกฤษ");
-//		FormItemIcon icon = new FormItemIcon();  
-//        icon.setSrc("[SKIN]/actions/help.png"); 
-//        icon.setPrompt("ชื่อสินค้าต้องไม่ซ้ำ");
-//        name.setIcons(icon);
-//        name.setRequired(true);
-//        name.setHint("*");
         
         TextItem name_th = new TextItem("name_th", "ชื่อสินค้าภาษาไทย");
-//		DoubleItem weight = new DoubleItem("weight", "น้ำหนัก");
 		DoubleItem price = new DoubleItem("price", "ราคา");
-		
-//		TextAreaItem desc = new TextAreaItem("desc", "คำอธิบาย");
-//		desc.setWidth(300);
-//		desc.setRowSpan(2);
 		final SelectItem type = new SelectItem("type", "ประเภท");
-//		TextItem unit = new TextItem("unit", "หน่วย");
+		CheckboxItem makeToOrder = new CheckboxItem("makeToOrder", "ผลิตตามคำสั่งซื้อเท่านั้น");
 		
 		name.setRequired(true);
 		name_th.setRequired(true);
@@ -189,9 +178,8 @@ public class ProductAdd {
 					    	//Double weight = Double.parseDouble(editorForm.getValueAsString("weight"));
 					    	Double price = Double.parseDouble(editorForm.getValueAsString("price"));
 					    	String type = editorForm.getValueAsString("type");
+					    	Boolean makeToOrder = Boolean.parseBoolean(editorForm.getValueAsString("makeToOrder"));
 					    	
-//					    	Integer inStock = currentRecord.getAttributeAsInt("inStock");
-//					    	Integer reserved = currentRecord.getAttributeAsInt("reserved");
 					    	Double size = null;
 					    	Double width = null;
 					    	Double length = null;
@@ -237,7 +225,8 @@ public class ProductAdd {
 												length,
 												height,
 												diameter,
-												thickness
+												thickness,
+												makeToOrder
 								    			);
 										ProcessAdd next = new ProcessAdd();
 		  					        	next.show("1_casting", newRecord, new ArrayList<ListGridRecord>(), new ArrayList<ListGridRecord>(), new ArrayList<ListGridRecord>(), new ArrayList<ListGridRecord>(), new ArrayList<ListGridRecord>());
@@ -302,7 +291,7 @@ public class ProductAdd {
         leftLayout.setMembersMargin(5);
         editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 //        editorForm.setFields(name, name_th, weight, price, type);
-        editorForm.setFields(name, name_th, price, type);
+        editorForm.setFields(name, name_th, price, type, makeToOrder);
         editorForm.setColWidths(200	, 300);
         sizeForm.setFields(size,width,length,height,diameter,thickness);
         leftLayout.addMembers(editorForm, sizeForm);

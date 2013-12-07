@@ -20,6 +20,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.InvoiceStatus;
 import com.smart.mis.shared.sale.QuotationStatus;
@@ -90,7 +91,7 @@ public class InvoiceViewWindow extends EditorWindow{
 	public void show(ListGridRecord record, boolean edit, User currentUser, int page){
 		client = new Customer();
 		Window editWindow = new Window();
-		editWindow.setTitle("ข้อมูลใบเสนอราคา");
+		editWindow.setTitle("ข้อมูลใบแจ้งหนี้");
 		editWindow.setWidth(670);  
 		editWindow.setHeight(620);
 		editWindow.setShowMinimizeButton(false);
@@ -106,7 +107,7 @@ public class InvoiceViewWindow extends EditorWindow{
 	}
 	
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
-		VLayout layout = new VLayout();
+		final VLayout layout = new VLayout();
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
@@ -127,18 +128,25 @@ public class InvoiceViewWindow extends EditorWindow{
 		//Date created_date = record.getAttributeAsDate("created_date");
 		Date due_date = record.getAttributeAsDate("due_date");
 		
+		Date created_date = record.getAttributeAsDate("created_date");
+		String purchase_id = record.getAttributeAsString("purchase_id");
+		
+		//Double recIn = record.getAttributeAsDouble("receivedInclusive");
+		//Date paid_date = record.getAttributeAsDate("paid_date");
+		
 		DynamicForm quotationForm = new DynamicForm();
 		quotationForm.setWidth100(); 
 		quotationForm.setHeight(30);
 		quotationForm.setMargin(5);
 		quotationForm.setIsGroup(true);
 		quotationForm.setNumCols(8);
-		quotationForm.setGroupTitle("ข้อมูลใบแจ้งหนัเ");
+		quotationForm.setGroupTitle("ข้อมูลใบแจ้งหนี้");
 
-		StaticTextItem invid = new StaticTextItem("sale_id", "รหัสใบแจ้งหนี้");
+		StaticTextItem invid = new StaticTextItem("invoice_id", "รหัสใบแจ้งหนี้");
 		StaticTextItem sid = new StaticTextItem("sale_id", "รหัสรายการขาย");
 		StaticTextItem sts = new StaticTextItem("status", "สถานะ");
 		StaticTextItem cdate = new StaticTextItem("due_date", "วันครบกำหนดชำระเงิน");
+		//StaticTextItem pdate = new StaticTextItem("paid_date", "วันจ่ายชำระเงิน");
 		invid.setValue(invoice_id);
 		sid.setValue(sale_id);
 		sts.setValue(status);
@@ -295,11 +303,11 @@ public class InvoiceViewWindow extends EditorWindow{
 		dateForm.setGroupTitle("ข้อกำหนดรายการขาย");
 		//if (!edit) 
 		dateForm.setCanEdit(false);
-//		final DateItem fromDate = new DateItem();
-//		fromDate.setName("fromDate");
-//		fromDate.setTitle("วันที่เริ่มข้อเสนอ");
-//		fromDate.setUseTextField(true);
-//		
+		final DateItem createDate = new DateItem();
+		createDate.setName("created_date");
+		createDate.setTitle("วันที่ออกใบแจ้งหนี้");
+		createDate.setUseTextField(true);
+		
 //		final DateItem toDate = new DateItem();
 //		toDate.setName("toDate");
 //		toDate.setTitle("วันที่สิ้นสุดข้อเสนอ");
@@ -310,12 +318,15 @@ public class InvoiceViewWindow extends EditorWindow{
 		deliveryDate.setTitle("วันที่กำหนดส่งของ");
 		deliveryDate.setUseTextField(true);
 		
-//        fromDate.setDefaultChooserDate(from);
-//        fromDate.setValue(from);
+		StaticTextItem ref_id = new StaticTextItem("purchase_id", "เลขที่คำสั่งซื้อ");
+		
+		createDate.setDefaultChooserDate(created_date);
+		createDate.setValue(created_date);
 //        toDate.setDefaultChooserDate(to);
 //        toDate.setValue(to);
         deliveryDate.setDefaultChooserDate(delivery);
         deliveryDate.setValue(delivery);
+        ref_id.setValue(purchase_id);
 //        fromDate.setRequired(true);
 //        fromDate.setHint("*");
 //		toDate.setRequired(true);
@@ -324,7 +335,7 @@ public class InvoiceViewWindow extends EditorWindow{
 //		deliveryDate.setHint("*");
 		
 //		dateForm.setFields(fromDate, toDate, deliveryDate);
-		dateForm.setFields(deliveryDate);
+		dateForm.setFields(createDate, deliveryDate, ref_id);
 		dateForm.setColWidths(130,80);
 		//dateForm.editRecord(record);
 		footerLayout.addMember(dateForm);
@@ -373,16 +384,27 @@ public class InvoiceViewWindow extends EditorWindow{
 		printButton.setWidth(120);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                SC.say("click print invoice");
+                //SC.say("click print invoice");
+            	VLayout printLayout = new VLayout(10);
+            	printLayout.addMember(new PrintHeader("ใบแจ้งหนี้"));
+            	printLayout.addMember(layout);
+            	Canvas.showPrintPreview(printLayout);
+            	main.destroy();
           }
         });
+		if (!status.equals("1_waiting_for_payment")) printButton.disable();
 		
 		final IButton printReceipt = new IButton("พิมพ์ใบเสร็จ");
 		printReceipt.setIcon("icons/16/print.png");
 		printReceipt.setWidth(120);
 		printReceipt.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                SC.say("click print receipt");
+                //SC.say("click print receipt");
+            	VLayout printLayout = new VLayout(10);
+            	printLayout.addMember(new PrintHeader("ใบเสร็จรับเงิน"));
+            	printLayout.addMember(layout);
+            	Canvas.showPrintPreview(printLayout);
+            	main.destroy();
           }
         });
 		

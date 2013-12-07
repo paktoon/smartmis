@@ -8,7 +8,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class ProductData {
 
-    public static ListGridRecord createRecord(String pid, String name, String name_th, Double price, String type, Integer inStock, Integer reserved, String imgUrl, Double size, Double width, Double length, Double height, Double diameter, Double thickness) {  
+    public static ListGridRecord createRecord(String pid, String name, String name_th, Double price, String type, Integer inStock, Integer reserved, String imgUrl, Double size, Double width, Double length, Double height, Double diameter, Double thickness, Boolean makeToOrder) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("pid", pid);
         record.setAttribute("name",name);
@@ -37,10 +37,12 @@ public class ProductData {
         //All
         record.setAttribute("thickness", thickness); //mm
         
+        record.setAttribute("makeToOrder", makeToOrder); //mm
+        
         return record;  
     }
     
-    public static ListGridRecord createRecord(String name, String name_th, Double price, String type, Integer inStock, Integer reserved, String imgUrl, Double size, Double width, Double length, Double height, Double diameter, Double thickness) {  
+    public static ListGridRecord createRecord(String name, String name_th, Double price, String type, Integer inStock, Integer reserved, String imgUrl, Double size, Double width, Double length, Double height, Double diameter, Double thickness, Boolean makeToOrder) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("name",name);
         record.setAttribute("name_th",name_th);
@@ -67,10 +69,12 @@ public class ProductData {
         //All
         record.setAttribute("thickness", thickness); //mm
         
+        record.setAttribute("makeToOrder", makeToOrder);
+        
         return record;  
     }
     
-    public static ListGridRecord createUpdatedRecord(String pid, String name, String name_th, Double price, String type, String imgUrl, Double size, Double width, Double length, Double height, Double diameter, Double thickness) {  
+    public static ListGridRecord createUpdatedRecord(String pid, String name, String name_th, Double price, String type, String imgUrl, Double size, Double width, Double length, Double height, Double diameter, Double thickness, Boolean makeToOrder) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("pid", pid);
         record.setAttribute("name",name);
@@ -93,6 +97,8 @@ public class ProductData {
         record.setAttribute("diameter", diameter); //mm
         //All
         record.setAttribute("thickness", thickness); //mm
+        
+        record.setAttribute("makeToOrder", makeToOrder);
         
         return record;  
     }
@@ -128,19 +134,19 @@ public class ProductData {
     
     public static ListGridRecord[] getNewRecords() {
     	return new ListGridRecord[]{ 
-    			createDummyRecord("PD10001","Diamond cut silver ring", "แหวนเงิน คัดลายน้ำ", 6.8, 55.0, "ring" , 300 , 120, "", 5.0,null,null,null,null,3.0),
-    			createDummyRecord("PD10002","Thin plain silver ring", "แหวนเงินเกลี้ยง แบบบาง", 6.8, 50.0, "ring", 200, 100, "", 5.0,null,null,null,null,3.0),
-    			createDummyRecord("PD10003","Dense plain silver ring", "แหวนเงินเกลี้ยง แบบหนา", 6.8, 62.0, "ring", 0 , 0, "", 5.0,null,null,null,null,4.0),
+    			createDummyRecord("PD10001","Diamond cut silver ring", "แหวนเงิน คัดลายน้ำ", 6.8, 55.0, "ring" , 300 , 120, "", 5.0,null,null,null,null,3.0, false),
+    			createDummyRecord("PD10002","Thin plain silver ring", "แหวนเงินเกลี้ยง แบบบาง", 6.8, 50.0, "ring", 200, 100, "", 5.0,null,null,null,null,3.0, false),
+    			createDummyRecord("PD10003","Dense plain silver ring", "แหวนเงินเกลี้ยง แบบหนา", 6.8, 62.0, "ring", 0 , 0, "", 5.0,null,null,null,null,4.0, true),
 
-    			createDummyRecord("PD10004","Spiral silver earrings", "ต่างหู ตีเกลียวคู่", 6.32, 55.0, "earring", 250, 0, GWT.getHostPageBaseURL() + "_ah/img/_avEWP6JsPhjg9w8eS2rmg", null, 0.7, 2.6, null, null, 3.0),
-    			createDummyRecord("PD10005","Scorpion silver ear cuffs", "ต่างหู ลงดำ ลายแมงป่อง", 6.32, 50.0, "earring", 200, 50, GWT.getHostPageBaseURL() + "_ah/img/x4oiXGpRJ2w9JHqqBnOInQ", null, null, null, 7.0, 10.0, 3.0),
+    			createDummyRecord("PD10004","Spiral silver earrings", "ต่างหู ตีเกลียวคู่", 6.32, 55.0, "earring", 250, 0, GWT.getHostPageBaseURL() + "_ah/img/_avEWP6JsPhjg9w8eS2rmg", null, 0.7, 2.6, null, null, 3.0, false),
+    			createDummyRecord("PD10005","Scorpion silver ear cuffs", "ต่างหู ลงดำ ลายแมงป่อง", 6.32, 50.0, "earring", 200, 50, GWT.getHostPageBaseURL() + "_ah/img/x4oiXGpRJ2w9JHqqBnOInQ", null, null, null, 7.0, 10.0, 3.0, false),
     			
-    			createDummyRecord("PD10006","Silver necklace with star pendant", "สร้อยคอ พร้อมจี้รูปดาว", 6.32, 55.0, "necklace" , 100, 0, GWT.getHostPageBaseURL() + "_ah/img/wcPuoWXSMi_K__gH9-5E2w", null, null, 45.5, 7.0, 10.0, 3.0),
-    			createDummyRecord("PD10007","Plain silver necklaces", "สายสร้อย โซ่คร้อง", 6.32, 50.0, "necklace", 100, 0, GWT.getHostPageBaseURL() + "_ah/img/SaCp1BkcC059PilPBLxskg", null, null, 50.0, null, null, 3.0),
+    			createDummyRecord("PD10006","Silver necklace with star pendant", "สร้อยคอ พร้อมจี้รูปดาว", 6.32, 55.0, "necklace" , 100, 0, GWT.getHostPageBaseURL() + "_ah/img/wcPuoWXSMi_K__gH9-5E2w", null, null, 45.5, 7.0, 10.0, 3.0, false),
+    			createDummyRecord("PD10007","Plain silver necklaces", "สายสร้อย โซ่คร้อง", 6.32, 50.0, "necklace", 100, 0, GWT.getHostPageBaseURL() + "_ah/img/SaCp1BkcC059PilPBLxskg", null, null, 50.0, null, null, 3.0, true),
     	};
     }
     
-    public static ListGridRecord createDummyRecord(String pid, String name, String name_th, Double weight, Double price, String type, Integer inStock, Integer reserved, String imgUrl, Double size, Double width, Double length, Double height, Double diameter, Double thickness) {  
+    public static ListGridRecord createDummyRecord(String pid, String name, String name_th, Double weight, Double price, String type, Integer inStock, Integer reserved, String imgUrl, Double size, Double width, Double length, Double height, Double diameter, Double thickness, Boolean makeToOrder) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("pid", pid);
         record.setAttribute("name",name);
@@ -168,6 +174,7 @@ public class ProductData {
         record.setAttribute("diameter", diameter); //mm
         //All
         record.setAttribute("thickness", thickness); //mm
+        record.setAttribute("makeToOrder", makeToOrder);
         
         return record;  
     }

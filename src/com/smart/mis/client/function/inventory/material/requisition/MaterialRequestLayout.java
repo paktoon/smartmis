@@ -171,12 +171,13 @@ public class MaterialRequestLayout extends VLayout {
 		ListGridField quote_id = new ListGridField("job_id" , 100);
 		ListGridField cus_name = new ListGridField("sname", 180);
 		ListGridField status = new ListGridField("status", 80);
-		ListGridField total_amount = new ListGridField("total_request_amount");
-		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
-		total_amount.setAlign(Alignment.RIGHT);
+//		ListGridField total_amount = new ListGridField("total_request_amount");
+//		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+//		total_amount.setAlign(Alignment.RIGHT);
+		ListGridField req_type = new ListGridField("req_type");
 		ListGridField created_date = new ListGridField("req_date");
 		
-		returnListGrid.setFields(status, sale_id, quote_id, cus_name, total_amount, created_date);
+		returnListGrid.setFields(status, sale_id, quote_id, cus_name, req_type, created_date);
 		
 		searchLayout.addMembers(searchForm, dateForm);
 		//reviseLayout.
