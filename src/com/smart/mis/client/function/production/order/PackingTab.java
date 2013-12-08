@@ -6,8 +6,10 @@ import java.util.LinkedHashMap;
 
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.smart.mis.client.function.production.order.abrading.AbradingPrintWindow;
 import com.smart.mis.client.function.production.order.casting.CastingViewWindow;
 import com.smart.mis.client.function.production.order.packing.PackingDS;
+import com.smart.mis.client.function.production.order.packing.PackingPrintWindow;
 import com.smart.mis.client.function.production.order.packing.PackingViewWindow;
 import com.smart.mis.client.function.production.plan.PlanDS;
 import com.smart.mis.client.function.production.plan.PlanViewWindow;
@@ -228,7 +230,8 @@ public class PackingTab {
             		SC.warn("กรุณาเลือกคำสั่งผลิต");
             		return;
             	}
-            	SC.say("Click print Todo");
+            	PackingPrintWindow printWindow = new PackingPrintWindow();
+				printWindow.show(selected, false, currentUser, 3);
           }
         });
 		

@@ -1086,5 +1086,5 @@ public class AbradingCreateWindow {
 			}
 		}
 		} );
-}
+	}
 }

@@ -13,6 +13,7 @@ import com.smart.mis.client.function.inventory.material.requisition.MaterialRequ
 import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestItemDetails;
 import com.smart.mis.client.function.production.order.abrading.AbradingDS;
 import com.smart.mis.client.function.production.order.abrading.AbradingData;
+import com.smart.mis.client.function.production.order.abrading.AbradingPrintWindow;
 import com.smart.mis.client.function.production.order.abrading.AbradingProductDS;
 import com.smart.mis.client.function.production.order.casting.CastingMaterialData;
 import com.smart.mis.client.function.production.plan.PlanDS;
@@ -857,10 +858,10 @@ public class PackingCreateWindow {
 
 			total_sent_weight += sent_weight + recv_weight;
 			
-			if (desc != null && !desc.equals("")) details += "(" + desc + ")";
+			//if (desc != null && !desc.equals("")) details += "(" + desc + ")";
 			
 			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100));
-			ListGridRecord temp = PackingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, sent_weight + recv_weight, sent_amount, true);
+			ListGridRecord temp = PackingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, desc, sent_weight + recv_weight, sent_amount, true);
 			orderProductList.add(temp);
 			
 			MaterialProcessDS.getInstance(psid, pid).refreshData();
@@ -899,7 +900,7 @@ public class PackingCreateWindow {
 		if (matRequest.size() != 0) {
 			status = "0_request_mat";
 		}
-		ListGridRecord jobOrder = PackingData.createSentRecord(job_id, plan_id, sent_date, due_date, total_sent_weight, total_sent_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), "", "", status);
+		final ListGridRecord jobOrder = PackingData.createSentRecord(job_id, plan_id, sent_date, due_date, total_sent_weight, total_sent_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), "", "", status);
 		
 		PackingDS.getInstance().addData(jobOrder, new DSCallback() {
 		@Override
@@ -930,14 +931,15 @@ public class PackingCreateWindow {
 							}
 							SC.clearPrompt();
 							
-							SC.say(message, new BooleanCallback(){
-								@Override
-								public void execute(Boolean value) {
-									if (value) {
-										editWindow.destroy();
-									}
-								}
-							} );
+//							SC.say(message, new BooleanCallback(){
+//								@Override
+//								public void execute(Boolean value) {
+//									if (value) {
+//										editWindow.destroy();
+//									}
+//								}
+//							} );
+							printDialog(jobOrder, currentUser ,message);
 						}
 						
 					});
@@ -1067,5 +1069,25 @@ public class PackingCreateWindow {
 			if (item.request_amount > item.remain) outOfStock.add(item);
 		}
 		return outOfStock;
+	}
+	
+	private void printDialog(final ListGridRecord jobOrder, final User currentUser, String message){
+		message += "<br><br> ต้องการพิมพ์คำสังผลิตหรือไม่?" ;
+		SC.confirm(message, new BooleanCallback(){
+		@Override
+		public void execute(Boolean value) {
+			if (value != null && value) {
+//				VLayout printLayout = new VLayout(10);
+//            	printLayout.addMember(new PrintHeader("ใบสั่งผลิต"));
+//            	printLayout.addMember(layout);
+//            	Canvas.showPrintPreview(printLayout);
+				PackingPrintWindow printWindow = new PackingPrintWindow();
+				printWindow.show(jobOrder, false, currentUser, 1);
+				editWindow.destroy();
+			} else {
+				editWindow.destroy();
+			}
+		}
+		} );
 	}
 }
