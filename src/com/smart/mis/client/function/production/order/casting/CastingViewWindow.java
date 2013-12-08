@@ -24,6 +24,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.prodution.ProcessStatus;
 import com.smart.mis.shared.prodution.ProcessType;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
@@ -112,7 +113,7 @@ public class CastingViewWindow extends EditorWindow{
 	
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
 		
-		VLayout layout = new VLayout();
+		final VLayout layout = new VLayout();
 		layout.setWidth(950);
 		layout.setHeight(600);
 		layout.setMargin(10);
@@ -439,10 +440,10 @@ public class CastingViewWindow extends EditorWindow{
 		controls.setAlign(Alignment.CENTER);
 		controls.setMargin(5);
 		controls.setMembersMargin(5);
-		final IButton printButton = new IButton("บันทึกรับสินค้า");
-		printButton.setIcon("icons/16/save.png");
-		printButton.setWidth(120);
-		printButton.addClickHandler(new ClickHandler() {  
+		final IButton receivedButton = new IButton("บันทึกรับสินค้า");
+		receivedButton.setIcon("icons/16/save.png");
+		receivedButton.setWidth(120);
+		receivedButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
             	
             	SC.confirm("ยืนยันการบันทึกรับสินค้า", "ต้องการบันทึกรับสินค้า หรือไม่?" , new BooleanCallback() {
@@ -455,7 +456,7 @@ public class CastingViewWindow extends EditorWindow{
             	});
           }
         });
-		// if (edit || !status.equals("3_approved")) printButton.disable();
+		// if (edit || !status.equals("3_approved")) receivedButton.disable();
 		
 		final IButton createButton = new IButton("ออกคำสั่งแต่งและฝังพลอย");
 		createButton.setIcon("icons/16/print.png");
@@ -480,6 +481,27 @@ public class CastingViewWindow extends EditorWindow{
             	});
           }
         });
+		
+//		final IButton printButton = new IButton("พิมพ์คำสั่งผลิต");
+//		printButton.setIcon("icons/16/print.png");
+//		printButton.setWidth(120);
+//		printButton.addClickHandler(new ClickHandler() {  
+//            public void onClick(ClickEvent event) { 
+//            	
+////            	SC.confirm("ยืนยันการบันทึกรับสินค้า", "ต้องการบันทึกรับสินค้า หรือไม่?" , new BooleanCallback() {
+////					@Override
+////					public void execute(Boolean value) {
+////						if (value) {
+////			                updateOrder(job_id, record, orderListGrid, currentUser);
+////						}
+////					}
+////            	});
+//				VLayout printLayout = new VLayout(10);
+//            	printLayout.addMember(new PrintHeader("ใบสั่งผลิต"));
+//            	printLayout.addMember(layout);
+//            	Canvas.showPrintPreview(printLayout);
+//          }
+//        });
 		
 		final IButton closeButton = new IButton("ปิด");
 		closeButton.setIcon("icons/16/close.png");
@@ -639,11 +661,12 @@ public class CastingViewWindow extends EditorWindow{
 //			controls.addMember(approveButton);
 //			controls.addMember(disapproveButton);
 //		} else {
-//			controls.addMember(printButton);
+//			controls.addMember(receivedButton);
 //			controls.addMember(saveButton);
 //		}
 		if (page == 1) controls.addMember(createButton);
-		if (page == 2) controls.addMember(printButton);
+		if (page == 2) controls.addMember(receivedButton);
+//		if (page == 3) controls.addMember(printButton);
 //		if (page == 1 && status.equals("1_waiting_for_production")) controls.addMember(cancelButton);
 //		if (page == 1 && status.equals("3_production_completed")) controls.addMember(deliveryButton);
 		controls.addMember(closeButton);

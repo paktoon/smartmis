@@ -7,8 +7,10 @@ import java.util.LinkedHashMap;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.smart.mis.client.function.production.order.casting.CastingDS;
+import com.smart.mis.client.function.production.order.casting.CastingPrintWindow;
 import com.smart.mis.client.function.production.order.casting.CastingViewWindow;
 import com.smart.mis.client.function.production.order.scraping.ScrapingDS;
+import com.smart.mis.client.function.production.order.scraping.ScrapingPrintWindow;
 import com.smart.mis.client.function.production.order.scraping.ScrapingViewWindow;
 import com.smart.mis.client.function.production.plan.PlanDS;
 import com.smart.mis.client.function.production.plan.PlanViewWindow;
@@ -225,7 +227,8 @@ public class ScrapingTab {
             		SC.warn("กรุณาเลือกคำสั่งผลิต");
             		return;
             	}
-            	SC.say("Click print Todo");
+            	ScrapingPrintWindow printWindow = new ScrapingPrintWindow();
+				printWindow.show(selected, false, currentUser, 3);
           }
         });
 		

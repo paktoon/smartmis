@@ -3,6 +3,7 @@ package com.smart.mis.client.function.production.order.casting;
 import java.util.HashMap;
 
 import com.smart.mis.client.function.production.process.MaterialProcessDS;
+import com.smart.mis.shared.prodution.ProductType;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
@@ -36,18 +37,20 @@ public class CastingProductDS extends DataSource  {
 			 DataSourceTextField Field_2 = new DataSourceTextField("job_id", "รหัสคำสั่งผลิต");
 			 DataSourceTextField Field_3 = new DataSourceTextField("pid", "รหัสสินค้า");
 			 DataSourceTextField Field_4 = new DataSourceTextField("name", "ชื่อสินค้า");
-			 DataSourceTextField Field_5 = new DataSourceTextField("type", "ชนิด");
+			 DataSourceEnumField Field_5 = new DataSourceEnumField("type", "ชนิด");
+			 Field_5.setValueMap(ProductType.getValueMap());
 			 DataSourceTextField Field_6 = new DataSourceTextField("unit", "หน่วย");
 			 
 			 DataSourceTextField Field_7_1 = new DataSourceTextField("details", "รายละเอียดสินค้า");
-			 DataSourceFloatField Field_7_2 = new DataSourceFloatField("sent_weight", "น้ำหนักที่สั่ง (กรัม)");
-			 DataSourceIntegerField Field_7_3 = new DataSourceIntegerField("sent_amount", "จำนวนที่สั่ง (ชิ้น)");
-			 DataSourceTextField Field_7_4 = new DataSourceTextField("status", "สถานะ");
+			 DataSourceTextField Field_7_2 = new DataSourceTextField("pdetails", "รายละเอียดการผลิต");
+			 DataSourceFloatField Field_7_3 = new DataSourceFloatField("sent_weight", "น้ำหนักที่สั่ง (กรัม)");
+			 DataSourceIntegerField Field_7_4 = new DataSourceIntegerField("sent_amount", "จำนวนที่สั่ง (ชิ้น)");
+			 DataSourceTextField Field_7_5 = new DataSourceTextField("status", "สถานะ");
 			 
-			 DataSourceTextField Field_7_5 = new DataSourceTextField("recv_weight", "น้ำหนักที่รับ (กรัม)");
-			 DataSourceTextField Field_7_6 = new DataSourceTextField("recv_amount", "จำนวนที่รับ (ชิ้น)");
+			 DataSourceFloatField Field_8 = new DataSourceFloatField("recv_weight", "น้ำหนักที่รับ (กรัม)");
+			 DataSourceIntegerField Field_9 = new DataSourceIntegerField("recv_amount", "จำนวนที่รับ (ชิ้น)");
 
-			 setFields(Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_7_6);
+			 setFields(Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_8, Field_9);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(new ListGridRecord[]{}); // For create tab
@@ -61,18 +64,20 @@ public class CastingProductDS extends DataSource  {
 			 DataSourceTextField Field_2 = new DataSourceTextField("job_id", "รหัสคำสั่งผลิต");
 			 DataSourceTextField Field_3 = new DataSourceTextField("pid", "รหัสสินค้า");
 			 DataSourceTextField Field_4 = new DataSourceTextField("name", "ชื่อสินค้า");
-			 DataSourceTextField Field_5 = new DataSourceTextField("type", "ชนิด");
+			 DataSourceEnumField Field_5 = new DataSourceEnumField("type", "ชนิด");
+			 Field_5.setValueMap(ProductType.getValueMap());
 			 DataSourceTextField Field_6 = new DataSourceTextField("unit", "หน่วย");
 			 
 			 DataSourceTextField Field_7_1 = new DataSourceTextField("details", "รายละเอียดสินค้า");
-			 DataSourceFloatField Field_7_2 = new DataSourceFloatField("sent_weight", "น้ำหนักที่สั่ง (กรัม)");
-			 DataSourceIntegerField Field_7_3 = new DataSourceIntegerField("sent_amount", "จำนวนที่สั่ง (ชิ้น)");
-			 DataSourceTextField Field_7_4 = new DataSourceTextField("status", "สถานะ");
+			 DataSourceTextField Field_7_2 = new DataSourceTextField("pdetails", "รายละเอียดการผลิต");
+			 DataSourceFloatField Field_7_3 = new DataSourceFloatField("sent_weight", "น้ำหนักที่สั่ง (กรัม)");
+			 DataSourceIntegerField Field_7_4 = new DataSourceIntegerField("sent_amount", "จำนวนที่สั่ง");
+			 DataSourceTextField Field_7_5 = new DataSourceTextField("status", "สถานะ");
 			 
-			 DataSourceTextField Field_7_5 = new DataSourceTextField("recv_weight", "น้ำหนักที่รับ (กรัม)");
-			 DataSourceTextField Field_7_6 = new DataSourceTextField("recv_amount", "จำนวนที่รับ (ชิ้น)");
+			 DataSourceFloatField Field_8 = new DataSourceFloatField("recv_weight", "น้ำหนักที่รับ (กรัม)");
+			 DataSourceIntegerField Field_9 = new DataSourceIntegerField("recv_amount", "จำนวนที่รับ");
 
-			 setFields(Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_7_6);
+			 setFields(Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_8, Field_9);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(CastingProductData.getRecords(job_id)); // For edit tab

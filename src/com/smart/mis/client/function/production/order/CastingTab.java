@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.smart.mis.client.function.production.order.casting.CastingDS;
+import com.smart.mis.client.function.production.order.casting.CastingPrintWindow;
 import com.smart.mis.client.function.production.order.casting.CastingViewWindow;
 import com.smart.mis.client.function.production.plan.PlanDS;
 import com.smart.mis.client.function.production.plan.PlanViewWindow;
@@ -228,7 +229,8 @@ public class CastingTab {
             		SC.warn("กรุณาเลือกคำสั่งผลิต");
             		return;
             	}
-            	SC.say("Click print Todo");
+				CastingPrintWindow printWindow = new CastingPrintWindow();
+				printWindow.show(selected, false, currentUser, 3);
           }
         });
 		

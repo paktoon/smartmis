@@ -14,6 +14,7 @@ import com.smart.mis.client.function.inventory.material.requisition.MaterialRequ
 import com.smart.mis.client.function.production.order.casting.CastingDS;
 import com.smart.mis.client.function.production.order.casting.CastingData;
 import com.smart.mis.client.function.production.order.casting.CastingMaterialData;
+import com.smart.mis.client.function.production.order.casting.CastingPrintWindow;
 import com.smart.mis.client.function.production.order.casting.CastingProductDS;
 import com.smart.mis.client.function.production.plan.PlanDS;
 import com.smart.mis.client.function.production.plan.PlanData;
@@ -29,6 +30,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.prodution.Smith;
 import com.smart.mis.shared.security.User;
@@ -85,6 +87,7 @@ public class ScrapingCreateWindow {
 //	Customer client;
 	Smith smith;
 	Window editWindow;
+	VLayout layout;
 	
 	public void show(ListGridRecord record, User currentUser, Integer std_time){
 		smith = new Smith();
@@ -105,7 +108,7 @@ public class ScrapingCreateWindow {
 	}
 	
 	private VLayout getViewEditor(final ListGridRecord record, final Window main, final User currentUser, Integer std_time) {
-		VLayout layout = new VLayout();
+		layout = new VLayout();
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
@@ -857,10 +860,10 @@ public class ScrapingCreateWindow {
 
 			total_sent_weight += sent_weight + recv_weight;
 			
-			if (desc != null && !desc.equals("")) details += "(" + desc + ")";
+			//if (desc != null && !desc.equals("")) details += "(" + desc + ")";
 			
 			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100));
-			ListGridRecord temp = ScrapingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, sent_weight + recv_weight, sent_amount, true);
+			ListGridRecord temp = ScrapingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, desc, sent_weight + recv_weight, sent_amount, true);
 			orderProductList.add(temp);
 			
 			MaterialProcessDS.getInstance(psid, pid).refreshData();
@@ -899,7 +902,7 @@ public class ScrapingCreateWindow {
 		if (matRequest.size() != 0) {
 			status = "0_request_mat";
 		}
-		ListGridRecord jobOrder = ScrapingData.createSentRecord(job_id, plan_id, smith, sent_date, due_date, total_sent_weight, total_sent_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), "", "", status);
+		final ListGridRecord jobOrder = ScrapingData.createSentRecord(job_id, plan_id, smith, sent_date, due_date, total_sent_weight, total_sent_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), "", "", status);
 		
 		ScrapingDS.getInstance().addData(jobOrder, new DSCallback() {
 		@Override
@@ -932,14 +935,16 @@ public class ScrapingCreateWindow {
 							}
 							SC.clearPrompt();
 							
-							SC.say(message, new BooleanCallback(){
-								@Override
-								public void execute(Boolean value) {
-									if (value) {
-										editWindow.destroy();
-									}
-								}
-							} );
+//							SC.say(message, new BooleanCallback(){
+//								@Override
+//								public void execute(Boolean value) {
+//									if (value) {
+//										editWindow.destroy();
+//									}
+//								}
+//							} );
+							
+							printDialog(jobOrder, currentUser, message);
 						}
 						
 					});
@@ -1060,4 +1065,24 @@ public class ScrapingCreateWindow {
 		}
 		return outOfStock;
 	}
+	
+	private void printDialog(final ListGridRecord jobOrder, final User currentUser, String message){
+		message += "<br><br> ต้องการพิมพ์คำสังผลิตหรือไม่?" ;
+		SC.confirm(message, new BooleanCallback(){
+		@Override
+		public void execute(Boolean value) {
+			if (value != null && value) {
+//				VLayout printLayout = new VLayout(10);
+//            	printLayout.addMember(new PrintHeader("ใบสั่งผลิต"));
+//            	printLayout.addMember(layout);
+//            	Canvas.showPrintPreview(printLayout);
+				ScrapingPrintWindow printWindow = new ScrapingPrintWindow();
+				printWindow.show(jobOrder, false, currentUser, 1);
+				editWindow.destroy();
+			} else {
+				editWindow.destroy();
+			}
+		}
+		} );
+}
 }

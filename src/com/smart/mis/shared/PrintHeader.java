@@ -13,7 +13,7 @@ public class PrintHeader extends HLayout {
 		setMembersMargin(10);
 		setHeight(120);
 		
-		Img logo = new Img("Plain-Silver-icon.png", 50, 50);
+		Img logo = new Img("Plain-Silver-icon.png", 120, 120);
 		//logo.setWidth(120);
 		addMember(logo);
 		

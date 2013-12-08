@@ -23,6 +23,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.WaitingCallback;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.prodution.Smith;
@@ -80,6 +81,7 @@ public class CastingCreateWindow {
 //	Customer client;
 	Smith smith;
 	Window editWindow;
+	VLayout layout;
 	
 	public void show(ListGridRecord record, User currentUser, Integer std_time){
 		smith = new Smith();
@@ -100,7 +102,7 @@ public class CastingCreateWindow {
 	}
 	
 	private VLayout getViewEditor(final ListGridRecord record, final Window main, final User currentUser, Integer std_time) {
-		VLayout layout = new VLayout();
+		layout = new VLayout();
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
@@ -806,7 +808,7 @@ public class CastingCreateWindow {
 //		});
 //	}
 
-	public void createCreateOrder(DynamicForm planForm, ListGrid orderListGrid, Date sent_date, Date due_date, User currentUser, final ListGridRecord planRecord) {
+	public void createCreateOrder(DynamicForm planForm, ListGrid orderListGrid, Date sent_date, Date due_date, final User currentUser, final ListGridRecord planRecord) {
 		ListGridRecord[] all = orderListGrid.getRecords();
 		
 		final String plan_id = (String) planForm.getField("plan_id").getValue();
@@ -840,10 +842,10 @@ public class CastingCreateWindow {
 			
 			total_sent_weight += sent_weight;
 			
-			if (desc != null && !desc.equals("")) details += "(" + desc + ")";
+			//if (desc != null && !desc.equals("")) details += "(" + desc + ")";
 			
 			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100));
-			ListGridRecord temp = CastingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, sent_weight, sent_amount, true);
+			ListGridRecord temp = CastingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, desc, sent_weight, sent_amount, true);
 			orderProductList.add(temp);
 			
 			MaterialProcessDS.getInstance(psid, pid).refreshData();
@@ -878,7 +880,7 @@ public class CastingCreateWindow {
 		PlanDS.getInstance().refreshData();
 		
 		String status = "1_on_production";
-		ListGridRecord jobOrder = CastingData.createSentRecord(job_id, plan_id, smith, sent_date, due_date, total_sent_weight, total_sent_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), "", "", status);
+		final ListGridRecord jobOrder = CastingData.createSentRecord(job_id, plan_id, smith, sent_date, due_date, total_sent_weight, total_sent_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), "", "", status);
 		
 		CastingDS.getInstance().addData(jobOrder, new DSCallback() {
 		@Override
@@ -948,25 +950,29 @@ public class CastingCreateWindow {
 							@Override
 							public void execute(DSResponse dsResponse,
 									Object data, DSRequest dsRequest) {
-									SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> รายการขายเขที่ " + sale_id + " มีสถานะเป็น " + SaleOrderStatus.getDisplay(sale_status), new BooleanCallback(){
-										@Override
-										public void execute(Boolean value) {
-											if (value) {
-												editWindow.destroy();
-											}
-										}
-									} );
+									String message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> รายการขายเขที่ " + sale_id + " มีสถานะเป็น " + SaleOrderStatus.getDisplay(sale_status);
+									printDialog(jobOrder, currentUser, message);
+//									SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> รายการขายเขที่ " + sale_id + " มีสถานะเป็น " + SaleOrderStatus.getDisplay(sale_status), new BooleanCallback(){
+//										@Override
+//										public void execute(Boolean value) {
+//											if (value) {
+//												editWindow.destroy();
+//											}
+//										}
+//									} );
 							}
 						});
 					} else {
-						SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id, new BooleanCallback(){
-							@Override
-							public void execute(Boolean value) {
-								if (value) {
-									editWindow.destroy();
-								}
-							}
-						} );
+						String message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id;
+						printDialog(jobOrder, currentUser ,message);
+//						SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id, new BooleanCallback(){
+//							@Override
+//							public void execute(Boolean value) {
+//								if (value) {
+//									editWindow.destroy();
+//								}
+//							}
+//						} );
 					}
 				}
 			}
@@ -1047,5 +1053,25 @@ public class CastingCreateWindow {
 		if (silver925[0].getAttributeAsDouble("remain") < (total_weight / 2)) outOfStock.add(silver925[0]);	
 		
 		return outOfStock;
+	}
+	
+	private void printDialog(final ListGridRecord jobOrder, final User currentUser, String message){
+			message += "<br><br> ต้องการพิมพ์คำสังผลิตหรือไม่?" ;
+			SC.confirm(message, new BooleanCallback(){
+			@Override
+			public void execute(Boolean value) {
+				if (value != null && value) {
+//					VLayout printLayout = new VLayout(10);
+//	            	printLayout.addMember(new PrintHeader("ใบสั่งผลิต"));
+//	            	printLayout.addMember(layout);
+//	            	Canvas.showPrintPreview(printLayout);
+					CastingPrintWindow printWindow = new CastingPrintWindow();
+					printWindow.show(jobOrder, false, currentUser, 1);
+					editWindow.destroy();
+				} else {
+					editWindow.destroy();
+				}
+			}
+			} );
 	}
 }

@@ -8,7 +8,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class AbradingProductData {
 
-    public static ListGridRecord createSentRecord(String sub_job_id, String job_id, String pid, String name, String type, String unit, String details, Double sent_weight, Integer sent_amount, Boolean status) {  
+    public static ListGridRecord createSentRecord(String sub_job_id, String job_id, String pid, String name, String type, String unit, String details, String pdetails, Double sent_weight, Integer sent_amount, Boolean status) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("sub_job_id", sub_job_id);
         record.setAttribute("job_id", job_id);
@@ -18,6 +18,7 @@ public class AbradingProductData {
         record.setAttribute("unit", unit); 
         
         record.setAttribute("details", details);
+        record.setAttribute("pdetails", pdetails);
         record.setAttribute("sent_weight", sent_weight);
         record.setAttribute("sent_amount", sent_amount);
         

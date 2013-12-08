@@ -75,8 +75,10 @@ public class PlanProductDS extends DataSource  {
 			 DataSourceTextField Field_7_4 = new DataSourceTextField("height", "ความสูง");
 			 DataSourceTextField Field_7_5 = new DataSourceTextField("diameter", "เส้นผ่านศูนย์กลาง");
 			 DataSourceTextField Field_7_6 = new DataSourceTextField("thickness", "ความหนา");
+			 
+			 DataSourceTextField Field_7 = new DataSourceTextField("details", "รายละเอียดสินค้า");
 
-			 setFields(sub_plan_id_field, plan_id_field, Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_7_6);
+			 setFields(sub_plan_id_field, plan_id_field, Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_7_6, Field_7);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(PlanProductData.getRecords(plan_id)); // For edit tab

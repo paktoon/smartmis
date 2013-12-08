@@ -7,8 +7,10 @@ import java.util.LinkedHashMap;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.smart.mis.client.function.production.order.abrading.AbradingDS;
+import com.smart.mis.client.function.production.order.abrading.AbradingPrintWindow;
 import com.smart.mis.client.function.production.order.abrading.AbradingViewWindow;
 import com.smart.mis.client.function.production.order.casting.CastingViewWindow;
+import com.smart.mis.client.function.production.order.scraping.ScrapingPrintWindow;
 import com.smart.mis.client.function.production.plan.PlanDS;
 import com.smart.mis.client.function.production.plan.PlanViewWindow;
 import com.smart.mis.shared.EditorListGrid;
@@ -223,7 +225,8 @@ public class AbradingTab {
             		SC.warn("กรุณาเลือกคำสั่งผลิต");
             		return;
             	}
-            	SC.say("Click print Todo");
+            	AbradingPrintWindow printWindow = new AbradingPrintWindow();
+				printWindow.show(selected, false, currentUser, 3);
           }
         });
 		
