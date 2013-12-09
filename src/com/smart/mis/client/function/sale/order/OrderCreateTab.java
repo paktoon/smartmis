@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
+import com.smart.mis.client.function.sale.quotation.CreateSaleWindow;
 import com.smart.mis.client.function.sale.quotation.QuotationDS;
 import com.smart.mis.client.function.sale.quotation.QuoteViewWindow;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
@@ -137,8 +138,9 @@ public class OrderCreateTab {
         searchForm.setItems(quoteText, cidText, cnameText);
         dateForm.setItems(from, to);
         
-		final ListGrid quoteListGrid = new EditorListGrid(new QuoteViewWindow(), currentUser);
- 
+		//final ListGrid quoteListGrid = new EditorListGrid(new QuoteViewWindow(), currentUser);
+		final ListGrid quoteListGrid = new EditorListGrid(new CreateSaleWindow(), currentUser);
+		 
 		quoteListGrid.setAutoFetchData(true);  
 		quoteListGrid.setCanMultiSort(true);
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
