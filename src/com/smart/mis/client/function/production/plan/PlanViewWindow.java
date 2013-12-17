@@ -694,13 +694,13 @@ public class PlanViewWindow extends EditorWindow{
 	}
 	
 	void updatePlanStatus(String plan_id, final String status, String comment, ListGridRecord record) {
-		Record updated = PlanData.createStatusRecord(plan_id,status,comment,record);
+		Record updated = PlanData.createStatusRecord(plan_id,status,comment);
 		PlanDS.getInstance().updateData(updated, new DSCallback() {
 			@Override
 			public void execute(DSResponse dsResponse, Object data,
 					DSRequest dsRequest) {
 					if (dsResponse.getStatus() != 0) {
-						SC.warn("การอนุมัติแผนการผลิคล้มเหลว");
+						SC.warn("การอนุมัติแผนการผลิตล้มเหลว");
 					} else { 
 						PlanDS.getInstance().refreshData();
 						SC.say("แก้ไขสถานะแผนการผลิต \"" + ProductionPlanStatus.getDisplay(status) + "\" เสร็จสิ้น");

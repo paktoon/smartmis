@@ -35,7 +35,7 @@ public class PlanDS extends DataSource {
 		 Field_1.setPrimaryKey(true);
 		 
 		 DataSourceTextField Field_2 = new DataSourceTextField("sale_id", "รหัสรายการขาย");
-		 Field_2.setForeignKey("SaleOrderDS.sale_id");
+//		 Field_2.setForeignKey("SaleOrderDS.sale_id");
 		 DataSourceTextField Field_2_1 = new DataSourceTextField("reason", "เหตุผลในการผลิต");
 //		 DataSourceTextField Field_2_2 = new DataSourceTextField("payment_model", "วิธีการชำระเงิน");
 //		 DataSourceIntegerField Field_2_3 = new DataSourceIntegerField("credit", "เครดิต");
@@ -53,10 +53,10 @@ public class PlanDS extends DataSource {
 		 
 		 DataSourceDateField Field_11 = new DataSourceDateField("created_date", "สร้างวันที่");
 		 DataSourceTextField Field_12 = new DataSourceTextField("created_by", "สร้างโดย");
-		 Field_12.setForeignKey("UserDS.uid");
+//		 Field_12.setForeignKey("UserDS.uid");
 		 DataSourceDateField Field_13 = new DataSourceDateField("modified_date", "แก้ไขวันที่");
 		 DataSourceTextField Field_14 = new DataSourceTextField("modified_by", "แก้ไขโดย");
-		 Field_14.setForeignKey("UserDS.uid");
+//		 Field_14.setForeignKey("UserDS.uid");
 		 
 		 DataSourceTextField Field_15 = new DataSourceTextField("comment", "ความคิดเห็น");
 		 DataSourceEnumField Field_16 = new DataSourceEnumField("status", "สถานะ");

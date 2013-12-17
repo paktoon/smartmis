@@ -4,9 +4,11 @@ import com.smart.mis.client.MainPage;
 import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionWindow;
 import com.smart.mis.client.function.financial.receipt.ReceiptLayout;
+import com.smart.mis.client.function.inventory.material.ViewMaterialLaylout;
 import com.smart.mis.client.function.inventory.material.received.ReceivedPurchaseLayout;
 import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestLayout;
 import com.smart.mis.client.function.inventory.material.returns.ReturnLayout;
+import com.smart.mis.client.function.inventory.product.ViewProductLaylout;
 import com.smart.mis.client.function.inventory.product.request.DeliveryOrderLayout;
 import com.smart.mis.client.function.inventory.product.transfer.TransferLayout;
 import com.smartgwt.client.types.Alignment;
@@ -48,6 +50,9 @@ public class InventoryPanel extends FunctionPanel{
 		prepareInMaterialWindow();
 		prepareReturnMaterialWindow();
 		prepareRequestMaterialWindow();
+		
+		prepareProductRemainWindow();
+		prepareMaterialRemainWindow();
 	}
 
 	@Override
@@ -69,7 +74,8 @@ public class InventoryPanel extends FunctionPanel{
 		} else if (nodeId.equals("35")) {
 			loadWindow(this._main.getInventoryPanel(), this.returnMaterialWindow , name, icon);
 		} else if (nodeId.equals("36")) {
-			loadWindow(this._main.getInventoryPanel(), this.allRamainWindow , name, icon);
+			//loadWindow(this._main.getInventoryPanel(), this.allRamainWindow , name, icon);
+			//Do nothing
 		} else if (nodeId.equals("361")) {
 			loadWindow(this._main.getInventoryPanel(), this.productRemainWindow , name, icon);
 		} else if (nodeId.equals("362")) {
@@ -109,5 +115,15 @@ public class InventoryPanel extends FunctionPanel{
 	private void prepareRequestMaterialWindow(){
 		VLayout requestLayout = new MaterialRequestLayout(this._main.getCurrentUser());
 		this.outMaterialWindow.addItem(requestLayout);
+	}
+	
+	private void prepareProductRemainWindow(){
+		VLayout viewLayout = new ViewProductLaylout(this._main.getCurrentUser());
+		this.productRemainWindow.addItem(viewLayout);
+	}
+	
+	private void prepareMaterialRemainWindow(){
+		VLayout viewLayout = new ViewMaterialLaylout(this._main.getCurrentUser());
+		this.materialRemainWindow.addItem(viewLayout);
 	}
 }

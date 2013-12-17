@@ -16,6 +16,7 @@ import com.smart.mis.client.function.sale.invoice.InvoiceTabSet;
 import com.smart.mis.client.function.sale.order.SaleOrderTabSet;
 import com.smart.mis.client.function.sale.purchase.ViewPOLaylout;
 import com.smart.mis.client.function.sale.quotation.QuotationTabSet;
+import com.smart.mis.client.function.sale.report.quotation.ReportQuotationLayout;
 import com.smart.mis.shared.security.Role;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.OperatorId;
@@ -67,6 +68,8 @@ public class SalePanel extends FunctionPanel{
 		prepareInvoiceWindow();
 		prepareCheckPOWindow();
 //		prepareSaleReportWindow();
+		
+		prepareQuotationReportWindow();
 	}
 
 	@Override
@@ -206,6 +209,11 @@ public class SalePanel extends FunctionPanel{
 		VLayout report = new VLayout();
 		chart.loadChart(report);
 		this.SubSaleReportWindow.addItem(report);
+	}
+	
+	private void prepareQuotationReportWindow() {
+		VLayout report = new ReportQuotationLayout(this._main.getCurrentUser());
+		this.SubQuotationReportWindow.addItem(report);
 	}
 	
 	private boolean checkPermFlag(byte flag, byte checked){

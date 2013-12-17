@@ -108,14 +108,14 @@ public class FunctionTreeNode {
     }
     
     private static final TreeNode[] inventoryNode = new TreeNode[] {  
-        new SubjectTreeNode("31", "3", "เบิกจ่ายสินค้า"),  
-        new SubjectTreeNode("32", "3", "เบิกจ่ายวัตถุดิบ"),
-        new SubjectTreeNode("33", "3", "บันทึกรับสินค้า"),
-        new SubjectTreeNode("34", "3", "บันทึกรับวัตถุดิบ"),
-        new SubjectTreeNode("35", "3", "บันทึกคืนวัตถุดิบ"),
-        new SubjectTreeNode("36", "3", "ปรับปรุงยอดคงเหลือ"),
-        new SubjectTreeNode("361", "36", "สินค้าคงคลัง"),
-        new SubjectTreeNode("362", "36", "วัตถุดิบคงคลัง"),
+        new SubjectTreeNode("31", "3", "เบิกจ่ายสินค้า", "icons/16/database-arrow-up-icon.png"),  
+        new SubjectTreeNode("32", "3", "เบิกจ่ายวัตถุดิบ", "icons/16/database-arrow-up-icon.png"),
+        new SubjectTreeNode("33", "3", "บันทึกรับสินค้า", "icons/16/database-arrow-down-icon.png"),
+        new SubjectTreeNode("34", "3", "บันทึกรับวัตถุดิบ", "icons/16/database-arrow-down-icon.png"),
+        new SubjectTreeNode("35", "3", "บันทึกคืนวัตถุดิบ", "icons/16/database-arrow-down-icon.png"),
+        new SubjectTreeNode("36", "3", "ปรับปรุงยอดคงเหลือ", "icons/16/database-settings-icon.png"),
+        new SubjectTreeNode("361", "36", "สินค้าคงคลัง", "icons/16/database-settings-icon.png"),
+        new SubjectTreeNode("362", "36", "วัตถุดิบคงคลัง", "icons/16/database-settings-icon.png"),
         
 //        new SubjectTreeNode("311", "31", "เบิกจ่าย"),  
 //        new SubjectTreeNode("312", "31", "บันทึกรับ"), 
@@ -167,9 +167,9 @@ public class FunctionTreeNode {
     }
     
     private static final TreeNode[] financialNode = new TreeNode[] {  
-        new SubjectTreeNode("51", "5", "บันทึกรับชำระเงิน"),  
-        new SubjectTreeNode("52", "5", "จ่ายชำระหนี้ค่าวัตถุดิบ"),  
-        new SubjectTreeNode("53", "5", "จ่ายชำระหนี้ค่าจ้างผลิต"),
+        new SubjectTreeNode("51", "5", "บันทึกรับชำระเงิน", "icons/16/Money-icon.png"),  
+        new SubjectTreeNode("52", "5", "จ่ายชำระหนี้ค่าวัตถุดิบ", "icons/16/Money-icon.png"),  
+        new SubjectTreeNode("53", "5", "จ่ายชำระหนี้ค่าจ้างผลิต", "icons/16/Money-icon.png"),
         
         new SubjectTreeNode("54", "5", "รายงานสรุป" , "icons/16/chart_bar.png"),
         new SubjectTreeNode("541", "54", "การรับชำระเงิน", "icons/16/chart_bar.png", "รายงาน"),   

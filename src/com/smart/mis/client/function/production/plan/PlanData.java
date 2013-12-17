@@ -57,8 +57,8 @@ public class PlanData {
         return record;  
     }
     
-    public static ListGridRecord createStatusRecord(String plan_id, String status, String comment, ListGridRecord planRecord) {  
-        ListGridRecord record = planRecord;
+    public static ListGridRecord createStatusRecord(String plan_id, String status, String comment) {  
+        ListGridRecord record = new ListGridRecord();
         record.setAttribute("plan_id", plan_id);
         record.setAttribute("status", status);
         record.setAttribute("comment", comment);

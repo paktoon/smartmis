@@ -874,7 +874,7 @@ public class CastingCreateWindow {
 		//End
 		
 		String plan_status = "5_on_production";
-		ListGridRecord update_plan = PlanData.createStatusRecord(plan_id, plan_status, "ออกคำสั่งผลิตแล้ว", planRecord);
+		ListGridRecord update_plan = PlanData.createStatusRecord(plan_id, plan_status, "ออกคำสั่งผลิตแล้ว");
 		System.out.println("update plan : " + update_plan.getAttributeAsString("plan_id") + " status: " + update_plan.getAttributeAsString("status"));
 		PlanDS.getInstance().updateData(update_plan);
 		PlanDS.getInstance().refreshData();
