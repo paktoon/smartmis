@@ -29,8 +29,8 @@ public class MaterialRequestData {
         return record;  
     }
 	
-	public static ListGridRecord createReceivedRecord(ListGridRecord record, Date issue_date, Double total_issue_amount,Date modified_date,String modified_by, String status) {  
-        record.setAttribute("issue_date", issue_date);
+	public static ListGridRecord createReceivedRecord(ListGridRecord record, Date issued_date, Double total_issue_amount,Date modified_date,String modified_by, String status) {  
+        record.setAttribute("issued_date", issued_date);
         record.setAttribute("total_issue_amount", total_issue_amount); 
         
         record.setAttribute("modified_date", modified_date);

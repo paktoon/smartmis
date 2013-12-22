@@ -42,8 +42,9 @@ public class MaterialRequestDS extends DataSource {
 		 DataSourceTextField Field_3_2 = new DataSourceTextField("sname", "ชื่อช่าง");
 		 
 		 DataSourceTextField Field_4_1 = new DataSourceTextField("req_date", "วันที่ขอเบิก");
-		 DataSourceTextField Field_4_2 = new DataSourceTextField("issue_date", "วันที่จ่ายวัตถุดิบ");
-		 DataSourceEnumField Field_4_3 = new DataSourceEnumField("req_type", "ประเภทงาน");
+		 DataSourceTextField Field_4_2 = new DataSourceTextField("issued_date", "วันที่จ่ายวัตถุดิบ");
+		 DataSourceTextField Field_4_3 = new DataSourceTextField("issued_by", "จ่ายวัตถุดิบโดย");
+		 DataSourceEnumField Field_4_4 = new DataSourceEnumField("req_type", "ประเภทงาน");
 		 Field_4_3.setValueMap(ProcessType.getValueMap());
 		 
 		 DataSourceFloatField Field_6 = new DataSourceFloatField("total_request_amount", "จำนวนที่ขอเบิก (หน่วย)");
@@ -59,7 +60,7 @@ public class MaterialRequestDS extends DataSource {
 		 DataSourceEnumField Field_12 = new DataSourceEnumField("status", "สถานะ");
 		 Field_12.setValueMap(RequisitionStatus.getValueMap());
 		 
-		 setFields(Field_1, Field_2_1, Field_3_1, Field_3_2, Field_4_1, Field_4_2, Field_4_3, Field_6, Field_6_2,  Field_7, Field_8, Field_9, Field_10, Field_12);
+		 setFields(Field_1, Field_2_1, Field_3_1, Field_3_2, Field_4_1, Field_4_2, Field_4_3, Field_4_4, Field_6, Field_6_2,  Field_7, Field_8, Field_9, Field_10, Field_12);
 		 
 		 //setDataURL("smartmis/security/userData");
 		 setTestData(MaterialRequestData.getNewRecords()); // For Test

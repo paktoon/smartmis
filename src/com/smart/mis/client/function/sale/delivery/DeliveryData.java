@@ -52,9 +52,9 @@ public class DeliveryData {
     
     public static ListGridRecord[] getNewRecords() {
     	return new ListGridRecord[]{ 
-    			createRecord("DL10001","SO10006","IN10006","CU10008", "ประทีปเจมส์", new Date() , 120.0, 270, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_on_delivery", "0_product_request", new Date(), null, ""),
-    			createRecord("DL10002","SO10007","IN10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", new Date() , 120.0, 300, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_on_delivery", "1_product_issued", new Date(), null, ""),
-    			createRecord("DL10003","SO10008","IN10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", new Date() , 120.0, 100, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "2_delivery_completed", "1_product_issued", new Date(), new Date(), "RC102142")
+    			createRecord("DL10001","SO10006","IN10006","CU10008", "ประทีปเจมส์", new Date() , 1836.0, 270, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_on_delivery", "0_product_request", new Date(), null, ""),
+    			createRecord("DL10002","SO10007","IN10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", new Date() , 1896.0, 300, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_on_delivery", "1_product_issued", new Date(), null, ""),
+    			createRecord("DL10003","SO10008","IN10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", new Date() , 632.0, 100, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "2_delivery_completed", "1_product_issued", new Date(), new Date(), "RC102142")
     			};
 //    	return new ListGridRecord[]{};
     }

@@ -136,12 +136,12 @@ public class PlanViewWindow extends EditorWindow{
 		productionPlanForm.setColWidths(100,70,70,70,70,80,60,100);
 		layout.addMember(productionPlanForm);
 		
-		if (sale_id != null && sale_id.equalsIgnoreCase("")) {
+		if (sale_id != null && !sale_id.equalsIgnoreCase("")) {
 			final DynamicForm saleOrderForm = new DynamicForm();
-			saleOrderForm.setWidth(360); 
+			saleOrderForm.setWidth100(); 
 			saleOrderForm.setHeight(30);
 			saleOrderForm.setMargin(5); 
-			saleOrderForm.setNumCols(4); 
+			saleOrderForm.setNumCols(6); 
 			saleOrderForm.setCellPadding(2);
 			saleOrderForm.setAutoFocus(true);
 			saleOrderForm.setSelectOnFocus(true);
@@ -152,11 +152,14 @@ public class PlanViewWindow extends EditorWindow{
 			StaticTextItem sid = new StaticTextItem("sale_id", "รหัสรายการขาย");
 			StaticTextItem cus_name = new StaticTextItem("cus_name", "ชื่อลูกค้า");
 			StaticTextItem ddate = new StaticTextItem("delivery", "กำหนดส่งสินค้า");
-			ddate.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(delivery));
+			if (delivery != null) {
+				ddate.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(delivery));
+			} else ddate.setValue("-");
 			saleOrderForm.setFields(sid, cus_name, ddate);
 			saleOrderForm.setColWidths(100,100,100,200,100,100);
 			saleOrderForm.fetchData(new Criterion("sale_id", OperatorId.EQUALS, sale_id));
 			layout.addMember(saleOrderForm);
+			main.setHeight(500);
 		}
 		
 		DynamicForm commentForm = new DynamicForm();

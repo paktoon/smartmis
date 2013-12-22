@@ -6,6 +6,8 @@ import com.smart.mis.client.function.FunctionWindow;
 import com.smart.mis.client.function.financial.disburse.material.DisbursePurchaseLayout;
 import com.smart.mis.client.function.financial.disburse.wage.WageLayout;
 import com.smart.mis.client.function.financial.receipt.ReceiptLayout;
+import com.smart.mis.client.function.financial.report.ReportDisburseLayout;
+import com.smart.mis.client.function.financial.report.ReportReceiptLayout;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -33,6 +35,9 @@ public class FinancialPanel extends FunctionPanel{
 		prepareReceiptWindow();
 		prepareDisburseMaterialWindow();
 		prepareDisburseWageWindow();
+		
+		prepareReceiptReportWindow();
+		prepareDisbuseReportWindow();
 	}
 
 	@Override
@@ -72,6 +77,16 @@ public class FinancialPanel extends FunctionPanel{
 	private void prepareDisburseWageWindow(){
 		VLayout disburseLayout = new WageLayout(this._main.getCurrentUser());
 		this.disburseWageWindow.addItem(disburseLayout);
+	}
+	
+	private void prepareReceiptReportWindow() {
+		VLayout report = new ReportReceiptLayout(this._main.getCurrentUser());
+		this.subReceiptReportWindow.addItem(report);
+	}
+	
+	private void prepareDisbuseReportWindow() {
+		VLayout report = new ReportDisburseLayout(this._main.getCurrentUser());
+		this.subDisbusementReportWindow.addItem(report);
 	}
 	
 }

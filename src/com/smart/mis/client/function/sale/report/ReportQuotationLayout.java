@@ -1,9 +1,10 @@
-package com.smart.mis.client.function.sale.report.quotation;
+package com.smart.mis.client.function.sale.report;
 
 //import java.util.Calendar;
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smart.mis.client.function.sale.quotation.QuotationDS;
 import com.smart.mis.shared.DateTimeMapping;
@@ -55,7 +56,7 @@ public class ReportQuotationLayout extends VLayout{
 	Label reportDate;
 	DynamicForm searchForm;
 	//DateItem searchItem;
-	IButton viewButton;
+	IButton printButton;
 	
 	String select_day;
 	String select_month;
@@ -72,7 +73,7 @@ public class ReportQuotationLayout extends VLayout{
 		setHeight100();
 		
 		HLayout search = new HLayout();
-		search.setWidth(650);
+		search.setWidth(950);
 		search.setHeight(45);
 		search.setMargin(5);
 		search.setMembersMargin(5);
@@ -108,6 +109,7 @@ public class ReportQuotationLayout extends VLayout{
 		yearItem.setValueMap(DateTimeMapping.getYearPast(select_year,5), DateTimeMapping.getYearPast(select_year,4) , DateTimeMapping.getYearPast(select_year,3), DateTimeMapping.getYearPast(select_year,2), DateTimeMapping.getYearPast(select_year,1),select_year);
 		yearItem.setDefaultValue(select_year);
 		yearItem.setWidth(50);
+		yearItem.setPickListWidth(60);
         
         final PickerIcon findIcon = new PickerIcon(PickerIcon.SEARCH);
         final PickerIcon cancelIcon = new PickerIcon(PickerIcon.CLEAR);
@@ -172,28 +174,26 @@ public class ReportQuotationLayout extends VLayout{
         searchForm.setFields(dayItem, monthItem, yearItem);
         search.addMember(searchForm);
         
-//        VLayout buttonLayout = new VLayout();
-//        buttonLayout.setAlign(VerticalAlignment.BOTTOM);
-//        buttonLayout.setHeight(38);
-//        viewButton = new IButton("ตรวจสอบคำสั่งซื้อ");
-//        viewButton.setIcon("icons/16/folder_out.png");
-//        viewButton.setWidth(150);
-//        viewButton.addClickHandler(new ClickHandler() {  
-//            public void onClick(ClickEvent event) { 
-//            	SaleViewWindow sale =  new SaleViewWindow();
-//            	sale.show(reportListGrid.getSelectedRecord(), false, currentUser, 2);
-//          }
-//        });
-//        
-//        viewButton.hide();
-//        buttonLayout.addMember(viewButton);
-//        
-//        search.addMember(buttonLayout);
+        HLayout empty = new HLayout();
+        empty.setWidth("*");
+        search.addMember(empty);
+        
+        VLayout buttonLayout = new VLayout();
+        buttonLayout.setAlign(VerticalAlignment.BOTTOM);
+        buttonLayout.setHeight(38);
+        buttonLayout.setWidth(120);
+        printButton = new IButton("พิมพ์รายงาน");
+        printButton.setIcon("icons/16/print.png");
+        printButton.setWidth(120);
+        buttonLayout.addMember(printButton);
+        
+        search.addMember(buttonLayout);
+        
         addMember(search);
         
-        VLayout header = new VLayout();
-        header.setWidth(950);
-        header.setHeight(10);
+        final VLayout report = new VLayout();
+        report.setWidth(950);
+        report.setHeight(10);
         Label text = new Label();
         text.setContents("รายงานการเสนอราคา");
         text.setAlign(Alignment.CENTER);
@@ -204,12 +204,18 @@ public class ReportQuotationLayout extends VLayout{
         reportDate.setAlign(Alignment.CENTER);
         reportDate.setHeight(10);
         reportDate.setStyleName("printDetails");
-        header.addMember(text);
-        header.addMember(reportDate);
+        report.addMember(text);
+        report.addMember(reportDate);
+        report.addMember(createResult());
+        addMember(report);
         
-        addMember(header);
+        printButton.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+            	Canvas.showPrintPreview(report);
+          }
+        });
         
-        addMember(createResult());
+        //addMember(createResult());
 	}
 	
 	private VLayout createResult() {
@@ -272,7 +278,7 @@ public class ReportQuotationLayout extends VLayout{
 //		reportListGrid.addRecordClickHandler(new RecordClickHandler() {  
 //			@Override
 //			public void onRecordClick(RecordClickEvent event) {
-//				viewButton.show();
+//				printButton.show();
 //			}  
 //        });
 		
@@ -291,7 +297,7 @@ public class ReportQuotationLayout extends VLayout{
 //		for(ListGridRecord record : reportListGrid.getRecords()) {
 //			reportListGrid.removeData(record);
 //		}
-//		viewButton.hide();
+//		printButton.hide();
 		reportDate.setContents("ประจำวันที่ " + select_day + " เดือน " + DateTimeMapping.getDisplay(select_month) + " ปี พ.ศ. " + select_year);
         
 		Date date = DateTimeFormat.getFormat("yyyy-M-dd").parse(DateTimeMapping.getRealYear(select_year) + "-" + select_month + "-" + select_day);
@@ -304,7 +310,7 @@ public class ReportQuotationLayout extends VLayout{
 //		for(ListGridRecord record : reportListGrid.getRecords()) {
 //			reportListGrid.removeData(record);
 //		}
-//		viewButton.hide();
+//		printButton.hide();
 		reportDate.setContents("ประจำวันที่ " + select_day + " เดือน " + DateTimeMapping.getDisplay(select_month) + " ปี พ.ศ. " + select_year);
         
 		reportListGrid.fetchData(new Criterion("created_date", OperatorId.EQUALS, new Date()) );

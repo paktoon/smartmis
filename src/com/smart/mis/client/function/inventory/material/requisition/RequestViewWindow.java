@@ -532,8 +532,8 @@ public class RequestViewWindow extends EditorWindow{
 			record.setAttribute("total_issue_amount", total_issue_amount);
 			record.setAttribute("modified_date", new Date());
 			record.setAttribute("modified_by", user);
-			record.setAttribute("received_date", new Date());
-			record.setAttribute("received_by", user);
+			record.setAttribute("issued_date", new Date());
+			record.setAttribute("issued_by", user);
 			
 			//final String wage_id = createWagePayment(record, user);
 			

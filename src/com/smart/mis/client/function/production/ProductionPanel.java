@@ -12,6 +12,8 @@ import com.smart.mis.client.function.production.product.ProductAdd;
 import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.production.product.ProductDetailTabPane;
 import com.smart.mis.client.function.production.product.ProductListGrid;
+import com.smart.mis.client.function.production.report.ReportProductionPlanLayout;
+import com.smart.mis.client.function.production.report.ReportTransferLayout;
 import com.smart.mis.client.function.production.smith.SmithAdd;
 import com.smart.mis.client.function.production.smith.SmithDS;
 import com.smart.mis.client.function.production.smith.SmithDetailTabPane;
@@ -22,6 +24,7 @@ import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.customer.CustomerDetailTabPane;
 import com.smart.mis.client.function.sale.customer.CustomerListGrid;
 import com.smart.mis.client.function.sale.quotation.QuotationTabSet;
+import com.smart.mis.client.function.sale.report.ReportDeliveryLayout;
 import com.smart.mis.shared.security.Role;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.OperatorId;
@@ -64,6 +67,9 @@ public class ProductionPanel extends FunctionPanel{
 		prepareProductWindow();
 		preparePlanWindow();
 		prepareOrderWindow();
+		
+		prepareProductionPlanReportWindow();
+		prepareTransferReportWindow();
 	}
 
 	@Override
@@ -242,6 +248,16 @@ public class ProductionPanel extends FunctionPanel{
 	private void prepareOrderWindow(){
 		ProductionOrderTabSet orderTab = new ProductionOrderTabSet( this._main.getCurrentUser());
 		this.produceWindow.addItem(orderTab);
+	}
+	
+	private void prepareProductionPlanReportWindow() {
+		VLayout report = new ReportProductionPlanLayout(this._main.getCurrentUser());
+		this.SubPlanReportWindow.addItem(report);
+	}
+	
+	private void prepareTransferReportWindow() {
+		VLayout report = new ReportTransferLayout(this._main.getCurrentUser());
+		this.SubTransferReportWindow.addItem(report);
 	}
 	
 	private boolean checkPermFlag(byte flag, byte checked){

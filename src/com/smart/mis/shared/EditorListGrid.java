@@ -79,10 +79,14 @@ public class EditorListGrid extends ListGrid{
                 }  
             });  
 
-            if (record.getAttributeAsString("status").equalsIgnoreCase("3_approved")) {
+            if (record.getAttributeAsString("status").equalsIgnoreCase("3_approved") || record.getAttributeAsString("status").equalsIgnoreCase("5_on_production") || record.getAttributeAsString("status").equalsIgnoreCase("6_production_completed") || record.getAttributeAsString("status").equalsIgnoreCase("7_transferred")) {
             	recordCanvas.addMember(viewImg); 
             }
-            recordCanvas.addMember(editImg);   
+            
+            if (!record.getAttributeAsString("status").equalsIgnoreCase("5_on_production") && !record.getAttributeAsString("status").equalsIgnoreCase("6_production_completed") && !record.getAttributeAsString("status").equalsIgnoreCase("7_transferred")) {
+                recordCanvas.addMember(editImg);   
+            }
+            
             return recordCanvas;  
         } else if (fieldName.equals("approveField")) { 
         	HLayout recordCanvas = new HLayout(3);  

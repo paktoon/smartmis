@@ -16,7 +16,10 @@ import com.smart.mis.client.function.sale.invoice.InvoiceTabSet;
 import com.smart.mis.client.function.sale.order.SaleOrderTabSet;
 import com.smart.mis.client.function.sale.purchase.ViewPOLaylout;
 import com.smart.mis.client.function.sale.quotation.QuotationTabSet;
-import com.smart.mis.client.function.sale.report.quotation.ReportQuotationLayout;
+import com.smart.mis.client.function.sale.report.ReportDeliveryLayout;
+import com.smart.mis.client.function.sale.report.ReportInvoiceLayout;
+import com.smart.mis.client.function.sale.report.ReportQuotationLayout;
+import com.smart.mis.client.function.sale.report.ReportSaleOrderLayout;
 import com.smart.mis.shared.security.Role;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.OperatorId;
@@ -70,6 +73,9 @@ public class SalePanel extends FunctionPanel{
 //		prepareSaleReportWindow();
 		
 		prepareQuotationReportWindow();
+		prepareSaleOrderReportWindow();
+		prepareInvoiceReportWindow();
+		prepareDeliveryReportWindow();
 	}
 
 	@Override
@@ -96,7 +102,7 @@ public class SalePanel extends FunctionPanel{
 		} else if (nodeId.equals("151")) {
 			loadWindow(this._main.getSalePanel(), this.SubQuotationReportWindow , name, icon);
 		} else if (nodeId.equals("152")) {
-			LoadSaleReportWindow();
+			//LoadSaleReportWindow();
 			loadWindow(this._main.getSalePanel(), this.SubSaleReportWindow , name, icon);
 		} else if (nodeId.equals("153")) {
 			loadWindow(this._main.getSalePanel(), this.SubInvoiceReportWindow , name, icon);
@@ -201,19 +207,34 @@ public class SalePanel extends FunctionPanel{
 		this.checkPOWindow.addItem(checkPO);
 	}
 	
-	private void LoadSaleReportWindow() {
-		for (Canvas removed : this.SubSaleReportWindow.getItems()) {
-			this.SubSaleReportWindow.removeItem(removed);
-		}
-		CustomColumnChart chart = new CustomColumnChart();
-		VLayout report = new VLayout();
-		chart.loadChart(report);
-		this.SubSaleReportWindow.addItem(report);
-	}
+//	private void LoadSaleReportWindow() {
+//		for (Canvas removed : this.SubSaleReportWindow.getItems()) {
+//			this.SubSaleReportWindow.removeItem(removed);
+//		}
+//		CustomColumnChart chart = new CustomColumnChart();
+//		VLayout report = new VLayout();
+//		chart.loadChart(report);
+//		this.SubSaleReportWindow.addItem(report);
+//	}
 	
 	private void prepareQuotationReportWindow() {
 		VLayout report = new ReportQuotationLayout(this._main.getCurrentUser());
 		this.SubQuotationReportWindow.addItem(report);
+	}
+	
+	private void prepareSaleOrderReportWindow() {
+		VLayout report = new ReportSaleOrderLayout(this._main.getCurrentUser());
+		this.SubSaleReportWindow.addItem(report);
+	}
+	
+	private void prepareInvoiceReportWindow() {
+		VLayout report = new ReportInvoiceLayout(this._main.getCurrentUser());
+		this.SubInvoiceReportWindow.addItem(report);
+	}
+	
+	private void prepareDeliveryReportWindow() {
+		VLayout report = new ReportDeliveryLayout(this._main.getCurrentUser());
+		this.SubDeliveryReportWindow.addItem(report);
 	}
 	
 	private boolean checkPermFlag(byte flag, byte checked){

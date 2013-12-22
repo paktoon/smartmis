@@ -11,6 +11,8 @@ import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDetailTabPane;
 import com.smart.mis.client.function.purchasing.material.MaterialListGrid;
 import com.smart.mis.client.function.purchasing.order.PurchaseOrderTabSet;
+import com.smart.mis.client.function.purchasing.report.ReportOrderLayout;
+import com.smart.mis.client.function.purchasing.report.ReportRequestLayout;
 import com.smart.mis.client.function.purchasing.request.PurchaseRequestTabSet;
 import com.smart.mis.client.function.purchasing.supplier.SupplierAdd;
 import com.smart.mis.client.function.purchasing.supplier.SupplierDS;
@@ -65,6 +67,9 @@ public class PurchasingPanel extends FunctionPanel{
 		prepareMeterialWindow();
 		prepareRequestWindow();
 		prepareOrderWindow();
+		
+		prepareRequestReportWindow();
+		prepareOrderReportWindow();
 	}
 
 	@Override
@@ -238,6 +243,16 @@ public class PurchasingPanel extends FunctionPanel{
 	private void prepareOrderWindow(){
 		PurchaseOrderTabSet orderTab = new PurchaseOrderTabSet(this._main.getCurrentUser());
 		this.purchaseOrderWindow.addItem(orderTab);
+	}
+	
+	private void prepareRequestReportWindow() {
+		VLayout report = new ReportRequestLayout(this._main.getCurrentUser());
+		this.subPurcharseRequestReportWindow.addItem(report);
+	}
+	
+	private void prepareOrderReportWindow() {
+		VLayout report = new ReportOrderLayout(this._main.getCurrentUser());
+		this.subPurcharseOrderReportWindow.addItem(report);
 	}
 	
 	private boolean checkPermFlag(byte flag, byte checked){

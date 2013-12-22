@@ -11,6 +11,10 @@ import com.smart.mis.client.function.inventory.material.returns.ReturnLayout;
 import com.smart.mis.client.function.inventory.product.ViewProductLaylout;
 import com.smart.mis.client.function.inventory.product.request.DeliveryOrderLayout;
 import com.smart.mis.client.function.inventory.product.transfer.TransferLayout;
+import com.smart.mis.client.function.inventory.report.ReportInventoryLayout;
+import com.smart.mis.client.function.inventory.report.ReportReceiveLayout;
+import com.smart.mis.client.function.inventory.report.ReportRequestLayout;
+import com.smart.mis.client.function.sale.report.ReportDeliveryLayout;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -26,8 +30,8 @@ public class InventoryPanel extends FunctionPanel{
 	private final FunctionWindow materialRemainWindow;
 	//private final FunctionWindow reportWindow;
 	private final FunctionWindow SubInventoryReportWindow;
-	private final FunctionWindow SubInOutProductReportWindow;
-	private final FunctionWindow SubInOutMaterialReportWindow;
+	private final FunctionWindow SubInProductMaterialReportWindow;
+	private final FunctionWindow SubOutProductMaterialReportWindow;
 	
 	public InventoryPanel(MainPage main){
 		super(main, "ระบบจัดการคลังสินค้าและวัตถุดิบ", 3);
@@ -42,8 +46,8 @@ public class InventoryPanel extends FunctionPanel{
 		
 		//reportWindow = createFuncWindow();
 		SubInventoryReportWindow = createFuncWindow();
-		SubInOutProductReportWindow = createFuncWindow();
-		SubInOutMaterialReportWindow = createFuncWindow();
+		SubInProductMaterialReportWindow = createFuncWindow();
+		SubOutProductMaterialReportWindow = createFuncWindow();
 		
 		prepareTransferWindow();
 		prepareOutProductWindow();
@@ -53,6 +57,10 @@ public class InventoryPanel extends FunctionPanel{
 		
 		prepareProductRemainWindow();
 		prepareMaterialRemainWindow();
+		
+		prepareInventoryWindow();
+		prepareInReportWindow();
+		prepareOutReportWindow();
 	}
 
 	@Override
@@ -86,9 +94,9 @@ public class InventoryPanel extends FunctionPanel{
 		} else if (nodeId.equals("371")) {
 			loadWindow(this._main.getInventoryPanel(), this.SubInventoryReportWindow , name, icon);
 		} else if (nodeId.equals("372")) {
-			loadWindow(this._main.getInventoryPanel(), this.SubInOutProductReportWindow , name, icon);
+			loadWindow(this._main.getInventoryPanel(), this.SubOutProductMaterialReportWindow , name, icon);
 		} else if (nodeId.equals("373")) {
-			loadWindow(this._main.getInventoryPanel(), this.SubInOutMaterialReportWindow , name, icon);
+			loadWindow(this._main.getInventoryPanel(), this.SubInProductMaterialReportWindow , name, icon);
 		} else init();
 	}
 	
@@ -125,5 +133,20 @@ public class InventoryPanel extends FunctionPanel{
 	private void prepareMaterialRemainWindow(){
 		VLayout viewLayout = new ViewMaterialLaylout(this._main.getCurrentUser());
 		this.materialRemainWindow.addItem(viewLayout);
+	}
+	
+	private void prepareInReportWindow() {
+		VLayout report = new ReportReceiveLayout(this._main.getCurrentUser());
+		this.SubInProductMaterialReportWindow.addItem(report);
+	}
+	
+	private void prepareOutReportWindow() {
+		VLayout report = new ReportRequestLayout(this._main.getCurrentUser());
+		this.SubOutProductMaterialReportWindow.addItem(report);
+	}
+	
+	private void prepareInventoryWindow() {
+		VLayout report = new ReportInventoryLayout(this._main.getCurrentUser());
+		this.SubInventoryReportWindow.addItem(report);
 	}
 }

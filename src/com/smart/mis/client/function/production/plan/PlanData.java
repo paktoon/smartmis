@@ -66,17 +66,17 @@ public class PlanData {
     }
     
     public static ListGridRecord[] getNewRecords() {
-//    	return new ListGridRecord[]{ 
-//    			createRecord("QA10001","CU10017", "Flora Creek", "เงินสด", 10 , new Date(), new Date(), new Date() , 120.0, 200, 11000.0, new Date(), null, "admin test", null, "", "2_waiting_for_approved"),
-//    			createRecord("QA10002","CU10008", "ประทีปเจมส์", "เงินสด", 30 , new Date(), new Date(), new Date() , 120.0, 270, 14850.0, new Date(), null, "admin test", null, "", "1_waiting_for_revised"),
-//    			createRecord("QA10003","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "เงินสด", 20 , new Date(), new Date(), new Date() , 120.0, 300, 16500.0, new Date(), null, "admin test", null, "", "4_canceled"),
-//    			createRecord("QA10004","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "เงินสด", 10 , new Date(), new Date(), new Date() , 120.0, 100, 5000.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    			
-//    			createRecord("QA10005","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 30 , new Date(), new Date(), new Date() , 120.0, 200, 11000.0, new Date(), null, "admin test", null, "", "2_waiting_for_approved"),
-//    			createRecord("QA10006","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 20 , new Date(), new Date(), new Date() , 120.0, 270, 14850.0, new Date(), null, "admin test", null, "", "1_waiting_for_revised"),
-//    			createRecord("QA10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , new Date(), new Date(), new Date() , 120.0, 300, 16500.0, new Date(), null, "admin test", null, "", "2_waiting_for_approved"),
-//    			createRecord("QA10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 , new Date(), new Date(), new Date() , 120.0, 100, 5000.0, new Date(), null, "admin test", null, "", "3_approved")
-//    	};
-    	return new ListGridRecord[]{};
+    	return new ListGridRecord[]{ 
+    			createRecord("PL10001","", null, 1914.4, 290 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "1_waiting_for_revised", "สินค้ามีปริมาณต่ำกว่าที่ควรจะเป็น"),
+    			createRecord("PL10002","", null, 2458.4, 370 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "2_waiting_for_approved", "สินค้าขายดี"),
+    			createRecord("PL10003","", null, 2856.0, 420 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "3_approved", "สินค้าขายดี"),
+    			createRecord("PL10004","", null, 3740.0, 550 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "5_on_production", "สินค้าขายดี"),
+    			
+    			createRecord("PL10005","", null, 1496.0, 220 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "6_production_completed", "สินค้าขาดตลาด"),
+    			createRecord("PL10006","SO10004", new Date(), 632.0, 100 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "5_on_production", "สร้างจากรายการขายโดยอัตโนมัติ"),
+    			createRecord("PL10007","SO10002", new Date(), 1836.0 , 270,  new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "5_on_production", "สร้างจากรายการขายโดยอัตโนมัติ"),
+    			createRecord("PL10008","SO10001", new Date(), 1360.0, 200 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "3_approved", "สร้างจากรายการขายโดยอัตโนมัติ")
+    	};
+//    	return new ListGridRecord[]{};
     }
 }

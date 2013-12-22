@@ -57,20 +57,20 @@ public class InvoiceData {
     			return record;
     		}
     	}
-    	 return createRecord(invoice_id,"SO10001","CU10017", "Flora Creek", "เงินสด", 10 , new Date() , 120.0, 200, 11000.0, new Date(), null, "admin test", null, "1_waiting_for_payment", "", new Date(), null);
+    	 return createRecord(invoice_id,"SO10001","CU10017", "Flora Creek", "เงินสด", 10 , new Date() , 120.0, 200, 11000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null);
     }
     
     public static ListGridRecord[] getNewRecords() {
     	return new ListGridRecord[]{ 
-    			createRecord("IN10001","SO10001","CU10017", "Flora Creek", "เงินสด", 10 , new Date() , 120.0, 200, 11000.0, new Date(), null, "admin test", null, "1_waiting_for_payment", "", new Date(), null),
-    			createRecord("IN10002","SO10002","CU10008", "ประทีปเจมส์", "เงินสด", 30 , new Date() , 120.0, 270, 14850.0, new Date(), null, "admin test", null, "1_waiting_for_payment", "", new Date(), null),
-    			createRecord("IN10003","SO10003","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "เงินสด", 20 , new Date() , 120.0, 300, 16500.0, new Date(), null, "admin test", null, "4_canceled", "", new Date(), null),
-    			createRecord("IN10004","SO10004","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "เงินสด", 10 , new Date() , 120.0, 100, 5000.0, new Date(), null, "admin test", null, "1_waiting_for_payment", "", new Date(), null),
+    			createRecord("IN10001","SO10001","CU10017", "Flora Creek", "เงินสด", 10 , new Date() , 1360.0, 200, 11000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null),
+    			createRecord("IN10002","SO10002","CU10008", "ประทีปเจมส์", "เงินสด", 30 , new Date() , 1836.0, 270, 14850.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null),
+    			createRecord("IN10003","SO10003","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "เงินสด", 20 , new Date() , 1896.0, 300, 16500.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "4_canceled", "", new Date(), null),
+    			createRecord("IN10004","SO10004","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "เงินสด", 10 , new Date() , 632.0, 100, 5000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null),
     		
-    			createRecord("IN10005","SO10005","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 0 , new Date() , 120.0, 200, 11000.0, new Date(), null, "admin test", null, "3_over_due", "", new Date(), null),
-    			createRecord("IN10006","SO10006","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 20 , new Date() , 120.0, 270, 14850.0, new Date(), null, "admin test", null, "2_paid", "", new Date(), new Date()),
-    			createRecord("IN10007","SO10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , new Date() , 120.0, 300, 16500.0, new Date(), null, "admin test", null, "1_waiting_for_payment", "", new Date(), null),
-    			createRecord("IN10008","SO10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 , new Date() , 120.0, 100, 5000.0, new Date(), null, "admin test", null, "2_paid", "", new Date(), new Date())
+    			createRecord("IN10005","SO10005","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 0 , new Date() , 1360.0, 200, 11000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "3_over_due", "", new Date(), null),
+    			createRecord("IN10006","SO10006","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 20 , new Date() , 1836.0, 270, 14850.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "2_paid", "", new Date(), new Date()),
+    			createRecord("IN10007","SO10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , new Date() , 1896.0, 300, 16500.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null),
+    			createRecord("IN10008","SO10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 , new Date() , 632.0, 100, 5000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "2_paid", "", new Date(), new Date())
     			};
     	//return new ListGridRecord[]{};
     }

@@ -58,20 +58,20 @@ public class SaleProductData {
     public static ListGridRecord[] getRecords(String sale_id) {
     	if (sale_id != null && ( sale_id.equals( "SO10001") || sale_id.equals( "SO10005") || sale_id.equals( "IN10001") || sale_id.equals( "IN10005"))) {
         	return new ListGridRecord[]{ 
-        			createRecord("SS10001",sale_id, "PD10002", "Thin plain silver ring",6.3, 55.0, "ring","วง", 200, true)
+        			createRecord("SS10001",sale_id, "PD10002", "Thin plain silver ring",6.8, 55.0, "ring","วง", 200, true)
         	};
         } else if (sale_id != null && ( sale_id.equals( "SO10002") || sale_id.equals( "SO10006") || sale_id.equals( "IN10002") || sale_id.equals( "IN10006") || sale_id.equals( "DL10001"))) {
         	return new ListGridRecord[]{ 
-        			createRecord("SS10002",sale_id, "PD10001", "Diamond cut silver ring", 6.3, 55.0, "ring","วง", 70, true),
-        			createRecord("SS10003",sale_id, "PD10002", "Thin plain silver ring",6.3, 55.0, "ring","วง", 200, true)
+        			createRecord("SS10002",sale_id, "PD10001", "Diamond cut silver ring", 6.8, 55.0, "ring","วง", 70, true),
+        			createRecord("SS10003",sale_id, "PD10002", "Thin plain silver ring",6.8, 55.0, "ring","วง", 200, true)
         	};
         } else if (sale_id != null && (sale_id.equals( "SO10003") || sale_id.equals( "SO10007") || sale_id.equals( "IN10003") || sale_id.equals( "IN10007") || sale_id.equals( "DL10002"))) {
         	return new ListGridRecord[]{ 
-        			createRecord("SS10004",sale_id, "PD10004","Spiral silver earrings", 6.3, 55.0, "earring", "คู่", 300, true)
+        			createRecord("SS10004",sale_id, "PD10004","Spiral silver earrings", 6.32, 55.0, "earring", "คู่", 300, true)
         	};
         } else if (sale_id != null && (sale_id.equals( "SO10004") || sale_id.equals( "SO10008") || sale_id.equals( "IN10004") || sale_id.equals( "IN10008") || sale_id.equals( "DL10003"))) {
         	return new ListGridRecord[]{ 
-        			createRecord("SS10005",sale_id, "PD10007","Plain silver necklaces", 5.6, 50.0, "earring","เส้น",100, true)
+        			createRecord("SS10005",sale_id, "PD10007","Plain silver necklaces", 6.32, 50.0, "earring","เส้น",100, true)
         	};
         } 
     	

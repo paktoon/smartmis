@@ -51,6 +51,10 @@ public class PurchaseOrderDS extends DataSource {
 		 DataSourceFloatField Field_6 = new DataSourceFloatField("total_weight", "น้ำหนักรวม (กรัม)");
 		 DataSourceFloatField Field_7 = new DataSourceFloatField("total_amount", "จำนวนรวม");
 		 
+		 DataSourceFloatField Field_7_1 = new DataSourceFloatField("totel_received_weight", "น้ำหนักที่รับรวม (กรัม)");
+		 DataSourceFloatField Field_7_2 = new DataSourceFloatField("totel_received_amount", "จำนวนที่รับรวม");
+		 DataSourceTextField Field_7_3 = new DataSourceTextField("received_by", "รับโดย");
+		 
 		 DataSourceFloatField Field_8 = new DataSourceFloatField("netExclusive", "ราคารวม (บาท)");
 		 DataSourceFloatField Field_9 = new DataSourceFloatField("tax", "ภาษีมูลค่าเพิ่ม (7%)");
 		 DataSourceFloatField Field_10 = new DataSourceFloatField("netInclusive", "ราคาสุทธิ (บาท)");
@@ -75,7 +79,7 @@ public class PurchaseOrderDS extends DataSource {
 		 DataSourceTextField Field_21 = new DataSourceTextField("paid_by", "ชำระเงินโดย");
 		 
 		 //setFields(Field_1, Field_1_1, Field_2_1, Field_2_2, Field_3_1,Field_3_2,Field_3_3, Field_3, Field_4, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_15, Field_16);
-		 setFields(Field_1, Field_1_1, Field_2_1, Field_2_2, Field_3_1,Field_3_2,Field_3_3,Field_3, Field_4, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_15, Field_16, Field_17, Field_18, Field_19, Field_20, Field_21);
+		 setFields(Field_1, Field_1_1, Field_2_1, Field_2_2, Field_3_1,Field_3_2,Field_3_3,Field_3, Field_4, Field_5, Field_6 ,Field_7, Field_7_1, Field_7_2, Field_7_3, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_15, Field_16, Field_17, Field_18, Field_19, Field_20, Field_21);
 		 
 		 //setDataURL("smartmis/security/userData");
 		 setTestData(PurchaseOrderData.getNewRecords()); // For Test
