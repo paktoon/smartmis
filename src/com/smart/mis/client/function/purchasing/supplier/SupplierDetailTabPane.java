@@ -3,12 +3,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smart.mis.client.function.purchasing.material.MaterialListGrid;
 import com.smart.mis.client.function.purchasing.material.MaterialSupplierChange;
+import com.smart.mis.client.function.purchasing.order.OrderViewWindow;
+import com.smart.mis.client.function.purchasing.order.PurchaseOrderDS;
 import com.smart.mis.client.function.security.SecurityService;
 import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
+import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.security.PermissionProfile;
 import com.smart.mis.shared.security.User;
+import com.smartgwt.client.data.AdvancedCriteria;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DataSource;  
@@ -35,6 +39,8 @@ import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.MatchesFieldValidator;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.events.RecordDoubleClickEvent;
+import com.smartgwt.client.widgets.grid.events.RecordDoubleClickHandler;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -68,6 +74,8 @@ public class SupplierDetailTabPane extends TabSet {
     public SupplierDetailTabPane(SupplierDS DS , SupplierListGrid Grid){
     	this.supplierListGrid = Grid;
     	this.supplierDataSource = DS;
+    	createHistoryGrid();
+    	
     	setHeight("70%");
     	
     	itemViewer = new DetailViewer();  
@@ -98,8 +106,6 @@ public class SupplierDetailTabPane extends TabSet {
         editorForm.setUseAllDataSourceFields(true); 
         editorForm.setIsGroup(true);
         editorForm.setGroupTitle("ข้อมูลผู้จำหน่าย");
-        
-        historyGrid = new ListGrid();
         
         //editorForm
         StaticTextItem id = new StaticTextItem("sid", "รหัสผู้จำหน่าย");
@@ -251,6 +257,7 @@ public class SupplierDetailTabPane extends TabSet {
         		editorForm.editRecord(selectedRecord);
         		fetchEditItemList(selectedRecord.getAttributeAsString("list"));
         		this.currentSid = selectedRecord.getAttributeAsString("sid");
+        		historyGrid.fetchData(new Criterion("sid", OperatorId.EQUALS, currentSid));
         	} else {
       	      fetchEditItemList("NULL");
         	}
@@ -271,6 +278,7 @@ public class SupplierDetailTabPane extends TabSet {
     		editorForm.editRecord(selectedRecord);
     		fetchEditItemList(selectedRecord.getAttributeAsString("list"));
     		this.currentSid = selectedRecord.getAttributeAsString("sid");
+    		historyGrid.fetchData(new Criterion("sid", OperatorId.EQUALS, currentSid));
         }
     }
     
@@ -408,5 +416,39 @@ public class SupplierDetailTabPane extends TabSet {
     	//permissionDataSource.refreshData();
     	supplierListGrid.invalidateCache();
 //    	profile.invalidateDisplayValueCache();
+    }
+    
+    private void createHistoryGrid() {
+    	
+    	historyGrid = new ListGrid();
+    	
+    	historyGrid.setAutoFetchData(true);
+    	historyGrid.setDataSource(PurchaseOrderDS.getInstance());
+    	historyGrid.setUseAllDataSourceFields(false);
+    	historyGrid.setCriteria(new Criterion("sid", OperatorId.EQUALS, currentSid));
+    	
+    	ListGridField order_id = new ListGridField("order_id" , 90);
+		ListGridField status = new ListGridField("status");
+		ListGridField payment_status = new ListGridField("payment_status");
+		ListGridField received_status = new ListGridField("received_status");
+		ListGridField total_amount = new ListGridField("total_weight", 110);
+		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		total_amount.setAlign(Alignment.RIGHT);
+		ListGridField netInclusive = new ListGridField("netInclusive", 110);
+		netInclusive.setCellFormatter(FieldFormatter.getPriceFormat());
+		netInclusive.setAlign(Alignment.RIGHT);
+		ListGridField created_date = new ListGridField("created_date","จัดซื้อวันที่", 100);
+		ListGridField created_by = new ListGridField("created_by", "จัดซื้อโดย", 150);
+		
+		historyGrid.setFields(order_id, status, payment_status, received_status, created_by, created_date, total_amount, netInclusive);
+		
+		historyGrid.addRecordDoubleClickHandler(new RecordDoubleClickHandler() {
+
+			@Override
+			public void onRecordDoubleClick(RecordDoubleClickEvent event) {
+				// TODO Auto-generated method stub
+				OrderViewWindow view = new OrderViewWindow();
+				view.show(historyGrid.getSelectedRecord(), false, null, 0);
+			}});
     }
 }

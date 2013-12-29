@@ -49,9 +49,9 @@ public class InvoiceDS extends DataSource {
 		 DataSourceFloatField Field_6 = new DataSourceFloatField("total_weight", "น้ำหนักรวม (กรัม)");
 		 DataSourceIntegerField Field_7 = new DataSourceIntegerField("total_amount", "จำนวนรวม (ชิ้น)");
 		 
-		 DataSourceFloatField Field_8 = new DataSourceFloatField("netExclusive", "ราคารวม (บาท)");
+		 DataSourceFloatField Field_8 = new DataSourceFloatField("netExclusive", "ยอดรวม (บาท)");
 		 DataSourceFloatField Field_9 = new DataSourceFloatField("tax", "ภาษีมูลค่าเพิ่ม (7%)");
-		 DataSourceFloatField Field_10 = new DataSourceFloatField("netInclusive", "ราคาสุทธิ (บาท)");
+		 DataSourceFloatField Field_10 = new DataSourceFloatField("netInclusive", "ยอดสุทธิ (บาท)");
 		 
 		 DataSourceDateField Field_11 = new DataSourceDateField("created_date", "สร้างวันที่");
 		 DataSourceTextField Field_12 = new DataSourceTextField("created_by", "สร้างโดย");

@@ -40,7 +40,7 @@ public class SaleOrderDS extends DataSource {
 		 Field_2.setForeignKey("CustomerDS.cid");
 		 DataSourceTextField Field_2_1 = new DataSourceTextField("cus_name", "ชื่อลูกค้า");
 		 DataSourceTextField Field_2_2 = new DataSourceTextField("payment_model", "วิธีการชำระเงิน");
-		 DataSourceIntegerField Field_2_3 = new DataSourceIntegerField("credit", "เครดิต");
+		 DataSourceIntegerField Field_2_3 = new DataSourceIntegerField("credit", "เครดิต (วัน)");
 		 
 		 //DataSourceDateField Field_3 = new DataSourceDateField("from", "เริ่ม");
 		 //DataSourceDateField Field_4 = new DataSourceDateField("to", "สิ้นสุด");

@@ -14,7 +14,6 @@ import com.smart.mis.client.function.inventory.product.transfer.TransferLayout;
 import com.smart.mis.client.function.inventory.report.ReportInventoryLayout;
 import com.smart.mis.client.function.inventory.report.ReportReceiveLayout;
 import com.smart.mis.client.function.inventory.report.ReportRequestLayout;
-import com.smart.mis.client.function.sale.report.ReportDeliveryLayout;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.layout.VLayout;
 

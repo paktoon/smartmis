@@ -238,7 +238,16 @@ public class RequestCreateTab {
 					sup_fax.setValue(supplier_fax);
 					
 					materialForm.enable();
-					tempDS.fetchData(new Criterion("mid", OperatorId.REGEXP, material_list));
+					System.out.println(material_list);
+					//tempDS.fetchData(new Criterion("mid", OperatorId.REGEXP, material_list));
+					tempDS.fetchData(new Criterion("mid", OperatorId.REGEXP, material_list), new DSCallback() {
+						@Override
+						public void execute(DSResponse dsResponse, Object data,
+								DSRequest dsRequest) {
+							dsResponse.setInvalidateCache(true);
+							tempDS.updateCaches(dsResponse, dsRequest);
+						}
+			    	});
 				}
 			}
         });

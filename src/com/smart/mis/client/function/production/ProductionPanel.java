@@ -24,7 +24,7 @@ import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.customer.CustomerDetailTabPane;
 import com.smart.mis.client.function.sale.customer.CustomerListGrid;
 import com.smart.mis.client.function.sale.quotation.QuotationTabSet;
-import com.smart.mis.client.function.sale.report.ReportDeliveryLayout;
+import com.smart.mis.client.function.sale.report.ReportDeliveryLayout_1;
 import com.smart.mis.shared.security.Role;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.OperatorId;

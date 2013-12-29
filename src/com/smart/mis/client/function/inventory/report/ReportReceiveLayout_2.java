@@ -1,4 +1,4 @@
-package com.smart.mis.client.function.production.report;
+package com.smart.mis.client.function.inventory.report;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,38 +76,30 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import com.smartgwt.client.widgets.cube.CubeGrid;
 
-public class ReportTransferLayout extends VLayout {
+public class ReportReceiveLayout_2 extends VLayout {
 	
 	Label reportDate;
 	
-	public ReportTransferLayout(final User currentUser){
-		//Tab scrapingTab = new Tab("แต่งและฝังพลอย","icons/16/comment_edit.png");
-		//VLayout reviseLayout = new VLayout();
-		//reviseLayout.
+	public ReportReceiveLayout_2(final User currentUser){
 		setWidth(950);
-		//reviseLayout.
 		setHeight100();
 		
 		HLayout searchLayout = new HLayout();
 		searchLayout.setHeight(20);
-		
-		//VLayout leftLayout = new VLayout();
+	        
 		final DynamicForm searchForm = new DynamicForm();
-		searchForm.setWidth(950); 
+		searchForm.setWidth(450); 
 		searchForm.setHeight(30);
 		searchForm.setMargin(5); 
-		searchForm.setNumCols(8);
+		searchForm.setNumCols(4);
 		searchForm.setCellPadding(2);
 		searchForm.setAutoFocus(true);
 		searchForm.setSelectOnFocus(true);
 		searchForm.setIsGroup(true);
 		searchForm.setDataSource(TransferDS.getInstance());
 		searchForm.setUseAllDataSourceFields(false);
-		searchForm.setGroupTitle("ค้นหาคำขอโอนสินค้า");
+		searchForm.setGroupTitle("ตัวกรอง");
 		
-//		final TextItem planText = new TextItem("transfer_id", "รหัสคำขอโอนสินค้า");
-//		planText.setWrapTitle(false);
-//		planText.setOperator(OperatorId.REGEXP);
 		final SelectItem statusSelected = new SelectItem("status", "สถานะ");
 		statusSelected.setWrapTitle(false);
 		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
@@ -142,7 +134,7 @@ public class ReportTransferLayout extends VLayout {
         to.setDefaultValue(dateRange.getEndDate());
         to.setUseTextField(true);
 
-        searchForm.setItems(statusSelected, jidText, from, to);
+        searchForm.setItems(jidText, statusSelected, from, to);
         //searchForm.setItems(planText, jidText);
 //        dateForm.setItems(from, to);
         
@@ -200,18 +192,17 @@ public class ReportTransferLayout extends VLayout {
 		buttonLayout.setMargin(10);
 		buttonLayout.setMembersMargin(5);
 		buttonLayout.setHeight(30);
-		IButton searchButton = new IButton("ออกรายงานโอนสินค้า");
+		IButton searchButton = new IButton("ค้นหาคำขอโอนสินค้า");
 		searchButton.setIcon("icons/16/reports-icon.png");
 		searchButton.setWidth(170);
 		searchButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-            	//Criterion search = new Criterion();
-            	//search.addCriteria(searchForm.getValuesAsCriteria());
-            	AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+            	Criterion search = new Criterion();
+            	search.addCriteria(searchForm.getValuesAsCriteria());
+                AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
-          		      new Criterion("status", OperatorId.REGEXP, statusSelected.getValueAsString()),
-          		      new Criterion("plan_id", OperatorId.REGEXP, jidText.getValueAsString()),
-            		  });
+        		      search
+          		  });
                 reportDate.setContents("ตั้งแต่วันที่ " + DateTimeFormat.getFormat( "d-M-yyyy" ).format(from.getValueAsDate()) + " ถึงวันที่ " +  DateTimeFormat.getFormat( "d-M-yyyy" ).format(to.getValueAsDate()));
               orderListGrid.fetchData(criteria);  
               orderListGrid.deselectAllRecords();
@@ -249,7 +240,6 @@ public class ReportTransferLayout extends VLayout {
 		final VLayout gridLayout = new VLayout();
 		gridLayout.setWidth100();
 		gridLayout.setHeight(500);
-		gridLayout.setMargin(10);
 		Label text = new Label();
         text.setContents("รายงานการโอนสินค้าเข้าคลังสินค้า");
         text.setAlign(Alignment.CENTER);

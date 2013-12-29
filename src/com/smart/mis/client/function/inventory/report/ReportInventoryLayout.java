@@ -67,9 +67,9 @@ public class ReportInventoryLayout extends VLayout{
 	//DateItem searchItem;
 	IButton printButton;
 	
-	String select_day;
-	String select_month;
-	String select_year;
+//	String select_day;
+//	String select_month;
+//	String select_year;
 	
 	//String type;
 	
@@ -78,19 +78,10 @@ public class ReportInventoryLayout extends VLayout{
 		gridLayout = new VLayout();
 		gridLayout.setWidth(950);
 		gridLayout.setHeight(450);
-		gridLayout.setMargin(5);
+		gridLayout.setMargin(10);
 		
-		//type = "product"; // "material"
-		//productListGrid = new ListGrid();
 		createProductResult();
 		createMaterialResult();
-		//createReturnResult();
-		//materialListGrid = new ListGrid();
-		
-		select_day = DateTimeFormat.getFormat( "d-M-yyyy" ).format( new Date() ).split( "-")[0];
-		select_month = DateTimeFormat.getFormat( "d-M-yyyy" ).format( new Date() ).split( "-")[1];
-		select_year = DateTimeFormat.getFormat( "d-M-yyyy" ).format( new Date() ).split( "-")[2];
-		select_year = Integer.toString((Integer.parseInt(select_year) + 543));
 		
 		setWidth(950);
 		setHeight100();
@@ -98,101 +89,13 @@ public class ReportInventoryLayout extends VLayout{
 		HLayout search = new HLayout();
 		search.setWidth(950);
 		search.setHeight(45);
-		search.setMargin(5);
+		search.setMargin(10);
 		search.setMembersMargin(5);
 		
 		searchForm = new DynamicForm();
 		searchForm.setWidth(340);
 		searchForm.setNumCols(4);
 		searchForm.setTitleOrientation(TitleOrientation.TOP);
-//		searchItem = new DateItem("created_date", "วันที่ออกรายงาน");
-//        searchItem.setTitleOrientation(TitleOrientation.TOP);
-//        searchItem.setColSpan(2);
-//        searchItem.setTitleAlign(Alignment.LEFT);
-//        searchItem.addKeyPressHandler(new KeyPressHandler() {
-//            public void onKeyPress(KeyPressEvent event) {
-//                if("enter".equalsIgnoreCase(event.getKeyName())) {
-//                    updateDetails();
-//                }
-//            }
-//        });
-//        searchItem.setDefaultChooserDate(new Date());
-//        searchItem.setDefaultValue(new Date());
-//        searchItem.setUseTextField(true);
-		
-//		final SelectItem dayItem = new SelectItem("dayItem", "วันที่");
-//		dayItem.setValueMap(DateTimeMapping.getDateValueMap(DateTimeMapping.getNumDay(select_month, select_year)));
-//		dayItem.setDefaultValue(select_day);
-//		dayItem.setWidth(50);
-//		final SelectItem monthItem = new SelectItem("monthItem", "เดือน");
-//		monthItem.setValueMap(DateTimeMapping.getMonthValueMap());
-//		monthItem.setDefaultValue(DateTimeMapping.getDisplay(select_month));
-//		monthItem.setWidth(100);
-//		final SelectItem yearItem = new SelectItem("yearItem", "ปี");
-//		yearItem.setValueMap(DateTimeMapping.getYearPast(select_year,5), DateTimeMapping.getYearPast(select_year,4) , DateTimeMapping.getYearPast(select_year,3), DateTimeMapping.getYearPast(select_year,2), DateTimeMapping.getYearPast(select_year,1),select_year);
-//		yearItem.setDefaultValue(select_year);
-//		yearItem.setWidth(50);
-//		yearItem.setPickListWidth(60);
-//        
-//        final PickerIcon findIcon = new PickerIcon(PickerIcon.SEARCH);
-//        final PickerIcon cancelIcon = new PickerIcon(PickerIcon.CLEAR);
-//        yearItem.setIcons(findIcon, cancelIcon);
-//        
-//        yearItem.addIconClickHandler(new IconClickHandler() {
-//            public void onIconClick(IconClickEvent event) {
-//                FormItemIcon icon = event.getIcon();
-//                if(icon.getSrc().equals(cancelIcon.getSrc())) {
-//                	searchForm.reset();
-//            		select_day = DateTimeFormat.getFormat( "d-M-yyyy" ).format( new Date() ).split( "-")[0];
-//            		select_month = DateTimeFormat.getFormat( "d-M-yyyy" ).format( new Date() ).split( "-")[1];
-//            		select_year = DateTimeFormat.getFormat( "d-M-yyyy" ).format( new Date() ).split( "-")[2];
-//                	resetDetails();
-//                } else if(icon.getSrc().equals(findIcon.getSrc())) {
-//                	if (select_day != null) updateDetails();
-//                	else SC.warn("กรุณาเลือกวันที่");
-//                }
-//            }
-//        });
-//        
-//        dayItem.addChangedHandler(new ChangedHandler(){
-//
-//			@Override
-//			public void onChanged(ChangedEvent event) {
-//				select_day = dayItem.getValueAsString();
-//			}
-//        });
-//        
-//        monthItem.addChangedHandler(new ChangedHandler(){
-//
-//			@Override
-//			public void onChanged(ChangedEvent event) {
-//				int num_1 = DateTimeMapping.getNumDay(select_month, select_year);
-//				select_month = monthItem.getValueAsString();
-//				int num_2 = DateTimeMapping.getNumDay(select_month, select_year);
-//				if (num_1 != num_2) {
-//					select_day = "1";
-//					dayItem.setValue(select_day);
-//					dayItem.setValueMap(DateTimeMapping.getDateValueMap(num_2));
-//				}
-//			}
-//        	
-//        });
-//        
-//        yearItem.addChangedHandler(new ChangedHandler(){
-//
-//			@Override
-//			public void onChanged(ChangedEvent event) {
-//				int num_1 = DateTimeMapping.getNumDay(select_month, select_year);
-//				select_year = yearItem.getValueAsString();
-//				int num_2 = DateTimeMapping.getNumDay(select_month, select_year);
-//				if (num_1 != num_2) {
-//					select_day = "1";
-//					dayItem.setValue(select_day);
-//					dayItem.setValueMap(DateTimeMapping.getDateValueMap(num_2));
-//				}
-//			}
-//        	
-//        });
         
         final SelectItem typeItem = new SelectItem("typeItem", "ประเภทรายงาน");
         LinkedHashMap<String,String> typeMap = new LinkedHashMap<String,String>();
@@ -246,7 +149,8 @@ public class ReportInventoryLayout extends VLayout{
         text.setHeight(10);
         text.setStyleName("printTitle");
         reportDate = new Label();
-        reportDate.setContents("ประจำวันที่ " + select_day + " เดือน " + DateTimeMapping.getDisplay(select_month) + " ปี พ.ศ. " + select_year);
+        //reportDate.setContents("ประจำวันที่ " + select_day + " เดือน " + DateTimeMapping.getDisplay(select_month) + " ปี พ.ศ. " + select_year);
+        reportDate.setContents("ประจำวันที่ " + DateTimeFormat.getFormat( "d-M-yyyy" ).format(new Date()));
         reportDate.setAlign(Alignment.CENTER);
         reportDate.setHeight(10);
         reportDate.setStyleName("printDetails");
@@ -366,75 +270,5 @@ public class ReportInventoryLayout extends VLayout{
 		materialListGrid.setFields(mid, mat_name, desc, type, inStock, reserved, remain, unit);
 
 	}
-	
-//	private void updateDetails() {
-////		for(ListGridRecord record : productListGrid.getRecords()) {
-////			productListGrid.removeData(record);
-////		}
-////		printButton.hide();
-////		text.setContents("รายงานการรับสินค้า");
-//		reportDate.setContents("ประจำวันที่ " + select_day + " เดือน " + DateTimeMapping.getDisplay(select_month) + " ปี พ.ศ. " + select_year);
-//        
-//		//Date date = DateTimeFormat.getFormat("yyyy-M-dd").parse(DateTimeMapping.getRealYear(select_year) + "-" + select_month + "-" + select_day);
-//		ProductDS.getInstance().refreshData();
-//		MaterialDS.getInstance().refreshData();
-//		
-//		productListGrid.fetchData();
-//		productListGrid.deselectAllRecords();
-//		materialListGrid.fetchData();
-//		materialListGrid.deselectAllRecords();
-//	}
-//	
-//	private void resetDetails() {
-////		for(ListGridRecord record : productListGrid.getRecords()) {
-////			productListGrid.removeData(record);
-////		}
-////		printButton.hide();
-//		reportDate.setContents("ประจำวันที่ " + select_day + " เดือน " + DateTimeMapping.getDisplay(select_month) + " ปี พ.ศ. " + select_year);
-//        
-//		ProductDS.getInstance().refreshData();
-//		MaterialDS.getInstance().refreshData();
-//		
-//		productListGrid.fetchData();
-//		productListGrid.deselectAllRecords();
-//		materialListGrid.fetchData();
-//		materialListGrid.deselectAllRecords();
-//	}
-	
-//	private int getDate(Date current){
-////        Calendar cal = Calendar.getInstance();
-////        cal.setTime(current);
-////        return cal.get(Calendar.DAY_OF_MONTH);
-//		return current.getDate();
-//	}
-//	
-//	private String getMonth(Date current){
-////        Calendar cal = Calendar.getInstance();
-////        cal.setTime(current);
-////        int month = cal.get(Calendar.MONTH);
-//        int month = current.getMonth();
-//        switch (month) {
-//        	case 0: return "มกราคม";
-//        	case 1: return "กุมภาพันธ์";
-//        	case 2: return "มีนาคม";
-//        	case 3: return "เมษายน";
-//        	case 4: return "พฤษภาคม";
-//        	case 5: return "มิถุนายน";
-//        	case 6: return "กรกฎาคม";
-//        	case 7: return "สิงหาคม";
-//        	case 8: return "กันยายน";
-//        	case 9: return "ตุลาคม";
-//        	case 10: return "พฤศจิกายน";
-//        	case 11: return "ธันวาคม";
-//        	default : return "no defined";
-//        }
-//	}
-//	
-//	private int getYear(Date current){
-////        Calendar cal = Calendar.getInstance();
-////        cal.setTime(current);
-////        return cal.get(Calendar.YEAR) + 543;
-//		return current.getYear() + 543;
-//	}
 	
 }
