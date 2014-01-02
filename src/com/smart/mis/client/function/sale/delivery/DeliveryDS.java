@@ -73,7 +73,7 @@ public class DeliveryDS extends DataSource {
 		 Field_16.setValueMap(DeliveryStatus.getValueMap());
 		 Field_17.setValueMap(DeliveryStatus.getIssueValueMap());
 		 
-		 setFields(Field_0, Field_1, Field_1_1, Field_2, Field_2_1, Field_5, Field_6 ,Field_7, Field_8, Field_9, Field_10_1, Field_10_2, Field_11, Field_12, Field_13, Field_14, Field_16,Field_17);
+		 setFields(Field_0, Field_1, Field_1_1, Field_2, Field_2_1, Field_5, Field_6 ,Field_7, Field_8, Field_9, Field_10_1, Field_10_2, Field_11, Field_12, Field_13, Field_14, Field_16, Field_17);
 		 
 		 //setDataURL("smartmis/security/userData");
 		 setTestData(DeliveryData.getNewRecords()); // For Test

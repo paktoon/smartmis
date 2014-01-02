@@ -890,7 +890,7 @@ public class PackingPrintWindow extends EditorWindow{
 //	}
 //	
 //	String createTransfer(ListGridRecord record, String user) {
-//		String transfer_id = "TF70" + Math.round((Math.random() * 100));
+//		String transfer_id = "TF70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //		String status = "1_sent";
 //		ListGridRecord newRecord = TransferData.createRecord(record, transfer_id, new Date(), user, status);
 //		TransferDS.getInstance().addData(newRecord);
@@ -898,7 +898,7 @@ public class PackingPrintWindow extends EditorWindow{
 //	}
 //	
 //	void createTransferItem(ListGridRecord record, String transfer_id) {
-//		String sub_transfer_id = "STFP70" + Math.round((Math.random() * 100));
+//		String sub_transfer_id = "STFP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //		ListGridRecord newRecord = TransferItemData.createRecord(record, sub_transfer_id, transfer_id, true);
 //		TransferItemDS.getInstance(transfer_id).addData(newRecord);
 //	}
@@ -930,8 +930,8 @@ public class PackingPrintWindow extends EditorWindow{
 ////		Double total_weight = 0.0;
 ////		Double total_netExclusive = 0.0;
 ////		Integer total_amount = 0;
-////		final String delivery_id = "DL70" + Math.round((Math.random() * 100));
-////		//final String invoice_id = "IN70" + Math.round((Math.random() * 100));
+////		final String delivery_id = "DL70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+////		//final String invoice_id = "IN70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 ////		final ArrayList<SaleProductDetails> saleProductList = new ArrayList<SaleProductDetails>();
 ////		//final ArrayList<SaleProductDetails> invoiceProductList = new ArrayList<SaleProductDetails>();
 ////

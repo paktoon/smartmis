@@ -17,6 +17,8 @@ import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.client.function.purchasing.order.PurchaseOrderDS;
 import com.smart.mis.client.function.purchasing.order.material.OrderMaterialDS;
 import com.smart.mis.client.function.purchasing.supplier.SupplierDS;
+import com.smart.mis.client.function.report.inventory.MaterialRequestReportDS;
+import com.smart.mis.client.function.report.inventory.ProductRequestReportDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryData;
 import com.smart.mis.client.function.sale.delivery.DeliveryItemDS;
@@ -79,7 +81,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class RequestViewWindow extends EditorWindow{
 
-	Double total_issue_amount;
+	Double total_issued_amount;
 	Window editWindow;
 	
 	public RequestViewWindow(){
@@ -122,7 +124,7 @@ public class RequestViewWindow extends EditorWindow{
 		Date modified_date = record.getAttributeAsDate("modified_date");
 		
 		Double request_amount = record.getAttributeAsDouble("total_request_amount");
-		Double issue_amount = record.getAttributeAsDouble("total_issue_amount");
+		Double issued_amount = record.getAttributeAsDouble("total_issued_amount");
 		
 		DynamicForm quotationForm = new DynamicForm();
 		quotationForm.setWidth100(); 
@@ -144,7 +146,7 @@ public class RequestViewWindow extends EditorWindow{
 		req_date.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(request_date));
 		smid.setValue(smith_id);
 		smname.setValue(smith_name);
-		smid.setColSpan(4);
+		smname.setColSpan(4);
 		quotationForm.setFields(orid, rqid, sts, req_date, smid, smname);
 		quotationForm.setColWidths(100,80,100,80,100,100,100,100);
 		layout.addMember(quotationForm);
@@ -290,7 +292,7 @@ public class RequestViewWindow extends EditorWindow{
 //        quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
 //        quoteItemCell_6.setShowGridSummary(true);
         
-        ListGridField quoteItemCell_7 = new ListGridField("issue_amount", "จำนวนที่จ่าย", 120);
+        ListGridField quoteItemCell_7 = new ListGridField("issued_amount", "จำนวนที่จ่าย", 120);
         quoteItemCell_7.setShowGridSummary(false);
         if (edit) quoteItemCell_7.setCanEdit(true);
         quoteItemCell_7.setCellFormatter(FieldFormatter.getNumberFormat());
@@ -359,21 +361,21 @@ public class RequestViewWindow extends EditorWindow{
 		final NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 		final StaticTextItem total_request_amount = new StaticTextItem("total_request_amount");
 		total_request_amount.setValue(nf.format(request_amount));
-		final StaticTextItem total_issue_amount = new StaticTextItem("total_issue_amount");
-		if (issue_amount == null) {
-			total_issue_amount.setDefaultValue(nf.format(0));
+		final StaticTextItem total_issued_amount = new StaticTextItem("total_issued_amount");
+		if (issued_amount == null) {
+			total_issued_amount.setDefaultValue(nf.format(0));
 		} else {
-			total_issue_amount.setDefaultValue(nf.format(issue_amount));
+			total_issued_amount.setDefaultValue(nf.format(issued_amount));
 		}
 		total_request_amount.setWidth(100);
-		total_issue_amount.setWidth(100);
+		total_issued_amount.setWidth(100);
 		total_request_amount.setTitle("จำนวนที่ขอเบิกรวม");
-		total_issue_amount.setTitle("จำนวนที่สั่งจ่ายรวม");
+		total_issued_amount.setTitle("จำนวนที่สั่งจ่ายรวม");
 		total_request_amount.setTextAlign(Alignment.RIGHT);
-		total_issue_amount.setTextAlign(Alignment.RIGHT);
+		total_issued_amount.setTextAlign(Alignment.RIGHT);
 		total_request_amount.setHint("หน่วย");
-		total_issue_amount.setHint("หน่วย");
-		summaryForm_1.setFields(total_request_amount, total_issue_amount);
+		total_issued_amount.setHint("หน่วย");
+		summaryForm_1.setFields(total_request_amount, total_issued_amount);
 		//summaryForm.editRecord(record);
 		footerLayout.addMember(summaryForm_1);
 		
@@ -488,10 +490,10 @@ public class RequestViewWindow extends EditorWindow{
 	
 	public void summaryRecalculate(ListGridRecord[] all, DynamicForm target){
 		//total_received_weight = 0.0;
-		total_issue_amount = 0.0;
+		total_issued_amount = 0.0;
 		
 		for (ListGridRecord record : all) {
-			String temp_amount = record.getAttribute("issue_amount");
+			String temp_amount = record.getAttribute("issued_amount");
 			
 			Double received_amount = 0.0;
 			
@@ -506,17 +508,17 @@ public class RequestViewWindow extends EditorWindow{
 				return;
 			}
 			
-			total_issue_amount += received_amount;
+			total_issued_amount += received_amount;
 		}
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
-		target.getField("total_issue_amount").setValue(nf.format(total_issue_amount));
+		target.getField("total_issued_amount").setValue(nf.format(total_issued_amount));
 	}
 	
 	public void updateRequest(final String request_id , final ListGridRecord record, ListGrid orderListGrid, User currentUser){
 		final ListGridRecord[] all = orderListGrid.getRecords();
 		
 		for (ListGridRecord item : all){
-			if (item.getAttribute("issue_amount") == null) {
+			if (item.getAttribute("issued_amount") == null) {
 				SC.warn("กรุณากรอกข้อมูลรับวัตถุดิบให้ครบถ้วน");
 				return;
 			}
@@ -529,7 +531,7 @@ public class RequestViewWindow extends EditorWindow{
 			final String user = currentUser.getFirstName() + " " + currentUser.getLastName();
 			
 			record.setAttribute("status", status);
-			record.setAttribute("total_issue_amount", total_issue_amount);
+			record.setAttribute("total_issued_amount", total_issued_amount);
 			record.setAttribute("modified_date", new Date());
 			record.setAttribute("modified_by", user);
 			record.setAttribute("issued_date", new Date());
@@ -547,6 +549,7 @@ public class RequestViewWindow extends EditorWindow{
 							editWindow.destroy();
 						} else { 
 							
+							updateMaterialRequestReport(request_id);
 							updateJob(job_id, job_type);
 							
 							for (ListGridRecord item : all) {
@@ -581,16 +584,26 @@ public class RequestViewWindow extends EditorWindow{
 //		}
 	}
 	
+	void updateMaterialRequestReport(String mat_request_id) {
+		MaterialRequestItemDS.getInstance(mat_request_id).refreshData();
+		Record[] records = MaterialRequestItemDS.getInstance(mat_request_id).getCacheData();
+		for (Record record : records) {
+			record.setAttribute("issued_date", new Date());
+			//System.out.println("Add record to ProductRequestDS --");
+			MaterialRequestReportDS.getInstance().addData(record);
+		}
+	}
+	
 	void updateStock(ListGridRecord record) {
 		String mid = record.getAttributeAsString("mid");
-		Double issue_amount = record.getAttributeAsDouble("issue_amount");
+		Double issued_amount = record.getAttributeAsDouble("issued_amount");
 		
 		MaterialDS.getInstance().refreshData();
 		Record[] updated_records = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mid", OperatorId.EQUALS, mid));
 		Record updated = updated_records[0];
-		Double inStock = updated.getAttributeAsDouble("inStock") - issue_amount;
+		Double inStock = updated.getAttributeAsDouble("inStock") - issued_amount;
 		updated.setAttribute("inStock", inStock);
-		Double reserved = updated.getAttributeAsDouble("reserved") - issue_amount;
+		Double reserved = updated.getAttributeAsDouble("reserved") - issued_amount;
 		updated.setAttribute("reserved", reserved);
 		MaterialDS.getInstance().updateData(updated);
 	}

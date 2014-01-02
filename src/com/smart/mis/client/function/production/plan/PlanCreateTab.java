@@ -703,7 +703,7 @@ public class PlanCreateTab {
 			total_amount += item.getAttributeAsInt("plan_amount");
 			//total_netExclusive += item.getAttributeAsDouble("sum_price");
 			
-			String sub_plan_id = "SP80" + Math.round((Math.random() * 100));
+			String sub_plan_id = "SP80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			String pid = item.getAttributeAsString("pid");
 			String pname = item.getAttributeAsString("name");
 			String ptype = item.getAttributeAsString("type");
@@ -731,7 +731,7 @@ public class PlanCreateTab {
 		String plan_status = "2_waiting_for_approved";
 		//xxxService.xxx(Callback quoteId);
 		System.out.println("Create plan, total_weight = " + total_weight);
-		final String plan_id = "PL70" + Math.round((Math.random() * 100));
+		final String plan_id = "PL70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		ListGridRecord newRecord = PlanData.createRecord(plan_id, null, delivery, total_weight, total_amount, new Date(), null, user, null, "", plan_status, reason);
 		// client; - cid
 		// DateForm; - from , to

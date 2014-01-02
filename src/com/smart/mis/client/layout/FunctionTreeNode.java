@@ -183,11 +183,22 @@ public class FunctionTreeNode {
     
     private static final TreeNode[] reportNode = new TreeNode[] {  
         new SubjectTreeNode("61", "6", "รายงานวิเคราะห์การขายสินค้า" , "icons/16/cubes_all.png"), 
-        new SubjectTreeNode("62", "6", "รายงานสรุป", "icons/16/chart_bar.png"),
-        new SubjectTreeNode("621", "62", "การผลิตสินค้า", "icons/16/chart_bar.png", "รายงานสรุป"),    
-        new SubjectTreeNode("622", "62", "สินค้าและวัตถุดิบคงคลัง", "icons/16/chart_bar.png", "รายงานสรุป"),  
-        new SubjectTreeNode("623", "62", "การจัดซื้อวัตถุดิบ", "icons/16/chart_bar.png", "รายงานสรุป"),  
-        new SubjectTreeNode("624", "62", "รายรับรายจ่าย", "icons/16/chart_bar.png", "รายงานสรุป")
+        //new SubjectTreeNode("62", "6", "รายงานสรุป", "icons/16/chart_bar.png"),
+        new SubjectTreeNode("621", "6", "รายงานสรุปการผลิตสินค้า", "icons/16/chart_bar.png", "รายงานสรุป"),   
+        new SubjectTreeNode("6211", "621", "ผลการผลิต", "icons/16/chart_bar.png", "การผลิตสินค้า"),  
+        new SubjectTreeNode("6212", "621", "ยอดการใช้วัตถุดิบ", "icons/16/chart_bar.png", "การผลิตสินค้า"), 
+        new SubjectTreeNode("622", "6", "รายงานสรุปคลังสินค้า", "icons/16/chart_bar.png", "รายงานสรุป"), 
+        new SubjectTreeNode("6221", "622", "สินค้าคงคลัง", "icons/16/chart_bar.png", "สินค้าและวัตถุดิบคงคลัง"), 
+        new SubjectTreeNode("6222", "622", "วัตถุดิบคงคลัง", "icons/16/chart_bar.png", "สินค้าและวัตถุดิบคงคลัง"), 
+        new SubjectTreeNode("6223", "622", "เบิกจ่ายสินค้า", "icons/16/chart_bar.png", "สินค้าและวัตถุดิบคงคลัง"), 
+        new SubjectTreeNode("6224", "622", "เบิกจ่ายวัตถุดิบ", "icons/16/chart_bar.png", "สินค้าและวัตถุดิบคงคลัง"), 
+        new SubjectTreeNode("6225", "622", "รับสินค้า", "icons/16/chart_bar.png", "สินค้าและวัตถุดิบคงคลัง"), 
+        new SubjectTreeNode("6226", "622", "รับวัตถุดิบ", "icons/16/chart_bar.png", "สินค้าและวัตถุดิบคงคลัง"), 
+        new SubjectTreeNode("623", "6", "รายงานสรุปการจัดซื้อวัตถุดิบ", "icons/16/chart_bar.png", "รายงานสรุป"),  
+        new SubjectTreeNode("624", "6", "รายงานสรุปรายรับรายจ่าย", "icons/16/chart_bar.png", "รายงานสรุป"),  
+        new SubjectTreeNode("6241", "624", "รับชำระเงิน", "icons/16/chart_bar.png", "รายรับรายจ่าย"),  
+        new SubjectTreeNode("6242", "624", "จ่ายชำระค่าวัตถุดิบ", "icons/16/chart_bar.png", "รายรับรายจ่าย"),  
+        new SubjectTreeNode("6243", "624", "จ่ายชำระค่าจ้างผลิต", "icons/16/chart_bar.png", "รายรับรายจ่าย")
     };
     
     public static TreeNode[] getReportNode(){

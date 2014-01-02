@@ -624,7 +624,7 @@ public class PlanViewWindow extends EditorWindow{
 		Double total_weight = 0.0;
 		//Double total_netExclusive = 0.0;
 		Integer total_amount = 0;
-		//final String plan_id = "QA70" + Math.round((Math.random() * 100));
+		//final String plan_id = "QA70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		final ArrayList<PlanProductDetails> productList = new ArrayList<PlanProductDetails>();
 		
 		for (ListGridRecord item : all){
@@ -681,7 +681,7 @@ public class PlanViewWindow extends EditorWindow{
 						} else { 
 							for (PlanProductDetails item : productList) {
 								if (item.sub_plan_id == null) {
-									item.sub_plan_id = "QS80" + Math.round((Math.random() * 100));
+									item.sub_plan_id = "QS80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 									ListGridRecord subUpdateRecord = PlanProductData.createRecord(item, plan_id);
 									PlanProductDS.getInstance(plan_id).addData(subUpdateRecord);
 								} else  {
@@ -697,7 +697,7 @@ public class PlanViewWindow extends EditorWindow{
 	}
 	
 	void updatePlanStatus(String plan_id, final String status, String comment, ListGridRecord record) {
-		Record updated = PlanData.createStatusRecord(plan_id,status,comment);
+		Record updated = PlanData.createStatusRecord(record,status,comment);
 		PlanDS.getInstance().updateData(updated, new DSCallback() {
 			@Override
 			public void execute(DSResponse dsResponse, Object data,

@@ -57,9 +57,9 @@ public class PlanData {
         return record;  
     }
     
-    public static ListGridRecord createStatusRecord(String plan_id, String status, String comment) {  
-        ListGridRecord record = new ListGridRecord();
-        record.setAttribute("plan_id", plan_id);
+    public static ListGridRecord createStatusRecord(ListGridRecord record, String status, String comment) {  
+        //ListGridRecord record = new ListGridRecord();
+        //record.setAttribute("plan_id", plan_id);
         record.setAttribute("status", status);
         record.setAttribute("comment", comment);
         return record;  
@@ -67,12 +67,12 @@ public class PlanData {
     
     public static ListGridRecord[] getNewRecords() {
     	return new ListGridRecord[]{ 
-    			createRecord("PL10001","", null, 1914.4, 290 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "1_waiting_for_revised", "สินค้ามีปริมาณต่ำกว่าที่ควรจะเป็น"),
-    			createRecord("PL10002","", null, 2458.4, 370 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "2_waiting_for_approved", "สินค้าขายดี"),
-    			createRecord("PL10003","", null, 2856.0, 420 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "3_approved", "สินค้าขายดี"),
-    			createRecord("PL10004","", null, 3740.0, 550 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "5_on_production", "สินค้าขายดี"),
+    			createRecord("PL10001","-", null, 1914.4, 290 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "1_waiting_for_revised", "สินค้ามีปริมาณต่ำกว่าที่ควรจะเป็น"),
+    			createRecord("PL10002","-", null, 2458.4, 370 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "2_waiting_for_approved", "สินค้าขายดี"),
+    			createRecord("PL10003","-", null, 2856.0, 420 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "3_approved", "สินค้าขายดี"),
+    			createRecord("PL10004","-", null, 3740.0, 550 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "5_on_production", "สินค้าขายดี"),
     			
-    			createRecord("PL10005","", null, 1496.0, 220 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "6_production_completed", "สินค้าขาดตลาด"),
+    			createRecord("PL10005","-", null, 1496.0, 220 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "6_production_completed", "สินค้าขาดตลาด"),
     			createRecord("PL10006","SO10004", new Date(), 632.0, 100 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "5_on_production", "สร้างจากรายการขายโดยอัตโนมัติ"),
     			createRecord("PL10007","SO10002", new Date(), 1836.0 , 270,  new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "5_on_production", "สร้างจากรายการขายโดยอัตโนมัติ"),
     			createRecord("PL10008","SO10001", new Date(), 1360.0, 200 , new Date(), null, "ภักดิ์ทูล ใจทอง" , null , "", "3_approved", "สร้างจากรายการขายโดยอัตโนมัติ")

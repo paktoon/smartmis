@@ -523,14 +523,14 @@ public class QuoteCreateTab {
 								Double total_weight = 0.0;
 								Double total_netExclusive = 0.0;
 								Integer total_amount = 0;
-								final String quote_id = "QA70" + Math.round((Math.random() * 100));
+								final String quote_id = "QA70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 								final ArrayList<QuoteProductDetails> productList = new ArrayList<QuoteProductDetails>();
 								for (ListGridRecord item : all){
 									total_weight += item.getAttributeAsDouble("weight");
 									total_amount += item.getAttributeAsInt("quote_amount");
 									total_netExclusive += item.getAttributeAsDouble("sum_price");
 									
-									String sub_quote_id = "QS80" + Math.round((Math.random() * 100));
+									String sub_quote_id = "QS80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 									String pid = item.getAttributeAsString("pid");
 									String pname = item.getAttributeAsString("name");
 									String ptype = item.getAttributeAsString("type");

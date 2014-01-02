@@ -355,7 +355,7 @@ public class ReportRequestLayout_1 extends VLayout{
 		
 		ListGridField issued_by = new ListGridField("issued_by");
 
-		ListGridField total_amount = new ListGridField("total_issue_amount", 130);
+		ListGridField total_amount = new ListGridField("total_issued_amount", 130);
 		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		total_amount.setSummaryFunction(SummaryFunctionType.SUM);

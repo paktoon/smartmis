@@ -781,7 +781,7 @@ public class OrderViewWindow extends EditorWindow{
 //		Double total_weight = 0.0;
 //		Double total_netExclusive = 0.0;
 //		Double total_amount = 0.0;
-//		//final String quote_id = "QA70" + Math.round((Math.random() * 100));
+//		//final String quote_id = "QA70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //		final ArrayList<RequestMaterialDetails> materialList = new ArrayList<RequestMaterialDetails>();
 //		
 //		for (ListGridRecord item : all){
@@ -828,7 +828,7 @@ public class OrderViewWindow extends EditorWindow{
 //						} else { 
 //							for (RequestMaterialDetails item : materialList) {
 //								if (item.sub_request_id == null) {
-//									item.sub_request_id = "SPR80" + Math.round((Math.random() * 100));
+//									item.sub_request_id = "SPR80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //									ListGridRecord subUpdateRecord = RequestMaterialData.createRecord(item);
 //									RequestMaterialDS.getInstance(request_id).addData(subUpdateRecord);
 //								} else  {
@@ -873,9 +873,9 @@ public class OrderViewWindow extends EditorWindow{
 //		Double total_amount = 0.0;
 //		//Integer total_produce_amount = 0;
 //		
-//		final String order_id = "PO70" + Math.round((Math.random() * 100));
-//		//final String invoice_id = "IN70" + Math.round((Math.random() * 100));
-//		//final String plan_id = "PL70" + Math.round((Math.random() * 100));
+//		final String order_id = "PO70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+//		//final String invoice_id = "IN70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+//		//final String plan_id = "PL70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //		final ArrayList<OrderMaterialDetails> orderProductList = new ArrayList<OrderMaterialDetails>();
 //		//final ArrayList<SaleProductDetails> invoiceProductList = new ArrayList<SaleProductDetails>();
 //		//final ArrayList<PlanProductDetails> planProductList = new ArrayList<PlanProductDetails>();
@@ -1027,7 +1027,7 @@ public class OrderViewWindow extends EditorWindow{
 //	}
 ////	
 ////	private PlanProductDetails CreatePlanProductDetails(String plan_id, Record product, Integer pplan_amount) {
-////		String sub_plan_id = "SP80" + Math.round((Math.random() * 100));
+////		String sub_plan_id = "SP80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 ////		String pid = product.getAttributeAsString("pid");
 ////		String pname = product.getAttributeAsString("name");
 ////		String ptype = product.getAttributeAsString("type");

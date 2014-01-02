@@ -135,7 +135,7 @@ public class ProductData {
     public static ListGridRecord[] getNewRecords() {
     	return new ListGridRecord[]{ 
     			createDummyRecord("PD10001","Diamond cut silver ring", "แหวนเงิน คัดลายน้ำ", 6.8, 55.0, "ring" , 300 , 120, "", 5.0,null,null,null,null,3.0, false),
-    			createDummyRecord("PD10002","Thin plain silver ring", "แหวนเงินเกลี้ยง แบบบาง", 6.8, 50.0, "ring", 200, 100, "", 5.0,null,null,null,null,3.0, false),
+    			createDummyRecord("PD10002","Thin plain silver ring", "แหวนเงินเกลี้ยง แบบบาง", 6.8, 50.0, "ring", 200, 200, "", 5.0,null,null,null,null,3.0, false),
     			createDummyRecord("PD10003","Dense plain silver ring", "แหวนเงินเกลี้ยง แบบหนา", 6.8, 62.0, "ring", 0 , 0, "", 5.0,null,null,null,null,4.0, true),
 
     			createDummyRecord("PD10004","Spiral silver earrings", "ต่างหู ตีเกลียวคู่", 6.32, 55.0, "earring", 250, 0, GWT.getHostPageBaseURL() + "_ah/img/_avEWP6JsPhjg9w8eS2rmg", null, 0.7, 2.6, null, null, 3.0, false),

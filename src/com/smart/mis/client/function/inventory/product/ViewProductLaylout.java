@@ -283,7 +283,8 @@ public class ViewProductLaylout extends VLayout{
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-								ListGridRecord updated = new ListGridRecord();
+								//ListGridRecord updated = new ListGridRecord();
+								ListGridRecord updated = record;
 								updated.setAttribute("pid", pid);
 								updated.setAttribute("inStock", pInStock.getValueAsInteger());
 								//record.setAttribute("reserved", pReserved.getValueAsInteger()); no changed

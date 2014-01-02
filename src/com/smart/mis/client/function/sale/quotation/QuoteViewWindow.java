@@ -730,7 +730,7 @@ public class QuoteViewWindow extends EditorWindow{
 		Double total_weight = 0.0;
 		Double total_netExclusive = 0.0;
 		Integer total_amount = 0;
-		//final String quote_id = "QA70" + Math.round((Math.random() * 100));
+		//final String quote_id = "QA70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		final ArrayList<QuoteProductDetails> productList = new ArrayList<QuoteProductDetails>();
 		
 		for (ListGridRecord item : all){
@@ -780,7 +780,7 @@ public class QuoteViewWindow extends EditorWindow{
 						} else { 
 							for (QuoteProductDetails item : productList) {
 								if (item.sub_quote_id == null) {
-									item.sub_quote_id = "QS80" + Math.round((Math.random() * 100));
+									item.sub_quote_id = "QS80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 									ListGridRecord subUpdateRecord = QuoteProductData.createRecord(item);
 									QuoteProductDS.getInstance(quote_id).addData(subUpdateRecord);
 								} else  {
@@ -906,9 +906,9 @@ public class QuoteViewWindow extends EditorWindow{
 	        dateRange.setRelativeEndDate(new RelativeDate("+"+credit+"d"));
 	        final Date due_date = dateRange.getEndDate();
 	        
-			final String sale_id = "SO70" + Math.round((Math.random() * 100));
-			final String invoice_id = "IN70" + Math.round((Math.random() * 100));
-			final String plan_id = "PL70" + Math.round((Math.random() * 100));
+			final String sale_id = "SO70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String invoice_id = "IN70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String plan_id = "PL70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			
 			final ListGridRecord saleRecord = SaleOrderData.createRecord(sale_id, quote_id, invoice_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, sale_status, purchase_id, due_date);
 			final ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
@@ -957,7 +957,7 @@ public class QuoteViewWindow extends EditorWindow{
 	}
 	
 	private PlanProductDetails CreatePlanProductDetails(Record product, Integer pplan_amount) {
-		String sub_plan_id = "SP80" + Math.round((Math.random() * 100));
+		String sub_plan_id = "SP80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		String pid = product.getAttributeAsString("pid");
 		String pname = product.getAttributeAsString("name");
 		String ptype = product.getAttributeAsString("type");

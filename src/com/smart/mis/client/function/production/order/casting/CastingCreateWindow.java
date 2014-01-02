@@ -727,7 +727,7 @@ public class CastingCreateWindow {
 //		Double total_weight = 0.0;
 //		Double total_netExclusive = 0.0;
 //		Integer total_amount = 0;
-//		//final String quote_id = "QA70" + Math.round((Math.random() * 100));
+//		//final String quote_id = "QA70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //		final ArrayList<QuoteProductDetails> productList = new ArrayList<QuoteProductDetails>();
 //		
 //		for (ListGridRecord item : all){
@@ -778,7 +778,7 @@ public class CastingCreateWindow {
 //						} else { 
 //							for (QuoteProductDetails item : productList) {
 //								if (item.sub_quote_id == null) {
-//									item.sub_quote_id = "QS80" + Math.round((Math.random() * 100));
+//									item.sub_quote_id = "QS80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //									ListGridRecord subUpdateRecord = QuoteProductData.createRecord(item);
 //									QuoteProductDS.getInstance(quote_id).addData(subUpdateRecord);
 //								} else  {
@@ -815,7 +815,7 @@ public class CastingCreateWindow {
 		final String sale_id = (String) planForm.getField("sale_id").getValue();
 		System.out.println(plan_id);
 		
-		final String job_id = "JOB70" + Math.round((Math.random() * 100));
+		final String job_id = "JOB70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		
 		Double total_sent_weight = 0.0;
 		Integer total_sent_amount = 0;
@@ -844,7 +844,7 @@ public class CastingCreateWindow {
 			
 			//if (desc != null && !desc.equals("")) details += "(" + desc + ")";
 			
-			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100));
+			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			ListGridRecord temp = CastingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, desc, sent_weight, sent_amount, true);
 			orderProductList.add(temp);
 			
@@ -852,7 +852,7 @@ public class CastingCreateWindow {
 			Record[] selectedMaterialProcess = MaterialProcessDS.getInstance(psid, pid).getCacheData();
 			
 			for (Record mat : selectedMaterialProcess) {
-				String cm_id = "CM70" + Math.round((Math.random() * 100));
+				String cm_id = "CM70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 				CastingMaterialDS.getInstance(sub_job_id, job_id).addData(CastingMaterialData.createRecord(sub_job_id, cm_id,  sent_amount, mat));
 			}
 		}
@@ -874,7 +874,7 @@ public class CastingCreateWindow {
 		//End
 		
 		String plan_status = "5_on_production";
-		ListGridRecord update_plan = PlanData.createStatusRecord(plan_id, plan_status, "ออกคำสั่งผลิตแล้ว");
+		ListGridRecord update_plan = PlanData.createStatusRecord(planRecord, plan_status, "ออกคำสั่งผลิตแล้ว");
 		System.out.println("update plan : " + update_plan.getAttributeAsString("plan_id") + " status: " + update_plan.getAttributeAsString("status"));
 		PlanDS.getInstance().updateData(update_plan);
 		PlanDS.getInstance().refreshData();

@@ -8,6 +8,7 @@ public class MaterialRequestItemDetails {
 	public String material_id;
 	public String material_name;
 	public String material_unit;
+	public String material_type;
 	public Double request_amount;
 	public Double remain;
 	
@@ -15,6 +16,7 @@ public class MaterialRequestItemDetails {
 		this.material_id = mat.getAttributeAsString("mid");
 		this.material_name = mat.getAttributeAsString("mat_name");
 		this.material_unit = mat.getAttributeAsString("unit");
+		this.material_type = mat.getAttributeAsString("type");
 		this.request_amount = amount * mat.getAttributeAsDouble("req_amount");
 		this.remain = remain;
 	}
@@ -23,6 +25,7 @@ public class MaterialRequestItemDetails {
 		this.material_id = mat.getAttributeAsString("mid");
 		this.material_name = mat.getAttributeAsString("mat_name");
 		this.material_unit = mat.getAttributeAsString("unit");
+		this.material_type = mat.getAttributeAsString("type");
 		this.request_amount = amount;
 		this.remain = remain;
 	}

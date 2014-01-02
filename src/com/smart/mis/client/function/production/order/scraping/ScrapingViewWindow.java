@@ -505,7 +505,7 @@ public class ScrapingViewWindow extends EditorWindow{
 			    					@Override
 			    					public void execute(Boolean value) {
 			    						if (value) {
-			    							final String return_id = "RT70" + Math.round((Math.random() * 100));
+			    							final String return_id = "RT70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			    							//job_id
 			    							MaterialDS.getInstance().refreshData();
 			    							Record[] selected = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 92.5%"));
@@ -900,7 +900,7 @@ public class ScrapingViewWindow extends EditorWindow{
 	}
 	
 	String createWagePayment(ListGridRecord record, String user) {
-		String wage_id = "WP70" + Math.round((Math.random() * 100));
+		String wage_id = "WP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		String status = "1_waiting_for_payment";
 		ListGridRecord newRecord = WageData.createRecord(record, wage_id, new Date(), user, status);
 		WageDS.getInstance().addData(newRecord);
@@ -908,7 +908,7 @@ public class ScrapingViewWindow extends EditorWindow{
 	}
 	
 	void createWageItemPayment(ListGridRecord record, String wage_id) {
-		String sub_wage_id = "SWP70" + Math.round((Math.random() * 100));
+		String sub_wage_id = "SWP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		ListGridRecord newRecord = WageItemData.createRecord(record, sub_wage_id, wage_id, true);
 		WageItemDS.getInstance(wage_id).addData(newRecord);
 	}

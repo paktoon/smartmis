@@ -35,17 +35,18 @@ public class MaterialRequestItemDS extends DataSource  {
 			 DataSourceTextField Field_3 = new DataSourceTextField("mid");
 			 DataSourceTextField Field_4 = new DataSourceTextField("mname");
 			 DataSourceTextField Field_5 = new DataSourceTextField("unit");
+			 DataSourceTextField Field_5_1 = new DataSourceTextField("type");
 			 DataSourceFloatField Field_6 = new DataSourceFloatField("request_weight");
 			 DataSourceFloatField Field_7 = new DataSourceFloatField("request_amount");
-			 DataSourceFloatField Field_8 = new DataSourceFloatField("issue_weight");
-			 DataSourceFloatField Field_9 = new DataSourceFloatField("issue_amount");
+			 DataSourceFloatField Field_8 = new DataSourceFloatField("issued_weight");
+			 DataSourceFloatField Field_9 = new DataSourceFloatField("issued_amount");
 			 
 			 Field_3.setPrimaryKey(true);
 			 Field_1.setHidden(true);
 			 //Field_2.setForeignKey("CastingProductDS_"+job_id+".sub_job_id"); 
 			 Field_2.setHidden(true);
 			 
-			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_7, Field_8, Field_9);
+			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_5_1, Field_6, Field_7, Field_8, Field_9);
 			 setTestData(MaterialRequestItemData.getNewRecords(request_id)); // For Test
 			 setClientOnly(true);
 		 }

@@ -18,10 +18,10 @@ public class DeliveryItemData {
 //        return record;  
 //    }
     
-    public static ListGridRecord createRecord(String sub_sale_id, String sale_id, String pid, String name, Double sale_weight, Double price, String type, String unit, Integer sale_amount, Boolean status) {  
+    public static ListGridRecord createRecord(String sub_delivery_id, String delivery_id, String pid, String name, Double sale_weight, Double price, String type, String unit, Integer sale_amount, Boolean status, Double issued_weight, Integer issued_amount) {  
         ListGridRecord record = new ListGridRecord();
-        record.setAttribute("sub_delivery_id", sub_sale_id);
-        record.setAttribute("delivery_id", sale_id);
+        record.setAttribute("sub_delivery_id", sub_delivery_id);
+        record.setAttribute("delivery_id", delivery_id);
         record.setAttribute("pid", pid);
         record.setAttribute("name",name);
         record.setAttribute("price", price);
@@ -31,6 +31,9 @@ public class DeliveryItemData {
         
         record.setAttribute("sale_weight", sale_weight);
         record.setAttribute("sale_amount", sale_amount);
+        
+        record.setAttribute("issued_weight", issued_weight);
+        record.setAttribute("issued_amount", issued_amount);
         return record;  
     }
     
@@ -45,22 +48,18 @@ public class DeliveryItemData {
     }
     	
     public static ListGridRecord[] getRecords(String sale_id) {
-    	if (sale_id != null && ( sale_id.equals( "SO10001") || sale_id.equals( "SO10005") || sale_id.equals( "IN10001") || sale_id.equals( "IN10005"))) {
+    	if (sale_id != null && sale_id.equals( "DL10001")) {
         	return new ListGridRecord[]{ 
-        			createRecord("SS10001",sale_id, "PD10002", "Thin plain silver ring",6.3, 55.0, "ring","วง", 200, true)
+        			createRecord("SS10002",sale_id, "PD10001", "Diamond cut silver ring", 476.0, 55.0, "ring","วง", 70, true, null, null),
+        			createRecord("SS10003",sale_id, "PD10002", "Thin plain silver ring",1360.0, 55.0, "ring","วง", 200, true, null, null)
         	};
-        } else if (sale_id != null && ( sale_id.equals( "SO10002") || sale_id.equals( "SO10006") || sale_id.equals( "IN10002") || sale_id.equals( "IN10006") || sale_id.equals( "DL10001"))) {
+        } else if (sale_id != null && sale_id.equals( "DL10002")) {
         	return new ListGridRecord[]{ 
-        			createRecord("SS10002",sale_id, "PD10001", "Diamond cut silver ring", 476.0, 55.0, "ring","วง", 70, true),
-        			createRecord("SS10003",sale_id, "PD10002", "Thin plain silver ring",1360.0, 55.0, "ring","วง", 200, true)
+        			createRecord("SS10004",sale_id, "PD10004","Spiral silver earrings", 1896.0, 55.0, "earring", "คู่", 300, true, 1896.0, 300)
         	};
-        } else if (sale_id != null && (sale_id.equals( "SO10003") || sale_id.equals( "SO10007") || sale_id.equals( "IN10003") || sale_id.equals( "IN10007") || sale_id.equals( "DL10002"))) {
+        } else if (sale_id != null && sale_id.equals( "DL10003")) {
         	return new ListGridRecord[]{ 
-        			createRecord("SS10004",sale_id, "PD10004","Spiral silver earrings", 1896.0, 55.0, "earring", "คู่", 300, true)
-        	};
-        } else if (sale_id != null && (sale_id.equals( "SO10004") || sale_id.equals( "SO10008") || sale_id.equals( "IN10004") || sale_id.equals( "IN10008") || sale_id.equals( "DL10003"))) {
-        	return new ListGridRecord[]{ 
-        			createRecord("SS10005",sale_id, "PD10007","Plain silver necklaces", 632.0, 50.0, "earring","เส้น",100, true)
+        			createRecord("SS10005",sale_id, "PD10007","Plain silver necklaces", 632.0, 50.0, "earring","เส้น",100, true, 632.0, 100)
         	};
         } 
     	

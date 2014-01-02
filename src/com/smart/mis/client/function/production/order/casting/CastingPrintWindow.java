@@ -812,7 +812,7 @@ public class CastingPrintWindow extends EditorWindow{
 //			
 //			//Create Material Request total_recv_weight / 2 -> Silver 92.5% + 100%
 //			//final HashMap<String, MaterialRequestItemDetails> matRequest = new HashMap<String, MaterialRequestItemDetails>();
-//			final String request_id = "MR70" + Math.round((Math.random() * 100));
+//			final String request_id = "MR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //			createMaterialRequest(request_id, job_id, smith, currentUser.getFirstName() + " " + currentUser.getLastName(), total_received_weight);
 //
 //			CastingDS.getInstance().updateData(record, new DSCallback() {
@@ -847,7 +847,7 @@ public class CastingPrintWindow extends EditorWindow{
 //	}
 	
 //	String createWagePayment(ListGridRecord record, String user) {
-//		String wage_id = "WP70" + Math.round((Math.random() * 100));
+//		String wage_id = "WP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //		String status = "1_waiting_for_payment";
 //		ListGridRecord newRecord = WageData.createRecord(record, wage_id, new Date(), user, status);
 //		WageDS.getInstance().addData(newRecord);
@@ -855,7 +855,7 @@ public class CastingPrintWindow extends EditorWindow{
 //	}
 //	
 //	void createWageItemPayment(ListGridRecord record, String wage_id) {
-//		String sub_wage_id = "SWP70" + Math.round((Math.random() * 100));
+//		String sub_wage_id = "SWP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //		ListGridRecord newRecord = WageItemData.createRecord(record, sub_wage_id, wage_id, true);
 //		WageItemDS.getInstance(wage_id).addData(newRecord);
 //	}
@@ -874,7 +874,7 @@ public class CastingPrintWindow extends EditorWindow{
 //		Double totel_request_amount = 0.0;
 //		for (MaterialRequestItemDetails item : matRequest) {
 //			totel_request_amount += item.getAmount();
-//			final String sub_request_id = "SMR70" + Math.round((Math.random() * 100));
+//			final String sub_request_id = "SMR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //			ListGridRecord newRecord = MaterialRequestItemData.createRecord(sub_request_id, request_id, item);
 //			MaterialRequestItemDS.getInstance(request_id).addData(newRecord);
 //			

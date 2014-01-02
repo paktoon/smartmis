@@ -45,11 +45,11 @@ public class MaterialRequestDS extends DataSource {
 		 DataSourceTextField Field_4_2 = new DataSourceTextField("issued_date", "วันที่จ่ายวัตถุดิบ");
 		 DataSourceTextField Field_4_3 = new DataSourceTextField("issued_by", "จ่ายวัตถุดิบโดย");
 		 DataSourceEnumField Field_4_4 = new DataSourceEnumField("req_type", "ประเภทงาน");
-		 Field_4_3.setValueMap(ProcessType.getValueMap());
+		 Field_4_4.setValueMap(ProcessType.getValueMap());
 		 
 		 DataSourceFloatField Field_6 = new DataSourceFloatField("total_request_amount", "จำนวนที่ขอเบิก (หน่วย)");
 		 
-		 DataSourceFloatField Field_6_2 = new DataSourceFloatField("total_issue_amount", "จำนวนที่สั่งจ่าย (หน่วย)");
+		 DataSourceFloatField Field_6_2 = new DataSourceFloatField("total_issued_amount", "จำนวนที่สั่งจ่าย (หน่วย)");
 	        
 		 DataSourceDateField Field_7 = new DataSourceDateField("created_date", "สร้างวันที่");
 		 DataSourceTextField Field_8 = new DataSourceTextField("created_by", "สร้างโดย");

@@ -10,6 +10,7 @@ import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryData;
 import com.smart.mis.client.function.sale.delivery.DeliveryItemDS;
+import com.smart.mis.client.function.sale.delivery.DeliveryItemData;
 import com.smart.mis.client.function.sale.invoice.InvoiceDS;
 import com.smart.mis.client.function.sale.invoice.InvoiceData;
 import com.smart.mis.client.function.sale.order.SaleOrderDS;
@@ -734,7 +735,7 @@ public class SaleViewWindow extends EditorWindow{
 //		Double total_weight = 0.0;
 //		Double total_netExclusive = 0.0;
 //		Integer total_amount = 0;
-//		//final String quote_id = "QA70" + Math.round((Math.random() * 100));
+//		//final String quote_id = "QA70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //		final ArrayList<QuoteProductDetails> productList = new ArrayList<QuoteProductDetails>();
 //		
 //		for (ListGridRecord item : all){
@@ -785,7 +786,7 @@ public class SaleViewWindow extends EditorWindow{
 //						} else { 
 //							for (QuoteProductDetails item : productList) {
 //								if (item.sub_quote_id == null) {
-//									item.sub_quote_id = "QS80" + Math.round((Math.random() * 100));
+//									item.sub_quote_id = "QS80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //									ListGridRecord subUpdateRecord = QuoteProductData.createRecord(item);
 //									QuoteProductDS.getInstance(quote_id).addData(subUpdateRecord);
 //								} else  {
@@ -827,13 +828,14 @@ public class SaleViewWindow extends EditorWindow{
 		Double total_weight = 0.0;
 		Double total_netExclusive = 0.0;
 		Integer total_amount = 0;
-		final String delivery_id = "DL70" + Math.round((Math.random() * 100));
-		//final String invoice_id = "IN70" + Math.round((Math.random() * 100));
+		final String delivery_id = "DL70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		//final String invoice_id = "IN70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //		final ArrayList<SaleProductDetails> saleProductList = new ArrayList<SaleProductDetails>();
 		//final ArrayList<SaleProductDetails> invoiceProductList = new ArrayList<SaleProductDetails>();
 
 		for (ListGridRecord item : all){
-			total_weight += item.getAttributeAsDouble("weight") * item.getAttributeAsInt("sale_amount");
+			//total_weight += item.getAttributeAsDouble("weight") * item.getAttributeAsInt("sale_amount");
+			total_weight += item.getAttributeAsDouble("weight");
 			total_amount += item.getAttributeAsInt("sale_amount");
 			total_netExclusive += item.getAttributeAsDouble("sum_price");
 			
@@ -888,16 +890,27 @@ public class SaleViewWindow extends EditorWindow{
 								item.setAttribute("delivery_id", delivery_id);
 								String sub_delivery_id = "SD80" + Math.round((Math.random() * 1000));
 								item.setAttribute("sub_delivery_id", sub_delivery_id);
-								Integer sale_amount = item.getAttributeAsInt("sale_amount");
+								//Integer sale_amount = item.getAttributeAsInt("sale_amount");
 								Double weight = item.getAttributeAsDouble("weight");
-								item.setAttribute("sale_weight", sale_amount * weight);
+								//item.setAttribute("sale_weight", sale_amount * weight);
+								item.setAttribute("sale_weight", weight);
+								item.setAttribute("status", true);
 								DeliveryItemDS.getInstance(delivery_id).addData(item);
 							}
 							
 							ListGridRecord saleRecord = SaleOrderData.createStatusRecord(sale_id, "3_waiting_for_issued");
-							SaleOrderDS.getInstance().updateData(saleRecord);
+							SaleOrderDS.getInstance().updateData(saleRecord );
 							//final String delivery_status = "1_on_delivery";
-							main.destroy();
+							
+							String message = "สร้างรายการนำส่งสินค้าเลขที่ " + delivery_id;
+							SC.say(message, new BooleanCallback(){
+								@Override
+								public void execute(Boolean value) {
+									if (value) {
+										main.destroy();
+									}
+								}
+							} );
 						}
 				}
 			});

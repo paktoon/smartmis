@@ -8,6 +8,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.smart.mis.client.function.inventory.product.transfer.TransferDS;
 import com.smart.mis.client.function.production.plan.PlanDS;
 import com.smart.mis.client.function.production.product.ProductDS;
+import com.smart.mis.client.function.report.inventory.ProductRequestReportDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryData;
@@ -172,7 +173,7 @@ public class RequestViewWindow extends EditorWindow{
 			cus_address.setColSpan(4);
 			cus_address.setDefaultValue(fullAddress);
 			customerForm.setFields(cus_id,cus_name, cus_type , cus_address);
-		customerForm.setColWidths(100,100,100,100,100,100);
+		customerForm.setColWidths(100,100,100,200,100,100);
 		customerForm.fetchData(new Criterion("cid", OperatorId.EQUALS, cid));
 		//customerForm.editRecord(record);
 		
@@ -297,7 +298,7 @@ public class RequestViewWindow extends EditorWindow{
 		endForm.setMargin(5);
 		endForm.setIsGroup(true);
 		//dateForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-		endForm.setGroupTitle("ข้อมูลการรับโอนสินค้า");
+		endForm.setGroupTitle("ข้อมูลการสั่งจ่ายสินค้า");
 		
 		StaticTextItem tby = new StaticTextItem("created_by", "ขอเบิกโดย");
 		StaticTextItem tdate = new StaticTextItem("created_date", "ขอเบิกเมื่อ");
@@ -504,7 +505,7 @@ public class RequestViewWindow extends EditorWindow{
 			}
 		}
 			final String sale_id = record.getAttributeAsString("sale_id");
-		
+			
 			final String delivery_status = "1_on_delivery";
 			final String issued_status = "1_product_issued";
 			final String user = currentUser.getFirstName() + " " + currentUser.getLastName();
@@ -530,13 +531,14 @@ public class RequestViewWindow extends EditorWindow{
 							editWindow.destroy();
 						} else { 
 							
+							updateProductRequestReport(delivery_id);
 							updateSale(sale_id);
 							
 							for (ListGridRecord item : all) {
 								updateStock(item);
 							}
 							
-							SC.say("บันทึกรับโอนสินค้าเสร็จสิ้น");
+							SC.say("บันทึกการสั่งจ่ายสินค้าเสร็จสิ้น");
 							editWindow.destroy();
 						}
 				}
@@ -546,6 +548,16 @@ public class RequestViewWindow extends EditorWindow{
 	void updateSale(String sale_id) {
 		ListGridRecord saleRecord = SaleOrderData.createStatusRecord(sale_id, "4_on_delivery");
 		SaleOrderDS.getInstance().updateData(saleRecord);
+	}
+	
+	void updateProductRequestReport(String delivery_id) {
+		DeliveryItemDS.getInstance(delivery_id).refreshData();
+		Record[] records = DeliveryItemDS.getInstance(delivery_id).getCacheData();
+		for (Record record : records) {
+			record.setAttribute("issued_date", new Date());
+			//System.out.println("Add record to ProductRequestDS --");
+			ProductRequestReportDS.getInstance().addData(record);
+		}
 	}
 	
 	void updateStock(ListGridRecord record) {

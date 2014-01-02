@@ -41,7 +41,7 @@ public class QuoteProductDetails {
 	}
 	
 	public ListGridRecord convertToRecord(Integer quote_amount){
-		return QuoteProductData.createRecord(product_id, product_name, product_weight, product_price, product_type, product_unit, quote_amount, status);
+		return QuoteProductData.createRecord(product_id, product_name, product_weight * quote_amount, product_price, product_type, product_unit, quote_amount, status);
 	}
 	
 	public void clear(){

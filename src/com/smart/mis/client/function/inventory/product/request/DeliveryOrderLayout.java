@@ -130,12 +130,15 @@ public class DeliveryOrderLayout extends VLayout {
 		dateForm.setCellPadding(2);
 		dateForm.setSelectOnFocus(true);
 		dateForm.setIsGroup(true);
-		dateForm.setGroupTitle("วันที่นำส่งสินค้า");
+		//dateForm.setGroupTitle("วันที่นำส่งสินค้า");
+		dateForm.setGroupTitle("วันที่ออกใบนำส่งสินค้า");
 		DateRange dateRange = new DateRange();  
         dateRange.setRelativeStartDate(new RelativeDate("-1m"));
         dateRange.setRelativeEndDate(RelativeDate.TODAY);
-		final DateItem from = new DateItem("delivery_from" , "ตั้งแต่");
-		final DateItem to = new DateItem("delivery_to" , "ถึง");
+		//final DateItem from = new DateItem("delivery_from" , "ตั้งแต่");
+		//final DateItem to = new DateItem("delivery_to" , "ถึง");
+		final DateItem from = new DateItem("created_from" , "ตั้งแต่");
+		final DateItem to = new DateItem("created_to" , "ถึง");
 		from.setDefaultChooserDate(dateRange.getStartDate());
 		from.setDefaultValue(dateRange.getStartDate());
 		from.setUseTextField(true);
@@ -208,7 +211,8 @@ public class DeliveryOrderLayout extends VLayout {
             	Criterion search = new Criterion();
             	search.addCriteria(searchForm.getValuesAsCriteria());
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-          		      new Criterion("delivery", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
+          		      //new Criterion("delivery", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
+          		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
           		      search
           		  });
               deliveryListGrid.fetchData(criteria);  
@@ -222,7 +226,8 @@ public class DeliveryOrderLayout extends VLayout {
 		listAllButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-          		      new Criterion("delivery", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+          		      //new Criterion("delivery", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+                		new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
           		  });
                 searchForm.reset();
                 deliveryListGrid.fetchData(criteria);  

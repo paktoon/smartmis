@@ -12,6 +12,7 @@ public class MaterialRequestItemData {
         record.setAttribute("mname", material.material_name);
         record.setAttribute("unit", material.material_unit);
         record.setAttribute("request_amount", material.request_amount);
+        record.setAttribute("type", material.material_type);
         return record;  
     }
 	
@@ -28,7 +29,7 @@ public class MaterialRequestItemData {
 //    }
     
 	public static ListGridRecord createUpdatedRecord(ListGridRecord record, Double amount) {  
-        record.setAttribute("issue_amount", amount);
+        record.setAttribute("issued_amount", amount);
         return record;  
     }
 	

@@ -622,14 +622,14 @@ public class RequestCreateTab {
 								Double total_weight = 0.0;
 								Double total_netExclusive = 0.0;
 								Double total_amount = 0.0;
-								final String request_id = "PR70" + Math.round((Math.random() * 100));
+								final String request_id = "PR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 								final ArrayList<RequestMaterialDetails> materailList = new ArrayList<RequestMaterialDetails>();
 								for (ListGridRecord item : all){
 									total_weight += item.getAttributeAsDouble("weight");
 									total_amount += item.getAttributeAsDouble("request_amount");
 									total_netExclusive += item.getAttributeAsDouble("sum_price");
 									
-									String sub_request_id = "SPR80" + Math.round((Math.random() * 100));
+									String sub_request_id = "SPR80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 									String mid = item.getAttributeAsString("mid");
 									String pname = item.getAttributeAsString("mat_name");
 									String ptype = item.getAttributeAsString("type");

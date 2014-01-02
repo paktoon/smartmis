@@ -291,11 +291,18 @@ public class ViewMaterialLaylout extends VLayout{
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-								ListGridRecord updated = new ListGridRecord();
-								updated.setAttribute("mid", mid);
+								//ListGridRecord updated = new ListGridRecord();
+								ListGridRecord updated = record;
+								
+								System.out.println("safety " + pSafety.getValueAsDouble());
+								System.out.println("inStock " + pInStock.getValueAsDouble());
+								System.out.println("reserved " + reserved);
+								System.out.println("remain " + (pInStock.getValueAsDouble() - reserved));
+								
+								//updated.setAttribute("mid", mid);
 								updated.setAttribute("safety", pSafety.getValueAsDouble());
 								updated.setAttribute("inStock", pInStock.getValueAsDouble());
-								//record.setAttribute("reserved", pReserved.getValueAsInteger()); no changed
+								updated.setAttribute("reserved", reserved);
 								updated.setAttribute("remain", pInStock.getValueAsDouble() - reserved);
 			            		MaterialDS.getInstance().updateData(updated, new DSCallback() {
 									@Override

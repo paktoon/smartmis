@@ -745,7 +745,7 @@ public class AbradingCreateWindow {
 //		Double total_weight = 0.0;
 //		Double total_netExclusive = 0.0;
 //		Integer total_amount = 0;
-//		//final String quote_id = "QA70" + Math.round((Math.random() * 100));
+//		//final String quote_id = "QA70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //		final ArrayList<QuoteProductDetails> productList = new ArrayList<QuoteProductDetails>();
 //		
 //		for (ListGridRecord item : all){
@@ -796,7 +796,7 @@ public class AbradingCreateWindow {
 //						} else { 
 //							for (QuoteProductDetails item : productList) {
 //								if (item.sub_quote_id == null) {
-//									item.sub_quote_id = "QS80" + Math.round((Math.random() * 100));
+//									item.sub_quote_id = "QS80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //									ListGridRecord subUpdateRecord = QuoteProductData.createRecord(item);
 //									QuoteProductDS.getInstance(quote_id).addData(subUpdateRecord);
 //								} else  {
@@ -831,7 +831,7 @@ public class AbradingCreateWindow {
 		
 		final String plan_id = (String) planForm.getField("plan_id").getValue();
 		
-		final String job_id = "JOB70" + Math.round((Math.random() * 100));
+		final String job_id = "JOB70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		
 		Double total_sent_weight = 0.0;
 		Integer total_sent_amount = 0;
@@ -861,7 +861,7 @@ public class AbradingCreateWindow {
 			
 			//if (desc != null && !desc.equals("")) details += "(" + desc + ")";
 			
-			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100));
+			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			ListGridRecord temp = AbradingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, desc, sent_weight + recv_weight, sent_amount, true);
 			orderProductList.add(temp);
 			
@@ -869,7 +869,7 @@ public class AbradingCreateWindow {
 			Record[] selectedMaterialProcess = MaterialProcessDS.getInstance(psid, pid).getCacheData();
 			
 			for (Record mat : selectedMaterialProcess) {
-				String cm_id = "SM70" + Math.round((Math.random() * 100));
+				String cm_id = "SM70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 				String mid = mat.getAttributeAsString("mid");
 				
 				Record[] materail = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mid", OperatorId.EQUALS, mid));
@@ -926,7 +926,7 @@ public class AbradingCreateWindow {
 								DSRequest dsRequest) {
 							String message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id;
 							if (matRequest.size() != 0) {
-								final String request_id = "MR70" + Math.round((Math.random() * 100));
+								final String request_id = "MR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 								createMaterialRequest(request_id, job_id, smith, currentUser.getFirstName() + " " + currentUser.getLastName(), matRequest);
 								message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> สร้างรายการขอเบิกวัตถุดิบ เลขที่ " + request_id;
 							}
@@ -947,7 +947,7 @@ public class AbradingCreateWindow {
 					
 //					String message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id;
 //					if (matRequest.size() != 0) {
-//						final String request_id = "MR70" + Math.round((Math.random() * 100));
+//						final String request_id = "MR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //						createMaterialRequest(request_id, job_id, smith, currentUser.getFirstName() + " " + currentUser.getLastName(), matRequest);
 //						message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> สร้างรายการขอเบิกวัตถุดิบ เลขที่ " + request_id;
 //					}
@@ -970,7 +970,7 @@ public class AbradingCreateWindow {
 //		System.out.println("Size " + matRequest.size());
 		for (MaterialRequestItemDetails item : matRequest.values()) {
 			totel_request_amount += item.getAmount();
-			final String sub_request_id = "SMR70" + Math.round((Math.random() * 100));
+			final String sub_request_id = "SMR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //			System.out.println("Debug ---");
 //			System.out.println("--- " + item.material_id);
 //			System.out.println("--- " + item.material_name);
