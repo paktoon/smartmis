@@ -11,8 +11,8 @@ public class PurchaseOrderStatus {
 	static {
 		valueMap = new LinkedHashMap<String, String>();  
         valueMap.put("1_created_order", "ออกคำสั่งซื้อแล้ว");  
-        valueMap.put("2_recevied_product", "รับสินค้าแล้ว");  
-        valueMap.put("3_returned_product", "คืนสินค้า");
+        valueMap.put("2_recevied_product", "รับวัตถุดิบแล้ว");  
+        valueMap.put("3_returned_product", "คืนวัตถุดิบ");
         valueMap.put("4_canceled", "ยกเลิก");
         
         valuePaymentMap = new LinkedHashMap<String, String>();  
@@ -22,9 +22,9 @@ public class PurchaseOrderStatus {
         valuePaymentMap.put("4_canceled", "ยกเลิก");
         
         valueReceivedMap = new LinkedHashMap<String, String>();  
-        valueReceivedMap.put("1_waiting_for_received", "รอรับสินค้า");  
-        valueReceivedMap.put("2_received", "รับสินค้าแล้ว");  
-        valueReceivedMap.put("3_over_due", "เกินกำหนดรับสินค้า");
+        valueReceivedMap.put("1_waiting_for_received", "รอรับวัตถุดิบ");  
+        valueReceivedMap.put("2_received", "รับวัตถุดิบแล้ว");  
+        valueReceivedMap.put("3_over_due", "เกินกำหนดรับวัตถุดิบ");
         valueReceivedMap.put("4_canceled", "ยกเลิก");
 	}
 	

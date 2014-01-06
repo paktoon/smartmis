@@ -39,10 +39,13 @@ public class InvoiceDS extends DataSource {
 		 Field_2.setForeignKey("CustomerDS.cid");
 		 DataSourceTextField Field_2_1 = new DataSourceTextField("cus_name", "ชื่อลูกค้า");
 		 DataSourceTextField Field_2_2 = new DataSourceTextField("payment_model", "วิธีการชำระเงิน");
-		 DataSourceIntegerField Field_2_3 = new DataSourceIntegerField("credit", "เครดิต");
+		 DataSourceIntegerField Field_2_3 = new DataSourceIntegerField("credit", "เครดิต (วัน)");
 		 
-		 //DataSourceDateField Field_3 = new DataSourceDateField("from", "เริ่ม");
-		 //DataSourceDateField Field_4 = new DataSourceDateField("to", "สิ้นสุด");
+		 DataSourceTextField Field_2_4 = new DataSourceTextField("cus_type", "ประเภทลูกค้า");
+		 DataSourceTextField Field_2_5 = new DataSourceTextField("bus_type", "กลุ่มธุรกิจลูกค้า");
+		 DataSourceTextField Field_2_6 = new DataSourceTextField("cus_group", "ชนิดลูกค้า");
+		 DataSourceTextField Field_2_7 = new DataSourceTextField("zone", "โซน");
+		 
 		 DataSourceDateField Field_5 = new DataSourceDateField("delivery", "กำหนดส่งสินค้า");
 		 DataSourceDateField Field_5_1 = new DataSourceDateField("due_date", "กำหนดชำระเงิน");
 		 
@@ -65,10 +68,12 @@ public class InvoiceDS extends DataSource {
 		 DataSourceEnumField Field_16 = new DataSourceEnumField("status", "สถานะ");
 		 DataSourceDateField Field_17 = new DataSourceDateField("paid_date", "วันที่ชำระเงิน");
 		 DataSourceTextField Field_18 = new DataSourceTextField("paid_by", "แก้ไขโดย");
+		 DataSourceFloatField Field_19 = new DataSourceFloatField("receivedInclusive", "ยอดที่รับชำระ (บาท)");
+		 
 		 //Field_16.setValueMap("รอชำระเงิน", "ชำระเงินแล้ว", "เกินกำหนดชำระเงิน");
 		 Field_16.setValueMap(InvoiceStatus.getValueMap());
 		 
-		 setFields(Field_0, Field_1, Field_1_1, Field_2, Field_2_1, Field_2_2, Field_2_3, Field_5, Field_5_1, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_16, Field_17, Field_18);
+		 setFields(Field_0, Field_1, Field_1_1, Field_2, Field_2_1, Field_2_2, Field_2_3, Field_2_4, Field_2_5, Field_2_6, Field_2_7, Field_5, Field_5_1, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_16, Field_17, Field_18, Field_19);
 		 
 		 //setDataURL("smartmis/security/userData");
 		 setTestData(InvoiceData.getNewRecords()); // For Test

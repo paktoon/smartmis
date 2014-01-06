@@ -9,7 +9,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 public class InvoiceData {
 	// --> Quote Object + ItemQuote Object
 	// Quote - quote id , cid , from, to ,delivery , total_weight, total_amount, netExclusive, tax, netInclusive, created_date, modified_date, created_by, modified_by, comment, status [waiting_for_approved, waiting_for_revised, approved, removed] --> to data store
-    public static ListGridRecord createRecord(String invoice_id, String sale_id ,String cid, String cus_name, String payment_model, Integer credit, Date delivery ,Double total_weight,Integer total_amount,Double netExclusive,Date created_date,Date modified_date,String created_by,String modified_by, String status, String purchase_id, Date due_date,Date paid_date) {  
+    public static ListGridRecord createRecord(String invoice_id, String sale_id ,String cid, String cus_name, String payment_model, Integer credit,String cus_type , String bus_type, String cus_group, String zone, Date delivery ,Double total_weight,Integer total_amount,Double netExclusive,Date created_date,Date modified_date,String created_by,String modified_by, String status, String purchase_id, Date due_date,Date paid_date) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("invoice_id", invoice_id);
         record.setAttribute("sale_id", sale_id);
@@ -18,8 +18,12 @@ public class InvoiceData {
         record.setAttribute("cus_name",cus_name);
         record.setAttribute("payment_model",payment_model);
         record.setAttribute("credit",credit);
-        //record.setAttribute("from", from); 
-        //record.setAttribute("to", to);
+
+        record.setAttribute("cus_type",cus_type);
+        record.setAttribute("bus_type",bus_type);
+        record.setAttribute("cus_group",cus_group);
+        record.setAttribute("zone",zone);
+        
         record.setAttribute("delivery", delivery);
         record.setAttribute("total_weight", total_weight);  
         record.setAttribute("total_amount", total_amount); 
@@ -57,20 +61,20 @@ public class InvoiceData {
     			return record;
     		}
     	}
-    	 return createRecord(invoice_id,"SO10001","CU10017", "Flora Creek", "เงินสด", 10 , new Date() , 120.0, 200, 11000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null);
+    	 return createRecord(invoice_id,"SO10001","CU10017", "Flora Creek", "เงินสด", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date() , 120.0, 200, 11000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null);
     }
     
     public static ListGridRecord[] getNewRecords() {
     	return new ListGridRecord[]{ 
-    			createRecord("IN10001","SO10001","CU10017", "Flora Creek", "เงินสด", 10 , new Date() , 1360.0, 200, 11000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null),
-    			createRecord("IN10002","SO10002","CU10008", "ประทีปเจมส์", "เงินสด", 30 , new Date() , 1836.0, 270, 14850.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null),
-    			createRecord("IN10003","SO10003","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "เงินสด", 20 , new Date() , 1896.0, 300, 16500.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "4_canceled", "", new Date(), null),
-    			createRecord("IN10004","SO10004","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "เงินสด", 10 , new Date() , 632.0, 100, 5000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null),
+    			createRecord("IN10001","SO10001","CU10017", "Flora Creek", "เงินสด", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date() , 1360.0, 200, 11000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null),
+    			createRecord("IN10002","SO10002","CU10008", "ประทีปเจมส์", "เงินสด", 0 , "ลูกค้าทั่วไป", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date() , 1836.0, 270, 14850.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null),
+    			createRecord("IN10003","SO10003","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "เงินสด", 20 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date() , 1896.0, 300, 16500.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "4_canceled", "", new Date(), null),
+    			createRecord("IN10004","SO10004","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "เงินสด", 10 ,"ลูกค้าประจำ", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date() , 632.0, 100, 5000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null),
     		
-    			createRecord("IN10005","SO10005","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 0 , new Date() , 1360.0, 200, 11000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "3_over_due", "", new Date(), null),
-    			createRecord("IN10006","SO10006","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 20 , new Date() , 1836.0, 270, 14850.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "2_paid", "", new Date(), new Date()),
-    			createRecord("IN10007","SO10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , new Date() , 1896.0, 300, 16500.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null),
-    			createRecord("IN10008","SO10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 , new Date() , 632.0, 100, 5000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "2_paid", "", new Date(), new Date())
+    			createRecord("IN10005","SO10005","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 30 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date() , 1360.0, 200, 11000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "3_over_due", "", new Date(), null),
+    			createRecord("IN10006","SO10006","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 0 , "ลูกค้าทั่วไป", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date() , 1836.0, 270, 14850.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "2_paid", "", new Date(), new Date()),
+    			createRecord("IN10007","SO10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date() , 1896.0, 300, 16500.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "", new Date(), null),
+    			createRecord("IN10008","SO10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 ,"ลูกค้าประจำ", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date() , 632.0, 100, 5000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "2_paid", "", new Date(), new Date())
     			};
     	//return new ListGridRecord[]{};
     }

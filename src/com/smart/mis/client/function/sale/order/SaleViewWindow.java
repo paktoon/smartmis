@@ -207,10 +207,13 @@ public class SaleViewWindow extends EditorWindow{
 						String contact_name = selected.getAttributeAsString("contact_name");
 						String contact_phone = selected.getAttributeAsString("contact_phone");
 						String contact_email = selected.getAttributeAsString("contact_email");
+						
+						String bus_type = selected.getAttributeAsString("bus_type");
+						String cus_group = selected.getAttributeAsString("cus_group");
 						String zone = selected.getAttributeAsString("zone");
 						
-						client.setAttributes(customer_id, customer_name, customer_phone, contact_name, contact_phone, contact_email, customer_type, zone);
-
+						client.setAttributes(customer_id, customer_name, customer_phone, contact_name, contact_phone, contact_email, customer_type, bus_type, cus_group, zone);
+						
 						if(customer_type.equalsIgnoreCase("ลูกค้าประจำ")) {
 							cus_credit.enable();
 						} else {

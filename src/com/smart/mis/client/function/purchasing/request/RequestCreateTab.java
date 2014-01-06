@@ -16,6 +16,7 @@ import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.prodution.ProductType;
 import com.smart.mis.shared.purchasing.Supplier;
 import com.smart.mis.shared.security.User;
+import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
@@ -24,6 +25,7 @@ import com.smartgwt.client.data.DateRange;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RelativeDate;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.CriteriaPolicy;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.types.RecordSummaryFunctionType;
@@ -240,14 +242,14 @@ public class RequestCreateTab {
 					materialForm.enable();
 					System.out.println(material_list);
 					//tempDS.fetchData(new Criterion("mid", OperatorId.REGEXP, material_list));
-					tempDS.fetchData(new Criterion("mid", OperatorId.REGEXP, material_list), new DSCallback() {
-						@Override
-						public void execute(DSResponse dsResponse, Object data,
-								DSRequest dsRequest) {
-							dsResponse.setInvalidateCache(true);
-							tempDS.updateCaches(dsResponse, dsRequest);
-						}
-			    	});
+//					tempDS.fetchData(new Criterion("mid", OperatorId.REGEXP, material_list), new DSCallback() {
+//						@Override
+//						public void execute(DSResponse dsResponse, Object data,
+//								DSRequest dsRequest) {
+//							dsResponse.setInvalidateCache(true);
+//							tempDS.updateCaches(dsResponse, dsRequest);
+//						}
+//			    	});
 				}
 			}
         });
@@ -298,8 +300,17 @@ public class RequestCreateTab {
 		materialForm.setGroupTitle("เลือกวัตถุดิบ");
         
         final StaticTextItem mid = new StaticTextItem("mid" , "รหัสวัตถุดิบ");
-        final SelectItem pname = new SelectItem("mat_name", "ชื่อวัตถุดิบ");
+        final SelectItem pname = new SelectItem("mat_name", "ชื่อวัตถุดิบ") {  
+            @Override  
+            protected Criteria getPickListFilterCriteria() {  
+                //String category = (String) categoryItem.getValue();  
+                //Criteria criteria = new Criteria("category", category); 
+                Criterion criteria = new Criterion("mid", OperatorId.REGEXP, material_list);
+                return criteria;
+            }  
+        };
         //pname.setOptionDataSource(MaterialDS.getInstance());
+		//tempDS.setCriteriaPolicy(CriteriaPolicy.DROPONCHANGE);
         pname.setOptionDataSource(tempDS);
         pname.setEmptyDisplayValue("--โปรดเลือกวัตถุดิบ--");
         //pname.setOptionCriteria(new Criterion("type", OperatorId.REGEXP, material_list));

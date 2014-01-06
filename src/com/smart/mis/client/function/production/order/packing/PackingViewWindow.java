@@ -18,6 +18,7 @@ import com.smart.mis.client.function.production.plan.PlanData;
 import com.smart.mis.client.function.production.plan.product.PlanProductDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
+import com.smart.mis.client.function.report.production.ProductionReportDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
@@ -320,7 +321,7 @@ public class PackingViewWindow extends EditorWindow{
 //        quoteItemCell_sum.setAlign(Alignment.RIGHT);
  
         //orderListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_4, quoteItemCell_5, quoteItemCell_3, quoteItemCell_6, quoteItemCell_7, quoteItemCell_3, quoteItemCell_8, quoteItemCell_sum);
-        orderListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_4, quoteItemCell_5, quoteItemCell_3, quoteItemCell_3);
+        orderListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_4, quoteItemCell_5, quoteItemCell_3);
         
         //itemLayout.addMember(orderListGrid);
         section.setItems(orderListGrid);
@@ -844,7 +845,7 @@ public class PackingViewWindow extends EditorWindow{
 						} else { 
 							for (ListGridRecord item : all) {
 								//PackingProductDS.getInstance(job_id).updateData(item);
-								createTransferItem(item, transfer_id);
+								createTransferItem(item, transfer_id, plan_id);
 							}
 							
 							PlanDS.getInstance().refreshData();
@@ -868,10 +869,13 @@ public class PackingViewWindow extends EditorWindow{
 		return transfer_id;
 	}
 	
-	void createTransferItem(ListGridRecord record, String transfer_id) {
+	void createTransferItem(ListGridRecord record, String transfer_id, String plan_id) {
 		String sub_transfer_id = "STFP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		ListGridRecord newRecord = TransferItemData.createRecord(record, sub_transfer_id, transfer_id, true);
+		newRecord.setAttribute("plan_id", plan_id);
+		newRecord.setAttribute("produced_date", new Date());
 		TransferItemDS.getInstance(transfer_id).addData(newRecord);
+		ProductionReportDS.getInstance().addData(newRecord);
 	}
 	
 //	void updateQuoteStatus(String quote_id, final String status, String comment) {

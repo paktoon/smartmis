@@ -88,9 +88,9 @@ public class PurchaseOrderData {
         return record;  
     }
     
-    public static ListGridRecord updateReceivedRecord(ListGridRecord record, Double totel_received_weight, Double totel_received_amount, String user, String received_status) {
-    	record.setAttribute("totel_received_weight", totel_received_weight);
-    	record.setAttribute("totel_received_amount", totel_received_amount);
+    public static ListGridRecord updateReceivedRecord(ListGridRecord record, Double total_received_weight, Double total_received_amount, String user, String received_status) {
+    	record.setAttribute("total_received_weight", total_received_weight);
+    	record.setAttribute("total_received_amount", total_received_amount);
         record.setAttribute("received_date", new Date());
         record.setAttribute("received_by", user);
         record.setAttribute("received_status", received_status);

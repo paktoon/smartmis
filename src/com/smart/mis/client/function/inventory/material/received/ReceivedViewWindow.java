@@ -5,12 +5,15 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.inventory.material.requisition.MaterialRequestItemDS;
 import com.smart.mis.client.function.inventory.product.transfer.TransferDS;
 import com.smart.mis.client.function.production.plan.PlanDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.client.function.purchasing.order.PurchaseOrderDS;
 import com.smart.mis.client.function.purchasing.order.material.OrderMaterialDS;
 import com.smart.mis.client.function.purchasing.supplier.SupplierDS;
+import com.smart.mis.client.function.report.inventory.MaterialReceivedReportDS;
+import com.smart.mis.client.function.report.inventory.MaterialRequestReportDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryData;
 import com.smart.mis.client.function.sale.delivery.DeliveryItemDS;
@@ -554,6 +557,7 @@ public class ReceivedViewWindow extends EditorWindow{
 						} else { 
 							
 							//updateSale(sale_id);
+							updateMaterialReceivedReport(order_id);
 							
 							for (ListGridRecord item : all) {
 								updateStock(item);
@@ -583,6 +587,17 @@ public class ReceivedViewWindow extends EditorWindow{
 		Double remain = updated.getAttributeAsDouble("remain") + received_amount;
 		updated.setAttribute("remain", remain);
 		MaterialDS.getInstance().updateData(updated);
+	}
+	
+	void updateMaterialReceivedReport(String order_id) {
+		OrderMaterialDS.getInstance(order_id).refreshData();
+		Record[] records = OrderMaterialDS.getInstance(order_id).getCacheData();
+		//System.out.println("Found " + records.length + " records");
+		for (Record record : records) {
+			record.setAttribute("received_date", new Date());
+			//System.out.println("Add record to MaterialReceivedReportDS -- " + record.getAttribute("order_id") + " - mid " + record.getAttribute("mid"));
+			MaterialReceivedReportDS.getInstance().addData(record);
+		}
 	}
 	
 //	String getCustomerFullAddress(String cid) {

@@ -234,13 +234,13 @@ public class ReportReceiveLayout extends VLayout{
 		ListGridField received_by = new ListGridField("received_by");
 		ListGridField received_date = new ListGridField("received_date");
 
-		ListGridField total_weight = new ListGridField("totel_received_weight", 130);
+		ListGridField total_weight = new ListGridField("total_received_weight", 130);
 		total_weight.setCellFormatter(FieldFormatter.getNumberFormat());
 		total_weight.setAlign(Alignment.RIGHT);
 		total_weight.setSummaryFunction(SummaryFunctionType.SUM);
 		total_weight.setShowGridSummary(true);
         
-		ListGridField total_amount = new ListGridField("totel_received_amount", 120);
+		ListGridField total_amount = new ListGridField("total_received_amount", 120);
 		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		total_amount.setSummaryFunction(SummaryFunctionType.SUM);

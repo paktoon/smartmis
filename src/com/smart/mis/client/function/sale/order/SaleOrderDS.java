@@ -42,8 +42,11 @@ public class SaleOrderDS extends DataSource {
 		 DataSourceTextField Field_2_2 = new DataSourceTextField("payment_model", "วิธีการชำระเงิน");
 		 DataSourceIntegerField Field_2_3 = new DataSourceIntegerField("credit", "เครดิต (วัน)");
 		 
-		 //DataSourceDateField Field_3 = new DataSourceDateField("from", "เริ่ม");
-		 //DataSourceDateField Field_4 = new DataSourceDateField("to", "สิ้นสุด");
+		 DataSourceTextField Field_2_4 = new DataSourceTextField("cus_type", "ประเภทลูกค้า");
+		 DataSourceTextField Field_2_5 = new DataSourceTextField("bus_type", "กลุ่มธุรกิจลูกค้า");
+		 DataSourceTextField Field_2_6 = new DataSourceTextField("cus_group", "ชนิดลูกค้า");
+		 DataSourceTextField Field_2_7 = new DataSourceTextField("zone", "โซน");
+		 
 		 DataSourceDateField Field_5 = new DataSourceDateField("delivery", "กำหนดส่งสินค้า");
 		 
 		 DataSourceFloatField Field_6 = new DataSourceFloatField("total_weight", "น้ำหนักรวม (กรัม)");
@@ -66,7 +69,7 @@ public class SaleOrderDS extends DataSource {
 		 //Field_16.setValueMap("รอผลิต", "กำลังผลิต", "พร้อมนำส่ง", "อยู่ระหว่างนำส่ง", "นำส่งแล้ว", "ยกเลิก");
 		 Field_16.setValueMap(SaleOrderStatus.getValueMap());
 		 
-		 setFields(Field_0 ,Field_0_1, Field_1, Field_1_1, Field_2, Field_2_1, Field_2_2, Field_2_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_16);
+		 setFields(Field_0 ,Field_0_1, Field_1, Field_1_1, Field_2, Field_2_1, Field_2_2, Field_2_3, Field_2_4, Field_2_5, Field_2_6, Field_2_7, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10, Field_11, Field_12, Field_13, Field_14, Field_16);
 		 
 		 //setDataURL("smartmis/security/userData");
 		 setTestData(SaleOrderData.getNewRecords()); // For Test

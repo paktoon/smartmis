@@ -40,13 +40,14 @@ public class MaterialProcessDS extends DataSource  {
 			 DataSourceTextField Field_4 = new DataSourceTextField("mat_name", "ชื่อวัตถุดิบ");
 			 DataSourceFloatField Field_5 = new DataSourceFloatField("req_amount", "จำนวนที่ต้องการ");
 			 DataSourceTextField Field_6 = new DataSourceTextField("unit", "หน่วย");
+			 DataSourceTextField Field_6_1 = new DataSourceTextField("type", "ชนิด");
 
 			 Field_3.setPrimaryKey(true);
 			 Field_1.setHidden(true);
 			 Field_2.setForeignKey("ProcessListDS_"+pid+".psid"); 
 			 Field_2.setHidden(true);
 			 
-			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6);
+			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_6_1);
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(MaterialProcessData.getNewRecords(psid)); // For Test
 			 setClientOnly(true);
@@ -59,12 +60,13 @@ public class MaterialProcessDS extends DataSource  {
 			 DataSourceTextField Field_4 = new DataSourceTextField("mat_name", "ชื่อวัตถุดิบ");
 			 DataSourceFloatField Field_5 = new DataSourceFloatField("req_amount", "จำนวนที่ต้องการ");
 			 DataSourceTextField Field_6 = new DataSourceTextField("unit", "หน่วย");
-
+			 DataSourceTextField Field_6_1 = new DataSourceTextField("type", "ชนิด");
+			 
 			 Field_3.setPrimaryKey(true);
 			 Field_1.setHidden(true);
 			 Field_2.setHidden(true);
 			 
-			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6);
+			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_6, Field_6_1);
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(new ListGridRecord[]{}); // For Test
 			 setClientOnly(true);

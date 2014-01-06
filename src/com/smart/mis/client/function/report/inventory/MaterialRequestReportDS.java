@@ -34,9 +34,9 @@ public class MaterialRequestReportDS extends DataSource  {
 			 DataSourceTextField Field_4 = new DataSourceTextField("mname", "ชื่อวัตถุดิบ");
 			 DataSourceTextField Field_5 = new DataSourceTextField("unit", "หน่วย");
 			 DataSourceTextField Field_5_1 = new DataSourceTextField("type", "ชนิด");
-			 DataSourceFloatField Field_6 = new DataSourceFloatField("request_weight", "น้ำหนักที่ขอเบิก");
+			 //DataSourceFloatField Field_6 = new DataSourceFloatField("request_weight", "น้ำหนักที่ขอเบิก");
 			 DataSourceFloatField Field_7 = new DataSourceFloatField("request_amount", "จำนวนที่ขอเบิก");
-			 DataSourceFloatField Field_8 = new DataSourceFloatField("issued_weight", "น้ำหนักที่สั่งจ่าย");
+			 //DataSourceFloatField Field_8 = new DataSourceFloatField("issued_weight", "น้ำหนักที่สั่งจ่าย");
 			 DataSourceFloatField Field_9 = new DataSourceFloatField("issued_amount", "จำนวนที่สั่งจ่าย");
 			 
 			 DataSourceDateField Field_10 = new DataSourceDateField("issued_date", "เบิกจ่ายวันที่");
@@ -46,7 +46,8 @@ public class MaterialRequestReportDS extends DataSource  {
 			 //Field_2.setForeignKey("CastingProductDS_"+job_id+".sub_job_id"); 
 			 Field_2.setHidden(true);
 			 
-			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_5_1, Field_6, Field_7, Field_8, Field_9, Field_10);
+			 //setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_5_1, Field_6, Field_7, Field_8, Field_9, Field_10);
+			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_5_1, Field_7, Field_9, Field_10);
 			 setTestData(new ListGridRecord[]{}); // For Test
 			 setClientOnly(true);
 		 }

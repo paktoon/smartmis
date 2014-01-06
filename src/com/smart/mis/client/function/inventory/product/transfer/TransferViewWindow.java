@@ -5,70 +5,40 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.smart.mis.client.function.financial.disburse.wage.WageDS;
-import com.smart.mis.client.function.financial.disburse.wage.WageData;
-import com.smart.mis.client.function.financial.disburse.wage.WageItemDS;
-import com.smart.mis.client.function.financial.disburse.wage.WageItemData;
-import com.smart.mis.client.function.production.order.abrading.AbradingCreateWindow;
 import com.smart.mis.client.function.production.plan.PlanDS;
-import com.smart.mis.client.function.production.plan.PlanData;
-import com.smart.mis.client.function.production.plan.product.PlanProductDS;
 import com.smart.mis.client.function.production.product.ProductDS;
-import com.smart.mis.client.function.production.smith.SmithDS;
-import com.smart.mis.client.function.purchasing.material.MaterialDS;
+import com.smart.mis.client.function.report.inventory.ProductReceivedReportDS;
 import com.smart.mis.client.function.sale.order.SaleOrderDS;
 import com.smart.mis.client.function.sale.order.SaleOrderData;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
-import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.inventory.TransferStatus;
-import com.smart.mis.shared.prodution.ProcessStatus;
-import com.smart.mis.shared.prodution.ProcessType;
-import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.prodution.Smith;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
-import com.smartgwt.client.data.DataSource;
-import com.smartgwt.client.data.DateRange;
 import com.smartgwt.client.data.Record;
-import com.smartgwt.client.data.RelativeDate;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.OperatorId;
-import com.smartgwt.client.types.RecordSummaryFunctionType;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.SummaryFunctionType;
-import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.DateUtil;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.util.ValueCallback;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.FetchDataEvent;
-import com.smartgwt.client.widgets.events.FetchDataHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.DateItem;
-import com.smartgwt.client.widgets.form.fields.FloatItem;
-import com.smartgwt.client.widgets.form.fields.IntegerItem;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
-import com.smartgwt.client.widgets.form.fields.TextAreaItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.ListGridSummaryField;
 import com.smartgwt.client.widgets.grid.SummaryFunction;
 import com.smartgwt.client.widgets.grid.events.CellSavedEvent;
 import com.smartgwt.client.widgets.grid.events.CellSavedHandler;
@@ -76,7 +46,6 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
 import com.smartgwt.client.widgets.layout.VLayout;
-import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 public class TransferViewWindow extends EditorWindow{
 
@@ -825,6 +794,7 @@ public class TransferViewWindow extends EditorWindow{
 							editWindow.destroy();
 						} else { 
 
+							updateProductReceivedReport(transfer_id);
 							boolean on_sale = updatePlanAndSale(plan_id);
 							
 							for (ListGridRecord item : all) {
@@ -846,7 +816,7 @@ public class TransferViewWindow extends EditorWindow{
 		updated.setAttribute("status", "7_transferred");
 		PlanDS.getInstance().updateData(updated);
 		String sale_id = updated.getAttributeAsString("sale_id");
-		if (sale_id != null) {
+		if (sale_id != null && !sale_id.equalsIgnoreCase("-")) {
 			//SaleOrderDS.getInstance().refreshData();
 			//Record[] sale_records = SaleOrderDS.getInstance().applyFilter(SaleOrderDS.getInstance().getCacheData(), new Criterion("sale_id", OperatorId.EQUALS, sale_id));
 			ListGridRecord saleRecord = SaleOrderData.createStatusRecord(sale_id, "3_production_completed");
@@ -854,6 +824,17 @@ public class TransferViewWindow extends EditorWindow{
 			return true;
 		} else {
 			return false;
+		}
+	}
+	
+	void updateProductReceivedReport(String transfer_id) {
+		TransferItemDS.getInstance(transfer_id).refreshData();
+		Record[] records = TransferItemDS.getInstance(transfer_id).getCacheData();
+		//System.out.println("Found " + records.length + " records");
+		for (Record record : records) {
+			record.setAttribute("received_date", new Date());
+			//System.out.println("Add record to ProductReceivedReportDS -- " + record.getAttribute("transfer_id") + " - pid " + record.getAttribute("pid"));
+			ProductReceivedReportDS.getInstance().addData(record);
 		}
 	}
 	

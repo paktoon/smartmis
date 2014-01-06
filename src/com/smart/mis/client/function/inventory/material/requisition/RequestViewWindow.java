@@ -269,6 +269,7 @@ public class RequestViewWindow extends EditorWindow{
 		quoteListGrid.setUseAllDataSourceFields(false);
 		
 		ListGridField quoteItemCell_1 = new ListGridField("mid", 60);
+		quoteItemCell_1.setTitle("รหัสวัตถุดิบ");
         ListGridField quoteItemCell_2 = new ListGridField("mname"); 
         quoteItemCell_2.setTitle("ชื่อวัตถุดิบ");
         quoteItemCell_2.setSummaryFunction(new SummaryFunction() {  

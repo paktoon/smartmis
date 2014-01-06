@@ -14,6 +14,8 @@ import com.smart.mis.client.function.purchasing.request.material.RequestMaterial
 import com.smart.mis.client.function.purchasing.request.material.RequestMaterialData;
 import com.smart.mis.client.function.purchasing.request.material.RequestMaterialDetails;
 import com.smart.mis.client.function.purchasing.supplier.SupplierDS;
+import com.smart.mis.client.function.report.financial.DisburseMaterialDS;
+import com.smart.mis.client.function.report.purchasing.PurchasingReportDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
@@ -920,114 +922,24 @@ public class RequestViewWindow extends EditorWindow{
 						} else { 
 							for (OrderMaterialDetails item : orderProductList) {
 									ListGridRecord subAddRecord = OrderMaterialData.createRecord(item);
+									subAddRecord.setAttribute("created_date", new Date());
 									OrderMaterialDS.getInstance(order_id).addData(subAddRecord);
+									//System.out.println("Add report record in PurchasingReportDS " + subAddRecord.getAttributeAsString("mid"));
+									PurchasingReportDS.getInstance().addData(subAddRecord);
 							}
 							request_record.setAttribute("status", "5_created_po");
 							PurchaseRequestDS.getInstance().updateData(request_record);
 							
-							SC.say("ใบเสนอซื้อรหัส " + request_id + " " + PurchaseRequestStatus.getDisplay(request_record.getAttributeAsString("status")) + "<br><br>รหัสคำสั่งซื้อ " + order_id + "<br> สถานะเป็น " + PurchaseOrderStatus.getDisplay(orderRecord.getAttributeAsString("status")) + " และ " + PurchaseOrderStatus.getPaymentDisplay(orderRecord.getAttributeAsString("payment_status")));
-							main.destroy();
+							//updatePurchasingReport(order_id);
+							
+							SC.say("ใบเสนอซื้อรหัส " + request_id + " " + PurchaseRequestStatus.getDisplay(request_record.getAttributeAsString("status")) + "<br><br>รหัสคำสั่งซื้อ " + order_id + "<br> สถานะเป็น " + PurchaseOrderStatus.getDisplay(orderRecord.getAttributeAsString("status")) + " และ " + PurchaseOrderStatus.getPaymentDisplay(orderRecord.getAttributeAsString("payment_status")), new BooleanCallback() {
+
+								@Override
+								public void execute(Boolean value) {
+									main.destroy();
+								}});
 						}
 				}
 			});
-		
-//			//For production
-//			for (Record updateProduct : productUpdateList) {
-//				ProductDS.getInstance().updateData(updateProduct);
-//			}
-		
-//			final Double produce_weight = total_produce_weight;
-//			final Integer produce_amount = total_produce_amount;
-//			if (planProductList.size() != 0) {
-//				SC.confirm("สร้างแผนการผลิตโดยอัตโนมัติ", "สินค้าในรายการขายไม่เพียงพอ <br> ต้องการสร้างแผนการผลิต หรือไม่?" , new BooleanCallback() {
-//					@Override
-//					public void execute(Boolean value) {
-//						if (value) {
-//							//Date delivery = null;
-//							String plan_status = "3_approved";
-//							//xxxService.xxx(Callback quoteId);
-//							ListGridRecord newRecord = PlanData.createRecord(plan_id, sale_id, delivery, produce_weight, produce_amount, new Date(), null,  currentUser.getFirstName() + " " + currentUser.getLastName(), null, "", plan_status, "สร้างจากรายการขายโดยอัตโนมัติ");
-//							PlanDS.getInstance().addData(newRecord, new DSCallback() {
-//								@Override
-//								public void execute(DSResponse dsResponse, Object data,
-//										DSRequest dsRequest) {
-//										if (dsResponse.getStatus() != 0) {
-//											SC.warn("การสร้างแผนการผลิตล้มเหลว");
-//										} else { 
-//											for (PlanProductDetails item : planProductList) {
-//												ListGridRecord subNewRecord = PlanProductData.createRecord(item);
-//												PlanProductDS.getInstance(plan_id).addData(subNewRecord);
-//												//System.out.println("add data " + item.sub_plan_id);
-//											}
-//											CreateInvoiceAndSaleOrder(main, invoice_id, invoiceRecord, sale_id, saleRecord, invoiceProductList,saleProductList, " <br><br> สร้างแผนการผลิตเสร็จสิ้น " + "รหัสแผนการผลิต " + plan_id + "<br>" + "กำหนดส่งสินค้าวันที่ " + DateUtil.formatAsShortDate(delivery));
-//										}
-//								}
-//							});
-//						}
-//					}
-//            	});
-//			} else {
-//				CreateInvoiceAndSaleOrder(main, invoice_id, invoiceRecord, sale_id, saleRecord, invoiceProductList,saleProductList, "");
-//			}
 	}
-//	
-//	private PlanProductDetails CreatePlanProductDetails(String plan_id, Record product, Integer pplan_amount) {
-//		String sub_plan_id = "SP80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
-//		String pid = product.getAttributeAsString("pid");
-//		String pname = product.getAttributeAsString("name");
-//		String ptype = product.getAttributeAsString("type");
-//		Double pweight = product.getAttributeAsDouble("weight");
-//		String punit = product.getAttributeAsString("unit");
-//		
-//		Double psize = product.getAttributeAsDouble("size");
-//		Double pwidth = product.getAttributeAsDouble("width");
-//		Double plength = product.getAttributeAsDouble("length");
-//		Double pheight = product.getAttributeAsDouble("height");
-//		Double pdiameter = product.getAttributeAsDouble("diameter");
-//		Double pthickness = product.getAttributeAsDouble("thickness");
-//		
-//		PlanProductDetails temp = new PlanProductDetails();
-//		temp.save(pid, pname, pweight * pplan_amount, ptype, punit, psize, pwidth, plength, pheight, pdiameter, pthickness);
-//		temp.setID(sub_plan_id, plan_id);
-//		temp.setQuantity(pplan_amount);
-//		
-//		return temp;
-//	}
-//	
-//	private void CreateInvoiceAndSaleOrder(final Window main, final String invoice_id, Record invoiceRecord, final String sale_id, final Record saleRecord, final ArrayList<SaleProductDetails> invoiceProductList,final ArrayList<SaleProductDetails> saleProductList, final String message) {
-//		//Auto create invoice
-//		InvoiceDS.getInstance().addData(invoiceRecord, new DSCallback() {
-//			@Override
-//			public void execute(DSResponse dsResponse, Object data,
-//					DSRequest dsRequest) {
-//					if (dsResponse.getStatus() != 0) {
-//						SC.warn("การสร้างรายการขายล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-//						main.destroy();
-//					} else { 
-//						for (SaleProductDetails item : invoiceProductList) {
-//							ListGridRecord subAddRecord = SaleProductData.createRecord(item);
-//							SaleProductDS.getInstance(invoice_id).addData(subAddRecord);
-//						}
-//						
-//						SaleOrderDS.getInstance().addData(saleRecord, new DSCallback() {
-//							@Override
-//							public void execute(DSResponse dsResponse, Object data,
-//									DSRequest dsRequest) {
-//									if (dsResponse.getStatus() != 0) {
-//										SC.warn("การสร้างรายการขายล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-//										main.destroy();
-//									} else { 
-//										for (SaleProductDetails item : saleProductList) {
-//												ListGridRecord subAddRecord = SaleProductData.createRecord(item);
-//												SaleProductDS.getInstance(sale_id).addData(subAddRecord);
-//										}
-//										SC.say("สร้างรายการขายเสร็จสิ้น <br> " + "รหัสรายการขาย " + sale_id + "<br> สถานะของรายการขาย " + SaleOrderStatus.getDisplay(saleRecord.getAttributeAsString("status")) + "<br><br> สร้างใบแจ้งหนี้โดยอัตโนมัติ เลขที่ "+ invoice_id + "<br> กำหนดชำระเงินวันที่ " + DateUtil.formatAsShortDate(saleRecord.getAttributeAsDate("due_date")) + message);
-//										main.destroy();
-//									}
-//							}
-//						});
-//					}
-//			}
-//		});
-//	}
 }

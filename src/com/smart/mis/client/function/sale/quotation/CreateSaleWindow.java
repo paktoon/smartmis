@@ -645,7 +645,8 @@ public class CreateSaleWindow extends EditorWindow{
 									if (value == null || value.equals("")){
 										SC.warn("กรุณาระบุเลขที่คำสั่งซื้อในกล่องข้อความ");
 									} else {
-										if (customerForm.validate()) createSaleOrder(main, quote_id, customerForm, quoteListGrid, deliveryDate.getValueAsDate(), currentUser, value);
+										//if (customerForm.validate()) createSaleOrder(main, quote_id, customerForm, quoteListGrid, deliveryDate.getValueAsDate(), currentUser, value);
+										if (customerForm.validate()) createSaleOrder(main, quote_id, record, quoteListGrid, deliveryDate.getValueAsDate(), currentUser, value);
 									}
 								}});
 						}
@@ -844,8 +845,9 @@ public class CreateSaleWindow extends EditorWindow{
 //		});
 //	}
 	
-	public void createSaleOrder(final Window main, final String quote_id, DynamicForm customer, ListGrid quoteListGrid, final Date delivery, final User currentUser, String purchase_id){
-		
+	//public void createSaleOrder(final Window main, final String quote_id, DynamicForm customer, ListGrid quoteListGrid, final Date delivery, final User currentUser, String purchase_id){
+	public void createSaleOrder(final Window main, final String quote_id, ListGridRecord quoteRecord, ListGrid quoteListGrid, final Date delivery, final User currentUser, String purchase_id){
+				
 		ListGridRecord[] all = quoteListGrid.getRecords();
 		
 		Double total_weight = 0.0;
@@ -930,10 +932,21 @@ public class CreateSaleWindow extends EditorWindow{
 				sale_status = "1_waiting_for_production";
 			}
 			final String invoice_status = "1_waiting_for_payment";
-			String cid = (String) customer.getField("cid").getValue();
-			String cus_name = (String) customer.getField("cus_name").getValue();
-			String payment_model = (String) customer.getField("payment_model").getValue();
-			Integer credit = (Integer) customer.getField("credit").getValue();
+//			String cid = (String) customer.getField("cid").getValue();
+//			String cus_name = (String) customer.getField("cus_name").getValue();
+//			String payment_model = (String) customer.getField("payment_model").getValue();
+//			Integer credit = (Integer) customer.getField("credit").getValue();
+			String cid = quoteRecord.getAttributeAsString("cid");
+			String cus_name = quoteRecord.getAttributeAsString("cus_name");
+			String payment_model = quoteRecord.getAttributeAsString("payment_model");
+			Integer credit = quoteRecord.getAttributeAsInt("credit");
+			
+			String cus_type = quoteRecord.getAttributeAsString("cus_type");
+			String bus_type = quoteRecord.getAttributeAsString("bus_type");
+			String cus_group = quoteRecord.getAttributeAsString("cus_group");
+			String zone = quoteRecord.getAttributeAsString("zone");
+			
+			System.out.println("CreateSaleWindow create saleorder for " + cid + " " + cus_name + " " + payment_model + " " + credit + " " + cus_type + " " + bus_type + " " + cus_group + " " + zone);
 			
 			DateRange dateRange = new DateRange();  
 	        dateRange.setRelativeStartDate(RelativeDate.TODAY);
@@ -944,8 +957,8 @@ public class CreateSaleWindow extends EditorWindow{
 			final String invoice_id = "IN70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			final String plan_id = "PL70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			
-			final ListGridRecord saleRecord = SaleOrderData.createRecord(sale_id, quote_id, invoice_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, sale_status, purchase_id, due_date);
-			final ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, cus_name, payment_model, credit, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
+			final ListGridRecord saleRecord = SaleOrderData.createRecord(sale_id, quote_id, invoice_id, cid, cus_name, payment_model, credit, cus_type ,bus_type, cus_group, zone, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, sale_status, purchase_id, due_date);
+			final ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, cus_name, payment_model, credit, cus_type ,bus_type, cus_group, zone, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
 			
 			//For production
 			for (Record updateProduct : productUpdateList) {

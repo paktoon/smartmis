@@ -15,23 +15,25 @@ public class OrderMaterialData {
         record.setAttribute("unit", unit); 
         record.setAttribute("order_amount", order_amount);
         record.setAttribute("status", status);
+        record.setAttribute("sum_price", price * order_amount);
         return record;  
     }
     
-    public static ListGridRecord createRecord(String sub_request_id, String request_id, String mid, String name, Double weight, Double price, String type, String unit, Integer request_amount, Boolean status) {  
-        ListGridRecord record = new ListGridRecord();
-        record.setAttribute("sub_request_id", sub_request_id);
-        record.setAttribute("request_id", request_id);
-        record.setAttribute("mid", mid);
-        record.setAttribute("mat_name",name); 
-        record.setAttribute("weight", weight);
-        record.setAttribute("price", price);
-        record.setAttribute("type", type);  
-        record.setAttribute("unit", unit); 
-        record.setAttribute("request_amount", request_amount);
-        record.setAttribute("status", status);
-        return record;  
-    }
+//    public static ListGridRecord createRecord(String sub_request_id, String request_id, String mid, String name, Double weight, Double price, String type, String unit, Integer request_amount, Boolean status) {  
+//        ListGridRecord record = new ListGridRecord();
+//        record.setAttribute("sub_request_id", sub_request_id);
+//        record.setAttribute("request_id", request_id);
+//        record.setAttribute("mid", mid);
+//        record.setAttribute("mat_name",name); 
+//        record.setAttribute("weight", weight);
+//        record.setAttribute("price", price);
+//        record.setAttribute("type", type);  
+//        record.setAttribute("unit", unit); 
+//        record.setAttribute("request_amount", request_amount);
+//        record.setAttribute("status", status);
+//        record.setAttribute("sum_price", price * request_amount);
+//        return record;  
+//    }
     
     public static ListGridRecord createRecord(OrderMaterialDetails item) {  
         ListGridRecord record = new ListGridRecord();
@@ -45,6 +47,7 @@ public class OrderMaterialData {
         record.setAttribute("unit", item.material_unit); 
         record.setAttribute("request_amount", item.order_amount);
         record.setAttribute("status", item.status);
+        record.setAttribute("sum_price", item.material_price * item.order_amount);
         return record;   
     }
     

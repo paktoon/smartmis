@@ -51,8 +51,8 @@ public class PurchaseOrderDS extends DataSource {
 		 DataSourceFloatField Field_6 = new DataSourceFloatField("total_weight", "น้ำหนักรวม (กรัม)");
 		 DataSourceFloatField Field_7 = new DataSourceFloatField("total_amount", "จำนวนรวม");
 		 
-		 DataSourceFloatField Field_7_1 = new DataSourceFloatField("totel_received_weight", "น้ำหนักที่รับรวม (กรัม)");
-		 DataSourceFloatField Field_7_2 = new DataSourceFloatField("totel_received_amount", "จำนวนที่รับรวม");
+		 DataSourceFloatField Field_7_1 = new DataSourceFloatField("total_received_weight", "น้ำหนักที่รับรวม (กรัม)");
+		 DataSourceFloatField Field_7_2 = new DataSourceFloatField("total_received_amount", "จำนวนที่รับรวม");
 		 DataSourceTextField Field_7_3 = new DataSourceTextField("received_by", "รับโดย");
 		 
 		 DataSourceFloatField Field_8 = new DataSourceFloatField("netExclusive", "ราคารวม (บาท)");

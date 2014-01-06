@@ -287,11 +287,12 @@ public class ProcessOutline extends VLayout {
 		    	      		material.setEmptyDisplayValue("---โปรดเลือก---");
 		    	      		ListGridField Field_1 = new ListGridField("mid", 80);  
 		    	            ListGridField Field_2 = new ListGridField("mat_name", 140);  
-		    	            ListGridField Field_3 = new ListGridField("remain", 80); 		  
-		    	            ListGridField Field_4 = new ListGridField("unit", 50); 
-		    	            Field_3.setCellFormatter(FieldFormatter.getNumberFormat());
-		    	            Field_3.setAlign(Alignment.CENTER);
-		    	            material.setPickListFields(Field_1, Field_2, Field_3, Field_4);
+		    	            ListGridField Field_3 = new ListGridField("type", 70);
+		    	            ListGridField Field_4 = new ListGridField("remain", 80); 		  
+		    	            ListGridField Field_5 = new ListGridField("unit", 50);
+		    	            Field_4.setCellFormatter(FieldFormatter.getNumberFormat());
+		    	            Field_4.setAlign(Alignment.CENTER);
+		    	            material.setPickListFields(Field_1, Field_2, Field_3, Field_4, Field_5);
 		    	            final DoubleItem reqAmount = new DoubleItem("req_amount", "จำนวนที่ใช้ในการผลิต ต่อชิ้น");
 		    	            reqAmount.disable();
 		    	            reqAmount.setDefaultValue(0.0);
@@ -323,6 +324,7 @@ public class ProcessOutline extends VLayout {
 		    	                	  String mat_name = selected.getAttributeAsString("mat_name");
 		    	                	  Double req_amount = reqAmount.getValueAsDouble();
 		    	                	  String unit = selected.getAttributeAsString("unit");
+		    	                	  String type = selected.getAttributeAsString("type");
 		    	                	  Double weight = 0.0;
 		    	                	  if (selected.getAttributeAsString("type").equalsIgnoreCase("แร่เงิน")) weight = req_amount;
 		    	                	  else weight = selected.getAttributeAsDouble("weight") * req_amount;
@@ -335,7 +337,8 @@ public class ProcessOutline extends VLayout {
 			  									mat_name,
 			  									req_amount,
 			  									weight,
-			  									unit
+			  									unit,
+			  									type
 			  					    			);
 			  	    	        	currentDS.addData(newRecord, new DSCallback() {
 										@Override

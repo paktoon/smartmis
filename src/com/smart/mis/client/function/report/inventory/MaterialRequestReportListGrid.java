@@ -51,7 +51,7 @@ public class MaterialRequestReportListGrid extends ListGrid {
         ListGridField field_2_2 = new ListGridField("mname");
         ListGridField field_2_3 = new ListGridField("type");
         
-        ListGridField field_3_1 = new ListGridField("issued_weight",150);
+        //ListGridField field_3_1 = new ListGridField("issued_weight",150);
         ListGridField field_3_2 = new ListGridField("issued_amount", 150);
         ListGridField field_3_3 = new ListGridField("unit", 50);
         
@@ -59,13 +59,11 @@ public class MaterialRequestReportListGrid extends ListGrid {
         //ListGridField field_8 = new ListGridField("sup_list");
         
         //Cell Format
-        field_3_1.setAlign(Alignment.RIGHT);
-        field_3_1.setCellFormatter(FieldFormatter.getNumberFormat());
         field_3_2.setAlign(Alignment.RIGHT);
         field_3_2.setCellFormatter(FieldFormatter.getNumberFormat());
         
         //setFields(field_1, field_2, field_3, field_4, field_5, field_6, field_7, field_8);
-        setFields(field_1, field_2_1, field_2_2, field_2_3, field_3_1, field_3_2, field_3_3, Field_4);
+        setFields(field_1, field_2_1, field_2_2, field_2_3, field_3_2, field_3_3, Field_4);
         setHoverWidth(200);  
         setHoverHeight(20);
         hideFields("type");

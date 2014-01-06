@@ -170,9 +170,13 @@ public class QuoteCreateTab {
 					String contact_name = selected.getAttributeAsString("contact_name");
 					String contact_phone = selected.getAttributeAsString("contact_phone");
 					String contact_email = selected.getAttributeAsString("contact_email");
+					
+					//For report
+					String bus_type = selected.getAttributeAsString("bus_type");
+					String cus_group = selected.getAttributeAsString("cus_group");
 					String zone = selected.getAttributeAsString("zone");
 					
-					client.setAttributes(customer_id, customer_name, customer_phone, contact_name, contact_phone, contact_email, customer_type, zone);
+					client.setAttributes(customer_id, customer_name, customer_phone, contact_name, contact_phone, contact_email, customer_type, bus_type, cus_group, zone);
 					client.setPaymentModel(paymentModel.getValueAsString());
 					client.setCredit(credit.getValueAsInteger());
 					paymentModel.enable();
@@ -550,7 +554,7 @@ public class QuoteCreateTab {
 								Date delivery = deliveryDate.getValueAsDate();
 								String quote_status = "2_waiting_for_approved";
 								//xxxService.xxx(Callback quoteId);
-								ListGridRecord newRecord = QuotationData.createRecord(quote_id, client.cid, client.cus_name, client.payment_model, client.credit, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "", quote_status);
+								ListGridRecord newRecord = QuotationData.createRecord(quote_id, client.cid, client.cus_name, client.payment_model, client.credit, client.cus_type, client.bus_type, client.cus_group, client.zone, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "", quote_status);
 								// client; - cid
 								// DateForm; - from , to
 								// SummaryForm; - netExclusive, tax, netInclusive

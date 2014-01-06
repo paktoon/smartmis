@@ -15,6 +15,7 @@ public class RequestMaterialData {
         record.setAttribute("unit", unit); 
         record.setAttribute("request_amount", request_amount);
         record.setAttribute("status", status);
+        record.setAttribute("sum_price", price * request_amount);
         return record;  
     }
     
@@ -30,6 +31,7 @@ public class RequestMaterialData {
         record.setAttribute("unit", unit); 
         record.setAttribute("request_amount", request_amount);
         record.setAttribute("status", status);
+        record.setAttribute("sum_price", price * request_amount);
         return record;  
     }
     
@@ -45,6 +47,7 @@ public class RequestMaterialData {
         record.setAttribute("unit", item.material_unit); 
         record.setAttribute("request_amount", item.request_amount);
         record.setAttribute("status", item.status);
+        record.setAttribute("sum_price", item.material_price * item.request_amount);
         return record;  
     }
     

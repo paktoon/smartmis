@@ -45,7 +45,7 @@ public class SilverRequestColumnChart {
 		    options.setWidth(550);
 		    options.setHeight(350);
 //		    options.setIsStacked(true);
-		    options.setLegend(LegendPosition.BOTTOM);
+		    options.setLegend(LegendPosition.NONE);
 		    options.setHAxisOptions(createAxisOption("ประเภทแร่เงิน"));
 		    options.setVAxisOptions(createAxisOption("ปริมาณแร่เงินที่เบิกจ่าย (กรัม)"));
 		    options.setTitle("รายงานสรุปแร่เงินคงเหลือ");

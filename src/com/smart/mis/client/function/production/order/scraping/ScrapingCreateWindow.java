@@ -25,6 +25,7 @@ import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.client.function.purchasing.supplier.SupplierDS;
+import com.smart.mis.client.function.report.production.MaterialUsedReportDS;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
@@ -970,12 +971,15 @@ public class ScrapingCreateWindow {
 	}
 	
 	public void createMaterialRequest(String request_id, String job_id, Smith smith,String user, HashMap<String, MaterialRequestItemDetails> matRequest){
-		Double totel_request_amount = 0.0;
+		Double total_request_amount = 0.0;
 		for (MaterialRequestItemDetails item : matRequest.values()) {
-			totel_request_amount += item.getAmount();
+			total_request_amount += item.getAmount();
 			final String sub_request_id = "SMR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			ListGridRecord newRecord = MaterialRequestItemData.createRecord(sub_request_id, request_id, item);
+			newRecord.setAttribute("request_date", new Date());
 			MaterialRequestItemDS.getInstance(request_id).addData(newRecord);
+			//For report
+			MaterialUsedReportDS.getInstance().addData(newRecord);
 			
 			MaterialDS.getInstance().refreshData();
 			Record[] updated_records = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mid", OperatorId.EQUALS, item.material_id));
@@ -987,7 +991,7 @@ public class ScrapingCreateWindow {
 			MaterialDS.getInstance().updateData(updated);
 		}
 		
-		ListGridRecord newRecord = MaterialRequestData.createRecord(request_id, job_id, smith, "2_scrape", new Date(), totel_request_amount, new Date(), null, user, null, "1_requested");
+		ListGridRecord newRecord = MaterialRequestData.createRecord(request_id, job_id, smith, "2_scrape", new Date(), total_request_amount, new Date(), null, user, null, "1_requested");
 		MaterialRequestDS.getInstance().addData(newRecord);
 	}
 	

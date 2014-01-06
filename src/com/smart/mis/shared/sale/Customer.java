@@ -10,11 +10,14 @@ public class Customer {
 	public String contact_email;  
 	//public String address;   
 	public String cus_type;
+	
+	public String bus_type;
+	public String cus_group;
 	public String zone;
 	public String payment_model;
 	public Integer credit;
     
-    public Customer(String cid, String cus_name, String cus_phone, String contact_name, String contact_phone, String contact_email, String cus_type, String zone) {
+    public Customer(String cid, String cus_name, String cus_phone, String contact_name, String contact_phone, String contact_email, String cus_type, String bus_type, String cus_group, String zone) {
     	this.cid = cid;
     	this.cus_name = cus_name;
     	this.cus_phone = cus_phone;
@@ -23,6 +26,8 @@ public class Customer {
     	this.contact_email = contact_email;
     	//this.address = address;
     	this.cus_type = cus_type;
+    	this.bus_type = bus_type;
+    	this.cus_group = cus_group;
     	this.zone = zone;
     	
     }
@@ -31,7 +36,7 @@ public class Customer {
     	
     }
     
-    public void setAttributes(String cid, String cus_name, String cus_phone, String contact_name, String contact_phone, String contact_email, String cus_type, String zone) {
+    public void setAttributes(String cid, String cus_name, String cus_phone, String contact_name, String contact_phone, String contact_email, String cus_type, String bus_type, String cus_group, String zone) {
     	this.cid = cid;
     	this.cus_name = cus_name;
     	this.cus_phone = cus_phone;
@@ -39,6 +44,8 @@ public class Customer {
     	this.contact_phone = contact_phone;
     	this.contact_email = contact_email;
     	//this.address = address;
+    	this.bus_type = bus_type;
+    	this.cus_group = cus_group;
     	this.cus_type = cus_type;
     	this.zone = zone;
     }

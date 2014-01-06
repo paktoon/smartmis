@@ -48,7 +48,7 @@ public class ProductRequestColumnChart {
 		    //options.setIsStacked(true);
 		    //options.setLegend("center");
 		    //options.setLegend(createLegendOption());
-		    options.setLegend(LegendPosition.BOTTOM);
+		    options.setLegend(LegendPosition.NONE);
 		    options.setHAxisOptions(createAxisOption("ประเภทสินค้า"));
 		    options.setVAxisOptions(createAxisOption("ปริมาณสินค้าที่เบิกจ่าย (ชิ้น)"));
 //		    ChartArea area = ChartArea.create();

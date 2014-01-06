@@ -871,9 +871,9 @@ public class CastingPrintWindow extends EditorWindow{
 //				new MaterialRequestItemDetails(silver925[0], total_received_weight / 2, silver100[0].getAttributeAsDouble("remain"))
 //		};
 //		
-//		Double totel_request_amount = 0.0;
+//		Double total_request_amount = 0.0;
 //		for (MaterialRequestItemDetails item : matRequest) {
-//			totel_request_amount += item.getAmount();
+//			total_request_amount += item.getAmount();
 //			final String sub_request_id = "SMR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //			ListGridRecord newRecord = MaterialRequestItemData.createRecord(sub_request_id, request_id, item);
 //			MaterialRequestItemDS.getInstance(request_id).addData(newRecord);
@@ -887,7 +887,7 @@ public class CastingPrintWindow extends EditorWindow{
 //			updated.setAttribute("reserved", reserved);
 //			MaterialDS.getInstance().updateData(updated);
 //		}
-//		ListGridRecord newRecord = MaterialRequestData.createRecord(request_id, job_id, smith, "1_casting", new Date(), totel_request_amount, new Date(), null, user, null, "1_requested");
+//		ListGridRecord newRecord = MaterialRequestData.createRecord(request_id, job_id, smith, "1_casting", new Date(), total_request_amount, new Date(), null, user, null, "1_requested");
 //		MaterialRequestDS.getInstance().addData(newRecord);
 //	}
 	
