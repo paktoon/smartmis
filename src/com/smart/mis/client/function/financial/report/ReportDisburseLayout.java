@@ -18,6 +18,7 @@ import com.smart.mis.client.function.sale.quotation.QuotationDS;
 import com.smart.mis.shared.DateTimeMapping;
 import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
+import com.smart.mis.shared.FromToValidate;
 import com.smart.mis.shared.purchasing.PurchaseOrderStatus;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.AdvancedCriteria;
@@ -126,6 +127,7 @@ public class ReportDisburseLayout extends VLayout{
         to.setDefaultValue(dateRange.getEndDate());
         to.setUseTextField(true);
         
+        FromToValidate.addValidator(from, to);
         searchForm.setFields(typeItem, from, to);
         
 //        typeItem.addChangedHandler(new ChangedHandler(){

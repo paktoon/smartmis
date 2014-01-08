@@ -13,6 +13,7 @@ import com.smart.mis.client.function.inventory.product.transfer.TransferDS;
 import com.smart.mis.client.function.purchasing.order.PurchaseOrderDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryDS;
 import com.smart.mis.shared.FieldFormatter;
+import com.smart.mis.shared.FromToValidate;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.AdvancedCriteria;
 import com.smartgwt.client.data.Criterion;
@@ -86,6 +87,7 @@ public class ReportRequestLayout extends VLayout{
         to.setDefaultValue(dateRange.getEndDate());
         to.setUseTextField(true);
         
+        FromToValidate.addValidator(from, to);
         searchForm.setFields(typeItem, from, to);
         
 		HLayout buttonLayout = new HLayout();

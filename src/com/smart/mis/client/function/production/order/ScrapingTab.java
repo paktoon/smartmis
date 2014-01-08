@@ -16,6 +16,7 @@ import com.smart.mis.client.function.production.plan.PlanDS;
 import com.smart.mis.client.function.production.plan.PlanViewWindow;
 import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
+import com.smart.mis.shared.FromToValidate;
 import com.smart.mis.shared.prodution.ProcessStatus;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.AdvancedCriteria;
@@ -138,6 +139,7 @@ public class ScrapingTab {
         to.setDefaultValue(dateRange.getEndDate());
         to.setUseTextField(true);
 
+        FromToValidate.addValidator(from, to);
         searchForm.setItems(jidText, statusSelected, planText, smidText);
         //searchForm.setItems(planText, jidText);
         dateForm.setItems(from, to);

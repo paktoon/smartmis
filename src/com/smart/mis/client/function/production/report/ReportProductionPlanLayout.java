@@ -9,6 +9,7 @@ import com.smart.mis.client.function.production.plan.PlanDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
+import com.smart.mis.shared.FromToValidate;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.sale.Customer;
@@ -136,6 +137,7 @@ public class ReportProductionPlanLayout extends VLayout {
         to.setDefaultValue(dateRange.getEndDate());
         to.setUseTextField(true);
 
+        FromToValidate.addValidator(from, to);
         //searchForm.setItems(planText,statusSelected, cidText, cnameText);
         searchForm.setItems(statusSelected, saleText , from, to);
         //dateForm.setItems(from, to);

@@ -60,6 +60,8 @@ import com.smartgwt.client.widgets.form.fields.SelectOtherItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -411,12 +413,74 @@ public class RequestViewWindow extends EditorWindow{
         toDate.setValue(to);
         deliveryDate.setDefaultChooserDate(delivery);
         deliveryDate.setValue(delivery);
-//        fromDate.setRequired(true);
-//        fromDate.setHint("*");
-//		toDate.setRequired(true);
-//		toDate.setHint("*");
-//		deliveryDate.setRequired(true);
-//		deliveryDate.setHint("*");
+
+        fromDate.addChangeHandler( new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				// TODO Auto-generated method stub
+				Date from = (Date) event.getValue();
+				
+				//if (toDate.getValueAsDate() != null && !from.before(toDate.getValueAsDate())) {
+				if (toDate.getValueAsDate() != null && from.after(toDate.getValueAsDate())) {
+					SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + fromDate.getTitle() + " ต้องก่อนหน้า " + toDate.getTitle() + " และ " + deliveryDate.getTitle());
+					fromDate.setValue(fromDate.getValueAsDate());
+					return;
+				}
+				
+				//if (deliveryDate.getValueAsDate() != null && !from.before(deliveryDate.getValueAsDate())) {
+				if (deliveryDate.getValueAsDate() != null && from.after(deliveryDate.getValueAsDate())) {
+					SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + fromDate.getTitle() + " ต้องก่อนหน้า " + toDate.getTitle() + " และ " + deliveryDate.getTitle());
+					fromDate.setValue(fromDate.getValueAsDate());
+					return;
+				}
+				}
+			});
+        
+		toDate.addChangeHandler( new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				// TODO Auto-generated method stub
+				Date to = (Date) event.getValue();
+				
+				//if (fromDate.getValueAsDate() != null && !to.after(fromDate.getValueAsDate())) {
+				if (fromDate.getValueAsDate() != null && to.before(fromDate.getValueAsDate())) {
+					SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + toDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+					toDate.setValue(toDate.getValueAsDate());
+					return;
+				}
+				
+				//if (!to.after(new Date())) {
+				if (to.before(new Date())) {
+						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + toDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+						toDate.setValue(toDate.getValueAsDate());
+						return;
+					}
+				} 
+		});
+		
+		deliveryDate.addChangeHandler( new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				// TODO Auto-generated method stub
+				Date delivery = (Date) event.getValue();
+				
+				//if (fromDate.getValueAsDate() != null && !delivery.after(fromDate.getValueAsDate())) {
+				if (fromDate.getValueAsDate() != null && delivery.before(fromDate.getValueAsDate())) {
+					//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+					SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + deliveryDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+					deliveryDate.setValue(deliveryDate.getValueAsDate());
+					return;
+				}
+				
+				//if (!delivery.after(new Date())) {
+				if (delivery.before(new Date())) {
+						//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + deliveryDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+						deliveryDate.setValue(deliveryDate.getValueAsDate());
+						return;
+					}
+				}
+			});
 		
 		dateForm.setFields(fromDate, toDate, deliveryDate);
 		dateForm.setColWidths(130,80);

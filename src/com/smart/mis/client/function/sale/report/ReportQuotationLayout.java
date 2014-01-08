@@ -11,6 +11,7 @@ import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.shared.DateTimeMapping;
 import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
+import com.smart.mis.shared.FromToValidate;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.QuotationStatus;
@@ -130,6 +131,7 @@ public class ReportQuotationLayout extends VLayout {
         to.setDefaultValue(dateRange.getEndDate());
         to.setUseTextField(true);
 
+        FromToValidate.addValidator(from, to);
         searchForm.setItems(statusSelected, cidText, cnameText);
         dateForm.setItems(from, to);
         

@@ -11,6 +11,7 @@ import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductData;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDetails;
 import com.smart.mis.shared.FieldFormatter;
+import com.smart.mis.shared.FromToValidate;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.prodution.ProductType;
@@ -40,8 +41,11 @@ import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.validator.DateRangeValidator;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -475,6 +479,49 @@ public class QuoteCreateTab {
 		toDate.setHint("*");
 		deliveryDate.setRequired(true);
 		deliveryDate.setHint("*");
+		
+		fromDate.addChangeHandler( new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				// TODO Auto-generated method stub
+				Date from = (Date) event.getValue();
+				
+				//if (!from.before(toDate.getValueAsDate()) || !from.before(deliveryDate.getValueAsDate())) {
+				if (from.after(toDate.getValueAsDate()) || from.after(deliveryDate.getValueAsDate())) {
+						//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + fromDate.getTitle() + " ต้องก่อนหน้า " + toDate.getTitle() + " และ " + deliveryDate.getTitle());
+						fromDate.setValue(fromDate.getValueAsDate());
+					}
+				}
+			});
+        
+		toDate.addChangeHandler( new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				// TODO Auto-generated method stub
+				Date to = (Date) event.getValue();
+				
+				//if (!to.after(fromDate.getValueAsDate()) || !to.after(new Date())) {
+				if (to.before(fromDate.getValueAsDate()) || to.before(new Date())) {
+						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + toDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+						toDate.setValue(toDate.getValueAsDate());
+					}
+				} 
+		});
+		
+		deliveryDate.addChangeHandler( new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				// TODO Auto-generated method stub
+				Date delivery = (Date) event.getValue();
+				//if (!delivery.after(fromDate.getValueAsDate())  || !delivery.after(new Date())) {
+				if (delivery.before(fromDate.getValueAsDate())  || delivery.before(new Date())) {
+						//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + deliveryDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+						deliveryDate.setValue(deliveryDate.getValueAsDate());
+					}
+				}
+			});
 		
 		dateForm.setFields(fromDate, toDate, deliveryDate);
 		dateForm.setColWidths(125,125 );
