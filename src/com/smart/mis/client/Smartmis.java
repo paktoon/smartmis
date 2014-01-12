@@ -209,7 +209,7 @@ public class Smartmis implements EntryPoint {
 		securityService.createPermOnServer(new PermissionProfile("INVENTORY", Function.INVENTORY, Role.STAFF, true), "admin",callback);
 		securityService.createPermOnServer(new PermissionProfile("PURCHASING", Function.PURCHASING, Role.STAFF, true), "admin",callback);
 		securityService.createPermOnServer(new PermissionProfile("FINANCIAL", Function.FINANCIAL, Role.STAFF, true), "admin",callback);
-		securityService.createPermOnServer(new PermissionProfile("OWNER", Function.REPORT, Role.OWNER, true), "admin",callback);
+		securityService.createPermOnServer(new PermissionProfile("OWNER", Function.ALL, Role.OWNER, true), "admin",callback);
 		
 		securityService.createUserOnServer(new User("admin", "test", "ภักดิ์ทูล" , "ใจทอง", "admin@projectadmin.com" , "administrator" , "นาย", true), "ADMIN", "admin", callback);
 		securityService.createUserOnServer(new User("sale", "test", "สมศรี" , "ยอดขาย", "somsee@richsilver.com" , "sale person", "นาง", true),"SALE", "admin",callback);

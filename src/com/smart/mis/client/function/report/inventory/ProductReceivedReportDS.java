@@ -45,7 +45,7 @@ public class ProductReceivedReportDS extends DataSource  {
 			 setFields(Field_1, Field_2, Field_4, Field_3, Field_5, Field_6, Field_7_2, Field_7_3, Field_7_4, Field_7_5, Field_8);
 			 
 			 //setDataURL("smartmis/security/userData");
-			 setTestData(new ListGridRecord[]{}); // For create tab
+			 setTestData(ProductReceivedReportData.getNewRecords()); // For create tab
 			 setClientOnly(true);
 		 }
 		 

@@ -368,8 +368,6 @@ public class ReportPanel extends FunctionPanel{
 		for (Canvas removed : this.inventoryProductReportWindow.getItems()) {
 			this.inventoryProductReportWindow.removeItem(removed);
 		}
-		ProductColumnChart chart = new ProductColumnChart();
-		VLayout reportLayout = new VLayout();
 		
 		Label title = new Label();
 		title.setContents("รายงานสรุปยอดสินค้าคงคลัง");
@@ -377,16 +375,19 @@ public class ReportPanel extends FunctionPanel{
 		title.setAlign(Alignment.CENTER);
 		title.setWidth(1000);
 		title.setHeight(30);
-		
-		HLayout chartLayout = new HLayout();
-		chartLayout.setAlign(Alignment.CENTER);
-		chartLayout.setHeight(350);
-		chart.loadChart(chartLayout, this);
-		
+
 		VLayout gridLayout = new VLayout();
 		gridLayout.setMargin(5);
 		InventoryProductGrid = new ProductReportListGrid();
 		gridLayout.addMember(InventoryProductGrid);
+		
+		ProductColumnChart chart = new ProductColumnChart();
+		VLayout reportLayout = new VLayout();
+		
+		HLayout chartLayout = new HLayout();
+		chartLayout.setAlign(Alignment.CENTER);
+		chartLayout.setHeight(350);
+		chart.loadChart(chartLayout, this, InventoryProductGrid.createDataTable());
 		
 		reportLayout.addMembers(title, chartLayout, gridLayout);
 		this.inventoryProductReportWindow.addItem(reportLayout);
@@ -396,9 +397,6 @@ public class ReportPanel extends FunctionPanel{
 		for (Canvas removed : this.inventoryMaterialReportWindow.getItems()) {
 			this.inventoryMaterialReportWindow.removeItem(removed);
 		}
-		SilverColumnChart chart_1 = new SilverColumnChart();
-		MaterialColumnChart chart_2 = new MaterialColumnChart();
-		VLayout reportLayout = new VLayout();
 		
 		Label title = new Label();
 		title.setContents("รายงานสรุปยอดวัตถุดิบคงคลัง");
@@ -411,19 +409,23 @@ public class ReportPanel extends FunctionPanel{
 		chartLayout.setAlign(Alignment.CENTER);
 		chartLayout.setHeight(350);
 		//chartLayout.setMargin(5);
-		
-		VLayout chartLayout_1 = new VLayout(); 
-		chartLayout_1.setWidth(450);
-		chart_1.loadChart(chartLayout_1, this);
-		VLayout chartLayout_2 = new VLayout(); 
-		chartLayout_2.setWidth(600);
-		chart_2.loadChart(chartLayout_2, this);
-		
-		chartLayout.addMembers(chartLayout_1, chartLayout_2);
+
 		VLayout gridLayout = new VLayout();
 		gridLayout.setMargin(5);
 		InventoryMaterialGrid = new MaterialReportListGrid();
 		gridLayout.addMember(InventoryMaterialGrid);
+		
+		SilverColumnChart chart_1 = new SilverColumnChart();
+		MaterialColumnChart chart_2 = new MaterialColumnChart();
+		VLayout reportLayout = new VLayout();
+		VLayout chartLayout_1 = new VLayout(); 
+		chartLayout_1.setWidth(450);
+		chart_1.loadChart(chartLayout_1, this , InventoryMaterialGrid.createSilverDataTable());
+		VLayout chartLayout_2 = new VLayout(); 
+		chartLayout_2.setWidth(600);
+		chart_2.loadChart(chartLayout_2, this, InventoryMaterialGrid.createMaterialDataTable());
+
+		chartLayout.addMembers(chartLayout_1, chartLayout_2);
 		
 		reportLayout.addMembers(title, chartLayout, gridLayout);
 		
@@ -505,6 +507,15 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
+		VLayout gridLayout = new VLayout();
+		gridLayout.setMargin(5);
+		Criterion dateCriteria = new Criterion("issued_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate());
+		InventoryProductRequestGrid = new ProductRequestReportListGrid();
+		//InventoryProductRequestGrid.setCriteria(new Criterion("issued_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()));
+		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[] { dateCriteria });
+		InventoryProductRequestGrid.setCriteria(criteria);
+		gridLayout.addMember(InventoryProductRequestGrid);
+		
 		ProductRequestColumnChart chart = new ProductRequestColumnChart();
 		VLayout reportLayout = new VLayout();
 		
@@ -518,17 +529,7 @@ public class ReportPanel extends FunctionPanel{
 		HLayout chartLayout = new HLayout();
 		chartLayout.setAlign(Alignment.CENTER);
 		chartLayout.setHeight(350);
-		chart.loadChart(chartLayout, this);
-		
-		VLayout gridLayout = new VLayout();
-		gridLayout.setMargin(5);
-		InventoryProductRequestGrid = new ProductRequestReportListGrid();
-		//InventoryProductRequestGrid.setCriteria(new Criterion("issued_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()));
-		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-	  		      new Criterion("issued_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
-	  		  });
-		InventoryProductRequestGrid.setCriteria(criteria);
-		gridLayout.addMember(InventoryProductRequestGrid);
+		chart.loadChart(chartLayout, this, InventoryProductRequestGrid.createDataTable(dateCriteria));
 		
 		reportLayout.addMembers(filterLayout, title, chartLayout, gridLayout);
 		this.inventoryProductRequestReportWindow.addItem(reportLayout);
@@ -618,6 +619,14 @@ public class ReportPanel extends FunctionPanel{
 		title.setWidth(1000);
 		title.setHeight(30);
 		
+		VLayout gridLayout = new VLayout();
+		gridLayout.setMargin(5);
+		Criterion dateCriteria = new Criterion("issued_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate());
+		InventoryMaterialRequestGrid = new MaterialRequestReportListGrid();
+		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{ dateCriteria });
+		InventoryMaterialRequestGrid.setCriteria(criteria);
+		gridLayout.addMember(InventoryMaterialRequestGrid);
+		
 		HLayout chartLayout = new HLayout();
 		chartLayout.setAlign(Alignment.CENTER);
 		chartLayout.setHeight(350);
@@ -625,20 +634,12 @@ public class ReportPanel extends FunctionPanel{
 		
 		VLayout chartLayout_1 = new VLayout(); 
 		chartLayout_1.setWidth(450);
-		chart_1.loadChart(chartLayout_1, this);
+		chart_1.loadChart(chartLayout_1, this, InventoryMaterialRequestGrid.createSilverDataTable(criteria));
 		VLayout chartLayout_2 = new VLayout(); 
 		chartLayout_2.setWidth(600);
-		chart_2.loadChart(chartLayout_2, this);
+		chart_2.loadChart(chartLayout_2, this, InventoryMaterialRequestGrid.createMaterialDataTable(criteria));
 		
 		chartLayout.addMembers(chartLayout_1, chartLayout_2);
-		VLayout gridLayout = new VLayout();
-		gridLayout.setMargin(5);
-		InventoryMaterialRequestGrid = new MaterialRequestReportListGrid();
-		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-	  		      new Criterion("issued_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
-	  		  });
-		InventoryMaterialRequestGrid.setCriteria(criteria);
-		gridLayout.addMember(InventoryMaterialRequestGrid);
 		
 		reportLayout.addMembers(filterLayout, title, chartLayout, gridLayout);
 		
@@ -719,6 +720,15 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
+		VLayout gridLayout = new VLayout();
+		gridLayout.setMargin(5);
+		Criterion dateCriteria = new Criterion("received_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate());
+		InventoryProductReceivedGrid = new ProductReceivedReportListGrid();
+		//InventoryProductReceivedGrid.setCriteria(new Criterion("received_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()));
+		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{ dateCriteria });
+		InventoryProductReceivedGrid.setCriteria(criteria);
+		gridLayout.addMember(InventoryProductReceivedGrid);
+		
 		ProductReceivedColumnChart chart = new ProductReceivedColumnChart();
 		VLayout reportLayout = new VLayout();
 		
@@ -732,17 +742,7 @@ public class ReportPanel extends FunctionPanel{
 		HLayout chartLayout = new HLayout();
 		chartLayout.setAlign(Alignment.CENTER);
 		chartLayout.setHeight(350);
-		chart.loadChart(chartLayout, this);
-		
-		VLayout gridLayout = new VLayout();
-		gridLayout.setMargin(5);
-		InventoryProductReceivedGrid = new ProductReceivedReportListGrid();
-		//InventoryProductReceivedGrid.setCriteria(new Criterion("received_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()));
-		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-	  		      new Criterion("received_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
-	  		  });
-		InventoryProductReceivedGrid.setCriteria(criteria);
-		gridLayout.addMember(InventoryProductReceivedGrid);
+		chart.loadChart(chartLayout, this, InventoryProductReceivedGrid.createDataTable(criteria));
 		
 		reportLayout.addMembers(filterLayout, title, chartLayout, gridLayout);
 		this.inventoryProductReceivedReportWindow.addItem(reportLayout);
@@ -822,6 +822,14 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
+		VLayout gridLayout = new VLayout();
+		gridLayout.setMargin(5);
+		Criterion dateCriteria = new Criterion("received_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate());
+		InventoryMaterialReceivedGrid = new MaterialReceivedReportListGrid();
+		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{ dateCriteria });
+		InventoryMaterialReceivedGrid.setCriteria(criteria);
+		gridLayout.addMember(InventoryMaterialReceivedGrid);
+		
 		SilverReceivedColumnChart chart_1 = new SilverReceivedColumnChart();
 		MaterialReceivedColumnChart chart_2 = new MaterialReceivedColumnChart();
 		VLayout reportLayout = new VLayout();
@@ -840,20 +848,12 @@ public class ReportPanel extends FunctionPanel{
 		
 		VLayout chartLayout_1 = new VLayout(); 
 		chartLayout_1.setWidth(450);
-		chart_1.loadChart(chartLayout_1, this);
+		chart_1.loadChart(chartLayout_1, this, InventoryMaterialReceivedGrid.createSilverDataTable(criteria));
 		VLayout chartLayout_2 = new VLayout(); 
 		chartLayout_2.setWidth(600);
-		chart_2.loadChart(chartLayout_2, this);
+		chart_2.loadChart(chartLayout_2, this, InventoryMaterialReceivedGrid.createMaterialDataTable(criteria));
 		
 		chartLayout.addMembers(chartLayout_1, chartLayout_2);
-		VLayout gridLayout = new VLayout();
-		gridLayout.setMargin(5);
-		InventoryMaterialReceivedGrid = new MaterialReceivedReportListGrid();
-		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-  		      new Criterion("received_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
-  		  });
-		InventoryMaterialReceivedGrid.setCriteria(criteria);
-		gridLayout.addMember(InventoryMaterialReceivedGrid);
 		
 		reportLayout.addMembers(filterLayout, title, chartLayout, gridLayout);
 		

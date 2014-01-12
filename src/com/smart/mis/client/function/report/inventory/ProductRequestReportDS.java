@@ -44,7 +44,8 @@ public class ProductRequestReportDS extends DataSource  {
 			 setFields(sub_id_field, ref_id_field, Field_1, Field_2, Field_3, Field_5, Field_6, Field_5_1, Field_6_1 ,Field_7, Field_8,  Field_9, Field_10);
 			 
 			 //setDataURL("smartmis/security/userData");
-			 setTestData(new ListGridRecord[]{}); // For create tab
+			 //setTestData(new ListGridRecord[]{}); // For create tab
+			 setTestData(ProductRequestReportData.getNewRecords()); // For create tab
 			 setClientOnly(true);
 		 }
 		 
@@ -58,4 +59,6 @@ public class ProductRequestReportDS extends DataSource  {
 					}
 		    	});
 		 }
+		 
+		 
 }

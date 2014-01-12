@@ -1,11 +1,17 @@
 package com.smart.mis.client.function.report.inventory;
 
 import com.smart.mis.shared.FieldFormatter;
+import com.smartgwt.client.data.AdvancedCriteria;
+import com.smartgwt.client.data.Criterion;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.GroupStartOpen;
+import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.types.SummaryFunctionType;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.SummaryFunction;
 
 public class ProductReceivedReportListGrid extends ListGrid {
 
@@ -38,14 +44,25 @@ public class ProductReceivedReportListGrid extends ListGrid {
         
         setGroupStartOpen(GroupStartOpen.ALL);
         setGroupByField("type"); 
+        setShowGroupSummary(true);
         
         ListGridField field_1 = new ListGridField("transfer_id", 120);
         ListGridField field_2_1 = new ListGridField("pid",150);
+        field_2_1.setShowGroupSummary(true);
+        field_2_1.setSummaryFunction(new SummaryFunction() {  
+            public Object getSummaryValue(Record[] records, ListGridField field) {
+                return records.length + " รายการ";  
+            }  
+        });
         ListGridField field_2_2 = new ListGridField("name");
         ListGridField field_2_3 = new ListGridField("type");
         
         ListGridField field_3_1 = new ListGridField("recv_weight",150);
+        field_3_1.setShowGroupSummary(true);
+        field_3_1.setSummaryFunction(SummaryFunctionType.SUM);
         ListGridField field_3_2 = new ListGridField("recv_amount", 150);
+        field_3_2.setShowGroupSummary(true);
+        field_3_2.setSummaryFunction(SummaryFunctionType.SUM);
         ListGridField field_3_3 = new ListGridField("unit", 50);
         
         ListGridField Field_4 = new ListGridField("received_date", 100);
@@ -66,20 +83,27 @@ public class ProductReceivedReportListGrid extends ListGrid {
         //fetchData();
 	}
 	
-//	public void addUpdateDetailHandler(final ProductDetailTabPane itemDetailTabPane){
-//        addRecordClickHandler(new RecordClickHandler() {  
-//			@Override
-//			public void onRecordClick(RecordClickEvent event) {
-//				itemDetailTabPane.updateDetails();  
-//			}  
-//        });  
-//  
-//        addCellSavedHandler(new CellSavedHandler() {  
-//			@Override
-//			public void onCellSaved(CellSavedEvent event) {
-//				itemDetailTabPane.updateDetails();  
-//			}  
-//        }); 
-//		
-//	}
+	public Double[][] createDataTable(Criterion criteria){
+	    ProductReceivedReportDS.getInstance().refreshData();
+	    Record[] ring = ProductReceivedReportDS.getInstance().applyFilter(ProductReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "ring")}));
+	    Record[] toe_ring = ProductReceivedReportDS.getInstance().applyFilter(ProductReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "toe ring")}));
+	    Record[] earring = ProductReceivedReportDS.getInstance().applyFilter(ProductReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "earring")}));
+	    Record[] necklace = ProductReceivedReportDS.getInstance().applyFilter(ProductReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "necklace")}));
+	    Record[] pendant = ProductReceivedReportDS.getInstance().applyFilter(ProductReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "pendant")}));
+	    Record[] bracelet = ProductReceivedReportDS.getInstance().applyFilter(ProductReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "bracelet")}));
+	    Record[] anklet = ProductReceivedReportDS.getInstance().applyFilter(ProductReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "anklet")}));
+	    Record[] bangle = ProductReceivedReportDS.getInstance().applyFilter(ProductReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "bangle")}));
+
+	    return new Double[][] {
+	    		{getReceviedAmount(ring), getReceviedAmount(toe_ring), getReceviedAmount(earring), getReceviedAmount(necklace), getReceviedAmount(pendant), getReceviedAmount(bracelet), getReceviedAmount(anklet), getReceviedAmount(bangle)}
+	    };
+	}
+	
+	public Double getReceviedAmount(Record[] records) {
+		Double recv_amount = 0.0;
+		for (Record record : records) {
+			recv_amount += record.getAttributeAsInt("recv_amount");
+		}
+		return recv_amount;
+	}
 }

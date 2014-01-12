@@ -200,17 +200,18 @@ public class SmithDetailTabPane extends TabSet {
         viewTab.setWidth(70);  
         viewTab.setPane(itemViewer);
   
-        Tab historyTab = new Tab("ประวัติการสั่งผลิต");
-        historyTab.setIcon("icons/16/application_form.png");  
-        historyTab.setWidth(70);
-        historyTab.setPane(historyGrid); 
+//        Tab historyTab = new Tab("ประวัติการสั่งผลิต");
+//        historyTab.setIcon("icons/16/application_form.png");  
+//        historyTab.setWidth(70);
+//        historyTab.setPane(historyGrid); 
         
         Tab editTab = new Tab("แก้ไข");  
         editTab.setIcon("icons/16/icon_edit.png");  
         editTab.setWidth(70);  
         editTab.setPane(outlineForm);
         
-        setTabs(viewTab, historyTab, editTab);  
+//        setTabs(viewTab, historyTab, editTab);  
+        setTabs(viewTab, editTab);  
         
         addTabSelectedHandler(new TabSelectedHandler() {  
             public void onTabSelected(TabSelectedEvent event) {  

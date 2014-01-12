@@ -1,11 +1,17 @@
 package com.smart.mis.client.function.report.inventory;
 
 import com.smart.mis.shared.FieldFormatter;
+import com.smartgwt.client.data.AdvancedCriteria;
+import com.smartgwt.client.data.Criterion;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.GroupStartOpen;
+import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.types.SummaryFunctionType;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.SummaryFunction;
 
 public class ProductRequestReportListGrid extends ListGrid {
 
@@ -38,14 +44,25 @@ public class ProductRequestReportListGrid extends ListGrid {
         
         setGroupStartOpen(GroupStartOpen.ALL);
         setGroupByField("type"); 
+        setShowGroupSummary(true);
         
         ListGridField field_1 = new ListGridField("delivery_id", 120);
         ListGridField field_2_1 = new ListGridField("pid",150);
+        field_2_1.setShowGroupSummary(true);
+        field_2_1.setSummaryFunction(new SummaryFunction() {  
+            public Object getSummaryValue(Record[] records, ListGridField field) {
+                return records.length + " รายการ";  
+            }  
+        });
         ListGridField field_2_2 = new ListGridField("name");
         ListGridField field_2_3 = new ListGridField("type");
         
         ListGridField field_3_1 = new ListGridField("issued_weight",100);
-        ListGridField field_3_2 = new ListGridField("issued_amount", 80);
+        field_3_1.setShowGroupSummary(true);
+        field_3_1.setSummaryFunction(SummaryFunctionType.SUM);
+        ListGridField field_3_2 = new ListGridField("issued_amount", 80); //*
+        field_3_2.setShowGroupSummary(true);
+        field_3_2.setSummaryFunction(SummaryFunctionType.SUM);
         ListGridField field_3_3 = new ListGridField("unit", 50);
         
         ListGridField Field_4 = new ListGridField("issued_date", 100);
@@ -66,20 +83,27 @@ public class ProductRequestReportListGrid extends ListGrid {
         //fetchData();
 	}
 	
-//	public void addUpdateDetailHandler(final ProductDetailTabPane itemDetailTabPane){
-//        addRecordClickHandler(new RecordClickHandler() {  
-//			@Override
-//			public void onRecordClick(RecordClickEvent event) {
-//				itemDetailTabPane.updateDetails();  
-//			}  
-//        });  
-//  
-//        addCellSavedHandler(new CellSavedHandler() {  
-//			@Override
-//			public void onCellSaved(CellSavedEvent event) {
-//				itemDetailTabPane.updateDetails();  
-//			}  
-//        }); 
-//		
-//	}
+	public Double[][] createDataTable(Criterion criteria){
+	    ProductRequestReportDS.getInstance().refreshData();
+	    Record[] ring = ProductRequestReportDS.getInstance().applyFilter(ProductRequestReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "ring")}));
+	    Record[] toe_ring = ProductRequestReportDS.getInstance().applyFilter(ProductRequestReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "toe ring")}));
+	    Record[] earring = ProductRequestReportDS.getInstance().applyFilter(ProductRequestReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "earring")}));
+	    Record[] necklace = ProductRequestReportDS.getInstance().applyFilter(ProductRequestReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "necklace")}));
+	    Record[] pendant = ProductRequestReportDS.getInstance().applyFilter(ProductRequestReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "pendant")}));
+	    Record[] bracelet = ProductRequestReportDS.getInstance().applyFilter(ProductRequestReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "bracelet")}));
+	    Record[] anklet = ProductRequestReportDS.getInstance().applyFilter(ProductRequestReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "anklet")}));
+	    Record[] bangle = ProductRequestReportDS.getInstance().applyFilter(ProductRequestReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "bangle")}));
+
+	    return new Double[][] {
+	    		{getIssuedAmount(ring), getIssuedAmount(toe_ring), getIssuedAmount(earring), getIssuedAmount(necklace), getIssuedAmount(pendant), getIssuedAmount(bracelet), getIssuedAmount(anklet), getIssuedAmount(bangle)}
+	    };
+	}
+	
+	public Double getIssuedAmount(Record[] records) {
+		Double issued_amount = 0.0;
+		for (Record record : records) {
+			issued_amount += record.getAttributeAsInt("issued_amount");
+		}
+		return issued_amount;
+	}
 }

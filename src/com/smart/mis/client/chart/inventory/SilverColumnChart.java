@@ -21,11 +21,11 @@ import com.smartgwt.client.widgets.Canvas;
 
 public class SilverColumnChart {
 
-	public void loadChart(final Canvas loader, final ReportPanel panel) {  
+	public void loadChart(final Canvas loader, final ReportPanel panel, final Double[][] data) {  
 	    Runnable onLoadCallback = new Runnable() {
 	        public void run() {
 	   
-	          ColumnChart chart = new ColumnChart(createTable(), createOptions());
+	          ColumnChart chart = new ColumnChart(createTable(data), createOptions());
 
 	          chart.addSelectHandler(createSelectHandler(chart, panel));
 	          
@@ -108,7 +108,7 @@ public class SilverColumnChart {
 		    };
 		  }
 
-		  private AbstractDataTable createTable() {
+		  private AbstractDataTable createTable(Double[][] item) {
 		    DataTable data = DataTable.create();
 		    data.addColumn(ColumnType.STRING, "ประเภทแร่เงิน"); //0
 		    data.addColumn(ColumnType.NUMBER, "ปริมาณแร่เเงินคงเหลือ (กรัม)"); //1
@@ -120,11 +120,11 @@ public class SilverColumnChart {
 		    data.setValue(0, 0, "แร่เงิน 100%");
 		    data.setValue(1, 0, "แร่เงิน 92.5%");
 		    
-		    data.setValue(0, 1, 1000.0);
-		    data.setValue(1, 1, 1200.0);
+		    data.setValue(0, 1, item[0][0]);
+		    data.setValue(1, 1, item[0][1]);
 		    
-		    data.setValue(0, 2, 100.0);
-		    data.setValue(1, 2, 220.0);
+		    data.setValue(0, 2, item[1][0]);
+		    data.setValue(1, 2, item[1][1]);
 		    
 		    // 2 Digit display for remaining
 		    NumberFormat.Options option = NumberFormat.Options.create();

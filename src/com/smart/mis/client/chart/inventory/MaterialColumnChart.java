@@ -21,11 +21,11 @@ import com.smartgwt.client.widgets.Canvas;
 
 public class MaterialColumnChart {
 
-	public void loadChart(final Canvas loader, final ReportPanel panel) {  
+	public void loadChart(final Canvas loader, final ReportPanel panel, final Double[][] data) {  
 	    Runnable onLoadCallback = new Runnable() {
 	        public void run() {
 	   
-	          ColumnChart chart = new ColumnChart(createTable(), createOptions());
+	          ColumnChart chart = new ColumnChart(createTable(data), createOptions());
 
 	          chart.addSelectHandler(createSelectHandler(chart, panel));
 	          
@@ -108,7 +108,7 @@ public class MaterialColumnChart {
 		    };
 		  }
 
-		  private AbstractDataTable createTable() {
+		  private AbstractDataTable createTable(Double[][] item) {
 		    DataTable data = DataTable.create();
 		    data.addColumn(ColumnType.STRING, "ประเภทวัตถุดิบ"); //0
 		    data.addColumn(ColumnType.NUMBER, "ปริมาณวัตถุดิบคงเหลือ (หน่วย)"); //1
@@ -121,13 +121,18 @@ public class MaterialColumnChart {
 		    data.setValue(1, 0, "แมกกาไซต์");
 		    data.setValue(2, 0, "อื่นๆ");
 		    
-		    data.setValue(0, 1, 1000.0);
-		    data.setValue(1, 1, 1200.0);
-		    data.setValue(2, 1, 800.0);
-		    
-		    data.setValue(0, 2, 100.0);
-		    data.setValue(1, 2, 220.0);
-		    data.setValue(2, 2, 170.0);
+		    for (int i = 0; i <=2; i++) {
+		    	data.setValue(i, 1, item[0][i]);
+		    	data.setValue(i, 2, item[1][i]);
+		    }
+		    	
+//		    data.setValue(0, 1, item[0][0]);
+//		    data.setValue(1, 1, 1200.0);
+//		    data.setValue(2, 1, 800.0);
+//		    
+//		    data.setValue(0, 2, 100.0);
+//		    data.setValue(1, 2, 220.0);
+//		    data.setValue(2, 2, 170.0);
 		    
 		    // 2 Digit display for remaining
 		    NumberFormat.Options option = NumberFormat.Options.create();
