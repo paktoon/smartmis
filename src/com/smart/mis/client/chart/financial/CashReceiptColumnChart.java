@@ -21,11 +21,11 @@ import com.smartgwt.client.widgets.Canvas;
 
 public class CashReceiptColumnChart {
 
-	public void loadChart(final Canvas loader, final ReportPanel panel, final String type) {  
+	public void loadChart(final Canvas loader, final ReportPanel panel, final String type, final Double[][] item) {  
 	    Runnable onLoadCallback = new Runnable() {
 	        public void run() {
 	   
-	          ColumnChart chart = new ColumnChart(createTable(type), createOptions());
+	          ColumnChart chart = new ColumnChart(createTable(type, item), createOptions());
 
 	          chart.addSelectHandler(createSelectHandler(chart, panel));
 	          
@@ -120,7 +120,7 @@ public class CashReceiptColumnChart {
 		    };
 		  }
 
-		  private AbstractDataTable createTable(String type) {
+		  private AbstractDataTable createTable(String type, Double[][] item) {
 		    DataTable data = DataTable.create();
 		    data.addColumn(ColumnType.STRING, "ประเภทลูกค้า"); //0
 		    data.addColumn(ColumnType.NUMBER, "ยอดรับชำระเงิน (บาท)"); //1
@@ -133,11 +133,18 @@ public class CashReceiptColumnChart {
 			    data.setValue(0, 0, "ลูกค้าทั่วไป");
 			    data.setValue(1, 0, "ลูกค้าประจำ");
 			    
-			    data.setValue(0, 1, 100000.0);
-			    data.setValue(1, 1, 300000.0);
+//			    data.setValue(0, 1, 100000.0);
+//			    data.setValue(1, 1, 300000.0);
+//			    
+//			    data.setValue(0, 2, 10000.0);
+//			    data.setValue(1, 2, 80000.0);
+			    for (int i = 0 ; i <= 1 ; i ++) {
+			    	data.setValue(i, 1, item[0][i]);
+			    }
 			    
-			    data.setValue(0, 2, 10000.0);
-			    data.setValue(1, 2, 80000.0);
+			    for (int i = 0 ; i <= 1 ; i ++) {
+			    	data.setValue(i, 2, item[1][i]);
+			    }
 		    } else if (type.equalsIgnoreCase("bus_type")) {
 			    data.addRows(4);
 			    //row, column
@@ -146,26 +153,40 @@ public class CashReceiptColumnChart {
 			    data.setValue(2, 0, "ค้าส่งผ่านหน้าร้าน");
 			    data.setValue(3, 0, "ค้าส่งผ่านเว็บไซต์");
 			    
-			    data.setValue(0, 1, 100000.0);
-			    data.setValue(1, 1, 120000.0);
-			    data.setValue(2, 1, 80000.0);
-			    data.setValue(3, 1, 100000.0);
+//			    data.setValue(0, 1, 100000.0);
+//			    data.setValue(1, 1, 120000.0);
+//			    data.setValue(2, 1, 80000.0);
+//			    data.setValue(3, 1, 100000.0);
+//			    
+//			    data.setValue(0, 2, 10000.0);
+//			    data.setValue(1, 2, 23000.0);
+//			    data.setValue(2, 2, 17000.0);
+//			    data.setValue(3, 2, 9000.0);
+			    for (int i = 0 ; i <= 3 ; i ++) {
+			    	data.setValue(i, 1, item[0][i]);
+			    }
 			    
-			    data.setValue(0, 2, 10000.0);
-			    data.setValue(1, 2, 23000.0);
-			    data.setValue(2, 2, 17000.0);
-			    data.setValue(3, 2, 9000.0);
+			    for (int i = 0 ; i <= 3 ; i ++) {
+			    	data.setValue(i, 2, item[1][i]);
+			    }
 		    } else if (type.equalsIgnoreCase("cus_group")) {
 			    data.addRows(2);
 			    //row, column
 			    data.setValue(0, 0, "บุคคลทั่วไป");
 			    data.setValue(1, 0, "ร้านค้า");
 			    
-			    data.setValue(0, 1, 50000.0);
-			    data.setValue(1, 1, 350000.0);
+//			    data.setValue(0, 1, 50000.0);
+//			    data.setValue(1, 1, 350000.0);
+//			    
+//			    data.setValue(0, 2, 30000.0);
+//			    data.setValue(1, 2, 60000.0);
+			    for (int i = 0 ; i <= 1 ; i ++) {
+			    	data.setValue(i, 1, item[0][i]);
+			    }
 			    
-			    data.setValue(0, 2, 30000.0);
-			    data.setValue(1, 2, 60000.0);
+			    for (int i = 0 ; i <= 1 ; i ++) {
+			    	data.setValue(i, 2, item[1][i]);
+			    }
 		    } else if (type.equalsIgnoreCase("zone")) { 
 		    	data.addRows(4);
 		    	
@@ -174,15 +195,22 @@ public class CashReceiptColumnChart {
 			    data.setValue(2, 0, "อเมริกาเหนือ");
 			    data.setValue(3, 0, "อเมริกาใต้");
 			    
-			    data.setValue(0, 1, 320000.0);
-			    data.setValue(1, 1, 20000.0);
-			    data.setValue(2, 1, 23000.0);
-			    data.setValue(3, 1, 37000.0);
+//			    data.setValue(0, 1, 320000.0);
+//			    data.setValue(1, 1, 20000.0);
+//			    data.setValue(2, 1, 23000.0);
+//			    data.setValue(3, 1, 37000.0);
+//			    
+//			    data.setValue(0, 2, 10000.0);
+//			    data.setValue(1, 2, 30000.0);
+//			    data.setValue(2, 2, 20000.0);
+//			    data.setValue(3, 2, 30000.0);
+			    for (int i = 0 ; i <= 3; i ++) {
+			    	data.setValue(i, 1, item[0][i]);
+			    }
 			    
-			    data.setValue(0, 2, 10000.0);
-			    data.setValue(1, 2, 30000.0);
-			    data.setValue(2, 2, 20000.0);
-			    data.setValue(3, 2, 30000.0);
+			    for (int i = 0 ; i <= 3 ; i ++) {
+			    	data.setValue(i, 2, item[1][i]);
+			    }
 		    }
 		    
 //		    data.setValue(0, 3, "1100.00");

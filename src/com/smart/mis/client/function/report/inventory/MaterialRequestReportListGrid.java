@@ -86,9 +86,10 @@ public class MaterialRequestReportListGrid extends ListGrid {
 	
 	public Double[][] createSilverDataTable(Criterion criteria){
 		MaterialRequestReportDS.getInstance().refreshData();
-	    Record[] silver100 = MaterialRequestReportDS.getInstance().applyFilter(MaterialRequestReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 100%")}));
-	    Record[] silver925 = MaterialRequestReportDS.getInstance().applyFilter(MaterialRequestReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 92.5%")}));
+	    Record[] silver100 = MaterialRequestReportDS.getInstance().applyFilter(MaterialRequestReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("mname", OperatorId.EQUALS, "แร่เงิน 100%")}));
+	    Record[] silver925 = MaterialRequestReportDS.getInstance().applyFilter(MaterialRequestReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("mname", OperatorId.EQUALS, "แร่เงิน 92.5%")}));
 
+	    System.out.println(getIssueAmount(silver100) + " " + getIssueAmount(silver925));
 	    return new Double[][] {
 	    		{getIssueAmount(silver100), getIssueAmount(silver925)}
 	    };

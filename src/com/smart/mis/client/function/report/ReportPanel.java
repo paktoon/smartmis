@@ -947,6 +947,16 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
+		VLayout gridLayout = new VLayout();
+		gridLayout.setMargin(5);
+		cashReceiptListGrid = new CashReceiptListGrid(type);
+		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+    		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
+    		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+    		  });
+		cashReceiptListGrid.setCriteria(criteria);
+		gridLayout.addMember(cashReceiptListGrid);
+		
 		CashReceiptColumnChart chart = new CashReceiptColumnChart();
 		VLayout reportLayout = new VLayout();
 		
@@ -960,17 +970,7 @@ public class ReportPanel extends FunctionPanel{
 		HLayout chartLayout = new HLayout();
 		chartLayout.setAlign(Alignment.CENTER);
 		chartLayout.setHeight(350);
-		chart.loadChart(chartLayout, this, type);
-		
-		VLayout gridLayout = new VLayout();
-		gridLayout.setMargin(5);
-		cashReceiptListGrid = new CashReceiptListGrid(type);
-		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-    		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
-    		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
-    		  });
-		cashReceiptListGrid.setCriteria(criteria);
-		gridLayout.addMember(cashReceiptListGrid);
+		chart.loadChart(chartLayout, this, type, cashReceiptListGrid.createDataTable(criteria, type));
 		
 //		Record[] filtered = filterDataSource(cashReceiptListGrid.getDataSource(), criteria);
 //		System.out.println("Found " + filtered.length);
@@ -1041,6 +1041,14 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
+		HLayout gridLayout = new HLayout();
+		gridLayout.setMargin(5);
+		disburseMaterialListGrid = new DisburseMaterialListGrid();
+		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+    		      new Criterion("paid_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+    		  });
+		disburseMaterialListGrid.setCriteria(criteria);
+		
 		DisburseMaterialPieChart chart = new DisburseMaterialPieChart();
 		VLayout reportLayout = new VLayout();
 		
@@ -1054,15 +1062,7 @@ public class ReportPanel extends FunctionPanel{
 		HLayout chartLayout = new HLayout();
 		chartLayout.setAlign(Alignment.CENTER);
 		chartLayout.setHeight(350);
-		chart.loadChart(chartLayout, this);
-		
-		HLayout gridLayout = new HLayout();
-		gridLayout.setMargin(5);
-		disburseMaterialListGrid = new DisburseMaterialListGrid();
-		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-    		      new Criterion("paid_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
-    		  });
-		disburseMaterialListGrid.setCriteria(criteria);
+		chart.loadChart(chartLayout, this, disburseMaterialListGrid.createDataTable(criteria));
 		
 		gridLayout.addMembers(chartLayout, disburseMaterialListGrid);
 		
@@ -1128,6 +1128,15 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
+		HLayout gridLayout = new HLayout();
+		gridLayout.setMargin(5);
+		disburseWageListGrid = new DisburseWageListGrid();
+		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+				  new Criterion("status", OperatorId.EQUALS, "2_paid"),
+    		      new Criterion("paid_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+    		  });
+		disburseWageListGrid.setCriteria(criteria);
+		
 		DisburseWagePieChart chart = new DisburseWagePieChart();
 		VLayout reportLayout = new VLayout();
 		
@@ -1142,15 +1151,6 @@ public class ReportPanel extends FunctionPanel{
 		chartLayout.setAlign(Alignment.CENTER);
 		chartLayout.setHeight(350);
 		chart.loadChart(chartLayout, this);
-		
-		HLayout gridLayout = new HLayout();
-		gridLayout.setMargin(5);
-		disburseWageListGrid = new DisburseWageListGrid();
-		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-				  new Criterion("status", OperatorId.EQUALS, "2_paid"),
-    		      new Criterion("paid_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
-    		  });
-		disburseWageListGrid.setCriteria(criteria);
 		
 		gridLayout.addMembers(chartLayout, disburseWageListGrid);
 		
