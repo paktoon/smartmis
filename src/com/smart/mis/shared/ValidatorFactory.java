@@ -9,14 +9,14 @@ public class ValidatorFactory {
 	public static Validator integerRange(Integer lower, Integer upper){
 		IntegerRangeValidator validator = new IntegerRangeValidator();
 		if (lower != null) validator.setMin(lower);
-		if (upper != null) validator.setMin(upper);
+		if (upper != null) validator.setMax(upper);
 		return validator;
 	}
 	
 	public static Validator doubleRange(Double lower, Double upper){
 		FloatRangeValidator validator = new FloatRangeValidator();
 		if (lower != null) validator.setMin(lower.floatValue());
-		if (upper != null) validator.setMin(upper.floatValue());
+		if (upper != null) validator.setMax(upper.floatValue());
 		return validator;
 	}
 }

@@ -127,7 +127,7 @@ public class TransferLayout extends VLayout {
 		dateForm.setIsGroup(true);
 		dateForm.setGroupTitle("วันที่ขอโอนสินค้า");
 		DateRange dateRange = new DateRange();  
-        dateRange.setRelativeStartDate(new RelativeDate("-1m"));
+        dateRange.setRelativeStartDate(new RelativeDate("-7d"));
         dateRange.setRelativeEndDate(RelativeDate.TODAY);
 		final DateItem from = new DateItem("create_from" , "ตั้งแต่");
 		final DateItem to = new DateItem("create_to" , "ถึง");
@@ -150,7 +150,8 @@ public class TransferLayout extends VLayout {
 		
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
     		      //new Criterion("status", OperatorId.NOT_EQUAL, "3_to_next_process"),
-    		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+    		      //new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+    		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, dateRange.getStartDate(), dateRange.getEndDate())
     		  });
 		orderListGrid.setCriteria(criteria);
 		

@@ -21,11 +21,11 @@ import com.smartgwt.client.widgets.Canvas;
 
 public class PurchasingColumnChart {
 
-	public void loadChart(final Canvas loader, final ReportPanel panel, final String type) {  
+	public void loadChart(final Canvas loader, final ReportPanel panel, final String type, final Double[][] item) {  
 	    Runnable onLoadCallback = new Runnable() {
 	        public void run() {
 	   
-	          ColumnChart chart = new ColumnChart(createTable(type), createOptions());
+	          ColumnChart chart = new ColumnChart(createTable(type, item), createOptions());
 
 	          chart.addSelectHandler(createSelectHandler(chart, panel));
 	          
@@ -120,24 +120,26 @@ public class PurchasingColumnChart {
 		    };
 		  }
 
-		  private AbstractDataTable createTable(String type) {
+		  private AbstractDataTable createTable(String type, Double[][] item) {
 		    DataTable data = DataTable.create();
 		    data.addColumn(ColumnType.STRING, "ประเภทวัตถุดิบ"); //0
 		    data.addColumn(ColumnType.NUMBER, "ยอดสั่งซื้อ (บาท)"); //1
 //		    addAnnotationColumn(data); //3
 		    
-		    data.addRows(4);
-		    data.setValue(0, 0, "แร่เงิน");
-		    data.setValue(0, 1, 100000.0);
-		    
-		    data.setValue(1, 0, "พลอยประดับ");
-		    data.setValue(1, 1, 120000.0);
-		    
-		    data.setValue(2, 0, "แมกกาไซต์");
-		    data.setValue(2, 1, 80000.0);
-		    
-		    data.setValue(3, 0, "อื่นๆ");
-		    data.setValue(3, 1, 80000.0);
+		    if (type.equalsIgnoreCase("type")) {
+			    data.addRows(4);
+			    data.setValue(0, 0, "แร่เงิน");
+			    data.setValue(0, 1, item[0][0]);
+			    
+			    data.setValue(1, 0, "พลอยประดับ");
+			    data.setValue(1, 1, item[0][1]);
+			    
+			    data.setValue(2, 0, "แมกกาไซต์");
+			    data.setValue(2, 1, item[0][2]);
+			    
+			    data.setValue(3, 0, "อื่นๆ");
+			    data.setValue(3, 1, item[0][3]);
+		    }
 		    
 //		    if (type.equalsIgnoreCase("cus_type")) {
 //			    data.addRows(2);

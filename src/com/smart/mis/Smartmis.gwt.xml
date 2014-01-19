@@ -33,7 +33,10 @@
     <!--<inherits name="com.smartclient.theme.simplicity.SimplicityResources"/>-->
     <inherits name='com.google.gwt.visualization.Visualization'/>
     <inherits name="com.google.gwt.i18n.I18N"/>
-  
+    
+    <inherits name="com.smartgwt.PluginBridgesWidgets"/>
+    <inherits name="com.smartgwt.Charts"/>
+    <inherits name="com.smartgwt.Analytics"/>
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.smart.mis.client.Smartmis'/>
 

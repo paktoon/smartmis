@@ -46,7 +46,7 @@ public class MaterialUsedReportDS extends DataSource  {
 			 
 			 //setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_5_1, Field_6, Field_7, Field_8, Field_9, Field_10);
 			 setFields(Field_1, Field_2, Field_3, Field_4, Field_5, Field_5_1, Field_7, Field_9, Field_10);
-			 setTestData(new ListGridRecord[]{}); // For Test
+			 setTestData(MaterialUsedReportData.getNewRecords()); // For Test
 			 setClientOnly(true);
 		 }
 		 

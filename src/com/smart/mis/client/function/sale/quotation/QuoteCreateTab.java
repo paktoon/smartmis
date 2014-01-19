@@ -157,6 +157,8 @@ public class QuoteCreateTab {
 		credit.setWidth(100);
 		credit.setTextAlign(Alignment.LEFT);
 		credit.setDefaultValue(0);
+
+		credit.setValidators(ValidatorFactory.integerRange(0, 30));
 		paymentModel.disable();
 		credit.disable();
         
@@ -256,7 +258,7 @@ public class QuoteCreateTab {
         quantity.disable();
         quantity.setWidth(100);
         quantity.setTextAlign(Alignment.LEFT);
-        quantity.setValidators(ValidatorFactory.integerRange(50, null));
+        quantity.setValidators(ValidatorFactory.integerRange(50, 5000));
         
         final StaticTextItem pname_th = new StaticTextItem("name_th", "คำอธิบาย");
         final StaticTextItem pprice = new StaticTextItem("pprice" , "ราคา");
@@ -411,6 +413,7 @@ public class QuoteCreateTab {
         quoteItemCell_5.setAlign(Alignment.RIGHT);
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("quote_amount", 80);
+        quoteItemCell_6.setValidators(ValidatorFactory.integerRange(50, 5000));
         
         quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
@@ -484,13 +487,17 @@ public class QuoteCreateTab {
 			@Override
 			public void onChange(ChangeEvent event) {
 				// TODO Auto-generated method stub
-				Date from = (Date) event.getValue();
-				
-				//if (!from.before(toDate.getValueAsDate()) || !from.before(deliveryDate.getValueAsDate())) {
-				if (from.after(toDate.getValueAsDate()) || from.after(deliveryDate.getValueAsDate())) {
-						//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
-						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + fromDate.getTitle() + " ต้องก่อนหน้า " + toDate.getTitle() + " และ " + deliveryDate.getTitle());
+					try {
+						Date from = (Date) event.getValue();
+						//if (!from.before(toDate.getValueAsDate()) || !from.before(deliveryDate.getValueAsDate())) {
+						if (from.after(toDate.getValueAsDate()) || from.after(deliveryDate.getValueAsDate())) {
+								//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + fromDate.getTitle() + " ต้องก่อนหน้า " + toDate.getTitle() + " และ " + deliveryDate.getTitle());
+								fromDate.setValue(fromDate.getValueAsDate());
+							}
+					} catch (Exception e) {
 						fromDate.setValue(fromDate.getValueAsDate());
+						SC.warn("รูปแบบวันที่ไม่ถูกต้อง กรุณากรอกด้วยรูปแบบ เดือน/วันที่/ปี เช่น 01/01/2014");
 					}
 				}
 			});
@@ -499,12 +506,17 @@ public class QuoteCreateTab {
 			@Override
 			public void onChange(ChangeEvent event) {
 				// TODO Auto-generated method stub
-				Date to = (Date) event.getValue();
-				
-				//if (!to.after(fromDate.getValueAsDate()) || !to.after(new Date())) {
-				if (to.before(fromDate.getValueAsDate()) || to.before(new Date())) {
-						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + toDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+					try {
+						Date to = (Date) event.getValue();
+						
+						//if (!to.after(fromDate.getValueAsDate()) || !to.after(new Date())) {
+						if (to.before(fromDate.getValueAsDate()) || to.before(new Date())) {
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + toDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+								toDate.setValue(toDate.getValueAsDate());
+							}
+					} catch (Exception e) {
 						toDate.setValue(toDate.getValueAsDate());
+						SC.warn("รูปแบบวันที่ไม่ถูกต้อง กรุณากรอกด้วยรูปแบบ เดือน/วันที่/ปี เช่น 01/01/2014");
 					}
 				} 
 		});
@@ -513,12 +525,17 @@ public class QuoteCreateTab {
 			@Override
 			public void onChange(ChangeEvent event) {
 				// TODO Auto-generated method stub
-				Date delivery = (Date) event.getValue();
-				//if (!delivery.after(fromDate.getValueAsDate())  || !delivery.after(new Date())) {
-				if (delivery.before(fromDate.getValueAsDate())  || delivery.before(new Date())) {
-						//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
-						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + deliveryDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+					try {
+						Date delivery = (Date) event.getValue();
+						//if (!delivery.after(fromDate.getValueAsDate())  || !delivery.after(new Date())) {
+						if (delivery.before(fromDate.getValueAsDate())  || delivery.before(new Date())) {
+								//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + deliveryDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+								deliveryDate.setValue(deliveryDate.getValueAsDate());
+							}
+					} catch (Exception e) {
 						deliveryDate.setValue(deliveryDate.getValueAsDate());
+						SC.warn("รูปแบบวันที่ไม่ถูกต้อง กรุณากรอกด้วยรูปแบบ เดือน/วันที่/ปี เช่น 01/01/2014");
 					}
 				}
 			});
@@ -558,6 +575,11 @@ public class QuoteCreateTab {
 			@Override
 			public void onClick(ClickEvent event) {
 				//quoteItem
+				if (quoteListGrid.hasErrors()) {
+					SC.warn("ข้อมูลจำนวนสินค้าไม่ถูกต้อง");
+					return;
+				}
+				
 				if (customerForm.validate() && dateForm.validate()) {
 					SC.confirm("ยืนยันการออกใบเสนอราคา", "ต้องการออกใบเสนอราคา หรือไม่?" , new BooleanCallback() {
 						@Override

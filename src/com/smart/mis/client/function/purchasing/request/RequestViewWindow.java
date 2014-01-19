@@ -418,21 +418,26 @@ public class RequestViewWindow extends EditorWindow{
 			@Override
 			public void onChange(ChangeEvent event) {
 				// TODO Auto-generated method stub
-				Date from = (Date) event.getValue();
-				
-				//if (toDate.getValueAsDate() != null && !from.before(toDate.getValueAsDate())) {
-				if (toDate.getValueAsDate() != null && from.after(toDate.getValueAsDate())) {
-					SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + fromDate.getTitle() + " ต้องก่อนหน้า " + toDate.getTitle() + " และ " + deliveryDate.getTitle());
-					fromDate.setValue(fromDate.getValueAsDate());
-					return;
-				}
-				
-				//if (deliveryDate.getValueAsDate() != null && !from.before(deliveryDate.getValueAsDate())) {
-				if (deliveryDate.getValueAsDate() != null && from.after(deliveryDate.getValueAsDate())) {
-					SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + fromDate.getTitle() + " ต้องก่อนหน้า " + toDate.getTitle() + " และ " + deliveryDate.getTitle());
-					fromDate.setValue(fromDate.getValueAsDate());
-					return;
-				}
+					try {
+						Date from = (Date) event.getValue();
+						
+						//if (toDate.getValueAsDate() != null && !from.before(toDate.getValueAsDate())) {
+						if (toDate.getValueAsDate() != null && from.after(toDate.getValueAsDate())) {
+							SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + fromDate.getTitle() + " ต้องก่อนหน้า " + toDate.getTitle() + " และ " + deliveryDate.getTitle());
+							fromDate.setValue(fromDate.getValueAsDate());
+							return;
+						}
+						
+						//if (deliveryDate.getValueAsDate() != null && !from.before(deliveryDate.getValueAsDate())) {
+						if (deliveryDate.getValueAsDate() != null && from.after(deliveryDate.getValueAsDate())) {
+							SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + fromDate.getTitle() + " ต้องก่อนหน้า " + toDate.getTitle() + " และ " + deliveryDate.getTitle());
+							fromDate.setValue(fromDate.getValueAsDate());
+							return;
+						}
+					} catch (Exception e) {
+						fromDate.setValue(fromDate.getValueAsDate());
+						SC.warn("รูปแบบวันที่ไม่ถูกต้อง กรุณากรอกด้วยรูปแบบ เดือน/วันที่/ปี เช่น 01/01/2014");
+					}
 				}
 			});
         
@@ -440,20 +445,25 @@ public class RequestViewWindow extends EditorWindow{
 			@Override
 			public void onChange(ChangeEvent event) {
 				// TODO Auto-generated method stub
-				Date to = (Date) event.getValue();
-				
-				//if (fromDate.getValueAsDate() != null && !to.after(fromDate.getValueAsDate())) {
-				if (fromDate.getValueAsDate() != null && to.before(fromDate.getValueAsDate())) {
-					SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + toDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
-					toDate.setValue(toDate.getValueAsDate());
-					return;
-				}
-				
-				//if (!to.after(new Date())) {
-				if (to.before(new Date())) {
-						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + toDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+					try {
+						Date to = (Date) event.getValue();
+						
+						//if (fromDate.getValueAsDate() != null && !to.after(fromDate.getValueAsDate())) {
+						if (fromDate.getValueAsDate() != null && to.before(fromDate.getValueAsDate())) {
+							SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + toDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+							toDate.setValue(toDate.getValueAsDate());
+							return;
+						}
+						
+						//if (!to.after(new Date())) {
+						if (to.before(new Date())) {
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + toDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+								toDate.setValue(toDate.getValueAsDate());
+								return;
+							}
+					} catch (Exception e) {
 						toDate.setValue(toDate.getValueAsDate());
-						return;
+						SC.warn("รูปแบบวันที่ไม่ถูกต้อง กรุณากรอกด้วยรูปแบบ เดือน/วันที่/ปี เช่น 01/01/2014");
 					}
 				} 
 		});
@@ -462,22 +472,27 @@ public class RequestViewWindow extends EditorWindow{
 			@Override
 			public void onChange(ChangeEvent event) {
 				// TODO Auto-generated method stub
-				Date delivery = (Date) event.getValue();
-				
-				//if (fromDate.getValueAsDate() != null && !delivery.after(fromDate.getValueAsDate())) {
-				if (fromDate.getValueAsDate() != null && delivery.before(fromDate.getValueAsDate())) {
-					//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
-					SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + deliveryDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
-					deliveryDate.setValue(deliveryDate.getValueAsDate());
-					return;
-				}
-				
-				//if (!delivery.after(new Date())) {
-				if (delivery.before(new Date())) {
-						//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
-						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + deliveryDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+					try {
+						Date delivery = (Date) event.getValue();
+						
+						//if (fromDate.getValueAsDate() != null && !delivery.after(fromDate.getValueAsDate())) {
+						if (fromDate.getValueAsDate() != null && delivery.before(fromDate.getValueAsDate())) {
+							//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+							SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + deliveryDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+							deliveryDate.setValue(deliveryDate.getValueAsDate());
+							return;
+						}
+						
+						//if (!delivery.after(new Date())) {
+						if (delivery.before(new Date())) {
+								//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + deliveryDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+								deliveryDate.setValue(deliveryDate.getValueAsDate());
+								return;
+							}
+					} catch (Exception e) {
 						deliveryDate.setValue(deliveryDate.getValueAsDate());
-						return;
+						SC.warn("รูปแบบวันที่ไม่ถูกต้อง กรุณากรอกด้วยรูปแบบ เดือน/วันที่/ปี เช่น 01/01/2014");
 					}
 				}
 			});

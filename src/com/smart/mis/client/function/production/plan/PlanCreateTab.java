@@ -12,6 +12,7 @@ import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.prodution.ProductType;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.security.User;
@@ -245,6 +246,7 @@ public class PlanCreateTab {
         quantity.disable();
         quantity.setWidth(100);
         quantity.setTextAlign(Alignment.LEFT);
+        quantity.setValidators(ValidatorFactory.integerRange(50, 5000));
         
         final StaticTextItem pname_th = new StaticTextItem("name_th", "คำอธิบาย");
         final StaticTextItem pweight = new StaticTextItem("weight" , "น้ำหนัก");
@@ -402,6 +404,7 @@ public class PlanCreateTab {
 //        quoteItemCell_5.setAlign(Alignment.RIGHT);
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("plan_amount", 90);
+        quoteItemCell_6.setValidators(ValidatorFactory.integerRange(50, 5000));
         
         quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
@@ -512,6 +515,11 @@ public class PlanCreateTab {
 						SC.warn("กรุณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
 						return;
 					}
+					
+					if (planListGrid.hasErrors()) {
+	            		SC.warn("ข้อมูลจำนวนสินค้าไม่ถูกต้อง");
+	            		return;
+	            	}
 					
 					SC.confirm("ยืนยันการสร้างแผนการผลิต", "ต้องการสร้างแผนการผลิต หรือไม่?" , new BooleanCallback() {
 						@Override

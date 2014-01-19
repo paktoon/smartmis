@@ -51,7 +51,7 @@ public class PlanProductDetails {
 	}
 	
 	public ListGridRecord convertToRecord(Integer plan_amount){
-		return PlanProductData.createRecord(product_id, product_name, product_weight, product_type, product_unit, product_size, product_width, product_length, product_height, product_diameter, product_thickness, plan_amount, status);
+		return PlanProductData.createRecord(product_id, product_name, product_weight * plan_amount, product_type, product_unit, product_size, product_width, product_length, product_height, product_diameter, product_thickness, plan_amount, status);
 	}
 	
 	public void clear(){

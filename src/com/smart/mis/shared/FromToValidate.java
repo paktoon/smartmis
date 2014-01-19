@@ -15,11 +15,16 @@ public class FromToValidate {
 			@Override
 			public void onChange(ChangeEvent event) {
 				// TODO Auto-generated method stub
-				Date from = (Date) event.getValue();
-				//if (!from.before(toDate.getValueAsDate())) {
-				if (from.after(toDate.getValueAsDate())) {
-						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+					try {
+						Date from = (Date) event.getValue();
+						//if (!from.before(toDate.getValueAsDate())) {
+						if (from.after(toDate.getValueAsDate())) {
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+								fromDate.setValue(fromDate.getValueAsDate());
+							}
+					} catch (Exception e) {
 						fromDate.setValue(fromDate.getValueAsDate());
+						SC.warn("รูปแบบวันที่ไม่ถูกต้อง กรุณากรอกด้วยรูปแบบ เดือน/วันที่/ปี เช่น 01/01/2014");
 					}
 				}
 			});
@@ -28,11 +33,16 @@ public class FromToValidate {
 			@Override
 			public void onChange(ChangeEvent event) {
 				// TODO Auto-generated method stub
-				Date to = (Date) event.getValue();
-				//if (!to.after(fromDate.getValueAsDate())) {
-				if (to.before(fromDate.getValueAsDate())) {
-						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+					try {
+						Date to = (Date) event.getValue();
+						//if (!to.after(fromDate.getValueAsDate())) {
+						if (to.before(fromDate.getValueAsDate())) {
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+								toDate.setValue(toDate.getValueAsDate());
+							}
+					} catch (Exception e) {
 						toDate.setValue(toDate.getValueAsDate());
+						SC.warn("รูปแบบวันที่ไม่ถูกต้อง กรุณากรอกด้วยรูปแบบ เดือน/วันที่/ปี เช่น 01/01/2014");
 					}
 				} 
 		});

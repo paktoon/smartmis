@@ -28,6 +28,7 @@ import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.QuotationStatus;
 import com.smart.mis.shared.sale.SaleOrderStatus;
@@ -351,6 +352,7 @@ public class QuoteViewWindow extends EditorWindow{
         quoteItemCell_5.setAlign(Alignment.RIGHT);
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("quote_amount", 70);
+        quoteItemCell_6.setValidators(ValidatorFactory.integerRange(50, 5000));
         
         if (edit) quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
@@ -412,13 +414,18 @@ public class QuoteViewWindow extends EditorWindow{
 			@Override
 			public void onChange(ChangeEvent event) {
 				// TODO Auto-generated method stub
-				Date from = (Date) event.getValue();
-				
-				//if (!from.before(toDate.getValueAsDate()) || !from.before(deliveryDate.getValueAsDate())) {
-				if (!from.before(toDate.getValueAsDate()) || from.after(deliveryDate.getValueAsDate())) {
-						//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
-						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + fromDate.getTitle() + " ต้องก่อนหน้า " + toDate.getTitle() + " และ " + deliveryDate.getTitle());
+					try {
+						Date from = (Date) event.getValue();
+						
+						//if (!from.before(toDate.getValueAsDate()) || !from.before(deliveryDate.getValueAsDate())) {
+						if (!from.before(toDate.getValueAsDate()) || from.after(deliveryDate.getValueAsDate())) {
+								//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + fromDate.getTitle() + " ต้องก่อนหน้า " + toDate.getTitle() + " และ " + deliveryDate.getTitle());
+								fromDate.setValue(fromDate.getValueAsDate());
+							}
+					} catch (Exception e) {
 						fromDate.setValue(fromDate.getValueAsDate());
+						SC.warn("รูปแบบวันที่ไม่ถูกต้อง กรุณากรอกด้วยรูปแบบ เดือน/วันที่/ปี เช่น 01/01/2014");
 					}
 				}
 			});
@@ -427,12 +434,17 @@ public class QuoteViewWindow extends EditorWindow{
 			@Override
 			public void onChange(ChangeEvent event) {
 				// TODO Auto-generated method stub
-				Date to = (Date) event.getValue();
-				
-				//if (!to.after(fromDate.getValueAsDate()) || !to.after(new Date())) {
-				if (!to.after(fromDate.getValueAsDate()) || to.before(new Date())) {
-						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + toDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+					try {
+						Date to = (Date) event.getValue();
+						
+						//if (!to.after(fromDate.getValueAsDate()) || !to.after(new Date())) {
+						if (!to.after(fromDate.getValueAsDate()) || to.before(new Date())) {
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + toDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+								toDate.setValue(toDate.getValueAsDate());
+							}
+					} catch (Exception e) {
 						toDate.setValue(toDate.getValueAsDate());
+						SC.warn("รูปแบบวันที่ไม่ถูกต้อง กรุณากรอกด้วยรูปแบบ เดือน/วันที่/ปี เช่น 01/01/2014");
 					}
 				} 
 		});
@@ -441,12 +453,17 @@ public class QuoteViewWindow extends EditorWindow{
 			@Override
 			public void onChange(ChangeEvent event) {
 				// TODO Auto-generated method stub
-				Date delivery = (Date) event.getValue();
-				//if (!delivery.after(fromDate.getValueAsDate())  || !delivery.after(new Date())) {
-				if (!delivery.after(fromDate.getValueAsDate())  || delivery.before(new Date())) {
-						//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
-						SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + deliveryDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+					try {
+						Date delivery = (Date) event.getValue();
+						//if (!delivery.after(fromDate.getValueAsDate())  || !delivery.after(new Date())) {
+						if (!delivery.after(fromDate.getValueAsDate())  || delivery.before(new Date())) {
+								//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + deliveryDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+								deliveryDate.setValue(deliveryDate.getValueAsDate());
+							}
+					} catch (Exception e) {
 						deliveryDate.setValue(deliveryDate.getValueAsDate());
+						SC.warn("รูปแบบวันที่ไม่ถูกต้อง กรุณากรอกด้วยรูปแบบ เดือน/วันที่/ปี เช่น 01/01/2014");
 					}
 				}
 			});
@@ -520,6 +537,11 @@ public class QuoteViewWindow extends EditorWindow{
 		saveButton.setWidth(120);
 		saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
+            	if (quoteListGrid.hasErrors()) {
+            		SC.warn("ข้อมูลจำนวนสินค้าไม่ถูกต้อง");
+            		return;
+            	}
+            		
             	SC.confirm("ยืนยันการทำรายการ", "ต้องการบันทึกการแก้ไขใบเสนอราคา หรือไม่?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {

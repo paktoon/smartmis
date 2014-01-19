@@ -212,7 +212,9 @@ public class Smartmis implements EntryPoint {
 		securityService.createPermOnServer(new PermissionProfile("OWNER", Function.ALL, Role.OWNER, true), "admin",callback);
 		
 		securityService.createUserOnServer(new User("admin", "test", "ภักดิ์ทูล" , "ใจทอง", "admin@projectadmin.com" , "administrator" , "นาย", true), "ADMIN", "admin", callback);
-		securityService.createUserOnServer(new User("sale", "test", "สมศรี" , "ยอดขาย", "somsee@richsilver.com" , "sale person", "นาง", true),"SALE", "admin",callback);
+		securityService.createUserOnServer(new User("sale1", "test", "สมศรี" , "ยอดขาย", "somsee@richsilver.com" , "sale person", "นาง", true),"SALE", "admin",callback);
+		securityService.createUserOnServer(new User("sale2", "test", "สมใจ" , "ยอดขาย", "somsee@richsilver.com" , "sale person", "นาง", true),"SALE", "admin",callback);
+		securityService.createUserOnServer(new User("sale3", "test", "สมมุติ" , "ยอดขาย", "somsee@richsilver.com" , "sale person", "นาง", true),"SALE", "admin",callback);
 		securityService.createUserOnServer(new User("production", "test", "สมใจ" , "ผลิตเก่ง", "somjai@richsilver.com" , "production staff", "นางสาว", true),"PRODUCTION", "admin",callback);
 		securityService.createUserOnServer(new User("inventory", "test", "สมศักดิ์" , "ดูแลคลัง", "somsak@richsilver.com" , "inventory staff", "นาย", true),"INVENTORY", "admin",callback);
 		securityService.createUserOnServer(new User("purchasing", "test", "สมหมาย" , "ซื้อของ", "sommai@richsilver.com" , "purchasing staff", "นาย", true),"PURCHASING", "admin",callback);

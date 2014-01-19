@@ -120,7 +120,7 @@ public class PlanReviseTab {
 		dateForm.setIsGroup(true);
 		dateForm.setGroupTitle("วันที่สร้างแผนการผลิต");
 		DateRange dateRange = new DateRange();  
-        dateRange.setRelativeStartDate(new RelativeDate("-1m"));
+        dateRange.setRelativeStartDate(new RelativeDate("-7d"));
         dateRange.setRelativeEndDate(RelativeDate.TODAY);
 		final DateItem from = new DateItem("create_from" , "ตั้งแต่");
 		final DateItem to = new DateItem("create_to" , "ถึง");

@@ -129,7 +129,7 @@ public class ReceiptLayout extends VLayout {
 		dateForm.setIsGroup(true);
 		dateForm.setGroupTitle("วันที่ครบกำหนดชำระเงิน");
 		DateRange dateRange = new DateRange();  
-        dateRange.setRelativeStartDate(new RelativeDate("-1m"));
+        dateRange.setRelativeStartDate(new RelativeDate("-7d"));
         dateRange.setRelativeEndDate(new RelativeDate("+1m"));
 		final DateItem from = new DateItem("due_from" , "ตั้งแต่");
 		final DateItem to = new DateItem("due_to" , "ถึง");

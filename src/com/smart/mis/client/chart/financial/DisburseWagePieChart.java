@@ -22,11 +22,11 @@ import com.smartgwt.client.widgets.Canvas;
 
 public class DisburseWagePieChart {
 
-	public void loadChart(final Canvas loader, final ReportPanel panel) {  
+	public void loadChart(final Canvas loader, final ReportPanel panel, final Double[][] item) {  
 	    Runnable onLoadCallback = new Runnable() {
 	        public void run() {
 	   
-	          PieChart chart = new PieChart(createTable(), createOptions());
+	          PieChart chart = new PieChart(createTable(item), createOptions());
 
 	          chart.addSelectHandler(createSelectHandler(chart, panel));
 	          
@@ -104,7 +104,7 @@ public class DisburseWagePieChart {
 			    };
 		  }
 
-		  private AbstractDataTable createTable() {
+		  private AbstractDataTable createTable(Double[][] item) {
 		    DataTable data = DataTable.create();
 		    data.addColumn(ColumnType.STRING, "ประเภทงาน"); //0
 		    data.addColumn(ColumnType.NUMBER, "สัดส่วนค่าจ้างผลิต (บาท)"); //1
@@ -114,13 +114,13 @@ public class DisburseWagePieChart {
 		    data.addRows(3);
 		    //row, column
 		    data.setValue(0, 0, "หล่อขึ้นรูป");
-		    data.setValue(0, 1, 100000.0);
+		    data.setValue(0, 1, item[0][0]);
 		    
 		    data.setValue(1, 0, "แต่งและฝังพลอยประดับ");
-		    data.setValue(1, 1, 120000.0);
+		    data.setValue(1, 1, item[0][1]);
 		    
 		    data.setValue(2, 0, "ขัดและติดพลอยแมกกาไซต์");
-		    data.setValue(2, 1, 80000.0);
+		    data.setValue(2, 1, item[0][2]);
 		    
 //		    data.setValue(0, 2, 100.0);
 //		    data.setValue(1, 2, 220.0);

@@ -21,6 +21,8 @@ import com.smart.mis.client.chart.production.MaterialUsedColumnChart;
 import com.smart.mis.client.chart.production.ProductionColumnChart;
 import com.smart.mis.client.chart.production.SilverUsedColumnChart;
 import com.smart.mis.client.chart.purchasing.PurchasingColumnChart;
+import com.smart.mis.client.cube.SaleCube;
+import com.smart.mis.client.cube.advanced.AdvancedSaleCube;
 import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.FunctionWindow;
 import com.smart.mis.client.function.production.product.ProductDS;
@@ -50,6 +52,7 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.cube.CubeGrid;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -125,6 +128,11 @@ public class ReportPanel extends FunctionPanel{
 		cashReceiptWindow = createFuncWindow();
 		DisburseMaterialWindow = createFuncWindow(); 
 		DisburseWageWindow = createFuncWindow(); 
+
+
+		
+//		AdvancedSaleCube cube = new AdvancedSaleCube();
+//		this.saleCubeReportWindow.addItem(cube.createMainLayout());
 	}
 
 	@Override
@@ -136,6 +144,11 @@ public class ReportPanel extends FunctionPanel{
 	@Override
 	public void load(String nodeId, String name, String icon) {
 		if (nodeId.equals("61")) {
+			// Time : yearly, quarterly (fit in 1 year)
+			// Customer : Type, name (fit in type : todo), zone (fit in type)
+			// Sale : name
+			// Product : Type, name (fit in type : todo)
+			LoadCubeReportWindow("yearly", "type", "all", "type", "2013");
 			loadWindow(this._main.getReportPanel(), this.saleCubeReportWindow , name, icon);
 		} else if (nodeId.equals("62")) {
 			//loadWindow(this._main.getReportPanel(), this.summaryReportWindow , name, icon);
@@ -177,6 +190,65 @@ public class ReportPanel extends FunctionPanel{
 			LoadDisburseWageReportWindow(startDate, endDate);
 			loadWindow(this._main.getReportPanel(), this.DisburseWageWindow , name, icon);
 		} else init();
+	}
+	
+	private void LoadCubeReportWindow(String time, final String customer, final String sale, final String product, final String yearSelected) {
+		for (Canvas removed : this.saleCubeReportWindow.getItems()) {
+			this.saleCubeReportWindow.removeItem(removed);
+		}
+		
+		final DynamicForm filterForm  = new DynamicForm();
+		filterForm.setWidth(300); 
+		filterForm.setHeight(30);
+		filterForm.setMargin(5); 
+		filterForm.setNumCols(4);
+		filterForm.setCellPadding(2);
+		filterForm.setSelectOnFocus(true);
+		filterForm.setIsGroup(true);
+		filterForm.setGroupTitle("Select Report");
+		
+		final SelectItem selectTime = new SelectItem();
+		selectTime.setTitle("Time");
+		selectTime.setValueMap("yearly", "quarterly", "monthly");
+		selectTime.setDefaultValue(time);
+		
+		final SelectItem selectYear = new SelectItem();
+		selectYear.setTitle("Year");
+		selectYear.setValueMap("2011", "2012", "2013");
+		selectYear.setDefaultValue(yearSelected);
+		
+		if (time.equalsIgnoreCase("yearly")) {
+			selectYear.disable();
+		} else selectYear.enable();
+		filterForm.setItems(selectTime, selectYear);
+		
+		selectTime.addChangedHandler(new ChangedHandler(){
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				// TODO Auto-generated method stub
+//				if (selectTime.getValueAsString().equalsIgnoreCase("yearly")) {
+//					selectYear.disable();
+//				} else selectYear.enable();
+				LoadCubeReportWindow(selectTime.getValueAsString(), customer, sale, product, selectYear.getValueAsString());
+		}});
+		
+
+		selectYear.addChangedHandler(new ChangedHandler(){
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				// TODO Auto-generated method stub
+				LoadCubeReportWindow(selectTime.getValueAsString(), customer, sale, product, selectYear.getValueAsString());
+		}});
+		
+        
+		VLayout cubeLayout = new VLayout();
+		cubeLayout.setMargin(10);
+		cubeLayout.addMember(filterForm);
+		cubeLayout.addMember(SaleCube.createCubeGrid(time, customer, sale, product, yearSelected));
+		
+		this.saleCubeReportWindow.addItem(cubeLayout);
 	}
 	
 	private void LoadProductionReportWindow(final Date start, final Date end) {
@@ -236,6 +308,16 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
+		VLayout gridLayout = new VLayout();
+		gridLayout.setMargin(5);
+		productionReportListGrid = new ProductionReportListGrid();
+		//InventoryProductRequestGrid.setCriteria(new Criterion("issued_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()));
+		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+	  		      new Criterion("produced_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+	  		  });
+		productionReportListGrid.setCriteria(criteria);
+		gridLayout.addMember(productionReportListGrid);
+		
 		ProductionColumnChart chart = new ProductionColumnChart();
 		VLayout reportLayout = new VLayout();
 		
@@ -249,17 +331,7 @@ public class ReportPanel extends FunctionPanel{
 		HLayout chartLayout = new HLayout();
 		chartLayout.setAlign(Alignment.CENTER);
 		chartLayout.setHeight(350);
-		chart.loadChart(chartLayout, this);
-		
-		VLayout gridLayout = new VLayout();
-		gridLayout.setMargin(5);
-		productionReportListGrid = new ProductionReportListGrid();
-		//InventoryProductRequestGrid.setCriteria(new Criterion("issued_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()));
-		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-	  		      new Criterion("produced_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
-	  		  });
-		productionReportListGrid.setCriteria(criteria);
-		gridLayout.addMember(productionReportListGrid);
+		chart.loadChart(chartLayout, this, productionReportListGrid.createDataTable(criteria));
 		
 		reportLayout.addMembers(filterLayout, title, chartLayout, gridLayout);
 //		reportLayout.addMembers(filterLayout, title, chartLayout);
@@ -326,6 +398,15 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
+		VLayout gridLayout = new VLayout();
+		gridLayout.setMargin(5);
+		materialUsedReportListGrid = new MaterialUsedReportListGrid();
+		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+	  		      new Criterion("request_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+	  		  });
+		materialUsedReportListGrid.setCriteria(criteria);
+		gridLayout.addMember(materialUsedReportListGrid);
+		
 		SilverUsedColumnChart chart_1 = new SilverUsedColumnChart();
 		MaterialUsedColumnChart chart_2 = new MaterialUsedColumnChart();
 		VLayout reportLayout = new VLayout();
@@ -344,20 +425,12 @@ public class ReportPanel extends FunctionPanel{
 		
 		VLayout chartLayout_1 = new VLayout(); 
 		chartLayout_1.setWidth(450);
-		chart_1.loadChart(chartLayout_1, this);
+		chart_1.loadChart(chartLayout_1, this, materialUsedReportListGrid.createSilverDataTable(criteria));
 		VLayout chartLayout_2 = new VLayout(); 
 		chartLayout_2.setWidth(600);
-		chart_2.loadChart(chartLayout_2, this);
+		chart_2.loadChart(chartLayout_2, this, materialUsedReportListGrid.createMaterialDataTable(criteria));
 		
 		chartLayout.addMembers(chartLayout_1, chartLayout_2);
-		VLayout gridLayout = new VLayout();
-		gridLayout.setMargin(5);
-		materialUsedReportListGrid = new MaterialUsedReportListGrid();
-		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-	  		      new Criterion("request_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
-	  		  });
-		materialUsedReportListGrid.setCriteria(criteria);
-		gridLayout.addMember(materialUsedReportListGrid);
 		
 		reportLayout.addMembers(filterLayout, title, chartLayout, gridLayout);
 //		reportLayout.addMembers(filterLayout, title, chartLayout);
@@ -1150,7 +1223,7 @@ public class ReportPanel extends FunctionPanel{
 		HLayout chartLayout = new HLayout();
 		chartLayout.setAlign(Alignment.CENTER);
 		chartLayout.setHeight(350);
-		chart.loadChart(chartLayout, this);
+		chart.loadChart(chartLayout, this, disburseWageListGrid.createDataTable(criteria) );
 		
 		gridLayout.addMembers(chartLayout, disburseWageListGrid);
 		
@@ -1247,6 +1320,15 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
+		VLayout gridLayout = new VLayout();
+		gridLayout.setMargin(5);
+		purchasingListGrid = new PurchasingListGrid(type);
+		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
+    		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+    		  });
+		purchasingListGrid.setCriteria(criteria);
+		gridLayout.addMember(purchasingListGrid);
+		
 		VLayout reportLayout = new VLayout();
 		
 		Label title = new Label();
@@ -1262,18 +1344,9 @@ public class ReportPanel extends FunctionPanel{
 		
 		if (type.equalsIgnoreCase("type")) {
 			PurchasingColumnChart chart = new PurchasingColumnChart();
-			chart.loadChart(chartLayout, this, type);
+			chart.loadChart(chartLayout, this, type, purchasingListGrid.createDataTable(criteria, type));
 		}
-		
-		VLayout gridLayout = new VLayout();
-		gridLayout.setMargin(5);
-		purchasingListGrid = new PurchasingListGrid(type);
-		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
-    		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
-    		  });
-		purchasingListGrid.setCriteria(criteria);
-		gridLayout.addMember(purchasingListGrid);
-		
+
 //		Record[] filtered = filterDataSource(cashReceiptListGrid.getDataSource(), criteria);
 //		System.out.println("Found " + filtered.length);
 //		for (Record record : filtered){

@@ -134,7 +134,7 @@ public class DeliveryOrderLayout extends VLayout {
 		//dateForm.setGroupTitle("วันที่นำส่งสินค้า");
 		dateForm.setGroupTitle("วันที่ออกใบนำส่งสินค้า");
 		DateRange dateRange = new DateRange();  
-        dateRange.setRelativeStartDate(new RelativeDate("-1m"));
+        dateRange.setRelativeStartDate(new RelativeDate("-7d"));
         dateRange.setRelativeEndDate(RelativeDate.TODAY);
 		//final DateItem from = new DateItem("delivery_from" , "ตั้งแต่");
 		//final DateItem to = new DateItem("delivery_to" , "ถึง");

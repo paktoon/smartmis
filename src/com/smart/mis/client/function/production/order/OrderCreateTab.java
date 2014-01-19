@@ -145,7 +145,8 @@ public class OrderCreateTab {
 		
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
     		      new Criterion("status", OperatorId.EQUALS, "3_approved"),
-    		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+    		      //new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+    		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, dateRange.getStartDate(), dateRange.getEndDate())
     		  });
 		planListGrid.setCriteria(criteria);
 		

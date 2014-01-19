@@ -22,6 +22,7 @@ import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.FromToValidate;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.WaitingCallback;
@@ -352,7 +353,7 @@ public class CastingCreateWindow {
 		dateForm.setIsGroup(true);
 		dateForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 		dateForm.setGroupTitle("ข้อกำหนดคำสั่งผลิต");
-		dateForm.setCanEdit(false);
+		//dateForm.setCanEdit(false);
 		
 		DateRange dateRange = new DateRange();  
 	    dateRange.setRelativeStartDate(RelativeDate.TODAY);
@@ -370,7 +371,9 @@ public class CastingCreateWindow {
 		dueDate.setTitle("วันที่กำหนดรับของ");
 		dueDate.setUseTextField(true);
 		dueDate.setDefaultValue(dateRange.getEndDate());
-		dueDate.setCanEdit(false);
+		
+		FromToValidate.addValidator(sentDate, dueDate);
+//		dueDate.setCanEdit(false);
 		
 //		final DateItem deliveryDate = new DateItem();
 //		deliveryDate.setName("deliveryDate");

@@ -9,7 +9,8 @@ public class PlanProductData {
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("pid", pid);
         record.setAttribute("name",name);  
-        record.setAttribute("weight", weight * plan_amount);
+        //record.setAttribute("weight", weight * plan_amount);
+        record.setAttribute("weight", weight);
         record.setAttribute("type", type);  
         record.setAttribute("unit", unit); 
         
@@ -125,40 +126,53 @@ public class PlanProductData {
 //        	else 
     	if (plan_id != null &&  plan_id.equals( "PL10001")) {
     		return new ListGridRecord[]{ 
-        			createRecord("SP10001",plan_id, "PD10002", "Thin plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 170, true),
-        			createRecord("SP10002",plan_id, "PD10007","Plain silver necklaces",6.32, "necklace","เส้น", null, null, 50.0, null, null, 3.0, 120, true)
+//        			createRecord("SP10001",plan_id, "PD10002", "Thin plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 170, true),
+//        			createRecord("SP10002",plan_id, "PD10007","Plain silver necklaces",6.32, "necklace","เส้น", null, null, 50.0, null, null, 3.0, 120, true)
+        			createRecord("SP10001",plan_id, "PD10002", "Thin plain silver ring",1156.0, "ring","วง", 5.0,null,null,null,null, 3.0, 170, true),
+        			createRecord("SP10002",plan_id, "PD10007","Plain silver necklaces",758.4, "necklace","เส้น", null, null, 50.0, null, null, 3.0, 120, true)
         	};
     	} else if (plan_id != null &&  plan_id.equals( "PL10002")) {
     		return new ListGridRecord[]{ 
-        			createRecord("SP20001",plan_id, "PD10003", "Dense plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 4.0, 250, true),
-        			createRecord("SP20002",plan_id, "PD10007","Plain silver necklaces",6.32, "necklace","เส้น", null, null, 50.0, null, null, 3.0, 120, true)
+//        			createRecord("SP20001",plan_id, "PD10003", "Dense plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 4.0, 250, true),
+//        			createRecord("SP20002",plan_id, "PD10007","Plain silver necklaces",6.32, "necklace","เส้น", null, null, 50.0, null, null, 3.0, 120, true)
+        			createRecord("SP20001",plan_id, "PD10003", "Dense plain silver ring",1700.0, "ring","วง", 5.0,null,null,null,null, 4.0, 250, true),
+        			createRecord("SP20002",plan_id, "PD10007","Plain silver necklaces",758.4, "necklace","เส้น", null, null, 50.0, null, null, 3.0, 120, true)
         	};
     	} else if (plan_id != null &&  plan_id.equals( "PL10003")) {
     		return new ListGridRecord[]{ 
-        			createRecord("SP30001",plan_id, "PD10003", "Dense plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 4.0, 250, true),
-        			createRecord("SP30002",plan_id, "PD10002", "Thin plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 170, true)
+//        			createRecord("SP30001",plan_id, "PD10003", "Dense plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 4.0, 250, true),
+//        			createRecord("SP30002",plan_id, "PD10002", "Thin plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 170, true)
+        			createRecord("SP30001",plan_id, "PD10003", "Dense plain silver ring",1700.0, "ring","วง", 5.0,null,null,null,null, 4.0, 250, true),
+        			createRecord("SP30002",plan_id, "PD10002", "Thin plain silver ring",1156.0, "ring","วง", 5.0,null,null,null,null, 3.0, 170, true)
         	};
     	} else if (plan_id != null &&  plan_id.equals( "PL10004")) {
     		return new ListGridRecord[]{ 
-    				createRecord("SP40001",plan_id, "PD10001", "Diamond cut silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 200, true),
-        			createRecord("SP40002",plan_id, "PD10003", "Dense plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 4.0, 350, true)
+//    				createRecord("SP40001",plan_id, "PD10001", "Diamond cut silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 200, true),
+//        			createRecord("SP40002",plan_id, "PD10003", "Dense plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 4.0, 350, true)
+    				createRecord("SP40001",plan_id, "PD10001", "Diamond cut silver ring",1360.0, "ring","วง", 5.0,null,null,null,null, 3.0, 200, true),
+        			createRecord("SP40002",plan_id, "PD10003", "Dense plain silver ring",2380.0, "ring","วง", 5.0,null,null,null,null, 4.0, 350, true)
         	};
     	} else if (plan_id != null &&  plan_id.equals( "PL10005")) {
     		return new ListGridRecord[]{ 
-    				createRecord("SP50001",plan_id, "PD10001", "Diamond cut silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 220, true)
+//    				createRecord("SP50001",plan_id, "PD10001", "Diamond cut silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 220, true)
+    				createRecord("SP50001",plan_id, "PD10001", "Diamond cut silver ring",1496.0, "ring","วง", 5.0,null,null,null,null, 3.0, 220, true)
         	};
     	} else if (plan_id != null &&  plan_id.equals( "PL10006")) {
     		return new ListGridRecord[]{ 
-    				createRecord("SP60001",plan_id, "PD10007","Plain silver necklaces",6.32, "necklace","เส้น", null, null, 50.0, null, null, 3.0, 100, true)
+//    				createRecord("SP60001",plan_id, "PD10007","Plain silver necklaces",6.32, "necklace","เส้น", null, null, 50.0, null, null, 3.0, 100, true)
+    				createRecord("SP60001",plan_id, "PD10007","Plain silver necklaces",632.0, "necklace","เส้น", null, null, 50.0, null, null, 3.0, 100, true)
         	};
     	} else if (plan_id != null &&  plan_id.equals( "PL10007")) {
     		return new ListGridRecord[]{ 
-    				createRecord("SP70001",plan_id, "PD10001", "Diamond cut silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 70, true),
-    				createRecord("SP70002",plan_id, "PD10002", "Thin plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 200, true)
+//    				createRecord("SP70001",plan_id, "PD10001", "Diamond cut silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 70, true),
+//    				createRecord("SP70002",plan_id, "PD10002", "Thin plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 200, true)
+    				createRecord("SP70001",plan_id, "PD10001", "Diamond cut silver ring",476.0, "ring","วง", 5.0,null,null,null,null, 3.0, 70, true),
+    				createRecord("SP70002",plan_id, "PD10002", "Thin plain silver ring",1360.0, "ring","วง", 5.0,null,null,null,null, 3.0, 200, true)
         	};
     	} else if (plan_id != null &&  plan_id.equals( "PL10008")) {
     		return new ListGridRecord[]{ 
-    				createRecord("SP80001",plan_id, "PD10002", "Thin plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 200, true),
+//    				createRecord("SP80001",plan_id, "PD10002", "Thin plain silver ring",6.8, "ring","วง", 5.0,null,null,null,null, 3.0, 200, true),
+    				createRecord("SP80001",plan_id, "PD10002", "Thin plain silver ring",1360.0, "ring","วง", 5.0,null,null,null,null, 3.0, 200, true),
         	};
     	} 
     	else	return new ListGridRecord[]{};

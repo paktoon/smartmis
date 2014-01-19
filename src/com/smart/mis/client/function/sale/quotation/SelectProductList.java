@@ -97,7 +97,7 @@ public class SelectProductList {
         pquoteAmount.setCanEdit(true);
         pquoteAmount.setRequired(true);
         pquoteAmount.setDefaultValue(0);
-        pquoteAmount.setValidators(ValidatorFactory.integerRange(1, null));
+        pquoteAmount.setValidators(ValidatorFactory.integerRange(50, 5000));
         productGrid.setFields(pidField, pnameField, ppriceField, premainField, punitField, pquoteAmount); 
         
         HLayout control = new HLayout();

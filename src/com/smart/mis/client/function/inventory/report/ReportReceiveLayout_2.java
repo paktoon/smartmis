@@ -147,7 +147,8 @@ public class ReportReceiveLayout_2 extends VLayout {
 		
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
     		      //new Criterion("status", OperatorId.NOT_EQUAL, "3_to_next_process"),
-    		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+    		      //new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
+    		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, dateRange.getStartDate(), dateRange.getEndDate())
     		  });
 		orderListGrid.setCriteria(criteria);
 		

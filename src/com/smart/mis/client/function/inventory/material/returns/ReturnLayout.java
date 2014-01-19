@@ -136,7 +136,7 @@ public class ReturnLayout extends VLayout {
 		dateForm.setIsGroup(true);
 		dateForm.setGroupTitle("วันที่ขอคืนวัตถุดิบ");
 		DateRange dateRange = new DateRange();  
-        dateRange.setRelativeStartDate(new RelativeDate("-1m"));
+        dateRange.setRelativeStartDate(new RelativeDate("-7d"));
         dateRange.setRelativeEndDate(RelativeDate.TODAY);
 		final DateItem from = new DateItem("create_from" , "ตั้งแต่");
 		final DateItem to = new DateItem("create_to" , "ถึง");

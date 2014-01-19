@@ -21,11 +21,11 @@ import com.smartgwt.client.widgets.Canvas;
 
 public class ProductionColumnChart {
 
-	public void loadChart(final Canvas loader, final ReportPanel panel) {  
+	public void loadChart(final Canvas loader, final ReportPanel panel, final Double[][] item) {  
 	    Runnable onLoadCallback = new Runnable() {
 	        public void run() {
 	   
-	          ColumnChart chart = new ColumnChart(createTable(), createOptions());
+	          ColumnChart chart = new ColumnChart(createTable(item), createOptions());
 
 	          chart.addSelectHandler(createSelectHandler(chart, panel));
 	          
@@ -49,6 +49,7 @@ public class ProductionColumnChart {
 		    //options.setLegend("center");
 		    //options.setLegend(createLegendOption());
 		    //options.setLegend(LegendPosition.BOTTOM);
+		    options.setLegend(LegendPosition.NONE);
 		    options.setHAxisOptions(createAxisOption("ประเภทสินค้า"));
 		    options.setVAxisOptions(createAxisOption("ปริมาณที่ผลิต (ชิ้น)"));
 		    ChartArea area = ChartArea.create();
@@ -120,7 +121,7 @@ public class ProductionColumnChart {
 		    };
 		  }
 
-		  private AbstractDataTable createTable() {
+		  private AbstractDataTable createTable(Double[][] item) {
 		    DataTable data = DataTable.create();
 		    data.addColumn(ColumnType.STRING, "ประเภทสินค้า"); //0
 		    data.addColumn(ColumnType.NUMBER, "ปริมาณที่ผลิต (ชิ้น)"); //1
@@ -137,14 +138,17 @@ public class ProductionColumnChart {
 		    data.setValue(6, 0, "กำไลข้อเท้า");
 		    data.setValue(7, 0, "สร้อยข้อเท้าหรือข้อมือ");
 		    
-		    data.setValue(0, 1, 1000.0);
-		    data.setValue(1, 1, 1200.0);
-		    data.setValue(2, 1, 800.0);
-		    data.setValue(3, 1, 1000.0);
-		    data.setValue(4, 1, 1200.0);
-		    data.setValue(5, 1, 800.0);
-		    data.setValue(6, 1, 1000.0);
-		    data.setValue(7, 1, 1200.0);
+//		    data.setValue(0, 1, 1000.0);
+//		    data.setValue(1, 1, 1200.0);
+//		    data.setValue(2, 1, 800.0);
+//		    data.setValue(3, 1, 1000.0);
+//		    data.setValue(4, 1, 1200.0);
+//		    data.setValue(5, 1, 800.0);
+//		    data.setValue(6, 1, 1000.0);
+//		    data.setValue(7, 1, 1200.0);
+		    for (int i = 0 ; i <= 7 ; i ++) {
+		    	data.setValue(i, 1, item[0][i]);
+		    }
 		    
 //		    if (type.equalsIgnoreCase("cus_type")) {
 //			    data.addRows(2);

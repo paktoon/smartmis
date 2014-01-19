@@ -77,6 +77,8 @@ import com.smartgwt.client.widgets.grid.ListGridSummaryField;
 import com.smartgwt.client.widgets.grid.SummaryFunction;
 import com.smartgwt.client.widgets.grid.events.CellSavedEvent;
 import com.smartgwt.client.widgets.grid.events.CellSavedHandler;
+import com.smartgwt.client.widgets.grid.events.ChangeEvent;
+import com.smartgwt.client.widgets.grid.events.ChangeHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;

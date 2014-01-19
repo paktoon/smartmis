@@ -97,7 +97,7 @@ public class SelectProductList {
         pplanAmount.setCanEdit(true);
         pplanAmount.setRequired(true);
         pplanAmount.setDefaultValue(0);
-        pplanAmount.setValidators(ValidatorFactory.integerRange(1, null));
+        pplanAmount.setValidators(ValidatorFactory.integerRange(50, 5000));
         productGrid.setFields(pidField, pnameField, pweightField, premainField, punitField, pplanAmount); 
         
         HLayout control = new HLayout();
@@ -142,7 +142,7 @@ public class SelectProductList {
 									Double pdiameter = item.getAttributeAsDouble("diameter");
 									Double pthickness = item.getAttributeAsDouble("thickness");
 									//ListGridRecord newRecord = QuoteProductData.createRecord(pid, pname, pweight, pprice ,ptype, punit, pquote_amount, true);
-									ListGridRecord newRecord = PlanProductData.createRecord(pid, pname, pweight ,ptype, punit, psize, pwidth, plength, pheight, pdiameter, pthickness, pplan_amount, true);
+									ListGridRecord newRecord = PlanProductData.createRecord(pid, pname, pweight * pplan_amount ,ptype, punit, psize, pwidth, plength, pheight, pdiameter, pthickness, pplan_amount, true);
 									//DS.addData(newRecord);
 									target.addData(newRecord, new DSCallback() {
 										@Override

@@ -16,6 +16,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.prodution.ProcessType;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.sale.Customer;
@@ -247,6 +248,7 @@ public class PlanViewWindow extends EditorWindow{
         quoteItemCell_4.setIncludeInRecordSummary(false);
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("plan_amount", 70);
+        quoteItemCell_6.setValidators(ValidatorFactory.integerRange(50, 5000));
         
         if (edit) quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
@@ -366,11 +368,18 @@ public class PlanViewWindow extends EditorWindow{
 		saveButton.setWidth(120);
 		saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
+            	
+            	if (planListGrid.hasErrors()) {
+            		SC.warn("ข้อมูลจำนวนสินค้าไม่ถูกต้อง");
+            		return;
+            	}
+            	
             	SC.confirm("ยืนยันการทำรายการ", "ต้องการบันทึกการแก้ไขแผนการผลิค หรือไม่?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
 							//if (customerForm.validate()) saveQuotation(main, plan_id, customerForm, planListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
+							if (reason_area.getValueAsString() != null) record.setAttribute("reason", reason_area.getValueAsString());
 							saveProductionPlan(main, plan_id, planListGrid, currentUser, record);
 						}
 					}
