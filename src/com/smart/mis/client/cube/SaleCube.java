@@ -54,15 +54,16 @@ public class SaleCube {
         cubeGrid.setAutoSelectValues(AutoSelectionModel.BOTH);
         cubeGrid.setRowHeaderGridMode(true);
   
-        final NumberFormat numberFormat = NumberFormat.getFormat("0,000");  
-  
+        final NumberFormat numberFormat_1 = NumberFormat.getFormat("0,000.00");  
+        final NumberFormat numberFormat_2 = NumberFormat.getFormat("000.00");  
+        
         cubeGrid.setCellFormatter(new CellFormatter() {  
             public String format(Object value, ListGridRecord record, int rowNum, int colNum) {  
                 if (value == null) return null;  
                 try {  
                 	if (((Number) value).longValue() > 999) {
-                		return numberFormat.format(((Number) value).longValue());  
-                	} else return value.toString(); 
+                		return numberFormat_1.format(((Number) value).longValue());  
+                	} else return numberFormat_2.format(((Number) value).longValue());
                 } catch (Exception e) {  
                     return value.toString();  
                 }  

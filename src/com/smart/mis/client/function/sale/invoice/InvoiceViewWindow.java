@@ -388,6 +388,7 @@ public class InvoiceViewWindow extends EditorWindow{
             	VLayout printLayout = new VLayout(10);
             	printLayout.addMember(new PrintHeader("ใบแจ้งหนี้"));
             	printLayout.addMember(layout);
+            	//printLayout.setPrintChildrenAbsolutelyPositioned(true);
             	Canvas.showPrintPreview(printLayout);
             	main.destroy();
           }

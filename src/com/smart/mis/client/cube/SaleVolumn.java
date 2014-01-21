@@ -17,6 +17,20 @@ public class SaleVolumn extends ListGridRecord {
         setValue(value);  
         //setPercentNational(percentNational);  
     }  
+    
+    public SaleVolumn(String cellId, String year, int type, String setting, String customer, String product, String metric, double value) {  
+    	setCellId(cellId);
+    	setYear(year);
+        
+        if (type == 1) setQuater(setting);  
+        else setMonth(setting);
+        
+        setCustomer(customer);  
+        setProduct(product);  
+        setMetric(metric);  
+        setValue(value);  
+        //setPercentNational(percentNational);  
+    } 
   
 //    public SaleVolumn(String cellId, String quarter, String month, String customer, String product, String metric, int value, String hilite) {  
 //    	setCellId(cellId);
@@ -30,6 +44,16 @@ public class SaleVolumn extends ListGridRecord {
 //    }  
     
     public SaleVolumn(String cellId, String year, String customer, String product, String metric, int value) {  
+    	setCellId(cellId);  
+        setYear(year);
+        setCustomer(customer);  
+        setProduct(product);  
+        setMetric(metric);  
+        setValue(value);  
+        //setPercentNational(percentNational);  
+    } 
+    
+    public SaleVolumn(String cellId, String year, String customer, String product, String metric, double value) {  
     	setCellId(cellId);  
         setYear(year);
         setCustomer(customer);  
@@ -116,10 +140,20 @@ public class SaleVolumn extends ListGridRecord {
         //setAttribute("value", value); 
     }  
   
-    public Integer getValue() {  
-        return getAttributeAsInt("value");  
-        //return getAttributeAsInt("value");  
+//    public Integer getValue() {  
+//        return getAttributeAsInt("value");  
+//        //return getAttributeAsInt("value");  
+//    }  
+    
+    public void setValue(Double value) {  
+        setAttribute("value", value);   
+        //setAttribute("value", value); 
     }  
+  
+    public Double getValue() {  
+        return getAttributeAsDouble("value");  
+        //return getAttributeAsInt("value");  
+    } 
   
 //    public void setPercentNational(Integer percentNational) {  
 //        setAttribute("percentNational", percentNational);  

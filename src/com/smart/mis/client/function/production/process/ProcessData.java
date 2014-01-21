@@ -42,7 +42,21 @@ public class ProcessData {
     			createDummyRecord("PS20003","3_abrade", "ดิน-เงา ไม่ลงดำ", 3, pid, 3, 0.6),
     			createDummyRecord("PS20004","4_packing", "แยกบรรจุ", 1, pid, 4, 0.12)
     	};
-    } 
+    } else if (pid != null && (pid.equals( "PD10008") || pid.equals( "PD10009") || pid.equals( "PD10010") || pid.equals( "PD10011"))) {
+    	return new ListGridRecord[]{ 
+    			createDummyRecord("PS30001","1_casting", "ใช้แบบเดิม", 3, pid, 1, 5.6),
+    			createDummyRecord("PS30002","2_scrape", "ไม่ฝังพลอย", 3, pid, 2, 0.0),
+    			createDummyRecord("PS30003","3_abrade", "ดิน-เงา ไม่ลงดำ", 3, pid, 3, 0.6),
+    			createDummyRecord("PS30004","4_packing", "แยกบรรจุ", 1, pid, 4, 0.12)
+    	};
+    }  else if (pid != null && (pid.equals( "PD10012") || pid.equals( "PD10013") || pid.equals( "PD10014") || pid.equals( "PD10015"))) {
+    	return new ListGridRecord[]{ 
+    			createDummyRecord("PS40001","1_casting", "สั่งเทียน", 3, pid, 1, 5.6),
+    			createDummyRecord("PS40002","2_scrape", "ไม่ฝังพลอย", 3, pid, 2, 0.0),
+    			createDummyRecord("PS40003","3_abrade", "ดิน-เงา ไม่ลงดำ", 3, pid, 3, 1.08),
+    			createDummyRecord("PS40004","4_packing", "แยกบรรจุ", 1, pid, 4, 0.12)
+    	};
+    }
     	else return new ListGridRecord[]{};
     }
     

@@ -13,11 +13,18 @@ public class SaleVolumnData {
         for (String month : months) {
 			for (String customer : customers) {
 				for (String product : products) {
-					for (String type : types) {
-						//time, zone, product, matric, value
-						dataGen.add(new SaleVolumn(i.toString(), year, 2, month, customer, product, type, (int) Math.round(Math.random() * 10000)));
-						i++;
-					}
+//					for (String type : types) {
+//						//time, zone, product, matric, value
+//						dataGen.add(new SaleVolumn(i.toString(), year, 2, month, customer, product, type, (int) Math.round(Math.random() * 10000)));
+//						i++;
+//					}
+					int amount = (int) Math.round(Math.random() * 2000 * 12);
+					amount += 80;
+					
+					dataGen.add(new SaleVolumn(i.toString(), year, 2, month, customer, product, "Amount", amount));
+					i++;
+					dataGen.add(new SaleVolumn(i.toString(), year, 2, month, customer, product, "Volumn", amount * 22.345));
+					i++;
 				}
 			}
 		}
@@ -32,11 +39,20 @@ public class SaleVolumnData {
         for (String quater : quaters) {
 			for (String customer : customers) {
 				for (String product : products) {
-					for (String type : types) {
-						//time, zone, product, matric, value
-						dataGen.add(new SaleVolumn(i.toString(), year, 1, quater, customer, product, type, (int) Math.round(Math.random() * 10000)));
-						i++;
+//					for (String type : types) {
+//						//time, zone, product, matric, value
+//						dataGen.add(new SaleVolumn(i.toString(), year, 1, quater, customer, product, type, (int) Math.round(Math.random() * 10000)));
+//						i++;
+//					}
+					int amount = (int) Math.round(Math.random() * 2000 * 4);
+					amount += 250;
+					if (quater.equalsIgnoreCase("Q2") || quater.equalsIgnoreCase("Q3")) {
+						amount *= 0.6;
 					}
+					dataGen.add(new SaleVolumn(i.toString(), year, 1, quater, customer, product, "Amount", amount));
+					i++;
+					dataGen.add(new SaleVolumn(i.toString(), year, 1, quater, customer, product, "Volumn", amount * 22.345));
+					i++;
 				}
 			}
 		}
@@ -51,11 +67,15 @@ public class SaleVolumnData {
         for (String year : years) {
 				for (String customer : customers) {
 					for (String product : products) {
-						for (String type : types) {
+						//for (String type : types) {
 							//time, zone, product, matric, value
-							dataGen.add(new SaleVolumn(i.toString(), year, customer, product, type, (int) Math.round(Math.random() * 10000)));
+							int amount = (int) Math.round(Math.random() * 2000);
+							amount += 1000;
+							dataGen.add(new SaleVolumn(i.toString(), year, customer, product, "Amount", amount));
 							i++;
-						}
+							dataGen.add(new SaleVolumn(i.toString(), year, customer, product, "Volumn", amount * 22.345));
+							i++;
+						//}
 					}
 				}
 		}
@@ -111,5 +131,9 @@ public class SaleVolumnData {
         "Bracelets", 
         "Anklets", 
         "Bangles"
+	};
+	
+	private static String[][] genData = new String[][] {
+		
 	};
 } 
