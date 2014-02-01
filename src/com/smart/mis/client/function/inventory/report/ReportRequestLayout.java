@@ -131,6 +131,16 @@ public class ReportRequestLayout extends VLayout{
         reportDate.setAlign(Alignment.CENTER);
         reportDate.setHeight(10);
         reportDate.setStyleName("printDetails");
+        
+		Label createDate = new Label();
+		Date today = new Date();
+		DateTimeFormat pattern = DateTimeFormat.getFormat("MM/dd/yyyy");
+		createDate.setContents("วันที่ออกรายงาน : " + pattern.format(today));
+		createDate.setWidth("20%");
+		createDate.setHeight(15);
+		createDate.setAlign(Alignment.LEFT);
+		createDate.setMargin(10);
+        report.addMember(createDate);
         report.addMember(text);
         report.addMember(reportDate);
         gridLayout.setMembers(productListGrid);

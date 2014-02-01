@@ -225,6 +225,13 @@ public class PlanReviseTab {
             		SC.warn("กรุณาเลือกแผนการผลิตที่ต้องการยกเลิก");
             		return;
             	}
+            	
+            	String status = selected.getAttributeAsString("status");
+            	if (status != null && (status.equalsIgnoreCase("5_on_production") || status.equalsIgnoreCase("6_production_completed") || status.equalsIgnoreCase("7_transferred"))) {
+            		SC.warn("ไม่สามารถยกเลิกแผนการผลิตได้ เนื่องจากเข้าสู่กระบวนการผลิตแล้ว");
+            		return;
+            	}
+            	
             	SC.confirm("ยืนยันการทำรายการ", "ต้องการยกเลิกแผนการผลิต หรือไม่?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {

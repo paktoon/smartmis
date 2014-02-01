@@ -89,7 +89,7 @@ public class MaterialAdd {
 		winModel.setTitle("เพิ่มวัตถุดิบ");
 		//winModel.setAutoSize(true);	
 		winModel.setWidth(570);
-		winModel.setHeight(330);
+		winModel.setHeight(400);
 		winModel.setHeaderIcon("[SKIN]actions/add.png");
 		winModel.setShowMinimizeButton(false);
 		winModel.setIsModal(true);
@@ -180,7 +180,7 @@ public class MaterialAdd {
 					weight.show();
 					weight.setRequired(true);
 					unit.clearValue();
-					unit.setCanEdit(false);
+					unit.setCanEdit(true);
 				}
 			}
         });

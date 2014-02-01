@@ -299,6 +299,8 @@ public class RequestViewWindow extends EditorWindow{
         quoteItemCell_7.setAlign(Alignment.RIGHT);
         quoteItemCell_7.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_7.setShowGridSummary(true);
+        if (edit) quoteItemCell_7.setEmptyCellValue("--โปรดระบุจำนวน--");
+        else quoteItemCell_7.setEmptyCellValue("ยังไม่มีการเบิกจ่าย");
         
 //        ListGridNumberField quoteItemCell_8 = new ListGridNumberField("received_amount", 110);
 //        quoteItemCell_8.setTitle("จำนวนที่รับ");

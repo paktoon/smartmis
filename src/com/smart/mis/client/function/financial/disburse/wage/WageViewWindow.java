@@ -85,7 +85,7 @@ public class WageViewWindow extends EditorWindow{
 		editWindow.setTitle("บันทึกชำระค่าจ้างผลิต");
 		} else editWindow.setTitle("ข้อมูลรายการชำระค่าจ้างผลิต");
 		editWindow.setWidth(850);  
-		editWindow.setHeight(540);
+		editWindow.setHeight(560);
 		editWindow.setShowMinimizeButton(false);
 		editWindow.setIsModal(true);
 		editWindow.setShowModalMask(true);
@@ -102,7 +102,7 @@ public class WageViewWindow extends EditorWindow{
 		
 		final VLayout layout = new VLayout();
 		layout.setWidth(820);
-		layout.setHeight(520);
+		layout.setHeight(540);
 		layout.setMargin(10);
 
 		String wage_id = record.getAttributeAsString("wage_id");
@@ -389,7 +389,7 @@ public class WageViewWindow extends EditorWindow{
 		
 		final DynamicForm summaryForm_2 = new DynamicForm();
 		summaryForm_2.setWidth100();
-		//summaryForm_2.setHeight(30);
+		summaryForm_2.setHeight(35);
 		summaryForm_2.setNumCols(6);
 		summaryForm_2.setMargin(5);
 		summaryForm_2.setIsGroup(true);
@@ -519,7 +519,8 @@ public class WageViewWindow extends EditorWindow{
 		        controlLayout.addMember(cancelButton);
 		        confirmButton.addClickHandler(new ClickHandler() {  
 		            public void onClick(ClickEvent event) { 
-		            	if (!receiptForm.validate() || paid_payment.getValueAsDouble() < (job_wage)) {
+		            	
+		            	if (!receiptForm.validate() || paid_payment.getValueAsDouble() < (job_wage * 0.99) || paid_payment.getValueAsDouble() > (job_wage * 1.01)) {
 		            		SC.warn("ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบข้อมูลใหม่อีกครั้ง");
 		            		paid_payment.clearValue();
 		            		return;
@@ -540,7 +541,7 @@ public class WageViewWindow extends EditorWindow{
 													if (dsResponse.getStatus() != 0) {
 														SC.warn("การบันทึกจ่ายชำระเงิน ล้มเหลว");
 													} else { 
-														SC.warn("การบันทึกจ่ายชำระเงิน เสร็จสมบูรณ์");
+														SC.say("การบันทึกจ่ายชำระเงิน เสร็จสมบูรณ์");
 														confirm.destroy();
 														
 														SC.confirm("พิมพ์ใบสำคัญจ่ายค่าจ้างวัตถุดิบ", "ต้องการพิมพ์ใบสำคัญจ่ายค่าจ้างวัตถุดิบหรือไม่?" , new BooleanCallback() {

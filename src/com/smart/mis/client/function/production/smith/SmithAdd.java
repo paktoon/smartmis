@@ -59,7 +59,7 @@ public class SmithAdd {
 		winModel.setTitle("เพิ่มช่าง");
 		//winModel.setAutoSize(true);	
 		winModel.setWidth(700);
-		winModel.setHeight(350);
+		winModel.setHeight(300);
 		winModel.setHeaderIcon("[SKIN]actions/add.png");
 		winModel.setShowMinimizeButton(false);
 		winModel.setIsModal(true);
@@ -96,7 +96,7 @@ public class SmithAdd {
         name.setHint("*");
         
 		TextItem phone1 = new TextItem("phone1", "หมายเลขโทรศัพท์ 1");
-		TextItem phone2 = new TextItem("phone2", "ชื่หมายเลขโทรศัพท์ 2");
+		TextItem phone2 = new TextItem("phone2", "หมายเลขโทรศัพท์ 2");
 		TextItem email = new TextItem("email", "อีเมล");
 		SelectItem type = new SelectItem("type", "ประเภทงาน");
 		type.setWidth(200);

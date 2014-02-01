@@ -869,7 +869,7 @@ public class CastingCreateWindow {
 				String mat_name = item.getAttributeAsString("mat_name");
 				Double remain = item.getAttributeAsDouble("remain");
 				String unit = item.getAttributeAsString("unit");
-				msg += "<br> <br>" + mat_name + " จำนวน " + (total_sent_weight / 2) + " " + unit + " คงเหลือ " + remain + " " + unit; 
+				msg += "<br>	ต้องการ" + mat_name + " จำนวน " + (total_sent_weight / 2) + " " + unit + " คงเหลือ " + remain + " " + unit; 
 			}
 			SC.warn(msg);
 			return;

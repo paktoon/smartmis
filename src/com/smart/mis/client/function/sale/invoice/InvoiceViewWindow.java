@@ -468,7 +468,11 @@ public class InvoiceViewWindow extends EditorWindow{
 		        controlLayout.addMember(cancelButton);
 		        confirmButton.addClickHandler(new ClickHandler() {  
 		            public void onClick(ClickEvent event) { 
-		            	if (!receiptForm.validate() || received_payment.getValueAsDouble() < (netEx * 1.07)) {
+		            	//Double need = netEx * 1.07;
+		            	Double upper = (netEx * 1.07) * 1.01;
+		            	Double lower = (netEx * 1.07) * 0.99;
+		            	System.out.println("received_payment " + upper + " " + lower);
+		            	if (!receiptForm.validate() || received_payment.getValueAsDouble() < lower || received_payment.getValueAsDouble() > upper) {
 		            		SC.warn("ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบข้อมูลใหม่อีกครั้ง");
 		            		received_payment.clearValue();
 		            		return;
@@ -489,7 +493,7 @@ public class InvoiceViewWindow extends EditorWindow{
 													if (dsResponse.getStatus() != 0) {
 														SC.warn("การบันทึกรับชำระเงิน ล้มเหลว");
 													} else { 
-														SC.warn("การบันทึกรับชำระเงิน เสร็จสมบูรณ์");
+														SC.say("การบันทึกรับชำระเงิน เสร็จสมบูรณ์");
 														confirm.destroy();
 														main.destroy();
 													}

@@ -89,7 +89,7 @@ public class SupplierAdd {
 		winModel.setTitle("เพิ่มผู้จำหน่าย");
 		//winModel.setAutoSize(true);	
 		winModel.setWidth(570);
-		winModel.setHeight(390);
+		winModel.setHeight(700);
 		winModel.setHeaderIcon("[SKIN]actions/add.png");
 		winModel.setShowMinimizeButton(false);
 		winModel.setIsModal(true);
@@ -119,7 +119,7 @@ public class SupplierAdd {
 		TextItem sup_name = new TextItem("sup_name", "ชื่อผู้จำหน่าย");
 		FormItemIcon icon = new FormItemIcon();  
         icon.setSrc("[SKIN]/actions/help.png"); 
-        icon.setPrompt("ชื่อวัตถุดิบต้องไม่ซ้ำ");
+        icon.setPrompt("ชื่อผู้จำหน่ายต้องไม่ซ้ำ");
         sup_name.setIcons(icon);
         sup_name.setRequired(true);
         sup_name.setHint("*");
@@ -219,6 +219,7 @@ public class SupplierAdd {
 								    	    	Integer.parseInt(editorForm.getValueAsString("leadtime")),
 								    	    	getAttributeList(editItemGrid, "mid")
 								    			);
+										editItemGrid.clear();
 										dataSource.addData(newRecord, new DSCallback() {
 
 											@Override
@@ -264,7 +265,7 @@ public class SupplierAdd {
         sup_phone2.setWidth(250);
         email.setWidth(250);
         editorForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-        editorForm.setFields(sup_name, sup_phone1, sup_phone2, fax, email, address, leadtime);
+        editorForm.setFields(sup_name, sup_phone1, sup_phone2, fax, email, address, street, city, state, postal, leadtime);
         editorForm.setColWidths(200	, 300);
     	
     	HLayout temp = new HLayout();

@@ -526,11 +526,14 @@ public class SaleViewWindow extends EditorWindow{
 					public void execute(Boolean value) {
 						if (value) {
 								String invoice_id = record.getAttributeAsString("invoice_id");
+								String sale_id = record.getAttributeAsString("sale_id");
 								ListGridRecord checkRecord = InvoiceData.getStatusRecords(invoice_id);
 								if (checkRecord.getAttributeAsString("status").equalsIgnoreCase("2_paid")) {
 									SC.warn("ลูกค้าชำระเงินแล้วไม่สามารถยกเลิกรายการขายได้");
 									return;
 								}
+								
+								cancelProductionPlan(sale_id);
 								
 								ListGridRecord invRecord = InvoiceData.createStatusRecord(invoice_id, "4_canceled");
 								InvoiceDS.getInstance().updateData(invRecord, new DSCallback() {
@@ -716,109 +719,14 @@ public class SaleViewWindow extends EditorWindow{
 		return layout;
 	}
 	
-//	public void summaryPriceRecalculate(ListGridRecord[] all, DynamicForm target){
-//		Double sum_price = 0.0;
-//		for (ListGridRecord record : all) {
-//			sum_price += record.getAttributeAsDouble("sum_price");
-//		}
-//		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
-//		target.getField("netExclusive").setValue(nf.format(sum_price));
-//		target.getField("tax").setValue(nf.format(sum_price * 0.07));
-//		target.getField("netInclusive").setValue(nf.format(sum_price * 1.07));
-//	}
-//	
-//	public void saveQuotation(final Window main, final String quote_id, DynamicForm customer, ListGrid saleListGrid, Date from, Date to, Date delivery, User currentUser){
-//		ListGridRecord[] all = saleListGrid.getRecords();
-//		
-//		if (all.length == 0) {
-//			SC.warn("กรูณาเลือกรายการสินค้าอย่างน้อย 1 รายการ");
-//			return;
-//		}
-//		
-//		Double total_weight = 0.0;
-//		Double total_netExclusive = 0.0;
-//		Integer total_amount = 0;
-//		//final String quote_id = "QA70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
-//		final ArrayList<QuoteProductDetails> productList = new ArrayList<QuoteProductDetails>();
-//		
-//		for (ListGridRecord item : all){
-//			total_weight += item.getAttributeAsDouble("weight");
-//			total_amount += item.getAttributeAsInt("quote_amount");
-//			total_netExclusive += item.getAttributeAsDouble("sum_price");
-//			
-//			String sub_quote_id = item.getAttributeAsString("sub_quote_id");
-//			String pid = item.getAttributeAsString("pid");
-//			String pname = item.getAttributeAsString("name");
-//			String ptype = item.getAttributeAsString("type");
-//			String psize = item.getAttributeAsString("size");
-//			Double pweight = item.getAttributeAsDouble("weight");
-//			Integer pquote_amount = item.getAttributeAsInt("quote_amount");
-//			String punit = item.getAttributeAsString("unit");
-//			Double pprice = item.getAttributeAsDouble("price");
-//			QuoteProductDetails temp = new QuoteProductDetails();
-//			temp.save(pid, pname, psize, pweight, pprice, ptype, punit);
-//			temp.setID(sub_quote_id, quote_id);
-//			temp.setQuantity(pquote_amount);
-//			productList.add(temp);
-//		}
-//		//System.out.println(total_weight + " " + total_amount + " " + total_netExclusive);
-//			//status
-//			final String quote_status = "2_waiting_for_approved";
-//			
-//			if (customer.getField("cid").getValue() == null || customer.getField("cus_name").getValue() == null) {
-//				SC.warn("ชื่อและรหัสลูกค้าไม่ถุกต้อง");
-//				return;
-//			}
-//			
-//			String cid = (String) customer.getField("cid").getValue();
-//			String cus_name = (String) customer.getField("cus_name").getValue();
-//			String payment_model = (String) customer.getField("payment_model").getValue();
-//			Integer credit = (Integer) customer.getField("credit").getValue();
-//			//System.out.println(cid + " " + cus_name + " " + payment_model + " " + credit);
-//			
-//			ListGridRecord updateRecord = QuotationData.createUpdateRecord(quote_id, cid, cus_name, payment_model, credit, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), currentUser.getFirstName() + " " + currentUser.getLastName(), "", quote_status);
-//			
-//			QuotationDS.getInstance().updateData(updateRecord, new DSCallback() {
-//				@Override
-//				public void execute(DSResponse dsResponse, Object data,
-//						DSRequest dsRequest) {
-//						//System.out.println("Test " + dsResponse.getStatus());
-//						if (dsResponse.getStatus() != 0) {
-//							SC.warn("การบันทึกใบเสนอราคาล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
-//							main.destroy();
-//						} else { 
-//							for (QuoteProductDetails item : productList) {
-//								if (item.sub_quote_id == null) {
-//									item.sub_quote_id = "QS80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
-//									ListGridRecord subUpdateRecord = QuoteProductData.createRecord(item);
-//									QuoteProductDS.getInstance(quote_id).addData(subUpdateRecord);
-//								} else  {
-//									ListGridRecord subUpdateRecord = QuoteProductData.createRecord(item);
-//									QuoteProductDS.getInstance(quote_id).updateData(subUpdateRecord);
-//								}
-//							}
-//							SC.warn("แก้ไขใบเสนอราคาเสร็จสิ้น <br> " + "รหัสใบเสนอราคา " + quote_id + "<br> สถานะของใบเสนอราคา " + quote_status);
-//							main.destroy();
-//						}
-//				}
-//			});
-//	}
-//	
-//	void updateQuoteStatus(String quote_id, final String status, String comment) {
-//		Record updated = QuotationData.createStatusRecord(quote_id,status,comment);
-//		QuotationDS.getInstance().updateData(updated, new DSCallback() {
-//			@Override
-//			public void execute(DSResponse dsResponse, Object data,
-//					DSRequest dsRequest) {
-//					if (dsResponse.getStatus() != 0) {
-//						SC.warn("การอนุมัติใบเสนอราคาล้มเหลว");
-//					} else { 
-//						SC.warn("แก้ไขสถานะใบเสนอราคา \"" + status + "\" เสร็จสิ้น");
-//					}
-//			}
-//		});
-//	}
-//	
+	public void cancelProductionPlan(String sale_id) {
+		Record[] selected = PlanDS.getInstance().applyFilter(PlanDS.getInstance().getCacheData(), new Criterion("sale_id", OperatorId.EQUALS, sale_id));
+		if (selected.length != 0) {
+			selected[0].setAttribute("status", "4_canceled");
+			PlanDS.getInstance().updateData(selected[0]);
+		}
+	}
+	
 	public void createDeliveryOrder(final Window main, final String sale_id, String invoice_id, DynamicForm customer, ListGrid saleListGrid, Date delivery, User currentUser){
 		
 		final ListGridRecord[] all = saleListGrid.getRecords();

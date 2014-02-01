@@ -504,7 +504,11 @@ public class OrderViewWindow extends EditorWindow{
 		        controlLayout.addMember(cancelButton);
 		        confirmButton.addClickHandler(new ClickHandler() {  
 		            public void onClick(ClickEvent event) { 
-		            	if (!receiptForm.validate() || paid_payment.getValueAsDouble() < (netEx * 1.07)) {
+		            	
+		            	Double upper = (netEx * 1.07) * 1.01;
+		            	Double lower = (netEx * 1.07) * 0.99;
+		            	System.out.println("paid_payment " + upper + " " + lower);
+		            	if (!receiptForm.validate() || paid_payment.getValueAsDouble() < (lower) || paid_payment.getValueAsDouble() > (upper)) {
 		            		SC.warn("ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบข้อมูลใหม่อีกครั้ง");
 		            		paid_payment.clearValue();
 		            		return;
