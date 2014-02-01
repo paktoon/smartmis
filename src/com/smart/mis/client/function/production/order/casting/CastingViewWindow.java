@@ -275,6 +275,8 @@ public class CastingViewWindow extends EditorWindow{
         quoteItemCell_6.setType(ListGridFieldType.FLOAT); 
         quoteItemCell_6.setShowGridSummary(true);
         if (edit) quoteItemCell_6.setCanEdit(true);
+        if (edit) quoteItemCell_6.setEmptyCellValue("--โปรดระบุน้ำหนัก--");
+        else quoteItemCell_6.setEmptyCellValue("ยังไม่มีการรับสินค้า");
         
         ListGridNumberField quoteItemCell_7 = new ListGridNumberField("recv_amount", 120);
         quoteItemCell_7.setSummaryFunction(SummaryFunctionType.SUM);
@@ -282,6 +284,8 @@ public class CastingViewWindow extends EditorWindow{
         quoteItemCell_7.setType(ListGridFieldType.FLOAT);
         quoteItemCell_7.setShowGridSummary(true);
         if (edit) quoteItemCell_7.setCanEdit(true);
+        if (edit) quoteItemCell_7.setEmptyCellValue("--โปรดระบุจำนวน--");
+        else quoteItemCell_7.setEmptyCellValue("ยังไม่มีการรับสินค้า");
  
         orderListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_4, quoteItemCell_5, quoteItemCell_3, quoteItemCell_6, quoteItemCell_7, quoteItemCell_3);
         
