@@ -72,7 +72,8 @@ public class UserDetailTabPane extends TabSet {
 
         outlineForm = new HLayout();
         outlineForm.setWidth100();
-        outlineForm.setHeight100();
+        //outlineForm.setHeight100();
+        outlineForm.setHeight(200);
         outlineForm.setMargin(5);
         
         editorForm = new DynamicForm();  

@@ -298,12 +298,16 @@ public class ReceivedViewWindow extends EditorWindow{
         quoteItemCell_7.setAlign(Alignment.RIGHT);
         quoteItemCell_7.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_7.setShowGridSummary(true);
+        if (edit) quoteItemCell_7.setEmptyCellValue("--โปรดระบุน้ำหนัก--");
+        else quoteItemCell_7.setEmptyCellValue("ยังไม่มีการรับวัตถุดิบ");
         
         ListGridNumberField quoteItemCell_8 = new ListGridNumberField("received_amount", 110);
         quoteItemCell_8.setTitle("จำนวนที่รับ");
         if (edit) quoteItemCell_8.setCanEdit(true);
         quoteItemCell_8.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_8.setShowGridSummary(true);
+        if (edit) quoteItemCell_8.setEmptyCellValue("--โปรดระบุจำนวน--");
+        else quoteItemCell_8.setEmptyCellValue("ยังไม่มีการรับวัตถุดิบ");
  
         quoteListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_4, quoteItemCell_6, quoteItemCell_3, quoteItemCell_7, quoteItemCell_8 , quoteItemCell_3);
         //itemLayout.addMember(quoteListGrid);

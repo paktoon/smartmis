@@ -79,7 +79,7 @@ import com.smartgwt.client.widgets.cube.CubeGrid;
 public class OrderReviseTab {
 	
 	public Tab getReviseTab(final User currentUser){
-		Tab reviseTab = new Tab("จัดการคำสั่งซื้อ", "icons/16/search-good-icon.png");
+		Tab reviseTab = new Tab("ค้นหาคำสั่งซื้อ", "icons/16/search-good-icon.png");
 		VLayout reviseLayout = new VLayout();
 		reviseLayout.setWidth(750);
 		reviseLayout.setHeight100();

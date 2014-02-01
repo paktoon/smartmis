@@ -277,12 +277,16 @@ public class RequestViewWindow extends EditorWindow{
         quoteItemCell_7.setAlign(Alignment.RIGHT);
         quoteItemCell_7.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_7.setShowGridSummary(true);
+        if (edit) quoteItemCell_7.setEmptyCellValue("--โปรดระบุน้ำหนัก--");
+        else quoteItemCell_7.setEmptyCellValue("ยังไม่มีการเบิกจ่าย");
         
         ListGridNumberField quoteItemCell_8 = new ListGridNumberField("issued_amount", 110);
         quoteItemCell_8.setTitle("จำนวนที่จ่าย");
         if (edit) quoteItemCell_8.setCanEdit(true);
         quoteItemCell_8.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_8.setShowGridSummary(true);
+        if (edit) quoteItemCell_8.setEmptyCellValue("--โปรดระบุจำนวน--");
+        else quoteItemCell_8.setEmptyCellValue("ยังไม่มีการเบิกจ่าย");
  
         saleListGrid.setFields(quoteItemCell_1, quoteItemCell_2, quoteItemCell_5, quoteItemCell_6, quoteItemCell_3, quoteItemCell_7, quoteItemCell_8, quoteItemCell_3);
         section.setItems(saleListGrid);

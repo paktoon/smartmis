@@ -211,7 +211,7 @@ public class ViewMaterialLaylout extends VLayout{
     	String unit = record.getAttributeAsString("unit");
     	
 		final Window confirm = new Window();
-		confirm.setTitle("แก้ไขปริมาณสินค้าคงคลัง");
+		confirm.setTitle("แก้ไขปริมาณวัตถุดิบคงคลัง");
 		confirm.setWidth(350);
 		confirm.setHeight(250);
 		confirm.setShowMinimizeButton(false);

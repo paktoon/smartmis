@@ -84,7 +84,7 @@ public class ReturnViewWindow extends EditorWindow{
 		editWindow = new Window();
 		editWindow.setTitle("ข้อมูลขอคืนวัตถุดิบ");
 		editWindow.setWidth(600);  
-		editWindow.setHeight(400);
+		editWindow.setHeight(350);
 		editWindow.setShowMinimizeButton(false);
 		editWindow.setIsModal(true);
 		editWindow.setShowModalMask(true);
@@ -99,7 +99,7 @@ public class ReturnViewWindow extends EditorWindow{
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
 		VLayout layout = new VLayout();
 		layout.setWidth(570);
-		layout.setHeight(370);
+		layout.setHeight(320);
 		layout.setMargin(10);
 		
 		final String return_id = record.getAttributeAsString("return_id");
@@ -180,11 +180,11 @@ public class ReturnViewWindow extends EditorWindow{
 		final DoubleItem rec_weight = new DoubleItem("total_received_weight", "น้ำหนักที่รับคืน");
 		if (page ==2) {
 			rec_weight.setRequired(true);
-			rec_weight.setHint("กรัม");
+			rec_weight.setHint("กรัม*");
 		} else {
 			rec_weight.setValue(nf.format(received_weight));
 			rec_weight.setCanEdit(false);
-			rec_weight.setHint("กรัม");
+			rec_weight.setHint("กรัม*");
 		}
 		detailsForm.setFields(mat_id, mat_name, ret_weight, rec_weight);
 		detailsForm.setColWidths(100,120,100,120);

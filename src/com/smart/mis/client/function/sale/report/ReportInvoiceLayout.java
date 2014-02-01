@@ -255,6 +255,14 @@ public class ReportInvoiceLayout extends VLayout {
         reportDate.setHeight(10);
         reportDate.setStyleName("printDetails");
 		
+		Label createDate = new Label();
+		Date today = new Date();
+		DateTimeFormat pattern = DateTimeFormat.getFormat("MM/dd/yyyy");
+		createDate.setContents("วันที่ออกรายงาน : " + pattern.format(today));
+		createDate.setWidth("15%");
+		createDate.setHeight(15);
+		createDate.setAlign(Alignment.LEFT);
+        gridLayout.addMember(createDate);
         gridLayout.addMember(text);
         gridLayout.addMember(reportDate);
 		gridLayout.addMember(invoiceListGrid);

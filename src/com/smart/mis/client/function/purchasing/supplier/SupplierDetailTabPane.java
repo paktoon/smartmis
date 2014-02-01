@@ -351,7 +351,7 @@ public class SupplierDetailTabPane extends TabSet {
         viewItemGrid = new MaterialListGrid();
         viewItemGrid.setEmptyMessage("No Item to show.");
         viewItemGrid.setUseAllDataSourceFields(false);
-        viewItemGrid.hideFields("type", "safety", "remain", "unit");
+        viewItemGrid.hideFields("weight", "type", "safety", "remain", "unit");
         viewItemGrid.setWidth100();
         viewItemGrid.setHeight100();
         

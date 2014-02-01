@@ -527,7 +527,7 @@ public class PlanCreateTab {
 							if (value) {
 								
 								final Window confirm = new Window();
-								confirm.setTitle("ความคิดเห็น");
+								confirm.setTitle("เหตุผลในการผลิตสินค้า");
 								confirm.setWidth(350);
 								confirm.setHeight(150);
 								confirm.setShowMinimizeButton(false);
