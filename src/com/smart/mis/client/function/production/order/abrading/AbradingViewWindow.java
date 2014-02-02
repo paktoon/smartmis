@@ -294,6 +294,8 @@ public class AbradingViewWindow extends EditorWindow{
         quoteItemCell_6.setShowGridSummary(true);
         if (edit)  quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setIncludeInRecordSummary(false);
+        if (edit) quoteItemCell_6.setEmptyCellValue("--โปรดระบุน้ำหนัก--");
+        else quoteItemCell_6.setEmptyCellValue("ยังไม่มีการรับสินค้า");
         
         ListGridNumberField quoteItemCell_7 = new ListGridNumberField("recv_amount", 120);
         quoteItemCell_7.setSummaryFunction(SummaryFunctionType.SUM);
@@ -301,6 +303,8 @@ public class AbradingViewWindow extends EditorWindow{
         quoteItemCell_7.setType(ListGridFieldType.FLOAT);
         quoteItemCell_7.setShowGridSummary(true);
         if (edit)  quoteItemCell_7.setCanEdit(true);
+        if (edit) quoteItemCell_7.setEmptyCellValue("--โปรดระบุจำนวน--");
+        else quoteItemCell_7.setEmptyCellValue("ยังไม่มีการรับสินค้า");
         
         ListGridNumberField quoteItemCell_8 = new ListGridNumberField("wage", 120);
         //quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);

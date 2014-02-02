@@ -10,6 +10,7 @@ import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.security.PermissionProfile;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.AdvancedCriteria;
@@ -27,6 +28,7 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;  
 import com.smartgwt.client.widgets.form.DynamicForm;  
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -125,14 +127,29 @@ public class SupplierDetailTabPane extends TabSet {
 		
 		IntegerItem leadtime = new IntegerItem("leadtime", "ระยะเวลาส่งสินค้า");
 		
-		sup_name.setRequired(true);
+		FormItemIcon icon = new FormItemIcon();  
+        icon.setSrc("[SKIN]/actions/help.png"); 
+        icon.setPrompt("ชื่อผู้จำหน่ายต้องไม่ซ้ำ");
+        sup_name.setIcons(icon);
+        sup_name.setRequired(true);
+        sup_name.setHint("*");
+		sup_phone1.setValidators(ValidatorFactory.phoneString());
+		sup_phone1.setIcons(ValidatorFactory.phoneHint());
+		sup_phone2.setValidators(ValidatorFactory.phoneString());
+		sup_phone2.setIcons(ValidatorFactory.phoneHint());
+		fax.setValidators(ValidatorFactory.phoneString());
+		fax.setIcons(ValidatorFactory.phoneHint());
+		email.setValidators(ValidatorFactory.emailString());
+		email.setIcons(ValidatorFactory.emailHint());
+		
+		//sup_name.setRequired(true);
 		sup_phone1.setRequired(true);
 		address.setRequired(true);
 		city.setRequired(true);
 		state.setRequired(true);
 		postal.setRequired(true);
 		leadtime.setRequired(true);
-		sup_name.setHint("*");
+		//sup_name.setHint("*");
 		sup_phone1.setHint("*");
 		address.setHint("*");
 		city.setHint("*");
@@ -148,6 +165,11 @@ public class SupplierDetailTabPane extends TabSet {
         saveButton.setIcon("icons/16/save.png");
         saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
+            	if (!editorForm.validate()) {
+            		SC.warn("ข้อมูลผู้จำหน่ายไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+            		return;
+            	}
+            	
             	SC.confirm("ยืนยันการแก้ไขข้อมูล", "ท่านต้องการแก้ไขข้อมูลผู้จำหน่าย " + (String) editorForm.getValue("sid") + " หรือไม่ ?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {

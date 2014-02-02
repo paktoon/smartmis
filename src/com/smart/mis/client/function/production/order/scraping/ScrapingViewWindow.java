@@ -292,7 +292,9 @@ public class ScrapingViewWindow extends EditorWindow{
         quoteItemCell_6.setCellFormatter(FieldFormatter.getNumberFormat());
         quoteItemCell_6.setType(ListGridFieldType.FLOAT); 
         quoteItemCell_6.setShowGridSummary(true);
-        if (edit)  quoteItemCell_6.setCanEdit(true);
+        if (edit) quoteItemCell_6.setCanEdit(true);
+        if (edit) quoteItemCell_6.setEmptyCellValue("--โปรดระบุน้ำหนัก--");
+        else quoteItemCell_6.setEmptyCellValue("ยังไม่มีการรับสินค้า");
         quoteItemCell_6.setIncludeInRecordSummary(false);
         
         ListGridNumberField quoteItemCell_7 = new ListGridNumberField("recv_amount", 120);
@@ -300,7 +302,9 @@ public class ScrapingViewWindow extends EditorWindow{
         quoteItemCell_7.setCellFormatter(FieldFormatter.getNumberFormat());
         quoteItemCell_7.setType(ListGridFieldType.FLOAT);
         quoteItemCell_7.setShowGridSummary(true);
-        if (edit)  quoteItemCell_7.setCanEdit(true);
+        if (edit) quoteItemCell_7.setCanEdit(true);
+        if (edit) quoteItemCell_7.setEmptyCellValue("--โปรดระบุจำนวน--");
+        else quoteItemCell_7.setEmptyCellValue("ยังไม่มีการรับสินค้า");
         
         ListGridNumberField quoteItemCell_8 = new ListGridNumberField("wage", 120);
         //quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);

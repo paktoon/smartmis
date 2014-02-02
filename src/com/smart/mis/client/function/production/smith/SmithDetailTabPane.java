@@ -6,6 +6,7 @@ import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
 import com.smart.mis.shared.Country;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.security.PermissionProfile;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
@@ -19,6 +20,7 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;  
 import com.smartgwt.client.widgets.form.DynamicForm;  
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -97,10 +99,23 @@ public class SmithDetailTabPane extends TabSet {
 		SelectItem type = new SelectItem("type", "ประเภทงาน");
 		type.setWidth(200);
 		
-		name.setRequired(true);
+		FormItemIcon icon = new FormItemIcon();  
+        icon.setSrc("[SKIN]/actions/help.png"); 
+        icon.setPrompt("ชื่อช่างต้องไม่ซ้ำ");
+        name.setIcons(icon);
+        name.setRequired(true);
+        name.setHint("*");
+		phone1.setValidators(ValidatorFactory.phoneString());
+		phone1.setIcons(ValidatorFactory.phoneHint());
+		phone2.setValidators(ValidatorFactory.phoneString());
+		phone2.setIcons(ValidatorFactory.phoneHint());
+		email.setValidators(ValidatorFactory.emailString());
+		email.setIcons(ValidatorFactory.emailHint());
+		
+		//name.setRequired(true);
 		phone1.setRequired(true);
 		type.setRequired(true);
-		name.setHint("*");
+		//name.setHint("*");
 		phone1.setHint("*");
 		type.setHint("*");
 		
@@ -139,6 +154,11 @@ public class SmithDetailTabPane extends TabSet {
         saveButton.setIcon("icons/16/save.png");
         saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
+            	if (!editorForm.validate() || !addressForm.validate()) {
+            		SC.warn("ข้อมูลช่างไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+            		return;
+            	}
+            	
             	SC.confirm("ยืนยันการแก้ไขข้อมูลช่าง", "ท่านต้องการแก้ไขข้อมูลช่าง " + (String) editorForm.getValue("smid") + " หรือไม่ ?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
@@ -311,7 +331,7 @@ public class SmithDetailTabPane extends TabSet {
 						    	editorForm.getValueAsString("type")
 				    			);
 						DataSource.updateData(updateRecord);
-						SC.warn("แก้ไขข้อมูลช่างเรียบร้อยแล้ว");
+						SC.say("แก้ไขข้อมูลช่างเรียบร้อยแล้ว");
 //					} else {
 //						SC.warn("Updating user Fails - please contact administrator");
 //					}

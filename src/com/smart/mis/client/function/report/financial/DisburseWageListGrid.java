@@ -23,6 +23,7 @@ import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 
 public class DisburseWageListGrid extends ListGrid {
 
+	private Double[][] dataTable;
 //	@Override
 //	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
 //		if (getFieldName(colNum).equals("remain")) { 
@@ -83,6 +84,9 @@ public class DisburseWageListGrid extends ListGrid {
 	}
 	
 	public Double[][] createDataTable(Criterion criteria){
+		
+		if (dataTable !=null) return dataTable;
+		
 		WageDS.getInstance().refreshData();
 	    
 	    Record[] mat_1 = WageDS.getInstance().applyFilter(WageDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("stype", OperatorId.EQUALS, "หล่อขึ้นรูป")}));
@@ -102,4 +106,68 @@ public class DisburseWageListGrid extends ListGrid {
 		return paidInclusive;
 	}
 	
+	public DisburseWageListGrid(Criterion criteria) {
+		setWidth(400);
+		setHeight(150);
+		setAlign(Alignment.CENTER);
+		
+        setAlternateRecordStyles(true);  
+        setShowAllRecords(true);
+        setSelectionType(SelectionStyle.SINGLE);
+        setCanResizeFields(false);
+        setCanEdit(false);
+        setMargin(10);
+        //setShowGridSummary(true);
+        //setGroupStartOpen(GroupStartOpen.ALL);
+        //setGroupByField("group"); 
+        setShowGridSummary(true);
+        
+        ListGridField field_1 = new ListGridField("type", "ประเภทงานผลิต");
+        field_1.setShowGridSummary(true);
+        field_1.setSummaryFunction(new SummaryFunction() {  
+            public Object getSummaryValue(Record[] records, ListGridField field) {
+                return records.length + " รายการ";  
+            }  
+        });
+        
+      ListGridField Field_6_1 = new ListGridField("sum_paid", "ยอดชำระค่าจ้างผลิต (บาท)", 170);
+      Field_6_1.setShowGridSummary(true);
+      Field_6_1.setSummaryFunction(SummaryFunctionType.SUM);
+        
+        //Cell Format
+      Field_6_1.setAlign(Alignment.RIGHT);
+      Field_6_1.setCellFormatter(FieldFormatter.getPriceFormat());
+        
+        setFields(field_1, Field_6_1);
+        
+        setRecords(createListGridRecord(criteria));
+        setHoverWidth(200);  
+        setHoverHeight(20);
+	}
+	
+	public ListGridRecord[] createListGridRecord(Criterion criteria) {
+		
+		WageDS.getInstance().refreshData();
+	    
+	    Record[] mat_1 = WageDS.getInstance().applyFilter(WageDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("stype", OperatorId.EQUALS, "หล่อขึ้นรูป")}));
+	    Record[] mat_2 = WageDS.getInstance().applyFilter(WageDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("stype", OperatorId.EQUALS, "แต่งและฝังพลอยประดับ")}));
+	    Record[] mat_3 = WageDS.getInstance().applyFilter(WageDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("stype", OperatorId.EQUALS, "ขัดและติดพลอยแมกกาไซต์")}));
+	  
+		dataTable = new Double[][] {
+		    		{getPaidInclusive(mat_1), getPaidInclusive(mat_2), getPaidInclusive(mat_3) }
+		    };
+	    
+    	return new ListGridRecord[]{ 
+    			createRecord("หล่อขึ้นรูป",getPaidInclusive(mat_1)),
+    			createRecord("แต่งและฝังพลอยประดับ",getPaidInclusive(mat_2)),
+    			createRecord("ขัดและติดพลอยแมกกาไซต์",getPaidInclusive(mat_3))
+    	};
+	}
+	
+	public ListGridRecord createRecord(String type, Double sum_price){
+		ListGridRecord record = new ListGridRecord();
+        record.setAttribute("type", type);
+        record.setAttribute("sum_paid", sum_price);
+        return record;
+	}
 }

@@ -9,6 +9,7 @@ import com.smart.mis.client.function.security.permission.PermissionDS;
 import com.smart.mis.shared.Country;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.security.PermissionProfile;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
@@ -24,6 +25,7 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;  
 import com.smartgwt.client.widgets.form.DynamicForm;  
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -106,6 +108,18 @@ public class CustomerDetailTabPane extends TabSet {
 		TextItem contact_phone = new TextItem("contact_phone", "หมายเลขโทรศัพท์ผู้ติดต่อ");
 		TextItem contact_email = new TextItem("contact_email", "อีเมลผู้ติดต่อ");
 
+		FormItemIcon icon = new FormItemIcon();  
+        icon.setSrc("[SKIN]/actions/help.png"); 
+        icon.setPrompt("ชื่อลูกค้าต้องไม่ซ้ำ");
+        cus_name.setIcons(icon);
+        cus_name.setRequired(true);
+        cus_name.setHint("*");
+		cus_phone.setValidators(ValidatorFactory.phoneString());
+		cus_phone.setIcons(ValidatorFactory.phoneHint());
+		contact_phone.setValidators(ValidatorFactory.phoneString());
+		contact_phone.setIcons(ValidatorFactory.phoneHint());
+		contact_email.setValidators(ValidatorFactory.emailString());
+		contact_email.setIcons(ValidatorFactory.emailHint());
 		//TextAreaItem address = new TextAreaItem("address", "ที่อยู่");
 		//address.setWidth(300);
 		//address.setRowSpan(3);
@@ -115,13 +129,11 @@ public class CustomerDetailTabPane extends TabSet {
 		SelectItem cus_group = new SelectItem("cus_group");
 		//SelectItem zone = new SelectItem("zone", "โซน");
 		
-		cus_name.setRequired(true);
 		cus_phone.setRequired(true);
 		contact_name.setRequired(true);
 		cus_type.setRequired(true);
 		bus_type.setRequired(true);
 		cus_group.setRequired(true);
-		cus_name.setHint("*");
 		cus_phone.setHint("*");
 		contact_name.setHint("*");
 		cus_type.setHint("*");
@@ -171,6 +183,11 @@ public class CustomerDetailTabPane extends TabSet {
         saveButton.setIcon("icons/16/save.png");
         saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
+            	if (!editorForm.validate() || !addressForm.validate()) {
+            		SC.warn("ข้อมูลลูกค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+            		return;
+            	}
+            	
             	SC.confirm("ยืนยันการแก้ไขข้อมูลลูกค้า", "ท่านต้องการแก้ไขข้อมูลลูกค้า " + (String) editorForm.getValue("cid") + " หรือไม่ ?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {

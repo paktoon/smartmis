@@ -46,6 +46,7 @@ import com.smartgwt.client.data.DateRange;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RelativeDate;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.OperatorId;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.SC;
@@ -308,14 +309,16 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
-		VLayout gridLayout = new VLayout();
+		HLayout gridLayout = new HLayout();
 		gridLayout.setMargin(5);
-		productionReportListGrid = new ProductionReportListGrid();
+		gridLayout.setAlign(Alignment.CENTER);
+		//productionReportListGrid = new ProductionReportListGrid();
 		//InventoryProductRequestGrid.setCriteria(new Criterion("issued_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()));
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
 	  		      new Criterion("produced_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
 	  		  });
-		productionReportListGrid.setCriteria(criteria);
+		//productionReportListGrid.setCriteria(criteria);
+		productionReportListGrid = new ProductionReportListGrid(criteria);
 		gridLayout.addMember(productionReportListGrid);
 		
 		ProductionColumnChart chart = new ProductionColumnChart();
@@ -398,13 +401,15 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
-		VLayout gridLayout = new VLayout();
+		HLayout gridLayout = new HLayout();
 		gridLayout.setMargin(5);
-		materialUsedReportListGrid = new MaterialUsedReportListGrid();
+		gridLayout.setAlign(Alignment.CENTER);
+		//materialUsedReportListGrid = new MaterialUsedReportListGrid();
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
 	  		      new Criterion("request_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
 	  		  });
-		materialUsedReportListGrid.setCriteria(criteria);
+		//materialUsedReportListGrid.setCriteria(criteria);
+		materialUsedReportListGrid = new MaterialUsedReportListGrid(criteria);
 		gridLayout.addMember(materialUsedReportListGrid);
 		
 		SilverUsedColumnChart chart_1 = new SilverUsedColumnChart();
@@ -449,8 +454,9 @@ public class ReportPanel extends FunctionPanel{
 		title.setWidth(1000);
 		title.setHeight(30);
 
-		VLayout gridLayout = new VLayout();
+		HLayout gridLayout = new HLayout();
 		gridLayout.setMargin(5);
+		gridLayout.setAlign(Alignment.CENTER);
 		InventoryProductGrid = new ProductReportListGrid();
 		gridLayout.addMember(InventoryProductGrid);
 		
@@ -483,8 +489,9 @@ public class ReportPanel extends FunctionPanel{
 		chartLayout.setHeight(350);
 		//chartLayout.setMargin(5);
 
-		VLayout gridLayout = new VLayout();
+		HLayout gridLayout = new HLayout();
 		gridLayout.setMargin(5);
+		gridLayout.setAlign(Alignment.CENTER);
 		InventoryMaterialGrid = new MaterialReportListGrid();
 		gridLayout.addMember(InventoryMaterialGrid);
 		
@@ -580,13 +587,15 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
-		VLayout gridLayout = new VLayout();
+		HLayout gridLayout = new HLayout();
 		gridLayout.setMargin(5);
+		gridLayout.setAlign(Alignment.CENTER);
 		Criterion dateCriteria = new Criterion("issued_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate());
-		InventoryProductRequestGrid = new ProductRequestReportListGrid();
+		//InventoryProductRequestGrid = new ProductRequestReportListGrid();
 		//InventoryProductRequestGrid.setCriteria(new Criterion("issued_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()));
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[] { dateCriteria });
-		InventoryProductRequestGrid.setCriteria(criteria);
+		//InventoryProductRequestGrid.setCriteria(criteria);
+		InventoryProductRequestGrid = new ProductRequestReportListGrid(criteria);
 		gridLayout.addMember(InventoryProductRequestGrid);
 		
 		ProductRequestColumnChart chart = new ProductRequestColumnChart();
@@ -692,12 +701,14 @@ public class ReportPanel extends FunctionPanel{
 		title.setWidth(1000);
 		title.setHeight(30);
 		
-		VLayout gridLayout = new VLayout();
+		HLayout gridLayout = new HLayout();
 		gridLayout.setMargin(5);
+		gridLayout.setAlign(Alignment.CENTER);
 		Criterion dateCriteria = new Criterion("issued_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate());
-		InventoryMaterialRequestGrid = new MaterialRequestReportListGrid();
+		//InventoryMaterialRequestGrid = new MaterialRequestReportListGrid();
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{ dateCriteria });
-		InventoryMaterialRequestGrid.setCriteria(criteria);
+		//InventoryMaterialRequestGrid.setCriteria(criteria);
+		InventoryMaterialRequestGrid = new MaterialRequestReportListGrid(criteria);
 		gridLayout.addMember(InventoryMaterialRequestGrid);
 		
 		HLayout chartLayout = new HLayout();
@@ -793,13 +804,15 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
-		VLayout gridLayout = new VLayout();
+		HLayout gridLayout = new HLayout();
 		gridLayout.setMargin(5);
+		gridLayout.setAlign(Alignment.CENTER);
 		Criterion dateCriteria = new Criterion("received_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate());
-		InventoryProductReceivedGrid = new ProductReceivedReportListGrid();
+		
 		//InventoryProductReceivedGrid.setCriteria(new Criterion("received_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()));
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{ dateCriteria });
-		InventoryProductReceivedGrid.setCriteria(criteria);
+		InventoryProductReceivedGrid = new ProductReceivedReportListGrid(criteria);
+		//InventoryProductReceivedGrid.setCriteria(criteria);
 		gridLayout.addMember(InventoryProductReceivedGrid);
 		
 		ProductReceivedColumnChart chart = new ProductReceivedColumnChart();
@@ -895,12 +908,14 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
-		VLayout gridLayout = new VLayout();
+		HLayout gridLayout = new HLayout();
 		gridLayout.setMargin(5);
+		gridLayout.setAlign(Alignment.CENTER);
 		Criterion dateCriteria = new Criterion("received_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate());
-		InventoryMaterialReceivedGrid = new MaterialReceivedReportListGrid();
+		//InventoryMaterialReceivedGrid = new MaterialReceivedReportListGrid();
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{ dateCriteria });
-		InventoryMaterialReceivedGrid.setCriteria(criteria);
+		//InventoryMaterialReceivedGrid.setCriteria(criteria);
+		InventoryMaterialReceivedGrid = new MaterialReceivedReportListGrid(criteria);
 		gridLayout.addMember(InventoryMaterialReceivedGrid);
 		
 		SilverReceivedColumnChart chart_1 = new SilverReceivedColumnChart();
@@ -1020,14 +1035,16 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
-		VLayout gridLayout = new VLayout();
+		HLayout gridLayout = new HLayout();
 		gridLayout.setMargin(5);
-		cashReceiptListGrid = new CashReceiptListGrid(type);
+		gridLayout.setAlign(Alignment.CENTER);
+		//cashReceiptListGrid = new CashReceiptListGrid(type);
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
     		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
     		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
     		  });
-		cashReceiptListGrid.setCriteria(criteria);
+		//cashReceiptListGrid.setCriteria(criteria);
+		cashReceiptListGrid = new CashReceiptListGrid(criteria, type);
 		gridLayout.addMember(cashReceiptListGrid);
 		
 		CashReceiptColumnChart chart = new CashReceiptColumnChart();
@@ -1116,12 +1133,14 @@ public class ReportPanel extends FunctionPanel{
 		
 		HLayout gridLayout = new HLayout();
 		gridLayout.setMargin(5);
-		disburseMaterialListGrid = new DisburseMaterialListGrid();
+		gridLayout.setAlign(Alignment.CENTER);
+		//disburseMaterialListGrid = new DisburseMaterialListGrid();
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
     		      new Criterion("paid_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
     		  });
-		disburseMaterialListGrid.setCriteria(criteria);
-		
+		//disburseMaterialListGrid.setCriteria(criteria);
+
+		disburseMaterialListGrid = new DisburseMaterialListGrid(criteria);
 		DisburseMaterialPieChart chart = new DisburseMaterialPieChart();
 		VLayout reportLayout = new VLayout();
 		
@@ -1203,13 +1222,14 @@ public class ReportPanel extends FunctionPanel{
 		
 		HLayout gridLayout = new HLayout();
 		gridLayout.setMargin(5);
-		disburseWageListGrid = new DisburseWageListGrid();
+		gridLayout.setAlign(Alignment.CENTER);
+		//disburseWageListGrid = new DisburseWageListGrid();
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
 				  new Criterion("status", OperatorId.EQUALS, "2_paid"),
     		      new Criterion("paid_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
     		  });
-		disburseWageListGrid.setCriteria(criteria);
-		
+		//disburseWageListGrid.setCriteria(criteria);
+		disburseWageListGrid = new DisburseWageListGrid(criteria);
 		DisburseWagePieChart chart = new DisburseWagePieChart();
 		VLayout reportLayout = new VLayout();
 		
@@ -1251,13 +1271,13 @@ public class ReportPanel extends FunctionPanel{
 		dateForm.setIsGroup(true);
 		dateForm.setGroupTitle("ตัวเลือกรายงาน");
 		
-		final SelectItem reportType = new SelectItem("แยกตาม");
-		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();  
-		valueMap.put("type", "ประเภทวัตถุดิบ");
-        valueMap.put("created_date", "ช่วงเวลา");
-		reportType.setValueMap(valueMap);
-		//reportType.setValueMap(CustomerType.getValueMap());
-		reportType.setDefaultValue(type);
+//		final SelectItem reportType = new SelectItem("แยกตาม");
+//		LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();  
+//		valueMap.put("type", "ประเภทวัตถุดิบ");
+//        valueMap.put("created_date", "ช่วงเวลา");
+//		reportType.setValueMap(valueMap);
+//		//reportType.setValueMap(CustomerType.getValueMap());
+//		reportType.setDefaultValue(type);
 //		DateRange dateRange = new DateRange();  
 //        dateRange.setRelativeStartDate(new RelativeDate("-1m"));
 //        dateRange.setRelativeEndDate(RelativeDate.TODAY);
@@ -1269,15 +1289,16 @@ public class ReportPanel extends FunctionPanel{
         to.setDefaultChooserDate(end);
         to.setDefaultValue(end);
         to.setUseTextField(true);
-        dateForm.setItems(reportType, from, to);
+        //dateForm.setItems(reportType, from, to);
+        dateForm.setItems(from, to);
         
-        reportType.addChangedHandler(new ChangedHandler(){
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				// TODO Auto-generated method stub
-				LoadPurchasingReportWindow(reportType.getValueAsString(), from.getValueAsDate(), to.getValueAsDate());
-			}});
+//        reportType.addChangedHandler(new ChangedHandler(){
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				// TODO Auto-generated method stub
+//				LoadPurchasingReportWindow(reportType.getValueAsString(), from.getValueAsDate(), to.getValueAsDate());
+//			}});
         
         from.addChangedHandler( new ChangedHandler() {
 
@@ -1285,7 +1306,8 @@ public class ReportPanel extends FunctionPanel{
 			public void onChanged(ChangedEvent event) {
 				// TODO Auto-generated method stub
 				if (from.getValueAsDate().before(to.getValueAsDate())) {
-					LoadPurchasingReportWindow(reportType.getValueAsString(), from.getValueAsDate(), to.getValueAsDate());
+					//LoadPurchasingReportWindow(reportType.getValueAsString(), from.getValueAsDate(), to.getValueAsDate());
+					LoadPurchasingReportWindow("type", from.getValueAsDate(), to.getValueAsDate());
 				} else {
 					SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
 					from.setValue(start);
@@ -1298,7 +1320,8 @@ public class ReportPanel extends FunctionPanel{
 			public void onChanged(ChangedEvent event) {
 				// TODO Auto-generated method stub
 				if (to.getValueAsDate().after(from.getValueAsDate())) {
-					LoadPurchasingReportWindow(reportType.getValueAsString(), from.getValueAsDate(), to.getValueAsDate());
+					//LoadPurchasingReportWindow(reportType.getValueAsString(), from.getValueAsDate(), to.getValueAsDate());
+					LoadPurchasingReportWindow("type", from.getValueAsDate(), to.getValueAsDate());
 				} else {
 					SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
 					to.setValue(end);
@@ -1320,13 +1343,16 @@ public class ReportPanel extends FunctionPanel{
 		
 		filterLayout.addMembers(dateForm);
 		
-		VLayout gridLayout = new VLayout();
+		HLayout gridLayout = new HLayout();
 		gridLayout.setMargin(5);
-		purchasingListGrid = new PurchasingListGrid(type);
+		gridLayout.setAlign(Alignment.CENTER);
+		//purchasingListGrid = new PurchasingListGrid(type);
 		AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
     		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate())
     		  });
-		purchasingListGrid.setCriteria(criteria);
+		//purchasingListGrid.setCriteria(criteria);
+
+		purchasingListGrid = new PurchasingListGrid(criteria, type);
 		gridLayout.addMember(purchasingListGrid);
 		
 		VLayout reportLayout = new VLayout();

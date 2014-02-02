@@ -23,17 +23,7 @@ import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 
 public class MaterialReceivedReportListGrid extends ListGrid {
 
-//	@Override
-//	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
-//		if (getFieldName(colNum).equals("remain")) { 
-//			return "font-weight:bold; color:#287fd6;";
-//		} else if (getFieldName(colNum).equals("reserved")) {
-//			return "font-weight:bold; color:#d64949;"; 
-//		}
-//		else {  
-//            return super.getCellCSSText(record, rowNum, colNum);  
-//        } 
-//	}
+	private Double[][] silverDataTable, matDataTable;
 	
 	public MaterialReceivedReportListGrid() {
 		setWidth(950);  
@@ -90,6 +80,9 @@ public class MaterialReceivedReportListGrid extends ListGrid {
 	}
 	
 	public Double[][] createSilverDataTable(Criterion criteria){
+		
+		if (silverDataTable != null) return silverDataTable;
+		
 		MaterialReceivedReportDS.getInstance().refreshData();
 	    Record[] silver100 = MaterialReceivedReportDS.getInstance().applyFilter(MaterialReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 100%")}));
 	    Record[] silver925 = MaterialReceivedReportDS.getInstance().applyFilter(MaterialReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 92.5%")}));
@@ -100,6 +93,9 @@ public class MaterialReceivedReportListGrid extends ListGrid {
 	}
 	
 	public Double[][] createMaterialDataTable(Criterion criteria){
+		
+		if (matDataTable != null) return matDataTable;
+		
 		MaterialReceivedReportDS.getInstance().refreshData();
 		Record[] mat_1 = MaterialReceivedReportDS.getInstance().applyFilter(MaterialReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "พลอยประดับ")}));
 	    Record[] mat_2 = MaterialReceivedReportDS.getInstance().applyFilter(MaterialReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "แมกกาไซต์")}));
@@ -118,4 +114,97 @@ public class MaterialReceivedReportListGrid extends ListGrid {
 		return received_amount;
 	}
 	
+	//new
+	
+	public Double getReceviedWeight(Record[] records) {
+		Double recv_weight = 0.0;
+		for (Record record : records) {
+			recv_weight += record.getAttributeAsDouble("received_weight");
+		}
+		return recv_weight;
+	}
+	
+	public MaterialReceivedReportListGrid(Criterion criteria) {
+		setWidth(650);
+		setHeight(270);
+        setAlign(Alignment.CENTER);
+		
+        setAlternateRecordStyles(true);  
+        setShowAllRecords(true);
+        setSelectionType(SelectionStyle.SINGLE);
+        setCanResizeFields(false);
+        setCanEdit(false);
+        setMargin(10);
+        //setShowGridSummary(true);
+        setGroupStartOpen(GroupStartOpen.ALL);
+        setGroupByField("group"); 
+        setShowGroupSummary(true);
+        
+        ListGridField field_0 = new ListGridField("group");
+        ListGridField field_1 = new ListGridField("type", "ประเภทวัตถุดิบ");
+        field_1.setShowGroupSummary(true);
+        field_1.setSummaryFunction(new SummaryFunction() {  
+            public Object getSummaryValue(Record[] records, ListGridField field) {
+                return records.length + " รายการ";  
+            }  
+        });
+        
+        ListGridField field_3_1 = new ListGridField("received_weight", "น้ำหนักวัตถุดิบที่รับเข้า (กรัม)",170);
+        field_3_1.setShowGroupSummary(true);
+        field_3_1.setSummaryFunction(SummaryFunctionType.SUM);
+        ListGridField field_3_2 = new ListGridField("received_amount", "จำนวนวัตถุดิบที่รับเข้า" , 170);
+        field_3_2.setShowGroupSummary(true);
+        field_3_2.setSummaryFunction(SummaryFunctionType.SUM);
+        ListGridField field_3_3 = new ListGridField("unit", "หน่วย", 50);
+        field_3_3.setAlign(Alignment.CENTER);
+        
+        //Cell Format
+        field_3_1.setAlign(Alignment.RIGHT);
+        field_3_1.setCellFormatter(FieldFormatter.getNumberFormat());
+        field_3_2.setAlign(Alignment.RIGHT);
+        field_3_2.setCellFormatter(FieldFormatter.getNumberFormat());
+        
+        setFields(field_0, field_1, field_3_1, field_3_2, field_3_3);
+        
+        setRecords(createListGridRecord(criteria));
+        setHoverWidth(200);  
+        setHoverHeight(20);
+        hideFields("group");
+	}
+	
+	public ListGridRecord[] createListGridRecord(Criterion criteria) {
+		MaterialReceivedReportDS.getInstance().refreshData();
+	    Record[] silver100 = MaterialReceivedReportDS.getInstance().applyFilter(MaterialReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 100%")}));
+	    Record[] silver925 = MaterialReceivedReportDS.getInstance().applyFilter(MaterialReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 92.5%")}));
+
+		Record[] mat_1 = MaterialReceivedReportDS.getInstance().applyFilter(MaterialReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "พลอยประดับ")}));
+	    Record[] mat_2 = MaterialReceivedReportDS.getInstance().applyFilter(MaterialReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "แมกกาไซต์")}));
+	    Record[] mat_3 = MaterialReceivedReportDS.getInstance().applyFilter(MaterialReceivedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "อื่นๆ")}));
+
+	    silverDataTable = new Double[][] {
+	    		{getReceviedAmount(silver100), getReceviedAmount(silver925)}
+	    };
+	    
+	    matDataTable = new Double[][] {
+	    		{getReceviedAmount(mat_1), getReceviedAmount(mat_2), getReceviedAmount(mat_3)}
+	    };
+	    
+    	return new ListGridRecord[]{ 
+    			createRecord("แร่เงิน 100%", "แร่เงิน",getReceviedAmount(silver100),getReceviedWeight(silver100), "กรัม"),
+    			createRecord("แร่เงิน 92.5%", "แร่เงิน",getReceviedAmount(silver925),getReceviedWeight(silver925), "กรัม"),
+    			createRecord("พลอยประดับ", "วัตถุดิบ",getReceviedAmount(mat_1),getReceviedWeight(mat_1), "เม็ด"),
+    			createRecord("แมกกาไซต์", "วัตถุดิบ",getReceviedAmount(mat_2),getReceviedWeight(mat_2), "เม็ด"),
+    			createRecord("อื่นๆ", "วัตถุดิบ",getReceviedAmount(mat_3),getReceviedWeight(mat_3), "ชิ้น")
+    	};
+	}
+	
+	public ListGridRecord createRecord(String type, String group, Double received_amount, Double received_weight, String unit){
+		ListGridRecord record = new ListGridRecord();
+        record.setAttribute("type", type);
+        record.setAttribute("group", group);
+        record.setAttribute("received_amount", received_amount);
+        record.setAttribute("received_weight", received_weight);
+        record.setAttribute("unit", unit);
+        return record;
+	}
 }

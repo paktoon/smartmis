@@ -1,5 +1,6 @@
 package com.smart.mis.client.function.report.financial;
 
+import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.sale.invoice.InvoiceDS;
 import com.smart.mis.shared.FieldFormatter;
 import com.smartgwt.client.data.AdvancedCriteria;
@@ -17,12 +18,14 @@ import com.smartgwt.client.widgets.grid.SummaryFunction;
 
 public class CashReceiptListGrid extends ListGrid {
 
+	private Double[][] cus_type_data, bus_type_data, cus_group_data, zone_data;
+	
 	@Override
 	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
-		if (getFieldName(colNum).equals("netInclusive") && record.getAttributeAsString("status") != null) {
-			if (record.getAttributeAsString("status").equalsIgnoreCase("2_paid")) {
-				return "font-weight:bold; color:#287fd6;";
-			} else return "font-weight:bold; color:#d64949;"; 
+		if (getFieldName(colNum).equals("paid")) {
+			return "font-weight:bold; color:#287fd6;";
+		} else if (getFieldName(colNum).equals("unpaid")) {
+			return "font-weight:bold; color:#d64949;"; 
 		} else {  
             return super.getCellCSSText(record, rowNum, colNum);  
         } 
@@ -89,7 +92,10 @@ public class CashReceiptListGrid extends ListGrid {
 	    InvoiceDS.getInstance().refreshData();
 	    
 	    if (type.equalsIgnoreCase("cus_type")) {
-	    	Record[] cus_type_1_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_type", OperatorId.EQUALS, "ลูกค้าทั่วไป") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+	    	
+	    	if (cus_type_data != null) return cus_type_data;
+	    	
+ 	    	Record[] cus_type_1_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_type", OperatorId.EQUALS, "ลูกค้าทั่วไป") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
 		    Record[] cus_type_1_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_type", OperatorId.EQUALS, "ลูกค้าประจำ") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
 		    Record[] cus_type_2_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_type", OperatorId.EQUALS, "ลูกค้าทั่วไป") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
 		    Record[] cus_type_2_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_type", OperatorId.EQUALS, "ลูกค้าประจำ") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
@@ -99,6 +105,9 @@ public class CashReceiptListGrid extends ListGrid {
 		    		{getNetInclusive(cus_type_2_1), getNetInclusive(cus_type_2_2)}
 		    };
 	    } else if (type.equalsIgnoreCase("bus_type")) {
+	    	
+	    	if (bus_type_data != null) return bus_type_data;
+	    	
 	    	Record[] bus_type_1_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าปลีกผ่านหน้าร้าน") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
 		    Record[] bus_type_1_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าปลีกผ่านเว็บไซต์") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
 		    Record[] bus_type_1_3 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าส่งผ่านหน้าร้าน") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
@@ -114,6 +123,9 @@ public class CashReceiptListGrid extends ListGrid {
 		    		{getNetInclusive(bus_type_2_1), getNetInclusive(bus_type_2_2), getNetInclusive(bus_type_2_3), getNetInclusive(bus_type_2_4)}
 		    };
 	    } else if (type.equalsIgnoreCase("cus_group")) {
+	    	
+	    	if (cus_group_data != null) return cus_group_data;
+	    	
 	    	Record[] cus_group_1_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_group", OperatorId.EQUALS, "บุคคลทั่วไป") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
 		    Record[] cus_group_1_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_group", OperatorId.EQUALS, "ร้านค้า") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
 		    Record[] cus_group_2_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_group", OperatorId.EQUALS, "บุคคลทั่วไป") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
@@ -124,6 +136,9 @@ public class CashReceiptListGrid extends ListGrid {
 		    		{getNetInclusive(cus_group_2_1), getNetInclusive(cus_group_2_2)}
 		    };
 	    } else if (type.equalsIgnoreCase("zone")) {
+	    	
+	    	if (zone_data != null) return zone_data;
+	    	
 	    	Record[] zone_1_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("zone", OperatorId.EQUALS, "เอเซีย") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
 		    Record[] zone_1_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("zone", OperatorId.EQUALS, "ยุโรป") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
 		    Record[] zone_1_3 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("zone", OperatorId.EQUALS, "อเมริกาเหนือ") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
@@ -147,5 +162,145 @@ public class CashReceiptListGrid extends ListGrid {
 			netInclusive += record.getAttributeAsDouble("netInclusive");
 		}
 		return netInclusive;
+	}
+	
+	public CashReceiptListGrid(Criterion criteria, String type) {
+		setWidth(500);
+		setHeight(170);
+		setAlign(Alignment.CENTER);
+		
+        setAlternateRecordStyles(true);  
+        setShowAllRecords(true);
+        setSelectionType(SelectionStyle.SINGLE);
+        setCanResizeFields(false);
+        setCanEdit(false);
+        setMargin(10);
+        setShowGridSummary(true);
+        
+        ListGridField field_3_1 = new ListGridField("cus_type", "ประเภทลูกค้า");
+        ListGridField field_3_2 = new ListGridField("bus_type", "กลุ่มธุรกิจลูกค้า");
+        ListGridField field_3_3 = new ListGridField("cus_group", "ชนิดลูกค้า");
+        ListGridField field_3_4 = new ListGridField("zone", "โซน");
+        
+        ListGridField Field_6_1 = new ListGridField("paid", "ยอดเงินที่ชำระแล้ว (บาท)", 150);
+        Field_6_1.setShowGroupSummary(true);
+        Field_6_1.setSummaryFunction(SummaryFunctionType.SUM);
+        ListGridField Field_6_2 = new ListGridField("unpaid", "ยอดเงินที่ค้างชำระ (บาท)", 150);
+        Field_6_2.setShowGroupSummary(true);
+        Field_6_2.setSummaryFunction(SummaryFunctionType.SUM);
+        
+        Field_6_1.setAlign(Alignment.RIGHT);
+        Field_6_1.setCellFormatter(FieldFormatter.getPriceFormat());
+        Field_6_2.setAlign(Alignment.RIGHT);
+        Field_6_2.setCellFormatter(FieldFormatter.getPriceFormat());
+        
+        setFields(field_3_1, field_3_2, field_3_3, field_3_4, Field_6_1, Field_6_2);
+        
+        setRecords(createListGridRecord(criteria, type));
+        setHoverWidth(200);  
+        setHoverHeight(20);
+        if (type.equalsIgnoreCase("cus_type")) {
+        	hideFields("bus_type" , "cus_group", "zone");
+        } else if (type.equalsIgnoreCase("bus_type")) {
+        	hideFields("cus_type", "cus_group", "zone");
+        } else if (type.equalsIgnoreCase("cus_group")) {
+        	hideFields("cus_type", "bus_type" , "zone");
+        } else if (type.equalsIgnoreCase("zone")) {
+        	hideFields("cus_type", "bus_type" , "cus_group");
+        }
+	}
+	
+	public ListGridRecord[] createListGridRecord(Criterion criteria, String type) {
+		InvoiceDS.getInstance().refreshData();
+	    
+	    if (type.equalsIgnoreCase("cus_type")) {
+	    	Record[] cus_type_1_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_type", OperatorId.EQUALS, "ลูกค้าทั่วไป") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+		    Record[] cus_type_1_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_type", OperatorId.EQUALS, "ลูกค้าประจำ") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+		    Record[] cus_type_2_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_type", OperatorId.EQUALS, "ลูกค้าทั่วไป") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+		    Record[] cus_type_2_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_type", OperatorId.EQUALS, "ลูกค้าประจำ") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+		    
+		    cus_type_data = new Double[][] {
+		    		{getNetInclusive(cus_type_1_1), getNetInclusive(cus_type_1_2)},
+		    		{getNetInclusive(cus_type_2_1), getNetInclusive(cus_type_2_2)}
+		    };
+		    
+	    	return new ListGridRecord[]{ 
+	    			createRecord("ลูกค้าทั่วไป","","","",getNetInclusive(cus_type_1_1), getNetInclusive(cus_type_2_1)),
+	    			createRecord("ลูกค้าประจำ","","","",getNetInclusive(cus_type_1_2), getNetInclusive(cus_type_2_2))
+	    	};
+	    	
+	    } else if (type.equalsIgnoreCase("bus_type")) {
+	    	Record[] bus_type_1_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าปลีกผ่านหน้าร้าน") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+		    Record[] bus_type_1_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าปลีกผ่านเว็บไซต์") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+		    Record[] bus_type_1_3 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าส่งผ่านหน้าร้าน") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+		    Record[] bus_type_1_4 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าส่งผ่านเว็บไซต์") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+		    
+		    Record[] bus_type_2_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าปลีกผ่านหน้าร้าน") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+		    Record[] bus_type_2_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าปลีกผ่านเว็บไซต์") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+		    Record[] bus_type_2_3 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าส่งผ่านหน้าร้าน") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+		    Record[] bus_type_2_4 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าส่งผ่านเว็บไซต์") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+		    
+		    bus_type_data = new Double[][] {
+		    		{getNetInclusive(bus_type_1_1), getNetInclusive(bus_type_1_2), getNetInclusive(bus_type_1_3), getNetInclusive(bus_type_1_4)},
+		    		{getNetInclusive(bus_type_2_1), getNetInclusive(bus_type_2_2), getNetInclusive(bus_type_2_3), getNetInclusive(bus_type_2_4)}
+		    };
+		    
+		    return new ListGridRecord[]{ 
+	    			createRecord("","ค้าปลีกผ่านหน้าร้าน","","",getNetInclusive(bus_type_1_1), getNetInclusive(bus_type_2_1)),
+	    			createRecord("","ค้าปลีกผ่านเว็บไซต์","","",getNetInclusive(bus_type_1_2), getNetInclusive(bus_type_2_2)),
+	    			createRecord("","ค้าส่งผ่านหน้าร้าน","","",getNetInclusive(bus_type_1_3), getNetInclusive(bus_type_2_3)),
+	    			createRecord("","ค้าส่งผ่านเว็บไซต์","","",getNetInclusive(bus_type_1_4), getNetInclusive(bus_type_2_4))
+	    	};
+		    
+	    } else if (type.equalsIgnoreCase("cus_group")) {
+	    	Record[] cus_group_1_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_group", OperatorId.EQUALS, "บุคคลทั่วไป") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+		    Record[] cus_group_1_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_group", OperatorId.EQUALS, "ร้านค้า") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+		    Record[] cus_group_2_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_group", OperatorId.EQUALS, "บุคคลทั่วไป") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+		    Record[] cus_group_2_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("cus_group", OperatorId.EQUALS, "ร้านค้า") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+		    
+		    cus_group_data = new Double[][] {
+		    		{getNetInclusive(cus_group_1_1), getNetInclusive(cus_group_1_2)},
+		    		{getNetInclusive(cus_group_2_1), getNetInclusive(cus_group_2_2)}
+		    };
+		    
+		    return new ListGridRecord[]{ 
+	    			createRecord("","","บุคคลทั่วไป","",getNetInclusive(cus_group_1_1), getNetInclusive(cus_group_2_1)),
+	    			createRecord("","","ร้านค้า","",getNetInclusive(cus_group_1_2), getNetInclusive(cus_group_2_2))
+	    	};
+		    
+	    } else if (type.equalsIgnoreCase("zone")) {
+	    	Record[] zone_1_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("zone", OperatorId.EQUALS, "เอเซีย") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+		    Record[] zone_1_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("zone", OperatorId.EQUALS, "ยุโรป") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+		    Record[] zone_1_3 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("zone", OperatorId.EQUALS, "อเมริกาเหนือ") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+		    Record[] zone_1_4 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("zone", OperatorId.EQUALS, "อเมริกาใต้") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+		    
+		    Record[] zone_2_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("zone", OperatorId.EQUALS, "เอเซีย") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+		    Record[] zone_2_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("zone", OperatorId.EQUALS, "ยุโรป") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+		    Record[] zone_2_3 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("zone", OperatorId.EQUALS, "อเมริกาเหนือ") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+		    Record[] zone_2_4 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("zone", OperatorId.EQUALS, "อเมริกาใต้") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+		    
+		    zone_data = new Double[][] {
+		    		{getNetInclusive(zone_1_1), getNetInclusive(zone_1_2), getNetInclusive(zone_1_3), getNetInclusive(zone_1_4)},
+		    		{getNetInclusive(zone_2_1), getNetInclusive(zone_2_2), getNetInclusive(zone_2_3), getNetInclusive(zone_2_4)}
+		    };
+		    
+		    return new ListGridRecord[]{ 
+	    			createRecord("","","","เอเซีย",getNetInclusive(zone_1_1), getNetInclusive(zone_2_1)),
+	    			createRecord("","","","ยุโรป",getNetInclusive(zone_1_2), getNetInclusive(zone_2_2)),
+	    			createRecord("","","","อเมริกาเหนือ",getNetInclusive(zone_1_3), getNetInclusive(zone_2_3)),
+	    			createRecord("","","","อเมริกาใต้",getNetInclusive(zone_1_4), getNetInclusive(zone_2_4))
+	    	};
+	    } else return null;
+	}
+	
+	public ListGridRecord createRecord(String cus_type, String bus_type, String cus_group, String zone, Double paid, Double unpaid){
+		ListGridRecord record = new ListGridRecord();
+        record.setAttribute("cus_type", cus_type);
+        record.setAttribute("bus_type", bus_type);
+        record.setAttribute("cus_group", cus_group);
+        record.setAttribute("zone", zone);
+        record.setAttribute("paid", paid);
+        record.setAttribute("unpaid", unpaid);
+        return record;
 	}
 }

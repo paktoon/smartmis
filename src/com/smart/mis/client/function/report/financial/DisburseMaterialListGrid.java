@@ -1,6 +1,7 @@
 package com.smart.mis.client.function.report.financial;
 
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.shared.FieldFormatter;
 import com.smartgwt.client.data.AdvancedCriteria;
 import com.smartgwt.client.data.Criterion;
@@ -22,6 +23,7 @@ import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 
 public class DisburseMaterialListGrid extends ListGrid {
 
+	private Double[][] dataTable;
 //	@Override
 //	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
 //		if (getFieldName(colNum).equals("remain")) { 
@@ -82,6 +84,9 @@ public class DisburseMaterialListGrid extends ListGrid {
 	}
 	
 	public Double[][] createDataTable(Criterion criteria){
+		
+		if (dataTable != null) return dataTable;
+		
 	    DisburseMaterialDS.getInstance().refreshData();
 	    
 	    Record[] mat_1 = DisburseMaterialDS.getInstance().applyFilter(DisburseMaterialDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "แร่เงิน")}));
@@ -102,4 +107,70 @@ public class DisburseMaterialListGrid extends ListGrid {
 		return sum_price;
 	}
 	
+	public DisburseMaterialListGrid(Criterion criteria) {
+		setWidth(400);
+		setHeight(170);
+		setAlign(Alignment.CENTER);
+		
+        setAlternateRecordStyles(true);  
+        setShowAllRecords(true);
+        setSelectionType(SelectionStyle.SINGLE);
+        setCanResizeFields(false);
+        setCanEdit(false);
+        setMargin(10);
+        //setShowGridSummary(true);
+        //setGroupStartOpen(GroupStartOpen.ALL);
+        //setGroupByField("group"); 
+        setShowGridSummary(true);
+        
+        ListGridField field_1 = new ListGridField("type", "ประเภทวัตถุดิบ");
+        field_1.setShowGridSummary(true);
+        field_1.setSummaryFunction(new SummaryFunction() {  
+            public Object getSummaryValue(Record[] records, ListGridField field) {
+                return records.length + " รายการ";  
+            }  
+        });
+        
+      ListGridField Field_6_1 = new ListGridField("sum_price", "ยอดชำระค่าวัตถุดิบ (บาท)", 170);
+      Field_6_1.setShowGridSummary(true);
+      Field_6_1.setSummaryFunction(SummaryFunctionType.SUM);
+        
+        //Cell Format
+      Field_6_1.setAlign(Alignment.RIGHT);
+      Field_6_1.setCellFormatter(FieldFormatter.getPriceFormat());
+        
+        setFields(field_1, Field_6_1);
+        
+        setRecords(createListGridRecord(criteria));
+        setHoverWidth(200);  
+        setHoverHeight(20);
+	}
+	
+	public ListGridRecord[] createListGridRecord(Criterion criteria) {
+		
+	    DisburseMaterialDS.getInstance().refreshData();
+	    
+	    Record[] mat_1 = DisburseMaterialDS.getInstance().applyFilter(DisburseMaterialDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "แร่เงิน")}));
+	    Record[] mat_2 = DisburseMaterialDS.getInstance().applyFilter(DisburseMaterialDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "พลอยประดับ")}));
+	    Record[] mat_3 = DisburseMaterialDS.getInstance().applyFilter(DisburseMaterialDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "แมกกาไซต์")}));
+	    Record[] mat_4 = DisburseMaterialDS.getInstance().applyFilter(DisburseMaterialDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "อื่นๆ")}));
+
+	    dataTable = new Double[][] {
+	    		{getSumPrice(mat_1), getSumPrice(mat_2), getSumPrice(mat_3), getSumPrice(mat_4) }
+	    };
+	    
+    	return new ListGridRecord[]{ 
+    			createRecord("แร่เงิน",getSumPrice(mat_1)),
+    			createRecord("พลอยประดับ",getSumPrice(mat_2)),
+    			createRecord("แมกกาไซต์",getSumPrice(mat_3)),
+    			createRecord("อื่นๆ",getSumPrice(mat_4))
+    	};
+	}
+	
+	public ListGridRecord createRecord(String type, Double sum_price){
+		ListGridRecord record = new ListGridRecord();
+        record.setAttribute("type", type);
+        record.setAttribute("sum_price", sum_price);
+        return record;
+	}
 }
