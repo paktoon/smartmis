@@ -3,6 +3,7 @@ package com.smart.mis.client.function.report.purchasing;
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.smart.mis.client.function.report.financial.DisburseMaterialDS;
 import com.smart.mis.shared.FieldFormatter;
 import com.smartgwt.client.data.AdvancedCriteria;
 import com.smartgwt.client.data.Criterion;
@@ -27,6 +28,7 @@ import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 
 public class PurchasingListGrid extends ListGrid {
 
+	private Double[][] dataTable;
 //	@Override
 //	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
 //		if (getFieldName(colNum).equals("remain")) { 
@@ -109,16 +111,20 @@ public class PurchasingListGrid extends ListGrid {
 	}
 	
 	public Double[][] createDataTable(Criterion criteria, String type){
+		
 		PurchasingReportDS.getInstance().refreshData();
 	    
 	    if (type.equalsIgnoreCase("type")) {
+	    	
+	    	if (dataTable != null) return dataTable;
+	    	
 	    	Record[] type_1_1 = PurchasingReportDS.getInstance().applyFilter(PurchasingReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "แร่เงิน")}));
 		    Record[] type_1_2 = PurchasingReportDS.getInstance().applyFilter(PurchasingReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "พลอยประดับ")}));
 		    Record[] type_2_1 = PurchasingReportDS.getInstance().applyFilter(PurchasingReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "แมกกาไซต์")}));
 		    Record[] type_2_2 = PurchasingReportDS.getInstance().applyFilter(PurchasingReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "อื่นๆ")}));
 		    
 		    return new Double[][] {
-		    		{getRequestAmount(type_1_1), getRequestAmount(type_1_2), getRequestAmount(type_2_1), getRequestAmount(type_2_2)}
+		    		{getSumPrice(type_1_1), getSumPrice(type_1_2), getSumPrice(type_2_1), getSumPrice(type_2_2)}
 		    };
 //	    } else if (type.equalsIgnoreCase("bus_type")) {
 //	    	Record[] bus_type_1_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าปลีกผ่านหน้าร้าน") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
@@ -144,5 +150,108 @@ public class PurchasingListGrid extends ListGrid {
 			request_amount += record.getAttributeAsDouble("request_amount");
 		}
 		return request_amount;
+	}
+	
+	public Double getSumPrice(Record[] records) {
+		Double sum_price = 0.0;
+		for (Record record : records) {
+			sum_price += record.getAttributeAsDouble("sum_price");
+		}
+		return sum_price;
+	}
+	
+	public PurchasingListGrid(Criterion criteria, String type) {
+		setWidth(650);
+		setHeight(170);
+		setAlign(Alignment.CENTER);
+		
+        setAlternateRecordStyles(true);  
+        setShowAllRecords(true);
+        setSelectionType(SelectionStyle.SINGLE);
+        setCanResizeFields(false);
+        setCanEdit(false);
+        setMargin(10);
+        //setShowGridSummary(true);
+        //setGroupStartOpen(GroupStartOpen.ALL);
+        //setGroupByField("group"); 
+        setShowGridSummary(true);
+        
+        ListGridField field_1 = new ListGridField("type", "ประเภทวัตถุดิบ");
+        field_1.setShowGridSummary(true);
+        field_1.setSummaryFunction(new SummaryFunction() {  
+            public Object getSummaryValue(Record[] records, ListGridField field) {
+                return records.length + " รายการ";  
+            }  
+        });
+
+        ListGridField field_2_4 = new ListGridField("unit", "หน่วย", 70);
+        field_2_4.setAlign(Alignment.CENTER);
+        
+      ListGridField Field_6_1 = new ListGridField("sum_price", "ยอดค่าวัตถุดิบ (บาท)", 150);
+      Field_6_1.setShowGridSummary(true);
+      Field_6_1.setSummaryFunction(SummaryFunctionType.SUM);
+      ListGridField Field_6_2 = new ListGridField("amount", "จำนวนวัตถุดิบ", 150);
+      Field_6_2.setShowGridSummary(true);
+      Field_6_2.setSummaryFunction(SummaryFunctionType.SUM);
+        
+        //Cell Format
+      Field_6_1.setAlign(Alignment.RIGHT);
+      Field_6_1.setCellFormatter(FieldFormatter.getPriceFormat());
+      Field_6_2.setAlign(Alignment.RIGHT);
+      Field_6_2.setCellFormatter(FieldFormatter.getNumberFormat());
+      
+        setFields(field_1, Field_6_1, Field_6_2, field_2_4);
+        
+        setRecords(createListGridRecord(criteria, type));
+        setHoverWidth(200);  
+        setHoverHeight(20);
+	}
+	
+	public ListGridRecord[] createListGridRecord(Criterion criteria, String type) {
+		
+		PurchasingReportDS.getInstance().refreshData();
+	    
+	    if (type.equalsIgnoreCase("type")) {
+	    	Record[] type_1_1 = PurchasingReportDS.getInstance().applyFilter(PurchasingReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "แร่เงิน")}));
+		    Record[] type_1_2 = PurchasingReportDS.getInstance().applyFilter(PurchasingReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "พลอยประดับ")}));
+		    Record[] type_2_1 = PurchasingReportDS.getInstance().applyFilter(PurchasingReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "แมกกาไซต์")}));
+		    Record[] type_2_2 = PurchasingReportDS.getInstance().applyFilter(PurchasingReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "อื่นๆ")}));
+		    
+		    dataTable = new Double[][] {
+		    		{getSumPrice(type_1_1), getSumPrice(type_1_2), getSumPrice(type_2_1), getSumPrice(type_2_2)}
+		    };
+		    
+	    	return new ListGridRecord[]{ 
+	    			createRecord("แร่เงิน",getSumPrice(type_1_1),getRequestAmount(type_1_1), "กรัม"),
+	    			createRecord("พลอยประดับ",getSumPrice(type_1_2),getRequestAmount(type_1_2), "เม็ด"),
+	    			createRecord("แมกกาไซต์",getSumPrice(type_2_1),getRequestAmount(type_2_1), "เม็ด"),
+	    			createRecord("อื่นๆ",getSumPrice(type_2_2),getRequestAmount(type_2_2), "ชิ้น")
+	    	};
+	    	
+//	    } else if (type.equalsIgnoreCase("bus_type")) {
+//	    	Record[] bus_type_1_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าปลีกผ่านหน้าร้าน") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+//		    Record[] bus_type_1_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าปลีกผ่านเว็บไซต์") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+//		    Record[] bus_type_1_3 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าส่งผ่านหน้าร้าน") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+//		    Record[] bus_type_1_4 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าส่งผ่านเว็บไซต์") , new Criterion("status", OperatorId.EQUALS, "2_paid")}));
+//		    
+//		    Record[] bus_type_2_1 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าปลีกผ่านหน้าร้าน") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+//		    Record[] bus_type_2_2 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าปลีกผ่านเว็บไซต์") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+//		    Record[] bus_type_2_3 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าส่งผ่านหน้าร้าน") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+//		    Record[] bus_type_2_4 = InvoiceDS.getInstance().applyFilter(InvoiceDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("bus_type", OperatorId.EQUALS, "ค้าส่งผ่านเว็บไซต์") , new Criterion("status", OperatorId.NOT_EQUAL, "2_paid")}));
+//		    
+//		    return new Double[][] {
+//		    		{getNetInclusive(bus_type_1_1), getNetInclusive(bus_type_1_2), getNetInclusive(bus_type_1_3), getNetInclusive(bus_type_1_4)},
+//		    		{getNetInclusive(bus_type_2_1), getNetInclusive(bus_type_2_2), getNetInclusive(bus_type_2_3), getNetInclusive(bus_type_2_4)}
+//		    };
+	    } else return null;
+	}
+	
+	public ListGridRecord createRecord(String type, Double sum_price, Double amount, String unit){
+		ListGridRecord record = new ListGridRecord();
+        record.setAttribute("type", type);
+        record.setAttribute("sum_price", sum_price);
+        record.setAttribute("amount", amount);
+        record.setAttribute("unit", unit);
+        return record;
 	}
 }
