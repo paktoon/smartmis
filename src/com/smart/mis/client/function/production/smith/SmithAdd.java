@@ -6,6 +6,7 @@ import com.smart.mis.client.function.security.SecurityService;
 import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DSCallback;
@@ -99,7 +100,15 @@ public class SmithAdd {
 		TextItem phone2 = new TextItem("phone2", "หมายเลขโทรศัพท์ 2");
 		TextItem email = new TextItem("email", "อีเมล");
 		SelectItem type = new SelectItem("type", "ประเภทงาน");
+		type.setEmptyDisplayValue("---โปรดเลือก---");
 		type.setWidth(200);
+		
+		phone1.setValidators(ValidatorFactory.phoneString());
+		phone1.setIcons(ValidatorFactory.phoneHint());
+		phone2.setValidators(ValidatorFactory.phoneString());
+		phone2.setIcons(ValidatorFactory.phoneHint());
+		email.setValidators(ValidatorFactory.emailString());
+		email.setIcons(ValidatorFactory.emailHint());
 		
 		name.setRequired(true);
 		phone1.setRequired(true);
@@ -143,7 +152,12 @@ public class SmithAdd {
         saveButton.setIcon("icons/16/save.png");
         saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
-            	            	
+            	   
+            	if (!editorForm.validate() || !addressForm.validate()) {
+            		SC.warn("ข้อมูลช่างไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+            		return;
+            	}
+            	
             	SC.confirm("ยืนยันการเพิ่มข้อมูลช่าง", "ท่านต้องการเพิ่มช่าง " + (String) editorForm.getValue("name") + " หรือไม่ ?", new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
@@ -194,7 +208,7 @@ public class SmithAdd {
 													if (dsResponse.getStatus() != 0) {
 														SC.warn("การเพิ่มข้อมูลช่างล้มเหลว มีชื่อนี้อยู่ในระบบแล้ว");
 													} else { 
-														SC.warn("เพิ่มข้อมูลช่างเรียบร้อยแล้ว");
+														SC.say("เพิ่มข้อมูลช่างเรียบร้อยแล้ว");
 														winModel.destroy();
 														ListGrid.fetchData();
 														ListGrid.selectSingleRecord(dsResponse.getData()[0]);

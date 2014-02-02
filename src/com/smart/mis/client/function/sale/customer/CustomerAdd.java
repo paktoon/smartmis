@@ -7,6 +7,7 @@ import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
 import com.smart.mis.shared.Country;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DSCallback;
@@ -100,6 +101,12 @@ public class CustomerAdd {
 		TextItem contact_phone = new TextItem("contact_phone", "หมายเลขโทรศัพท์ผู้ติดต่อ");
 		TextItem contact_email = new TextItem("contact_email", "อีเมลผู้ติดต่อ");
 		
+		cus_phone.setValidators(ValidatorFactory.phoneString());
+		cus_phone.setIcons(ValidatorFactory.phoneHint());
+		contact_phone.setValidators(ValidatorFactory.phoneString());
+		contact_phone.setIcons(ValidatorFactory.phoneHint());
+		contact_email.setValidators(ValidatorFactory.emailString());
+		contact_email.setIcons(ValidatorFactory.emailHint());
 //		TextAreaItem address = new TextAreaItem("address", "ที่อยู่");
 //		address.setWidth(300);
 //		address.setRowSpan(3);
@@ -170,7 +177,12 @@ public class CustomerAdd {
         saveButton.setIcon("icons/16/save.png");
         saveButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) {  
-            	            	
+            	
+            	if (!editorForm.validate() || !addressForm.validate()) {
+            		SC.warn("ข้อมูลลูกค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+            		return;
+            	}
+            		
             	SC.confirm("ยืนยันการเพิ่มข้อมูลลูกค้า", "ท่านต้องการเพิ่มลูกค้า " + (String) editorForm.getValue("cus_name") + " หรือไม่ ?", new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {

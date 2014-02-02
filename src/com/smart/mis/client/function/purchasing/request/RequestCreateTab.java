@@ -384,7 +384,7 @@ public class RequestCreateTab {
 //		credit.setDefaultValue(0);
 		
 		supplierForm.setFields(sid, sup_name, sup_email, sup_phone1, sup_phone2, sup_fax, sup_address);
-		supplierForm.setColWidths(100, 80, 80, 200, 100, 140);
+		supplierForm.setColWidths(100, 100, 80, 180, 100, 140);
 		createLayout.addMember(supplierForm);
 		//******************End Supplier
 		

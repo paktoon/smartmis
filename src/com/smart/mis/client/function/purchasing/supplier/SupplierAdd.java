@@ -9,6 +9,7 @@ import com.smart.mis.client.function.security.SecurityService;
 import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DSCallback;
@@ -138,6 +139,15 @@ public class SupplierAdd {
 		
 		IntegerItem leadtime = new IntegerItem("leadtime", "ระยะเวลาส่งสินค้า");
 		
+		sup_phone1.setValidators(ValidatorFactory.phoneString());
+		sup_phone1.setIcons(ValidatorFactory.phoneHint());
+		sup_phone2.setValidators(ValidatorFactory.phoneString());
+		sup_phone2.setIcons(ValidatorFactory.phoneHint());
+		fax.setValidators(ValidatorFactory.phoneString());
+		fax.setIcons(ValidatorFactory.phoneHint());
+		email.setValidators(ValidatorFactory.emailString());
+		email.setIcons(ValidatorFactory.emailHint());
+		
 		sup_name.setRequired(true);
 		sup_phone1.setRequired(true);
 		address.setRequired(true);
@@ -177,7 +187,7 @@ public class SupplierAdd {
             public void onClick(ClickEvent event) {  
             	            	
             	if (!editorForm.validate()) {
-            		SC.warn("ข้อมูลไม่ถูกต้อง");
+            		SC.warn("ข้อมูลผู้จำหน่ายไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
             		return;
             	}
             		
