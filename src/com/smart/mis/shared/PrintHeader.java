@@ -14,11 +14,11 @@ public class PrintHeader extends HLayout {
 		setHeight(120);
 		
 		Img logo = new Img("Plain-Silver-icon.png", 120, 120);
-		//logo.setWidth(120);
+		//logo.setWidth("10%");
 		addMember(logo);
 		
 		VLayout companyDetails = new VLayout(10);
-		companyDetails.setWidth(150);
+		companyDetails.setWidth("30%");
 		companyDetails.setAlign(Alignment.LEFT);
 		Label companyName = new Label();
 		companyName.setContents("Rich Silver Shop");
@@ -28,14 +28,14 @@ public class PrintHeader extends HLayout {
 		
 		Label companyAddress = new Label();
 		companyAddress.setContents("<br> 1211 เจริญกรุง ซอย 47/1 <br> ถนนเจริญกรุง แขวงสี่พระยา <br> เขตบางรัก กรุงเทพมหานคร 10500");
-		companyAddress.setWidth(150);
+		companyAddress.setWidth("30%");
 		companyAddress.setStyleName("printDetails");
 		companyDetails.addMember(companyAddress);
 		addMember(companyDetails);
 		
 		VLayout docDetail = new VLayout(10);
 		Label docName = new Label();
-		docName.setWidth("5%");
+		docName.setWidth("10%");
 		docName.setContents(type);
 		docName.setStyleName("printDocHeader");
 		docDetail.addMember(docName);

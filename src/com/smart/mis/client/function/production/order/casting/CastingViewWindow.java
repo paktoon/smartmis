@@ -77,6 +77,8 @@ import com.smartgwt.client.widgets.grid.ListGridSummaryField;
 import com.smartgwt.client.widgets.grid.SummaryFunction;
 import com.smartgwt.client.widgets.grid.events.CellSavedEvent;
 import com.smartgwt.client.widgets.grid.events.CellSavedHandler;
+import com.smartgwt.client.widgets.grid.events.CellSelectionChangedEvent;
+import com.smartgwt.client.widgets.grid.events.CellSelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.ChangeEvent;
 import com.smartgwt.client.widgets.grid.events.ChangeHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -114,7 +116,7 @@ public class CastingViewWindow extends EditorWindow{
 		editWindow.show();
 	}
 	
-	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
+	private VLayout getViewEditor(final ListGridRecord record, final boolean edit, final Window main, final User currentUser, int page) {
 		
 		final VLayout layout = new VLayout();
 		layout.setWidth(950);
@@ -123,7 +125,7 @@ public class CastingViewWindow extends EditorWindow{
 		
 		final String job_id = record.getAttributeAsString("job_id");
 		String plan_id = record.getAttributeAsString("plan_id");
-		String status = record.getAttributeAsString("status");
+		final String status = record.getAttributeAsString("status");
 		
 		String created_by = record.getAttributeAsString("created_by");
 		Date created_date = record.getAttributeAsDate("created_date");
@@ -237,7 +239,7 @@ public class CastingViewWindow extends EditorWindow{
 		orderListGrid.setCanResizeFields(false);
 		orderListGrid.setShowGridSummary(true);
 		orderListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		orderListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		orderListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		orderListGrid.setShowRowNumbers(true);
 		orderListGrid.setCanExpandRecords(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
@@ -453,6 +455,13 @@ public class CastingViewWindow extends EditorWindow{
 		receivedButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
             	
+            	listGridValidate(orderListGrid);
+            	
+            	if (orderListGrid.hasErrors()) {
+            		SC.warn("ข้อมูลการรับสินค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+            		return;
+            	}
+            	
             	SC.confirm("ยืนยันการบันทึกรับสินค้า", "ต้องการบันทึกรับสินค้า หรือไม่?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
@@ -515,6 +524,7 @@ public class CastingViewWindow extends EditorWindow{
 		closeButton.setWidth(120);
 		closeButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
+            	//if (status.equalsIgnoreCase("1_on_production") || status.equalsIgnoreCase("0_request_mat")) clearListGrid(orderListGrid);
             	main.destroy();
           }
         });
@@ -769,7 +779,7 @@ public class CastingViewWindow extends EditorWindow{
 					recv_amount = Integer.parseInt(temp_amount);
 				}
 			} catch (Exception e) {
-				SC.warn("กรุณากรอกข้อมูลตัวเลข");
+				SC.warn("กรุณากรอกข้อมูลตัวเลขให้ถูกต้อง");
 				return;
 			}
 			
@@ -896,7 +906,42 @@ public class CastingViewWindow extends EditorWindow{
                 //return new CastingMaterialDS(record.getAttributeAsString("psid"), DS.pid);
                 return CastingMaterialDS.getInstance(record.getAttributeAsString("sub_job_id"), record.getAttributeAsString("job_id"));
             }  
-  
+            
+            @Override
+        	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
+        		//Double sent_weight = record.getAttributeAsDouble("sent_weight");
+        		//Integer sent_amount = record.getAttributeAsInt("sent_amount");
+            	//System.out.println("getCellCSSText -- " + getFieldName(colNum));
+        		if (getFieldName(colNum).equals("recv_weight")) {
+        			Double recv_weight = record.getAttributeAsDouble("recv_weight");
+        			if (recv_weight != null) {
+	        			Double sent_weight = record.getAttributeAsDouble("sent_weight");
+	        			if (recv_weight > sent_weight * 1.15 || recv_weight < sent_weight * 0.85) {
+	        				//setFieldError(rowNum, "recv_weight", "น้ำหนักสินค้าไม่ตรงตามที่ประมาณการ");
+	        				return "font-weight:bold; color:#d64949;";
+	        			} else {
+	        				//clearFieldError(rowNum, "recv_weight");
+	        				return "font-weight:bold; color:#009900;";
+	        			}
+        			} else return "font-weight:bold; color:#287fd6;";
+        		} else if (getFieldName(colNum).equals("recv_amount")) {
+        			Integer recv_amount = record.getAttributeAsInt("recv_amount");
+        			if (recv_amount != null) {
+	        			Integer sent_amount = record.getAttributeAsInt("sent_amount");
+	        			//if (recv_amount > sent_amount * 1.02 || recv_amount < sent_amount * 0.98) {
+	        				//setFieldError(rowNum, "recv_amount", "จำนวนสินค้าไม่ตรงตามที่ประมาณการ");
+	        			if (recv_amount.intValue() != sent_amount.intValue()) {
+	        				return "font-weight:bold; color:#d64949;";
+	        			} else {
+	        				//clearFieldError(rowNum, "recv_amount");
+	        				return "font-weight:bold; color:#009900;";
+	        			}
+        			} else return "font-weight:bold; color:#287fd6;";
+        		} else {  
+                    return super.getCellCSSText(record, rowNum, colNum);  
+                } 
+        	}
+        	
             @Override  
             protected Canvas getExpansionComponent(final ListGridRecord record) {  
   
@@ -922,7 +967,7 @@ public class CastingViewWindow extends EditorWindow{
             	
                 materialGrid.setModalEditing(true);  
                 materialGrid.setEditEvent(ListGridEditEvent.CLICK);  
-                materialGrid.setListEndEditAction(RowEndEditAction.NEXT);  
+                materialGrid.setListEndEditAction(RowEndEditAction.NONE);  
                 materialGrid.setAutoSaveEdits(false);  
   
                 ListGridField Field_1 = new ListGridField("mid", 150);
@@ -948,4 +993,46 @@ public class CastingViewWindow extends EditorWindow{
 		ScrapingCreateWindow order = new ScrapingCreateWindow();
 		order.show(casting, currentUser, std_time);
 	}
+	
+	public void listGridValidate(ListGrid listGrid){
+
+		int row = 0;
+		for (ListGridRecord record : listGrid.getRecords()){
+			if (record.getAttributeAsString("pid") == null) listGrid.removeData(record);
+			else {
+				Double sent_weight = record.getAttributeAsDouble("sent_weight");
+				Integer sent_amount = record.getAttributeAsInt("sent_amount");
+				
+				Double recv_weight = record.getAttributeAsDouble("recv_weight");
+				Integer recv_amount = record.getAttributeAsInt("recv_amount");
+				
+				if (recv_weight != null) {
+					if (recv_weight > sent_weight * 1.15 || recv_weight < sent_weight * 0.85) {
+						listGrid.setFieldError(row, "recv_weight", "น้ำหนักสินค้าไม่อยู่ในช่วงที่รับได้");
+					}
+				} else {
+					listGrid.setFieldError(row, "recv_weight", "น้ำหนักสินค้าไม่ถูกต้อง");
+				}
+				
+				if (recv_amount != null) {
+					//if (recv_amount > sent_amount * 1.02 || recv_amount < sent_amount * 0.98) {
+					//System.out.println("recv_amount " + recv_amount);
+					//System.out.println("sent_amount " + sent_amount);
+					if (recv_amount.intValue() != sent_amount.intValue()) {
+						listGrid.setFieldError(row, "recv_amount", "จำนวนสินค้าไม่อยู่ในช่วงที่รับได้");
+					}
+				} else {
+					listGrid.setFieldError(row, "recv_amount", "จำนวนสินค้าไม่ถูกต้อง");
+				}
+			}
+			row++;
+		}
+	}
+	
+//	public void clearListGrid(ListGrid listGrid){
+//		for (ListGridRecord record : listGrid.getRecords()){
+//			record.setAttribute("recv_weight", (Double) null);
+//			record.setAttribute("recv_amount", (Integer) null);
+//		}
+//	}
 }

@@ -133,7 +133,10 @@ public class RequestCreateTab {
 
 		final SelectItem paymentModel = new SelectItem("payment_model", "วิธีการชำระเงิน");
 		paymentModel.setValueMap("เงินสด", "แคชเชียร์เช็ค");
+		paymentModel.setDefaultValue("เงินสด");
 		paymentModel.setEmptyDisplayValue("--โปรดเลือกวิธีชำระเงิน--");
+		paymentModel.setRequired(true);
+		paymentModel.setHint("*");
 		
 		final IntegerItem credit = new IntegerItem("credit","เครดิต");
 		credit.setRequired(true);
@@ -384,7 +387,7 @@ public class RequestCreateTab {
 //		credit.setDefaultValue(0);
 		
 		supplierForm.setFields(sid, sup_name, sup_email, sup_phone1, sup_phone2, sup_fax, sup_address);
-		supplierForm.setColWidths(100, 100, 80, 180, 100, 140);
+		supplierForm.setColWidths(100, 100, 80, 180, 80, 140);
 		createLayout.addMember(supplierForm);
 		//******************End Supplier
 		
@@ -482,7 +485,7 @@ public class RequestCreateTab {
 			}
         });
         materialForm.setFields(mid, pname, pprice, ptype, pname_th , quantity);
-        materialForm.setColWidths(100, 80, 80, 240, 100, 100);
+        materialForm.setColWidths(100, 80, 80, 200, 100, 100);
         materialForm.disable();
 		createLayout.addMember(materialForm);
 		//******************End Product Header
@@ -579,7 +582,7 @@ public class RequestCreateTab {
 		requestListGrid.setCanResizeFields(false);
 		requestListGrid.setShowGridSummary(true);
 		requestListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		requestListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		requestListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		requestListGrid.setShowRowNumbers(true);
 		
 		//requestListGrid.setCanRemoveRecords(true);

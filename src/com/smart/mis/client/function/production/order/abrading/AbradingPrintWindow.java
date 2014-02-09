@@ -216,11 +216,12 @@ public class AbradingPrintWindow extends EditorWindow{
 //		comment_area.setValue(comment);
 //		commentForm.setFields(comment_area);
 		
-		HLayout headerLayout = new HLayout();
-		headerLayout.setWidth100();
+//		HLayout headerLayout = new HLayout();
+//		headerLayout.setWidth100();
 		//headerLayout.addMembers(smithForm, commentForm);
-		headerLayout.addMembers(smithForm);
-		layout.addMember(headerLayout);
+//		headerLayout.addMembers(smithForm);
+//		layout.addMember(headerLayout);
+		layout.addMember(smithForm);
 		
 		SectionStack sectionStack = new SectionStack();
     	sectionStack.setWidth100();
@@ -249,7 +250,7 @@ public class AbradingPrintWindow extends EditorWindow{
 		orderListGrid.setCanResizeFields(false);
 		orderListGrid.setShowGridSummary(true);
 		orderListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		orderListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		orderListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		orderListGrid.setShowRowNumbers(true);
 		orderListGrid.setCanExpandRecords(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
@@ -333,6 +334,7 @@ public class AbradingPrintWindow extends EditorWindow{
 		
 		HLayout footerLayout = new HLayout();
 		footerLayout.setHeight(100);
+		footerLayout.setAlign(Alignment.RIGHT);
 		
 		final DynamicForm dateForm = new DynamicForm();
 		dateForm.setWidth(300);
@@ -1062,7 +1064,7 @@ public class AbradingPrintWindow extends EditorWindow{
 //            	
 //                materialGrid.setModalEditing(true);  
 //                materialGrid.setEditEvent(ListGridEditEvent.CLICK);  
-//                materialGrid.setListEndEditAction(RowEndEditAction.NEXT);  
+//                materialGrid.setListEndEditAction(RowEndEditAction.NONE);  
 //                materialGrid.setAutoSaveEdits(false);  
 //  
 //                ListGridField Field_1 = new ListGridField("mid", 150);

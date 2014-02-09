@@ -198,8 +198,8 @@ public class SaleVolumnFacets {
         //metric.setIsTree(true);  
   
         metric.setValues(  
-                new FacetValue("Volumn", "Volumn"),  
-                new FacetValue("Amount", "Amount")
+                new FacetValue("Volumn (bath)", "Volumn (bath)"),  
+                new FacetValue("Amount (ea)", "Amount (ea)")
         );
         
         //salePerson, metric

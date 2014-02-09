@@ -232,7 +232,7 @@ public class ProcessOutline extends VLayout {
             	
                 materialGrid.setModalEditing(true);  
                 materialGrid.setEditEvent(ListGridEditEvent.CLICK);  
-                materialGrid.setListEndEditAction(RowEndEditAction.NEXT);  
+                materialGrid.setListEndEditAction(RowEndEditAction.NONE);  
                 materialGrid.setAutoSaveEdits(false);  
   
                 ListGridField Field_1 = new ListGridField("mid", 150);

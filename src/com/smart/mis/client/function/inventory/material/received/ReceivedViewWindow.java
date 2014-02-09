@@ -239,7 +239,36 @@ public class ReceivedViewWindow extends EditorWindow{
     	section.setCanCollapse(false);  
         section.setExpanded(true);
         
-		final ListGrid quoteListGrid = new ListGrid();
+		final ListGrid quoteListGrid = new ListGrid() {
+            @Override
+        	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
+        		if (getFieldName(colNum).equals("received_weight")) {
+        			Double recv_weight = record.getAttributeAsDouble("received_weight");
+        			if (recv_weight != null) {
+	        			Double weight = record.getAttributeAsDouble("weight");
+	        			if (recv_weight > weight * 1.02 || recv_weight < weight * 0.98) {
+	        				return "font-weight:bold; color:#d64949;";
+	        			} else {
+	        				return "font-weight:bold; color:#009900;";
+	        			}
+        			} else return "font-weight:bold; color:#287fd6;";
+        		} else if (getFieldName(colNum).equals("received_amount")) {
+        			Double recv_amount = record.getAttributeAsDouble("received_amount");
+        			if (recv_amount != null) {
+        				Double sent_amount = record.getAttributeAsDouble("request_amount");
+	        			//if (recv_amount.intValue() != sent_amount.intValue()) {
+	        			if (recv_amount > sent_amount * 1.02 || recv_amount < sent_amount * 0.98) {
+	        				return "font-weight:bold; color:#d64949;";
+	        			} else {
+	        				return "font-weight:bold; color:#009900;";
+	        			}
+        			} else return "font-weight:bold; color:#287fd6;";
+        		} else {  
+                    return super.getCellCSSText(record, rowNum, colNum);  
+                } 
+        	}
+		};
+		
 		quoteListGrid.setHeight(230);
 		quoteListGrid.setAlternateRecordStyles(true);  
 		quoteListGrid.setShowAllRecords(true);  
@@ -249,7 +278,7 @@ public class ReceivedViewWindow extends EditorWindow{
 		quoteListGrid.setCanResizeFields(false);
 		quoteListGrid.setShowGridSummary(true);
 		quoteListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		quoteListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		quoteListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		quoteListGrid.setShowRowNumbers(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		quoteListGrid.setCriteria(ci);
@@ -278,7 +307,7 @@ public class ReceivedViewWindow extends EditorWindow{
         quoteItemCell_2.setShowGridSummary(true);
         ListGridField quoteItemCell_3 = new ListGridField("unit", 40);
         
-        ListGridField quoteItemCell_4 = new ListGridField("weight", "น้ำหนักที่สั่งซื้อ (กรัม)", 90);
+        ListGridField quoteItemCell_4 = new ListGridField("weight", "น้ำหนักที่สั่งซื้อ (กรัม)", 130);
         quoteItemCell_4.setShowGridSummary(false);
         quoteItemCell_4.setCellFormatter(FieldFormatter.getNumberFormat());
         quoteItemCell_4.setAlign(Alignment.RIGHT);
@@ -286,7 +315,7 @@ public class ReceivedViewWindow extends EditorWindow{
         quoteItemCell_4.setShowGridSummary(true);
         quoteItemCell_4.setIncludeInRecordSummary(false);
         
-        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("request_amount", 70);
+        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("request_amount", 100);
         quoteItemCell_6.setTitle("จำนวนที่สั่งซื้อ");
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
@@ -301,7 +330,7 @@ public class ReceivedViewWindow extends EditorWindow{
         if (edit) quoteItemCell_7.setEmptyCellValue("--โปรดระบุน้ำหนัก--");
         else quoteItemCell_7.setEmptyCellValue("ยังไม่มีการรับวัตถุดิบ");
         
-        ListGridNumberField quoteItemCell_8 = new ListGridNumberField("received_amount", 110);
+        ListGridNumberField quoteItemCell_8 = new ListGridNumberField("received_amount", 100);
         quoteItemCell_8.setTitle("จำนวนที่รับ");
         if (edit) quoteItemCell_8.setCanEdit(true);
         quoteItemCell_8.setSummaryFunction(SummaryFunctionType.SUM);
@@ -439,6 +468,14 @@ public class ReceivedViewWindow extends EditorWindow{
 		issueButton.setWidth(150);
 		issueButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
+            	
+            	listGridValidate(quoteListGrid);
+            	
+            	if (quoteListGrid.hasErrors()){
+            		SC.warn("ข้อมูลการรับวัตถุดิบไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+            		return;
+            	}
+            	
             	SC.confirm("ยืนยันการทำรายการ", "ต้องการบันทึกรับวัตถุดิบ หรือไม่?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
@@ -604,33 +641,60 @@ public class ReceivedViewWindow extends EditorWindow{
 		}
 	}
 	
-//	String getCustomerFullAddress(String cid) {
-//		CustomerDS.getInstance().refreshData();
-//		Record[] records = CustomerDS.getInstance().applyFilter(CustomerDS.getInstance().getCacheData(), new Criterion("cid", OperatorId.EQUALS, cid));
-//		Record selected = records[0];
-//		String address = selected.getAttributeAsString("address");
-//		String street = selected.getAttributeAsString("street");
-//		String city = selected.getAttributeAsString("city");
-//		String state = selected.getAttributeAsString("state");
-//		String postal = selected.getAttributeAsString("postal");
-//		String country = selected.getAttributeAsString("country");
-//		
-//		if (country.equalsIgnoreCase("TH")) {
-//			String fullAddress = address;
-//			if (street !=null) fullAddress += " ถนน " + street;
-//			if (city !=null) fullAddress += " เขต " + city;
-//			if (state !=null) fullAddress += " จังหวัด " + state;
-//			if (postal !=null) fullAddress += " รหัสไปรษณีย์ " + postal;
-//			if (country !=null) fullAddress += " ประเทศ " + Country.getThaiCountryName(country);
-//			return fullAddress;
-//		} else {
-//			String fullAddress = address;
-//			if (street !=null) fullAddress += " ,Street " + street;
-//			if (city !=null) fullAddress += " ,City " + city;
-//			if (state !=null) fullAddress += " ,State " + state;
-//			if (postal !=null) fullAddress += " ,Postal " + postal;
-//			if (country !=null) fullAddress += " ,Country " + Country.getEnglishCountryName(country);
-//			return fullAddress;
-//		}
-//	}
+	public void listGridValidate(ListGrid listGrid){
+		
+		 
+//		if (getFieldName(colNum).equals("received_weight")) {
+//			Double recv_weight = record.getAttributeAsDouble("received_weight");
+//			if (recv_weight != null) {
+//    			Double weight = record.getAttributeAsDouble("weight");
+//    			if (recv_weight > weight * 1.02 || recv_weight < weight * 0.98) {
+//    				return "font-weight:bold; color:#d64949;";
+//    			} else {
+//    				return "font-weight:bold; color:#009900;";
+//    			}
+//			} else return "font-weight:bold; color:#287fd6;";
+//		} else if (getFieldName(colNum).equals("received_amount")) {
+//			Integer recv_amount = record.getAttributeAsInt("received_amount");
+//			if (recv_amount != null) {
+//				Double sent_amount = record.getAttributeAsDouble("request_amount");
+//    			//if (recv_amount.intValue() != sent_amount.intValue()) {
+//    			if (recv_amount > sent_amount * 1.02 || recv_amount < sent_amount * 0.98) {
+//    				return "font-weight:bold; color:#d64949;";
+//    			} else {
+//    				return "font-weight:bold; color:#009900;";
+//    			}
+//			} else return "font-weight:bold; color:#287fd6;";
+//		} else {  
+//            return super.getCellCSSText(record, rowNum, colNum);  
+//        } 
+	
+		
+		int row = 0;
+		for (ListGridRecord record : listGrid.getRecords()){
+				Double sent_weight = record.getAttributeAsDouble("weight");
+				Double sent_amount = record.getAttributeAsDouble("request_amount");
+				
+				Double recv_weight = record.getAttributeAsDouble("received_weight");
+				Double recv_amount = record.getAttributeAsDouble("received_amount");
+				
+				if (recv_weight != null) {
+					if (recv_weight > sent_weight * 1.02 || recv_weight < sent_weight * 0.98) {
+						listGrid.setFieldError(row, "received_weight", "น้ำหนักวัตถุดิบไม่อยู่ในช่วงที่เหมาะสม");
+					}
+				} else {
+					listGrid.setFieldError(row, "received_weight", "น้ำหนักวัตถุดิบไม่ถูกต้อง");
+				}
+				
+				if (recv_amount != null) {
+					//if (recv_amount.intValue() != sent_amount.intValue()) {
+					if (recv_amount > sent_amount * 1.02 || recv_amount < sent_amount * 0.98) {
+						listGrid.setFieldError(row, "received_amount", "จำนวนวัตถุดิบไม่ถูกต้อง");
+					}
+				} else {
+					listGrid.setFieldError(row, "received_amount", "จำนวนวัตถุดิบไม่ถูกต้อง");
+				}
+			row++;
+		}
+	}
 }

@@ -21,9 +21,9 @@ public class SaleVolumnData {
 					int amount = (int) Math.round(Math.random() * 2000 * 12);
 					amount += 80;
 					
-					dataGen.add(new SaleVolumn(i.toString(), year, 2, month, customer, product, "Amount", amount));
+					dataGen.add(new SaleVolumn(i.toString(), year, 2, month, customer, product, "Amount (ea)", amount));
 					i++;
-					dataGen.add(new SaleVolumn(i.toString(), year, 2, month, customer, product, "Volumn", amount * 22.345));
+					dataGen.add(new SaleVolumn(i.toString(), year, 2, month, customer, product, "Volumn (bath)", amount * 22.345));
 					i++;
 				}
 			}
@@ -49,9 +49,9 @@ public class SaleVolumnData {
 					if (quater.equalsIgnoreCase("Q2") || quater.equalsIgnoreCase("Q3")) {
 						amount *= 0.6;
 					}
-					dataGen.add(new SaleVolumn(i.toString(), year, 1, quater, customer, product, "Amount", amount));
+					dataGen.add(new SaleVolumn(i.toString(), year, 1, quater, customer, product, "Amount (ea)", amount));
 					i++;
-					dataGen.add(new SaleVolumn(i.toString(), year, 1, quater, customer, product, "Volumn", amount * 22.345));
+					dataGen.add(new SaleVolumn(i.toString(), year, 1, quater, customer, product, "Volumn (bath)", amount * 22.345));
 					i++;
 				}
 			}
@@ -71,9 +71,9 @@ public class SaleVolumnData {
 							//time, zone, product, matric, value
 							int amount = (int) Math.round(Math.random() * 2000);
 							amount += 1000;
-							dataGen.add(new SaleVolumn(i.toString(), year, customer, product, "Amount", amount));
+							dataGen.add(new SaleVolumn(i.toString(), year, customer, product, "Amount (ea)", amount));
 							i++;
-							dataGen.add(new SaleVolumn(i.toString(), year, customer, product, "Volumn", amount * 22.345));
+							dataGen.add(new SaleVolumn(i.toString(), year, customer, product, "Volumn (bath)", amount * 22.345));
 							i++;
 						//}
 					}
@@ -84,9 +84,9 @@ public class SaleVolumnData {
     }
     
     
-    private static String[] types  = new String[] {
-    	"Volumn", "Amount"
-    };
+//    private static String[] types  = new String[] {
+//    	"Volumn (bath)", "Amount (ea)"
+//    };
     
     private static String[] years = new String[] {
     	"2011", "2012", "2013"

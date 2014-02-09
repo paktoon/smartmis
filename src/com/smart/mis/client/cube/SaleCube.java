@@ -54,8 +54,8 @@ public class SaleCube {
         cubeGrid.setAutoSelectValues(AutoSelectionModel.BOTH);
         cubeGrid.setRowHeaderGridMode(true);
   
-        final NumberFormat numberFormat_1 = NumberFormat.getFormat("0,000.00");  
-        final NumberFormat numberFormat_2 = NumberFormat.getFormat("000.00");  
+        final NumberFormat numberFormat_1 = NumberFormat.getFormat("0,000");  
+        final NumberFormat numberFormat_2 = NumberFormat.getFormat("000");  
         
         cubeGrid.setCellFormatter(new CellFormatter() {  
             public String format(Object value, ListGridRecord record, int rowNum, int colNum) {  

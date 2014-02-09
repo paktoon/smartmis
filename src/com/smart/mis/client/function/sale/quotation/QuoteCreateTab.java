@@ -380,7 +380,7 @@ public class QuoteCreateTab {
 		quoteListGrid.setCanResizeFields(false);
 		quoteListGrid.setShowGridSummary(true);
 		quoteListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		quoteListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		quoteListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		quoteListGrid.setShowRowNumbers(true);
 		
 		//quoteListGrid.setCanRemoveRecords(true);

@@ -21,6 +21,7 @@ import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.Printing;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.InvoiceStatus;
 import com.smart.mis.shared.sale.QuotationStatus;
@@ -43,6 +44,8 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.PrintWindow;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -74,6 +77,8 @@ public class InvoiceViewWindow extends EditorWindow{
 
 //	SelectProductList addFunc;
 	Customer client;
+//	PrintHeader invoiceHeader = new PrintHeader("ใบแจ้งหนี้");
+//	PrintHeader receiptHeader = new PrintHeader("ใบเสร็จรับเงิน");
 	
 	public InvoiceViewWindow(){
 //		super();
@@ -111,6 +116,10 @@ public class InvoiceViewWindow extends EditorWindow{
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
+//		invoiceHeader.hide();
+//		receiptHeader.hide();
+//		layout.addMember(invoiceHeader);
+//		layout.addMember(receiptHeader);
 
 		final String invoice_id = record.getAttributeAsString("invoice_id");
 		String cid = record.getAttributeAsString("cid");
@@ -205,11 +214,12 @@ public class InvoiceViewWindow extends EditorWindow{
 //		comment_area.setValue(comment);
 //		commentForm.setFields(comment_area);
 		
-		HLayout headerLayout = new HLayout();
-		headerLayout.setWidth100();
+//		HLayout headerLayout = new HLayout();
+//		headerLayout.setWidth100();
 		//headerLayout.addMembers(customerForm, commentForm);
-		headerLayout.addMembers(customerForm);
-		layout.addMember(headerLayout);
+//		headerLayout.addMembers(customerForm);
+//		layout.addMember(headerLayout);
+		layout.addMembers(customerForm);
 		
 		SectionStack sectionStack = new SectionStack();
     	sectionStack.setWidth100();
@@ -237,7 +247,7 @@ public class InvoiceViewWindow extends EditorWindow{
 		saleListGrid.setCanResizeFields(false);
 		saleListGrid.setShowGridSummary(true);
 		saleListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		saleListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		saleListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		saleListGrid.setShowRowNumbers(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		saleListGrid.setCriteria(ci);
@@ -292,10 +302,13 @@ public class InvoiceViewWindow extends EditorWindow{
 		layout.addMember(sectionStack);
 		
 		HLayout footerLayout = new HLayout();
+		footerLayout.setWidth100();
 		footerLayout.setHeight(100);
+		footerLayout.setAlign(Alignment.RIGHT);
 		
 		final DynamicForm dateForm = new DynamicForm();
-		dateForm.setWidth(300);
+		dateForm.setWidth("50%");
+		dateForm.setHeight(100);
 		dateForm.setNumCols(2);
 		dateForm.setMargin(5);
 		dateForm.setIsGroup(true);
@@ -343,7 +356,8 @@ public class InvoiceViewWindow extends EditorWindow{
 		
 		//******************Summary
 		final DynamicForm summaryForm = new DynamicForm();
-		summaryForm.setWidth(300);
+		summaryForm.setWidth("50%");
+		summaryForm.setHeight(100);
 		summaryForm.setNumCols(2);
 		summaryForm.setMargin(5);
 		summaryForm.setIsGroup(true);
@@ -387,9 +401,28 @@ public class InvoiceViewWindow extends EditorWindow{
                 //SC.say("click print invoice");
             	VLayout printLayout = new VLayout(10);
             	printLayout.addMember(new PrintHeader("ใบแจ้งหนี้"));
+//            	invoiceHeader.show();
             	printLayout.addMember(layout);
             	//printLayout.setPrintChildrenAbsolutelyPositioned(true);
+            	//Canvas.showPrintPreview(printLayout);
+//            	PrintWindow printWindow = new PrintWindow();
+//            	printWindow.setWidth(650);
+//            	printWindow.setHeight(620);
+//            	printWindow.setIsModal(true);
+//            	printWindow.setShowModalMask(true);
+//            	printWindow.setCanDragResize(false);
+//            	printWindow.setCanDragReposition(false);
+//            	printWindow.centerInPage();
+//            	Printing.show(printLayout);
+//            	printWindow.addItem(printLayout);
+//            	printWindow.show();
             	Canvas.showPrintPreview(printLayout);
+            	
+//            	VLayout printLayout = new VLayout(10);
+//            	printLayout.setWidth100();
+//            	printLayout.addMembers(new PrintHeader("ใบแจ้งหนี้"));
+//            	printLayout.addMember(layout);
+//            	Canvas.showPrintPreview(printLayout.getMembers());
             	main.destroy();
           }
         });
@@ -402,6 +435,7 @@ public class InvoiceViewWindow extends EditorWindow{
             public void onClick(ClickEvent event) { 
                 //SC.say("click print receipt");
             	VLayout printLayout = new VLayout(10);
+            	printLayout.setWidth100();
             	printLayout.addMember(new PrintHeader("ใบเสร็จรับเงิน"));
             	printLayout.addMember(layout);
             	Canvas.showPrintPreview(printLayout);

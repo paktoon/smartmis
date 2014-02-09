@@ -155,7 +155,7 @@ public class QuoteViewWindow extends EditorWindow{
 		layout.addMember(quotationForm);
 		
 		final DynamicForm customerForm = new DynamicForm();
-		customerForm.setWidth(360); 
+		customerForm.setWidth("60%"); 
 		customerForm.setHeight(30);
 		customerForm.setMargin(5); 
 		customerForm.setNumCols(4); 
@@ -267,7 +267,7 @@ public class QuoteViewWindow extends EditorWindow{
 		//customerForm.editRecord(record);
 		
 		DynamicForm commentForm = new DynamicForm();
-		commentForm.setWidth(250); 
+		commentForm.setWidth("30%"); 
 		commentForm.setHeight(70);
 		commentForm.setMargin(5);
 		commentForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
@@ -317,7 +317,7 @@ public class QuoteViewWindow extends EditorWindow{
 		quoteListGrid.setCanResizeFields(false);
 		quoteListGrid.setShowGridSummary(true);
 		quoteListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		quoteListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		quoteListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		quoteListGrid.setShowRowNumbers(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		quoteListGrid.setCriteria(ci);
@@ -376,7 +376,7 @@ public class QuoteViewWindow extends EditorWindow{
 		footerLayout.setHeight(100);
 		
 		final DynamicForm dateForm = new DynamicForm();
-		dateForm.setWidth(300);
+		dateForm.setWidth("40%");
 		dateForm.setNumCols(2);
 		dateForm.setMargin(5);
 		dateForm.setIsGroup(true);
@@ -476,7 +476,7 @@ public class QuoteViewWindow extends EditorWindow{
 		
 		//******************Summary
 		final DynamicForm summaryForm = new DynamicForm();
-		summaryForm.setWidth(300);
+		summaryForm.setWidth("40%");
 		summaryForm.setNumCols(2);
 		summaryForm.setMargin(5);
 		summaryForm.setIsGroup(true);
@@ -524,6 +524,7 @@ public class QuoteViewWindow extends EditorWindow{
 //            	item.print();
             	
             	VLayout printLayout = new VLayout(10);
+            	printLayout.setWidth100();
             	printLayout.addMember(new PrintHeader("ใบเสนอราคา"));
             	printLayout.addMember(layout);
             	Canvas.showPrintPreview(printLayout);

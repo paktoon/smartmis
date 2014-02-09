@@ -103,7 +103,7 @@ public class ScrapingViewWindow extends EditorWindow{
 		editWindow.show();
 	}
 	
-	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
+	private VLayout getViewEditor(final ListGridRecord record, final boolean edit, final Window main, final User currentUser, int page) {
 		
 		VLayout layout = new VLayout();
 		layout.setWidth(1150);
@@ -112,7 +112,7 @@ public class ScrapingViewWindow extends EditorWindow{
 		
 		final String job_id = record.getAttributeAsString("job_id");
 		String plan_id = record.getAttributeAsString("plan_id");
-		String status = record.getAttributeAsString("status");
+		final String status = record.getAttributeAsString("status");
 		
 		String created_by = record.getAttributeAsString("created_by");
 		Date created_date = record.getAttributeAsDate("created_date");
@@ -248,7 +248,7 @@ public class ScrapingViewWindow extends EditorWindow{
 		orderListGrid.setCanResizeFields(false);
 		orderListGrid.setShowGridSummary(true);
 		orderListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		orderListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		orderListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		orderListGrid.setShowRowNumbers(true);
 		orderListGrid.setCanExpandRecords(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
@@ -310,8 +310,10 @@ public class ScrapingViewWindow extends EditorWindow{
         //quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_8.setCellFormatter(FieldFormatter.getPriceFormat());
         quoteItemCell_8.setType(ListGridFieldType.FLOAT); 
-        //quoteItemCell_6.setShowGridSummary(true);
+        quoteItemCell_8.setShowGridSummary(false);
         if (edit) quoteItemCell_8.setCanEdit(true);
+        if (edit) quoteItemCell_8.setEmptyCellValue("--โปรดระบุค่าจ้าง--");
+        else quoteItemCell_8.setEmptyCellValue("ยังไม่มีการรับสินค้า");
         
         ListGridSummaryField quoteItemCell_sum = new ListGridSummaryField("sum_wage", 120);
         quoteItemCell_sum.setRecordSummaryFunction(RecordSummaryFunctionType.MULTIPLIER);
@@ -493,11 +495,18 @@ public class ScrapingViewWindow extends EditorWindow{
             public void onClick(ClickEvent event) { 
             	final ListGridRecord[] all = orderListGrid.getRecords();
         		for (ListGridRecord item : all){
-        			if (item.getAttribute("recv_weight") == null || item.getAttribute("recv_amount") == null) {
+        			if (item.getAttribute("recv_weight") == null || item.getAttribute("recv_amount") == null || item.getAttribute("wage") == null) {
         				SC.warn("กรุณากรอกข้อมูลรับสินค้าให้ครบถ้วน");
         				return;
         			}
         		}
+        		
+            	listGridValidate(orderListGrid);
+            	
+            	if (orderListGrid.hasErrors()) {
+            		SC.warn("ข้อมูลการรับสินค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+            		return;
+            	}
         		
             	SC.confirm("ยืนยันการบันทึกรับสินค้า", "ต้องการบันทึกรับสินค้าหรือไม่?" , new BooleanCallback() {
 					@Override
@@ -570,6 +579,7 @@ public class ScrapingViewWindow extends EditorWindow{
 		closeButton.setWidth(120);
 		closeButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
+            	//if (status.equalsIgnoreCase("1_on_production") || status.equalsIgnoreCase("0_request_mat")) clearListGrid(orderListGrid);
             	main.destroy();
           }
         });
@@ -835,7 +845,7 @@ public class ScrapingViewWindow extends EditorWindow{
 					sum_page = Double.parseDouble(temp_total_wage);
 				}
 			} catch (Exception e) {
-				SC.warn("กรุณากรอกข้อมูลตัวเลข");
+				SC.warn("กรุณากรอกข้อมูลตัวเลขให้ถูกต้อง");
 				return;
 			}
 			
@@ -924,6 +934,51 @@ public class ScrapingViewWindow extends EditorWindow{
                 return ScrapingMaterialDS.getInstance(record.getAttributeAsString("sub_job_id"), record.getAttributeAsString("job_id"));
             }  
   
+            @Override
+        	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
+        		//Double sent_weight = record.getAttributeAsDouble("sent_weight");
+        		//Integer sent_amount = record.getAttributeAsInt("sent_amount");
+            	//System.out.println("getCellCSSText -- " + getFieldName(colNum));
+        		if (getFieldName(colNum).equals("recv_weight")) {
+        			Double recv_weight = record.getAttributeAsDouble("recv_weight");
+        			if (recv_weight != null) {
+	        			Double sent_weight = record.getAttributeAsDouble("sent_weight");
+	        			if (recv_weight > sent_weight * 1.15 || recv_weight < sent_weight * 0.85) {
+	        				//setFieldError(rowNum, "recv_weight", "น้ำหนักสินค้าไม่ตรงตามที่ประมาณการ");
+	        				return "font-weight:bold; color:#d64949;";
+	        			} else {
+	        				//clearFieldError(rowNum, "recv_weight");
+	        				return "font-weight:bold; color:#009900;";
+	        			}
+        			} else return "font-weight:bold; color:#287fd6;";
+        		} else if (getFieldName(colNum).equals("recv_amount")) {
+        			Integer recv_amount = record.getAttributeAsInt("recv_amount");
+        			if (recv_amount != null) {
+	        			Integer sent_amount = record.getAttributeAsInt("sent_amount");
+	        			//if (recv_amount > sent_amount * 1.02 || recv_amount < sent_amount * 0.98) {
+	        				//setFieldError(rowNum, "recv_amount", "จำนวนสินค้าไม่ตรงตามที่ประมาณการ");
+	        			if (recv_amount.intValue() != sent_amount.intValue()) {
+	        				return "font-weight:bold; color:#d64949;";
+	        			} else {
+	        				//clearFieldError(rowNum, "recv_amount");
+	        				return "font-weight:bold; color:#009900;";
+	        			}
+        			} else return "font-weight:bold; color:#287fd6;";
+        		} else if (getFieldName(colNum).equals("wage")) {
+        			Double wage = record.getAttributeAsDouble("wage");
+        			if (wage != null) {
+	        			if (wage <= 0.0 || wage > 100.0) {
+	        				return "font-weight:bold; color:#d64949;";
+	        			} else {
+	        				//clearFieldError(rowNum, "recv_amount");
+	        				return "font-weight:bold; color:#009900;";
+	        			}
+        			} else return "font-weight:bold; color:#287fd6;";
+        		} else {  
+                    return super.getCellCSSText(record, rowNum, colNum);  
+                } 
+        	}
+            
             @Override  
             protected Canvas getExpansionComponent(final ListGridRecord record) {  
   
@@ -949,7 +1004,7 @@ public class ScrapingViewWindow extends EditorWindow{
             	
                 materialGrid.setModalEditing(true);  
                 materialGrid.setEditEvent(ListGridEditEvent.CLICK);  
-                materialGrid.setListEndEditAction(RowEndEditAction.NEXT);  
+                materialGrid.setListEndEditAction(RowEndEditAction.NONE);  
                 materialGrid.setAutoSaveEdits(false);  
   
                 ListGridField Field_1 = new ListGridField("mid", 150);
@@ -975,4 +1030,55 @@ public class ScrapingViewWindow extends EditorWindow{
 		AbradingCreateWindow order = new AbradingCreateWindow();
 		order.show(casting, currentUser, std_time);
 	}
+	
+	public void listGridValidate(ListGrid listGrid){
+
+		int row = 0;
+		for (ListGridRecord record : listGrid.getRecords()){
+			if (record.getAttributeAsString("pid") == null) listGrid.removeData(record);
+			else {
+				Double sent_weight = record.getAttributeAsDouble("sent_weight");
+				Integer sent_amount = record.getAttributeAsInt("sent_amount");
+				
+				Double recv_weight = record.getAttributeAsDouble("recv_weight");
+				Integer recv_amount = record.getAttributeAsInt("recv_amount");
+				
+				Double wage = record.getAttributeAsDouble("wage");
+				
+				if (recv_weight != null) {
+					if (recv_weight > sent_weight * 1.15 || recv_weight < sent_weight * 0.85) {
+						listGrid.setFieldError(row, "recv_weight", "น้ำหนักสินค้าไม่อยู่ในช่วงที่รับได้");
+					}
+				} else {
+					listGrid.setFieldError(row, "recv_weight", "น้ำหนักสินค้าไม่ถูกต้อง");
+				}
+				
+				if (recv_amount != null) {
+					//if (recv_amount > sent_amount * 1.02 || recv_amount < sent_amount * 0.98) {
+					if (recv_amount.intValue() != sent_amount.intValue()) {
+						listGrid.setFieldError(row, "recv_amount", "จำนวนสินค้าไม่อยู่ในช่วงที่รับได้");
+					}
+				} else {
+					listGrid.setFieldError(row, "recv_amount", "จำนวนสินค้าไม่ถูกต้อง");
+				}
+				
+				if (wage != null) {
+					if (wage > 100.0 || wage <= 0.0) {
+						listGrid.setFieldError(row, "wage", "ค่าจ้างผลิตต้องมีค่ามากกว่า 0 แต่ไม่เกิน 100 บาท");
+					}
+				} else {
+					listGrid.setFieldError(row, "wage", "ค่าจ้างผลิตไม่ถูกต้อง");
+				}
+			}
+			row++;
+		}
+	}
+	
+//	public void clearListGrid(ListGrid listGrid){
+//		for (ListGridRecord record : listGrid.getRecords()){
+//			record.setAttribute("recv_weight", (Double) null);
+//			record.setAttribute("recv_amount", (Integer) null);
+//			record.setAttribute("wage", (Double) null);
+//		}
+//	}
 }

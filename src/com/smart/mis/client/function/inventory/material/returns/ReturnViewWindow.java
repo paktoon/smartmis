@@ -20,6 +20,7 @@ import com.smart.mis.shared.Country;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
+import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.inventory.ReturnStatus;
 import com.smart.mis.shared.purchasing.PurchaseOrderStatus;
 import com.smart.mis.shared.sale.Customer;
@@ -186,6 +187,8 @@ public class ReturnViewWindow extends EditorWindow{
 			rec_weight.setCanEdit(false);
 			rec_weight.setHint("กรัม*");
 		}
+		rec_weight.setValidators(ValidatorFactory.doubleRange(return_weight * 0.98, return_weight * 1.02));
+		
 		detailsForm.setFields(mat_id, mat_name, ret_weight, rec_weight);
 		detailsForm.setColWidths(100,120,100,120);
 		layout.addMember(detailsForm);
@@ -236,7 +239,7 @@ public class ReturnViewWindow extends EditorWindow{
 		issueButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
             	if (!detailsForm.validate()) {
-            		SC.warn("กรุณากรอกข้อมูล รับืนวัตถุดิบ");
+            		SC.warn("ข้อมูลรับคืนไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
             		return;
             	}
             	

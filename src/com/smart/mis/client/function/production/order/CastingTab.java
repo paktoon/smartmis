@@ -242,6 +242,7 @@ public class CastingTab {
 		receiveOrderButton.setWidth(100);
 		receiveOrderButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
+            	//CastingDS.getInstance().refreshData();
             	ListGridRecord selected = orderListGrid.getSelectedRecord();
             	if (selected == null) {
             		SC.warn("กรุณาเลือกคำสั่งผลิต");
@@ -262,6 +263,7 @@ public class CastingTab {
 		createOrderButton.setWidth(170);
 		createOrderButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
+            	//CastingDS.getInstance().refreshData();
             	ListGridRecord selected = orderListGrid.getSelectedRecord();
             	if (selected == null) {
             		SC.warn("กรุณาเลือกคำสั่งผลิต");

@@ -315,7 +315,7 @@ public class SaleViewWindow extends EditorWindow{
 		saleListGrid.setCanResizeFields(false);
 		saleListGrid.setShowGridSummary(true);
 		saleListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		saleListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		saleListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		saleListGrid.setShowRowNumbers(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		saleListGrid.setCriteria(ci);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryData;
@@ -104,9 +105,14 @@ public class DeliveryViewWindow extends EditorWindow{
 		//Double netEx = record.getAttributeAsDouble("netExclusive");
 		
 		String status = record.getAttributeAsString("status");
+		
+		Double total_weight = record.getAttributeAsDouble("total_weight");
+		Integer total_amount = record.getAttributeAsInt("total_amount");
+		
 		//String issued_status = record.getAttributeAsString("issued_status");
-		//String created_by = record.getAttributeAsString("created_by");
-		//Date created_date = record.getAttributeAsDate("created_date");
+		//String issued_by = record.getAttributeAsString("issued_by");
+		//if (issued_by == null) issued_by = "รอเบิกสินค้า";
+		Date issued_date = record.getAttributeAsDate("issued_date");
 		
 		DynamicForm quotationForm = new DynamicForm();
 		quotationForm.setWidth100(); 
@@ -182,11 +188,12 @@ public class DeliveryViewWindow extends EditorWindow{
 //		comment_area.setValue(comment);
 //		commentForm.setFields(comment_area);
 		
-		HLayout headerLayout = new HLayout();
-		headerLayout.setWidth100();
+		//HLayout headerLayout = new HLayout();
+		//headerLayout.setWidth100();
 		//headerLayout.addMembers(customerForm, commentForm);
-		headerLayout.addMembers(customerForm);
-		layout.addMember(headerLayout);
+		//headerLayout.addMembers(customerForm);
+		//layout.addMember(headerLayout);
+		layout.addMember(customerForm);
 		
 		SectionStack sectionStack = new SectionStack();
     	sectionStack.setWidth100();
@@ -215,7 +222,7 @@ public class DeliveryViewWindow extends EditorWindow{
 		saleListGrid.setCanResizeFields(false);
 		saleListGrid.setShowGridSummary(true);
 		saleListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		saleListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		saleListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		saleListGrid.setShowRowNumbers(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		saleListGrid.setCriteria(ci);
@@ -273,80 +280,52 @@ public class DeliveryViewWindow extends EditorWindow{
 		footerLayout.setHeight(100);
 		
 		final DynamicForm dateForm = new DynamicForm();
-		dateForm.setWidth(300);
+		dateForm.setWidth("40%");
 		dateForm.setNumCols(2);
 		dateForm.setMargin(5);
 		dateForm.setIsGroup(true);
-		dateForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-		dateForm.setGroupTitle("ข้อกำหนดรายการขาย");
-		if (!edit) dateForm.setCanEdit(false);
-//		final DateItem fromDate = new DateItem();
-//		fromDate.setName("fromDate");
-//		fromDate.setTitle("วันที่เริ่มข้อเสนอ");
-//		fromDate.setUseTextField(true);
-//		
-//		final DateItem toDate = new DateItem();
-//		toDate.setName("toDate");
-//		toDate.setTitle("วันที่สิ้นสุดข้อเสนอ");
-//		toDate.setUseTextField(true);
+		//dateForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
+		dateForm.setGroupTitle("รายละเอียดการนำส่งสินค้า");
+		dateForm.setCanEdit(false);
+		final DateItem issuedDate = new DateItem();
+		issuedDate.setName("issueDate");
+		issuedDate.setTitle("วันที่เบิกสินค้า");
+		issuedDate.setUseTextField(true);
+		if (issued_date != null) issuedDate.setValue(issued_date);
+		final StaticTextItem deliverBy = new StaticTextItem();
+		deliverBy.setTitle("ผู้นำส่งสินค้า");
+		if (issued_date != null) deliverBy.setValue(currentUser.getFirstName() + " " + currentUser.getLastName());
+		else deliverBy.setValue("-");
 		
-//		final DateItem deliveryDate = new DateItem();
-//		deliveryDate.setName("deliveryDate");
-//		deliveryDate.setTitle("วันที่กำหนดส่งของ");
-//		deliveryDate.setUseTextField(true);
-		
-//        fromDate.setDefaultChooserDate(from);
-//        fromDate.setValue(from);
-//        toDate.setDefaultChooserDate(to);
-//        toDate.setValue(to);
-//        deliveryDate.setDefaultChooserDate(delivery);
-//        deliveryDate.setValue(delivery);
-//        fromDate.setRequired(true);
-//        fromDate.setHint("*");
-//		toDate.setRequired(true);
-//		toDate.setHint("*");
-//		deliveryDate.setRequired(true);
-//		deliveryDate.setHint("*");
-		
-//		dateForm.setFields(fromDate, toDate, deliveryDate);
-//		dateForm.setFields(deliveryDate);
-//		dateForm.setColWidths(130,80);
-//		//dateForm.editRecord(record);
-//		footerLayout.addMember(dateForm);
+		dateForm.setFields(issuedDate, deliverBy);
+		dateForm.setColWidths(130,150);
+		footerLayout.addMember(dateForm);
 //		//******************End
 //		
-//		//******************Summary
-//		final DynamicForm summaryForm = new DynamicForm();
-//		summaryForm.setWidth(300);
-//		summaryForm.setNumCols(2);
-//		summaryForm.setMargin(5);
-//		summaryForm.setIsGroup(true);
-//		summaryForm.setGroupTitle("สรุปยอดรวม");
-//		summaryForm.setColWidths(120, 100);
-//		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
-//		StaticTextItem netExclusive = new StaticTextItem("netExclusive");
-//		netExclusive.setValue(nf.format(netEx));
-//		StaticTextItem tax = new StaticTextItem("tax");
-//		tax.setValue(nf.format(netEx * 0.07));
-//		StaticTextItem netInclusive = new StaticTextItem("netInclusive");
-//		netInclusive.setValue(nf.format(netEx * 1.07));
-//		netExclusive.setWidth(100);
-//		tax.setWidth(100);
-//		netInclusive.setWidth(100);
-//		netExclusive.setTitle("ราคารวม");
-//		tax.setTitle("ภาษีมูลค่าเพิ่ม (7%)");
-//		netInclusive.setTitle("ราคาสุทธิ");
-//		netExclusive.setTextAlign(Alignment.RIGHT);
-//		tax.setTextAlign(Alignment.RIGHT);
-//		netInclusive.setTextAlign(Alignment.RIGHT);
-//		netExclusive.setHint("บาท");
-//		tax.setHint("บาท");
-//		netInclusive.setHint("บาท");
-//		summaryForm.setFields(netExclusive, tax, netInclusive);
-//		//summaryForm.editRecord(record);
-//		footerLayout.addMember(summaryForm);
-//		
-//		layout.addMember(footerLayout);
+		//******************Summary
+		final DynamicForm summaryForm = new DynamicForm();
+		summaryForm.setWidth("40%");
+		summaryForm.setNumCols(2);
+		summaryForm.setMargin(5);
+		summaryForm.setIsGroup(true);
+		summaryForm.setGroupTitle("สรุปยอดนำส่งสินค้า");
+		summaryForm.setColWidths(120, 100);
+		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		StaticTextItem tweight = new StaticTextItem("total_weight");
+		tweight.setValue(nf.format(total_weight));
+		StaticTextItem tamount = new StaticTextItem("total_amount");
+		tamount.setValue(nf.format(total_amount));
+		tweight.setWidth(100);
+		tamount.setWidth(100);
+		tweight.setTitle("น้ำหนักรวม");
+		tamount.setTitle("จำนวนรวม");
+		tweight.setTextAlign(Alignment.RIGHT);
+		tamount.setTextAlign(Alignment.RIGHT);
+		tweight.setHint("กรัม");
+		tamount.setHint("ชิ้น");
+		summaryForm.setFields(tweight, tamount);
+		footerLayout.addMember(summaryForm);
+		layout.addMember(footerLayout);
 		
 		//Control
 		HLayout controls = new HLayout();
@@ -361,6 +340,7 @@ public class DeliveryViewWindow extends EditorWindow{
                 //SC.say("click print");
             	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
                 VLayout printLayout = new VLayout(10);
+                printLayout.setWidth100();
             	printLayout.addMember(new PrintHeader("ใบนำส่งสินค้า"));
             	printLayout.addMember(layout);
             	Canvas.showPrintPreview(printLayout);

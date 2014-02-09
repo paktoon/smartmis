@@ -252,7 +252,7 @@ public class PackingPrintWindow extends EditorWindow{
 		orderListGrid.setCanResizeFields(false);
 		orderListGrid.setShowGridSummary(true);
 		orderListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		orderListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		orderListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		orderListGrid.setShowRowNumbers(true);
 		orderListGrid.setCanExpandRecords(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
@@ -336,6 +336,7 @@ public class PackingPrintWindow extends EditorWindow{
 		
 		HLayout footerLayout = new HLayout();
 		footerLayout.setHeight(100);
+		footerLayout.setAlign(Alignment.RIGHT);
 		
 		final DynamicForm dateForm = new DynamicForm();
 		dateForm.setWidth(300);
@@ -1024,7 +1025,7 @@ public class PackingPrintWindow extends EditorWindow{
 //            	
 //                materialGrid.setModalEditing(true);  
 //                materialGrid.setEditEvent(ListGridEditEvent.CLICK);  
-//                materialGrid.setListEndEditAction(RowEndEditAction.NEXT);  
+//                materialGrid.setListEndEditAction(RowEndEditAction.NONE);  
 //                materialGrid.setAutoSaveEdits(false);  
 //  
 //                ListGridField Field_1 = new ListGridField("mid", 150);

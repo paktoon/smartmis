@@ -285,7 +285,7 @@ public class OrderViewWindow extends EditorWindow{
 		quoteListGrid.setCanResizeFields(false);
 		quoteListGrid.setShowGridSummary(true);
 		quoteListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		quoteListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		quoteListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		quoteListGrid.setShowRowNumbers(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		quoteListGrid.setCriteria(ci);
@@ -351,7 +351,7 @@ public class OrderViewWindow extends EditorWindow{
 		footerLayout.setHeight(100);
 		
 		final DynamicForm endForm = new DynamicForm();
-		endForm.setWidth(330);
+		endForm.setWidth(320);
 		endForm.setNumCols(4);
 		endForm.setMargin(5);
 		endForm.setIsGroup(true);
@@ -376,7 +376,7 @@ public class OrderViewWindow extends EditorWindow{
 		
 		//******************Summary
 		final DynamicForm summaryForm = new DynamicForm();
-		summaryForm.setWidth(300);
+		summaryForm.setWidth(320);
 		summaryForm.setNumCols(2);
 		summaryForm.setMargin(5);
 		summaryForm.setIsGroup(true);

@@ -203,11 +203,11 @@ public class WageViewWindow extends EditorWindow{
 //		comment_area.setValue(comment);
 //		commentForm.setFields(comment_area);
 		
-		HLayout headerLayout = new HLayout();
-		headerLayout.setWidth100();
-		//headerLayout.addMembers(smithForm, commentForm);
-		headerLayout.addMembers(smithForm);
-		layout.addMember(headerLayout);
+//		HLayout headerLayout = new HLayout();
+//		headerLayout.setWidth100();
+//		//headerLayout.addMembers(smithForm, commentForm);
+//		headerLayout.addMembers(smithForm);
+		layout.addMember(smithForm);
 		
 		SectionStack sectionStack = new SectionStack();
     	sectionStack.setWidth100();
@@ -235,7 +235,7 @@ public class WageViewWindow extends EditorWindow{
 		orderListGrid.setCanResizeFields(false);
 		orderListGrid.setShowGridSummary(true);
 		orderListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-//		orderListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+//		orderListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		orderListGrid.setShowRowNumbers(true);
 //		orderListGrid.setCanExpandRecords(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
@@ -316,8 +316,8 @@ public class WageViewWindow extends EditorWindow{
         sectionStack.setSections(section);
 		layout.addMember(sectionStack);
 		
-		HLayout footerLayout = new HLayout();
-		footerLayout.setHeight(100);
+//		HLayout footerLayout = new HLayout();
+//		footerLayout.setHeight(100);
 		
 //		final DynamicForm dateForm = new DynamicForm();
 //		dateForm.setWidth(300);
@@ -389,7 +389,7 @@ public class WageViewWindow extends EditorWindow{
 		
 		final DynamicForm summaryForm_2 = new DynamicForm();
 		summaryForm_2.setWidth100();
-		summaryForm_2.setHeight(35);
+		summaryForm_2.setHeight(20);
 		summaryForm_2.setNumCols(6);
 		summaryForm_2.setMargin(5);
 		summaryForm_2.setIsGroup(true);
@@ -426,7 +426,7 @@ public class WageViewWindow extends EditorWindow{
 		total_wage.setTextAlign(Alignment.RIGHT);
 		total_wage.setHint("บาท");
 		summaryForm_2.setFields(total_recv_amount, total_recv_weight, total_wage);
-		footerLayout.addMember(summaryForm_2);
+//		footerLayout.addMember(summaryForm_2);
 		
 //        final DynamicForm summaryForm_3 = new DynamicForm();
 //        summaryForm_3.setWidth(300);
@@ -462,7 +462,7 @@ public class WageViewWindow extends EditorWindow{
 //		
 //		footerLayout.addMember(summaryForm_3);
 		
-		layout.addMember(footerLayout);
+		layout.addMember(summaryForm_2);
 		
 		//Control
 		HLayout controls = new HLayout();
@@ -1094,7 +1094,7 @@ public class WageViewWindow extends EditorWindow{
 //            	
 //                materialGrid.setModalEditing(true);  
 //                materialGrid.setEditEvent(ListGridEditEvent.CLICK);  
-//                materialGrid.setListEndEditAction(RowEndEditAction.NEXT);  
+//                materialGrid.setListEndEditAction(RowEndEditAction.NONE);  
 //                materialGrid.setAutoSaveEdits(false);  
 //  
 //                ListGridField Field_1 = new ListGridField("mid", 150);

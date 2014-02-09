@@ -134,7 +134,7 @@ public class ProcessAdd {
         
 //        materialGrid.setModalEditing(true);  
 //        materialGrid.setEditEvent(ListGridEditEvent.CLICK);  
-//        materialGrid.setListEndEditAction(RowEndEditAction.NEXT);  
+//        materialGrid.setListEndEditAction(RowEndEditAction.NONE);  
         materialGrid.setAutoSaveEdits(true);  
         
         ListGridField Field_1 = new ListGridField("mid", 150);

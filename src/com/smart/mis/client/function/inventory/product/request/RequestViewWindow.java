@@ -218,7 +218,34 @@ public class RequestViewWindow extends EditorWindow{
 //        }
 		
         //HLayout itemLayout = new HLayout();
-		final ListGrid saleListGrid = new ListGrid();
+		final ListGrid saleListGrid = new ListGrid() {
+            @Override
+        	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
+        		if (getFieldName(colNum).equals("issued_weight")) {
+        			Double issued_weight = record.getAttributeAsDouble("issued_weight");
+        			if (issued_weight != null) {
+	        			Double sale_weight = record.getAttributeAsDouble("sale_weight");
+	        			if (issued_weight > sale_weight * 1.05 || issued_weight < sale_weight * 0.95) {
+	        				return "font-weight:bold; color:#d64949;";
+	        			} else {
+	        				return "font-weight:bold; color:#009900;";
+	        			}
+        			} else return "font-weight:bold; color:#287fd6;";
+        		} else if (getFieldName(colNum).equals("issued_amount")) {
+        			Integer issued_amount = record.getAttributeAsInt("issued_amount");
+        			if (issued_amount != null) {
+	        			Integer sale_amount = record.getAttributeAsInt("sale_amount");
+	        			if (issued_amount.intValue() != sale_amount.intValue()) {
+	        				return "font-weight:bold; color:#d64949;";
+	        			} else {
+	        				return "font-weight:bold; color:#009900;";
+	        			}
+        			} else return "font-weight:bold; color:#287fd6;";
+        		} else {  
+                    return super.getCellCSSText(record, rowNum, colNum);  
+                } 
+        	}
+		};
 		saleListGrid.setHeight(230);
 		saleListGrid.setAlternateRecordStyles(true);  
 		saleListGrid.setShowAllRecords(true);  
@@ -229,7 +256,7 @@ public class RequestViewWindow extends EditorWindow{
 		saleListGrid.setCanResizeFields(false);
 		saleListGrid.setShowGridSummary(true);
 		saleListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		saleListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		saleListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		saleListGrid.setShowRowNumbers(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		saleListGrid.setCriteria(ci);
@@ -416,6 +443,14 @@ public class RequestViewWindow extends EditorWindow{
 		issueButton.setWidth(150);
 		issueButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
+            	
+            	listGridValidate(saleListGrid);
+            	
+            	if (saleListGrid.hasErrors()){
+            		SC.warn("ข้อมูลการเบิกจ่ายสินค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+            		return;
+            	}
+            	
             	SC.confirm("ยืนยันการทำรายการ", "ต้องการสั่งจ่ายสินค้า หรือไม่?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
@@ -605,6 +640,34 @@ public class RequestViewWindow extends EditorWindow{
 			if (postal !=null) fullAddress += " ,Postal " + postal;
 			if (country !=null) fullAddress += " ,Country " + Country.getEnglishCountryName(country);
 			return fullAddress;
+		}
+	}
+	
+	public void listGridValidate(ListGrid listGrid){
+		int row = 0;
+		for (ListGridRecord record : listGrid.getRecords()){
+				Double sale_weight = record.getAttributeAsDouble("sale_weight");
+				Integer sale_amount = record.getAttributeAsInt("sale_amount");
+				
+				Double issued_weight = record.getAttributeAsDouble("issued_weight");
+				Integer issued_amount = record.getAttributeAsInt("issued_amount");
+				
+				if (issued_weight != null) {
+					if (issued_weight > sale_weight * 1.05 || issued_weight < sale_weight * 0.95) {
+						listGrid.setFieldError(row, "issued_weight", "น้ำหนักสินค้าไม่อยู่ในช่วงที่เหมาะสม");
+					}
+				} else {
+					listGrid.setFieldError(row, "issued_weight", "น้ำหนักสินค้าไม่ถูกต้อง");
+				}
+				
+				if (issued_amount != null) {
+					if (issued_amount.intValue() != sale_amount.intValue()) {
+						listGrid.setFieldError(row, "issued_amount", "จำนวนสินค้าไม่ถูกต้อง");
+					}
+				} else {
+					listGrid.setFieldError(row, "issued_amount", "จำนวนสินค้าไม่ถูกต้อง");
+				}
+			row++;
 		}
 	}
 }

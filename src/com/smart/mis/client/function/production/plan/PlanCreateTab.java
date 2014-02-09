@@ -371,7 +371,7 @@ public class PlanCreateTab {
 		planListGrid.setCanResizeFields(false);
 		planListGrid.setShowGridSummary(true);
 		planListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		planListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		planListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		planListGrid.setShowRowNumbers(true);
 		
 		//planListGrid.setCanRemoveRecords(true);

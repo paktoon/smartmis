@@ -5,6 +5,8 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.smart.mis.client.function.production.order.casting.CastingPrintWindow;
+import com.smart.mis.client.function.purchasing.order.OrderViewWindow;
 import com.smart.mis.client.function.purchasing.order.PurchaseOrderDS;
 import com.smart.mis.client.function.purchasing.order.PurchaseOrderData;
 import com.smart.mis.client.function.purchasing.order.material.OrderMaterialDS;
@@ -321,7 +323,7 @@ public class RequestViewWindow extends EditorWindow{
 		quoteListGrid.setCanResizeFields(false);
 		quoteListGrid.setShowGridSummary(true);
 		quoteListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		quoteListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		quoteListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		quoteListGrid.setShowRowNumbers(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		quoteListGrid.setCriteria(ci);
@@ -1011,12 +1013,27 @@ public class RequestViewWindow extends EditorWindow{
 							
 							//updatePurchasingReport(order_id);
 							
-							SC.say("ใบเสนอซื้อรหัส " + request_id + " " + PurchaseRequestStatus.getDisplay(request_record.getAttributeAsString("status")) + "<br><br>รหัสคำสั่งซื้อ " + order_id + "<br> สถานะเป็น " + PurchaseOrderStatus.getDisplay(orderRecord.getAttributeAsString("status")) + " และ " + PurchaseOrderStatus.getPaymentDisplay(orderRecord.getAttributeAsString("payment_status")), new BooleanCallback() {
-
+//							SC.say("ใบเสนอซื้อรหัส " + request_id + " " + PurchaseRequestStatus.getDisplay(request_record.getAttributeAsString("status")) + "<br><br>รหัสคำสั่งซื้อ " + order_id + "<br> สถานะเป็น " + PurchaseOrderStatus.getDisplay(orderRecord.getAttributeAsString("status")) + " และ " + PurchaseOrderStatus.getPaymentDisplay(orderRecord.getAttributeAsString("payment_status")), new BooleanCallback() {
+//
+//								@Override
+//								public void execute(Boolean value) {
+//									main.destroy();
+//								}});
+							
+							SC.confirm("คำสั่งซื้อรหัส " + order_id + "<br> สถานะเป็น " + PurchaseOrderStatus.getDisplay(orderRecord.getAttributeAsString("status")) + " และ " + PurchaseOrderStatus.getPaymentDisplay(orderRecord.getAttributeAsString("payment_status")) + "<br><br> ต้องการพิ่มพ์คำสั่งซื้อหรือไม่?", new BooleanCallback(){
 								@Override
 								public void execute(Boolean value) {
-									main.destroy();
-								}});
+									if (value != null && value) {
+										//CastingPrintWindow printWindow = new CastingPrintWindow();
+										//printWindow.show(jobOrder, false, currentUser, 1);
+										OrderViewWindow printWindow = new OrderViewWindow();
+										printWindow.show(orderRecord, false, currentUser, 1);
+										main.destroy();
+									} else {
+										main.destroy();
+									}
+								}
+								} );
 						}
 				}
 			});

@@ -239,7 +239,24 @@ public class RequestViewWindow extends EditorWindow{
     	section.setCanCollapse(false);  
         section.setExpanded(true);
         
-		final ListGrid quoteListGrid = new ListGrid();
+		final ListGrid quoteListGrid = new ListGrid() {
+            @Override
+        	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
+        		if (getFieldName(colNum).equals("issued_amount")) {
+        			Double issued_amount = record.getAttributeAsDouble("issued_amount");
+        			if (issued_amount != null) {
+	        			Double request_amount = record.getAttributeAsDouble("request_amount");
+	        			if (issued_amount > request_amount * 1.01 || issued_amount < request_amount * 0.99) {
+	        				return "font-weight:bold; color:#d64949;";
+	        			} else {
+	        				return "font-weight:bold; color:#009900;";
+	        			}
+        			} else return "font-weight:bold; color:#287fd6;";
+        		} else {  
+                    return super.getCellCSSText(record, rowNum, colNum);  
+                } 
+        	}
+		};
 		quoteListGrid.setHeight(230);
 		quoteListGrid.setAlternateRecordStyles(true);  
 		quoteListGrid.setShowAllRecords(true);  
@@ -249,7 +266,7 @@ public class RequestViewWindow extends EditorWindow{
 		quoteListGrid.setCanResizeFields(false);
 		quoteListGrid.setShowGridSummary(true);
 		quoteListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		quoteListGrid.setListEndEditAction(RowEndEditAction.NEXT);
+		quoteListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		quoteListGrid.setShowRowNumbers(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		quoteListGrid.setCriteria(ci);
@@ -442,6 +459,14 @@ public class RequestViewWindow extends EditorWindow{
 		issueButton.setWidth(150);
 		issueButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
+            	
+            	listGridValidate(quoteListGrid);
+            	
+            	if (quoteListGrid.hasErrors()){
+            		SC.warn("ข้อมูลการเบิกจ่ายวัตถุดิบไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+            		return;
+            	}
+            	
             	SC.confirm("ยืนยันการทำรายการ", "ต้องการบันทึกสั่งจ่ายวัตถุดิบ หรือไม่?" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
@@ -610,33 +635,24 @@ public class RequestViewWindow extends EditorWindow{
 		MaterialDS.getInstance().updateData(updated);
 	}
 	
-//	String getCustomerFullAddress(String cid) {
-//		CustomerDS.getInstance().refreshData();
-//		Record[] records = CustomerDS.getInstance().applyFilter(CustomerDS.getInstance().getCacheData(), new Criterion("cid", OperatorId.EQUALS, cid));
-//		Record selected = records[0];
-//		String address = selected.getAttributeAsString("address");
-//		String street = selected.getAttributeAsString("street");
-//		String city = selected.getAttributeAsString("city");
-//		String state = selected.getAttributeAsString("state");
-//		String postal = selected.getAttributeAsString("postal");
-//		String country = selected.getAttributeAsString("country");
-//		
-//		if (country.equalsIgnoreCase("TH")) {
-//			String fullAddress = address;
-//			if (street !=null) fullAddress += " ถนน " + street;
-//			if (city !=null) fullAddress += " เขต " + city;
-//			if (state !=null) fullAddress += " จังหวัด " + state;
-//			if (postal !=null) fullAddress += " รหัสไปรษณีย์ " + postal;
-//			if (country !=null) fullAddress += " ประเทศ " + Country.getThaiCountryName(country);
-//			return fullAddress;
-//		} else {
-//			String fullAddress = address;
-//			if (street !=null) fullAddress += " ,Street " + street;
-//			if (city !=null) fullAddress += " ,City " + city;
-//			if (state !=null) fullAddress += " ,State " + state;
-//			if (postal !=null) fullAddress += " ,Postal " + postal;
-//			if (country !=null) fullAddress += " ,Country " + Country.getEnglishCountryName(country);
-//			return fullAddress;
-//		}
-//	}
+	public void listGridValidate(ListGrid listGrid){
+		int row = 0;
+		for (ListGridRecord record : listGrid.getRecords()){
+				//Double sale_weight = record.getAttributeAsDouble("sale_weight");
+				Double request_amount = record.getAttributeAsDouble("request_amount");
+				
+				//Double issued_weight = record.getAttributeAsDouble("issued_weight");
+				Double issued_amount = record.getAttributeAsDouble("issued_amount");
+				
+				if (issued_amount != null) {
+					if (issued_amount > request_amount * 1.01 || issued_amount < request_amount * 0.99) {
+						listGrid.setFieldError(row, "issued_amount", "ปริมาณวัตถุดิบไม่ถูกต้อง");
+					}
+				} else {
+					listGrid.setFieldError(row, "issued_amount", "ปริมาณวัตถุดิบไม่ถูกต้อง");
+				}
+			row++;
+		}
+	}
+	
 }

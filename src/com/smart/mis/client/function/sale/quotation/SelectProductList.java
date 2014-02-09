@@ -67,7 +67,7 @@ public class SelectProductList {
         productGrid.setDataSource(new ProductDS());
         productGrid.setAutoFetchData(true);
         productGrid.setEditEvent(ListGridEditEvent.CLICK);
-        productGrid.setListEndEditAction(RowEndEditAction.NEXT);
+        productGrid.setListEndEditAction(RowEndEditAction.NONE);
         productGrid.setCanEdit(true);
         productGrid.setEditByCell(true);
         String regex = FieldVerifier.createNegativeRegex(selected);
