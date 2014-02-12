@@ -190,7 +190,7 @@ public class PurchasingListGrid extends ListGrid {
       ListGridField Field_6_1 = new ListGridField("sum_price", "ยอดค่าวัตถุดิบ (บาท)", 150);
       Field_6_1.setShowGridSummary(true);
       Field_6_1.setSummaryFunction(SummaryFunctionType.SUM);
-      ListGridField Field_6_2 = new ListGridField("Amount (ea)", "จำนวนวัตถุดิบ", 150);
+      ListGridField Field_6_2 = new ListGridField("amount", "จำนวนวัตถุดิบ", 150);
       Field_6_2.setShowGridSummary(true);
       Field_6_2.setSummaryFunction(SummaryFunctionType.SUM);
         
@@ -250,7 +250,7 @@ public class PurchasingListGrid extends ListGrid {
 		ListGridRecord record = new ListGridRecord();
         record.setAttribute("type", type);
         record.setAttribute("sum_price", sum_price);
-        record.setAttribute("Amount (ea)", amount);
+        record.setAttribute("amount", amount);
         record.setAttribute("unit", unit);
         return record;
 	}

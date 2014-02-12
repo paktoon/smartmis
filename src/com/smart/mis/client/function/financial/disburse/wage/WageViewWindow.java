@@ -12,6 +12,7 @@ import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.Printing;
 import com.smart.mis.shared.financial.WagePaymentStatus;
 import com.smart.mis.shared.prodution.ProcessStatus;
 import com.smart.mis.shared.prodution.ProcessType;
@@ -41,6 +42,7 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -78,6 +80,8 @@ public class WageViewWindow extends EditorWindow{
 	Double total_paid_wage;
 	Double total_return_mat;
 	
+	PrintHeader header = new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต");
+	
 	public void show(ListGridRecord record, boolean edit, User currentUser, int page){
 		smith = new Smith();
 		editWindow = new Window();
@@ -104,6 +108,8 @@ public class WageViewWindow extends EditorWindow{
 		layout.setWidth(820);
 		layout.setHeight(540);
 		layout.setMargin(10);
+		layout.addMember(header);
+		header.hide();
 
 		String wage_id = record.getAttributeAsString("wage_id");
 		String job_id = record.getAttributeAsString("job_id");
@@ -316,8 +322,11 @@ public class WageViewWindow extends EditorWindow{
         sectionStack.setSections(section);
 		layout.addMember(sectionStack);
 		
-//		HLayout footerLayout = new HLayout();
-//		footerLayout.setHeight(100);
+		HLayout footerLayout = new HLayout();
+		footerLayout.setHeight(30);
+//		final Label empty = Printing.empty();
+//		empty.hide();
+//		footerLayout.addMember(empty);
 		
 //		final DynamicForm dateForm = new DynamicForm();
 //		dateForm.setWidth(300);
@@ -389,11 +398,12 @@ public class WageViewWindow extends EditorWindow{
 		
 		final DynamicForm summaryForm_2 = new DynamicForm();
 		summaryForm_2.setWidth100();
-		summaryForm_2.setHeight(20);
+		summaryForm_2.setHeight(10);
 		summaryForm_2.setNumCols(6);
 		summaryForm_2.setMargin(5);
 		summaryForm_2.setIsGroup(true);
 		summaryForm_2.setGroupTitle("สรุปยอดสั่งผลิตสินค้า");
+		//summaryForm_2.setPrintChildrenAbsolutelyPositioned(true);
 		//summaryForm_2.setColWidths(100, 100, 100, 100, 100, 100);
 		final NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 		final StaticTextItem total_recv_weight = new StaticTextItem("total_recv_weight");
@@ -426,7 +436,7 @@ public class WageViewWindow extends EditorWindow{
 		total_wage.setTextAlign(Alignment.RIGHT);
 		total_wage.setHint("บาท");
 		summaryForm_2.setFields(total_recv_amount, total_recv_weight, total_wage);
-//		footerLayout.addMember(summaryForm_2);
+		footerLayout.addMember(summaryForm_2);
 		
 //        final DynamicForm summaryForm_3 = new DynamicForm();
 //        summaryForm_3.setWidth(300);
@@ -462,7 +472,8 @@ public class WageViewWindow extends EditorWindow{
 //		
 //		footerLayout.addMember(summaryForm_3);
 		
-		layout.addMember(summaryForm_2);
+//		layout.addMember(summaryForm_2);
+		layout.addMember(footerLayout);
 		
 		//Control
 		HLayout controls = new HLayout();
@@ -550,10 +561,19 @@ public class WageViewWindow extends EditorWindow{
 															public void execute(
 																	Boolean value) {
 																	if(value) {
-																		VLayout printLayout = new VLayout(10);
-														            	printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
+//																		VLayout printLayout = new VLayout(10);
+//														            	printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
+//														            	printLayout.addMember(layout);
+//														            	Canvas.showPrintPreview(printLayout);
+														            	VLayout printLayout = new VLayout(10);
+														            	//printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
+														            	//empty.show();
+														            	header.show();
+														            	printLayout.setPrintChildrenAbsolutelyPositioned(true);
 														            	printLayout.addMember(layout);
+														            	//System.out.println(printLayout.getPrintHTML(null, null));
 														            	Canvas.showPrintPreview(printLayout);
+														            	main.destroy();
 																	}
 													            	main.destroy();
 															}});
@@ -587,9 +607,18 @@ public class WageViewWindow extends EditorWindow{
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
                 //SC.say("Click print");
-                VLayout printLayout = new VLayout(10);
-            	printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
+//                VLayout printLayout = new VLayout(10);
+//            	printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
+//            	printLayout.addMember(layout);
+//            	Canvas.showPrintPreview(printLayout);
+//            	main.destroy();
+            	VLayout printLayout = new VLayout(10);
+            	//printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
+            	//empty.show();
+            	header.show();
+            	printLayout.setPrintChildrenAbsolutelyPositioned(true);
             	printLayout.addMember(layout);
+            	//System.out.println(printLayout.getPrintHTML(null, null));
             	Canvas.showPrintPreview(printLayout);
             	main.destroy();
           }

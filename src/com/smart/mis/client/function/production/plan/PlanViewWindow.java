@@ -217,8 +217,8 @@ public class PlanViewWindow extends EditorWindow{
 		else planListGrid.setSelectionType(SelectionStyle.NONE);
 		planListGrid.setCanResizeFields(false);
 		planListGrid.setShowGridSummary(true);
-		planListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		planListGrid.setListEndEditAction(RowEndEditAction.NONE);
+		//planListGrid.setEditEvent(ListGridEditEvent.CLICK);  
+		//planListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		planListGrid.setShowRowNumbers(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		planListGrid.setCriteria(ci);

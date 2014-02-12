@@ -223,7 +223,7 @@ public class MainPage {
         		
         if ( checkPermFlag(userFunction, Function.SALE) )
         {
-        	Tab saleTab = new Tab("งานขาย");
+        	Tab saleTab = new Tab("ระบบจัดการงานขาย");
         	saleTab.setIcon("icons/256/shop-icon.png", 22);
         	final HLayout hSaleLayout = createFunctionPage(salePanel);
         	saleTab.setPane(hSaleLayout);
@@ -239,7 +239,7 @@ public class MainPage {
         
         if (checkPermFlag(userFunction, Function.PRODUCTION))
         {
-        	Tab productionTab = new Tab("งานผลิต");
+        	Tab productionTab = new Tab("ระบบจัดการงานผลิต");
         	productionTab.setIcon("icons/256/calendar-icon.png", 20);
         	final HLayout hProductionLayout = createFunctionPage(productionPanel);
         	productionTab.setPane(hProductionLayout);
@@ -254,7 +254,7 @@ public class MainPage {
         
         if (checkPermFlag(userFunction, Function.INVENTORY))
         {
-        	Tab inventoryTab = new Tab("คลังสินค้าและวัตถุดิบ");
+        	Tab inventoryTab = new Tab("ระบบจัดการสินค้าและวัตถุดิบคงคลัง");
         	inventoryTab.setIcon("icons/256/shipping-icon.png", 22);
         	final HLayout hInventoryLayout = createFunctionPage(inventoryPanel);
         	inventoryTab.setPane(hInventoryLayout);
@@ -269,7 +269,7 @@ public class MainPage {
         
         if (checkPermFlag(userFunction, Function.PURCHASING))
         {
-        	Tab purchasingTab = new Tab("จัดซื้อวัตถุดิบ");
+        	Tab purchasingTab = new Tab("ระบบการจัดซื้อวัตถุดิบ");
         	purchasingTab.setIcon("icons/256/shopping-icon.png", 22);
         	final HLayout hPurchasingLayout = createFunctionPage(purchasingPanel);
         	purchasingTab.setPane(hPurchasingLayout);
@@ -284,7 +284,7 @@ public class MainPage {
         
         if (checkPermFlag(userFunction, Function.FINANCIAL))
         {
-        	Tab financialTab = new Tab("รายรับรายจ่าย");
+        	Tab financialTab = new Tab("ระบบบันทึกรายรับรายจ่าย");
         	financialTab.setIcon("icons/256/coins-icon.png", 22);
         	final HLayout hFinancialLayout = createFunctionPage(financialPanel);
         	financialTab.setPane(hFinancialLayout);
@@ -299,7 +299,7 @@ public class MainPage {
         
         if (checkPermFlag(userFunction, Function.REPORT)  && ( checkPermFlag(userRole, Role.OWNER) || checkPermFlag(userRole, Role.ADMIN)))
         {
-        	Tab reportTab = new Tab("รายงาน");
+        	Tab reportTab = new Tab("ระบบสารสนเทศเพื่อผู้บริหาร");
         	reportTab.setIcon("icons/256/bar-chart-icon.png", 22);
         	final HLayout hReportLayout = createFunctionPage(reportPanel);
         	reportTab.setPane(hReportLayout);
@@ -314,7 +314,7 @@ public class MainPage {
         
         if (checkPermFlag(userFunction, Function.SECURITY) && checkPermFlag(userRole, Role.ADMIN))
         {
-        	Tab securityTab = new Tab("จัดการข้อมูลผู้ใช้ระบบ");
+        	Tab securityTab = new Tab("ระบบรักษาความปลอดภัย");
         	securityTab.setIcon("icons/256/key-icon.png", 20);
         	final HLayout hSecurityLayout = createFunctionPage(securityPanel);
         	securityTab.setPane(hSecurityLayout);
@@ -364,7 +364,7 @@ public class MainPage {
 		
 		ToolStrip toolStripVersion = new ToolStrip();
         toolStripVersion.setWidth100();
-        Label version = new Label("Version: 0.8 <br> Built Sat 01/12/2014 04:33 AM");
+        Label version = new Label("Version: 0.8.1 <br> Built Tue 01/12/2014 04:41 AM");
         version.setWidth100();
         version.setPadding(5);
         toolStripVersion.addMember(version);

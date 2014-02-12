@@ -143,7 +143,7 @@ public class ProductionReportListGrid extends ListGrid {
         ListGridField Field_6_1 = new ListGridField("weight", "น้ำหนักที่ผลิต (กรัม)", 150);
         Field_6_1.setShowGridSummary(true);
         Field_6_1.setSummaryFunction(SummaryFunctionType.SUM);
-        ListGridField Field_6_2 = new ListGridField("Amount (ea)","จำนวนที่ผลิตได้", 150);
+        ListGridField Field_6_2 = new ListGridField("amount","จำนวนที่ผลิตได้", 150);
         Field_6_2.setShowGridSummary(true);
         Field_6_2.setSummaryFunction(SummaryFunctionType.SUM);
         ListGridField field_3_3 = new ListGridField("unit", "หน่วย", 50);
@@ -193,7 +193,7 @@ public class ProductionReportListGrid extends ListGrid {
 	public ListGridRecord createRecord(String type, Double amount, Double weight, String unit){
 		ListGridRecord record = new ListGridRecord();
         record.setAttribute("type", type);
-        record.setAttribute("Amount (ea)", amount);
+        record.setAttribute("amount", amount);
         record.setAttribute("weight", weight);
         record.setAttribute("unit", unit);
         return record;

@@ -20,6 +20,20 @@ public class FieldFormatter {
         };
 	}
 	
+	public static CellFormatter getIntegerFormat(){
+		return new CellFormatter() {  
+            public String format(Object value, ListGridRecord record, int rowNum, int colNum) {  
+                if (value == null) return null;  
+                try {  
+                    NumberFormat nf = NumberFormat.getFormat("#,##0");  
+                    return nf.format(((Number) value).intValue());  
+                } catch (Exception e) {  
+                    return value.toString();  
+                }  
+            }  
+        };
+	}
+	
 	public static CellFormatter getPriceFormat(){
 		return new CellFormatter() {  
             public String format(Object value, ListGridRecord record, int rowNum, int colNum) {  

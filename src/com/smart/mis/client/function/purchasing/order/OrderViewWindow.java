@@ -22,6 +22,7 @@ import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.Printing;
 import com.smart.mis.shared.purchasing.PurchaseOrderStatus;
 import com.smart.mis.shared.purchasing.PurchaseRequestStatus;
 import com.smart.mis.shared.purchasing.Supplier;
@@ -49,6 +50,7 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -82,6 +84,8 @@ public class OrderViewWindow extends EditorWindow{
 //	SelectMaterailList addFunc;
 //	Supplier client;
 //	String material_list = "NONE";
+
+	PrintHeader header = new PrintHeader("ใบสั่งซื้อ");
 	
 	public OrderViewWindow(){
 //		addFunc = new SelectMaterailList();
@@ -109,6 +113,8 @@ public class OrderViewWindow extends EditorWindow{
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
+		layout.addMember(header);
+		header.hide();
 		
 		final String order_id = record.getAttributeAsString("order_id");
 		String request_id = record.getAttributeAsString("request_id");
@@ -350,6 +356,10 @@ public class OrderViewWindow extends EditorWindow{
 		HLayout footerLayout = new HLayout();
 		footerLayout.setHeight(100);
 		
+//		final Label empty = Printing.empty();
+//		empty.hide();
+//		footerLayout.addMember(empty);
+		
 		final DynamicForm endForm = new DynamicForm();
 		endForm.setWidth(320);
 		endForm.setNumCols(4);
@@ -357,6 +367,7 @@ public class OrderViewWindow extends EditorWindow{
 		endForm.setIsGroup(true);
 		//dateForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 		endForm.setGroupTitle("ข้อมูลอ้างอิง");
+		//endForm.setPrintChildrenAbsolutelyPositioned(true);
 		
 		StaticTextItem cby = new StaticTextItem("created_by", "สร้างโดย");
 		StaticTextItem cdate = new StaticTextItem("created_date", "สร้างเมื่อ");
@@ -382,6 +393,8 @@ public class OrderViewWindow extends EditorWindow{
 		summaryForm.setIsGroup(true);
 		summaryForm.setGroupTitle("สรุปยอดรวม");
 		summaryForm.setColWidths(120, 100);
+		//summaryForm.setPrintChildrenAbsolutelyPositioned(true);
+		
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 		StaticTextItem netExclusive = new StaticTextItem("netExclusive");
 		netExclusive.setValue(nf.format(netEx));
@@ -412,16 +425,25 @@ public class OrderViewWindow extends EditorWindow{
 		controls.setAlign(Alignment.CENTER);
 		controls.setMargin(5);
 		controls.setMembersMargin(5);
-		final IButton printButton = new IButton("พิมพ์คำสั่งซื้อ");
+		final IButton printButton = new IButton("พิมพ์ใบสั่งซื้อ");
 		printButton.setIcon("icons/16/print.png");
 		printButton.setWidth(120);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
                 //SC.warn("click print");
             	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
-                VLayout printLayout = new VLayout(10);
-            	printLayout.addMember(new PrintHeader("ใบสั่งซื้อ"));
+//                VLayout printLayout = new VLayout(10);
+//            	printLayout.addMember(new PrintHeader("ใบสั่งซื้อ"));
+//            	printLayout.addMember(layout);
+//            	Canvas.showPrintPreview(printLayout);
+//            	main.destroy();
+            	VLayout printLayout = new VLayout(10);
+            	//printLayout.addMember(new PrintHeader("ใบสั่งซื้อ"));
+            	//empty.show();
+            	header.show();
+            	printLayout.setPrintChildrenAbsolutelyPositioned(true);
             	printLayout.addMember(layout);
+            	//System.out.println(printLayout.getPrintHTML(null, null));
             	Canvas.showPrintPreview(printLayout);
             	main.destroy();
           }

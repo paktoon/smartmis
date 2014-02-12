@@ -243,7 +243,10 @@ public class ReportInventoryLayout extends VLayout{
         });
 		materialListGrid.setUseAllDataSourceFields(false);
 		materialListGrid.setShowRowNumbers(true);
-		materialListGrid.setShowGridSummary(true);
+		//materialListGrid.setShowGridSummary(true);
+		materialListGrid.setShowGroupSummary(true);
+		materialListGrid.setGroupByField("type");
+		materialListGrid.setGroupStartOpen(GroupStartOpen.ALL);
 		
 		ListGridField mid = new ListGridField("mid" , 100);
 		mid.setSummaryFunction(new SummaryFunction() {  
@@ -251,34 +254,34 @@ public class ReportInventoryLayout extends VLayout{
                 return records.length + " รายการ";  
             }  
         });  
-		mid.setShowGridSummary(true);
+		mid.setShowGroupSummary(true);
         
 		ListGridField mat_name = new ListGridField("mat_name");
-		ListGridField desc = new ListGridField("desc", 100);
+		ListGridField desc = new ListGridField("desc", 180);
 		ListGridField type = new ListGridField("type", 80);
 		
 		ListGridField inStock = new ListGridField("inStock", 130);
 		inStock.setCellFormatter(FieldFormatter.getNumberFormat());
 		inStock.setAlign(Alignment.RIGHT);
 		inStock.setSummaryFunction(SummaryFunctionType.SUM);
-		inStock.setShowGridSummary(true);
+		inStock.setShowGroupSummary(true);
         
 		ListGridField reserved = new ListGridField("reserved", 120);
 		reserved.setCellFormatter(FieldFormatter.getNumberFormat());
 		reserved.setAlign(Alignment.RIGHT);
 		reserved.setSummaryFunction(SummaryFunctionType.SUM);
-		reserved.setShowGridSummary(true);
+		reserved.setShowGroupSummary(true);
         
 		ListGridField remain = new ListGridField("remain", 120);
 		remain.setCellFormatter(FieldFormatter.getNumberFormat());
 		remain.setAlign(Alignment.RIGHT);
 		remain.setSummaryFunction(SummaryFunctionType.SUM);
-		remain.setShowGridSummary(true);
+		remain.setShowGroupSummary(true);
 		
 		ListGridField unit = new ListGridField("unit",50);
 		
 		materialListGrid.setFields(mid, mat_name, desc, type, inStock, reserved, remain, unit);
-
+		materialListGrid.hideField("type");
 	}
 	
 }

@@ -13,6 +13,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.Printing;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.DeliveryStatus;
 import com.smart.mis.shared.security.User;
@@ -37,6 +38,7 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -65,6 +67,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class DeliveryViewWindow extends EditorWindow{
 
 	Customer client;
+	PrintHeader header = new PrintHeader("ใบนำส่งสินค้า");
 	
 	public DeliveryViewWindow(){
 		
@@ -93,6 +96,8 @@ public class DeliveryViewWindow extends EditorWindow{
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
+		layout.addMember(header);
+		header.hide();
 		
 		final String delivery_id = record.getAttributeAsString("delivery_id");
 		String cid = record.getAttributeAsString("cid");
@@ -278,6 +283,9 @@ public class DeliveryViewWindow extends EditorWindow{
 		
 		HLayout footerLayout = new HLayout();
 		footerLayout.setHeight(100);
+//		final Label empty = Printing.empty();
+//		empty.hide();
+//		footerLayout.addMember(empty);
 		
 		final DynamicForm dateForm = new DynamicForm();
 		dateForm.setWidth("40%");
@@ -287,6 +295,7 @@ public class DeliveryViewWindow extends EditorWindow{
 		//dateForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 		dateForm.setGroupTitle("รายละเอียดการนำส่งสินค้า");
 		dateForm.setCanEdit(false);
+		//dateForm.setPrintChildrenAbsolutelyPositioned(true);
 		final DateItem issuedDate = new DateItem();
 		issuedDate.setName("issueDate");
 		issuedDate.setTitle("วันที่เบิกสินค้า");
@@ -310,6 +319,7 @@ public class DeliveryViewWindow extends EditorWindow{
 		summaryForm.setIsGroup(true);
 		summaryForm.setGroupTitle("สรุปยอดนำส่งสินค้า");
 		summaryForm.setColWidths(120, 100);
+		//summaryForm.setPrintChildrenAbsolutelyPositioned(true);
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 		StaticTextItem tweight = new StaticTextItem("total_weight");
 		tweight.setValue(nf.format(total_weight));
@@ -339,10 +349,20 @@ public class DeliveryViewWindow extends EditorWindow{
             public void onClick(ClickEvent event) { 
                 //SC.say("click print");
             	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
-                VLayout printLayout = new VLayout(10);
-                printLayout.setWidth100();
-            	printLayout.addMember(new PrintHeader("ใบนำส่งสินค้า"));
+//                VLayout printLayout = new VLayout(10);
+//                printLayout.setWidth100();
+//            	printLayout.addMember(new PrintHeader("ใบนำส่งสินค้า"));
+//            	printLayout.addMember(layout);
+//            	Canvas.showPrintPreview(printLayout);
+//            	main.destroy();
+            	
+            	VLayout printLayout = new VLayout(10);
+            	//printLayout.addMember(new PrintHeader("ใบนำส่งสินค้า"));
+            	header.show();
+            	printLayout.setPrintChildrenAbsolutelyPositioned(true);
+            	//empty.show();
             	printLayout.addMember(layout);
+            	//System.out.println(printLayout.getPrintHTML(null, null));
             	Canvas.showPrintPreview(printLayout);
             	main.destroy();
           }

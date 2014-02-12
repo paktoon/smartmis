@@ -28,6 +28,7 @@ import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.Printing;
 import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.QuotationStatus;
@@ -54,6 +55,7 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -86,6 +88,7 @@ public class QuoteViewWindow extends EditorWindow{
 
 	SelectProductList addFunc;
 	Customer client;
+	PrintHeader header = new PrintHeader("ใบเสนอราคา");
 	
 	public QuoteViewWindow(){
 		addFunc = new SelectProductList();
@@ -113,6 +116,8 @@ public class QuoteViewWindow extends EditorWindow{
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
+		layout.addMember(header);
+		header.hide();
 		
 		String cid = record.getAttributeAsString("cid");
 		String payment_model = record.getAttributeAsString("payment_model");
@@ -266,7 +271,7 @@ public class QuoteViewWindow extends EditorWindow{
 		customerForm.fetchData(new Criterion("cid", OperatorId.EQUALS, cid));
 		//customerForm.editRecord(record);
 		
-		DynamicForm commentForm = new DynamicForm();
+		final DynamicForm commentForm = new DynamicForm();
 		commentForm.setWidth("30%"); 
 		commentForm.setHeight(70);
 		commentForm.setMargin(5);
@@ -316,8 +321,8 @@ public class QuoteViewWindow extends EditorWindow{
 		else quoteListGrid.setSelectionType(SelectionStyle.NONE);
 		quoteListGrid.setCanResizeFields(false);
 		quoteListGrid.setShowGridSummary(true);
-		quoteListGrid.setEditEvent(ListGridEditEvent.CLICK);  
-		quoteListGrid.setListEndEditAction(RowEndEditAction.NONE);
+		//quoteListGrid.setEditEvent(ListGridEditEvent.CLICK);  
+		//quoteListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		quoteListGrid.setShowRowNumbers(true);
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		quoteListGrid.setCriteria(ci);
@@ -331,6 +336,11 @@ public class QuoteViewWindow extends EditorWindow{
 		Record[] cachedData = QuoteProductDS.getInstance(quote_id).getCacheData();
 		if (cachedData.length != 0) {
 			tempView.setTestData(cachedData);
+			for (Record cache : cachedData){
+				System.out.println(cache.getAttributeAsString("sub_quote_id") + " "+ cache.getAttributeAsString("status"));
+			}
+		} else {
+			System.out.println("0 result found....");
 		}
 		quoteListGrid.setDataSource(tempView);
 		quoteListGrid.setUseAllDataSourceFields(false);
@@ -374,6 +384,11 @@ public class QuoteViewWindow extends EditorWindow{
 		
 		HLayout footerLayout = new HLayout();
 		footerLayout.setHeight(100);
+		footerLayout.setAlign(Alignment.RIGHT);
+		
+//		final Label empty = Printing.empty();
+//		empty.hide();
+//		footerLayout.addMember(empty);
 		
 		final DynamicForm dateForm = new DynamicForm();
 		dateForm.setWidth("40%");
@@ -382,6 +397,7 @@ public class QuoteViewWindow extends EditorWindow{
 		dateForm.setIsGroup(true);
 		dateForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 		dateForm.setGroupTitle("ข้อกำหนดใบเสนอราคา");
+		//dateForm.setPrintChildrenAbsolutelyPositioned(true);
 		if (!edit) dateForm.setCanEdit(false);
 		final DateItem fromDate = new DateItem();
 		fromDate.setName("fromDate");
@@ -482,6 +498,7 @@ public class QuoteViewWindow extends EditorWindow{
 		summaryForm.setIsGroup(true);
 		summaryForm.setGroupTitle("สรุปยอดรวม");
 		summaryForm.setColWidths(120, 100);
+		//summaryForm.setPrintChildrenAbsolutelyPositioned(true);
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 		StaticTextItem netExclusive = new StaticTextItem("netExclusive");
 		netExclusive.setValue(nf.format(netEx));
@@ -517,15 +534,19 @@ public class QuoteViewWindow extends EditorWindow{
 		printButton.setWidth(120);
 		printButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-                //SC.warn("click print");
-            	//Canvas.showPrintPreview(PrintQuotation.getPrintContainer(record));
-            	
-//            	PrintQuotation item = new PrintQuotation(record);
-//            	item.print();
-            	
+//            	VLayout printLayout = new VLayout(10);
+//            	printLayout.setWidth100();
+//            	printLayout.addMember(new PrintHeader("ใบเสนอราคา"));
+//            	printLayout.addMember(layout);
+//            	Canvas.showPrintPreview(printLayout);
+//            	main.destroy();
             	VLayout printLayout = new VLayout(10);
-            	printLayout.setWidth100();
-            	printLayout.addMember(new PrintHeader("ใบเสนอราคา"));
+            	printLayout.setAlign(Alignment.CENTER);
+//            	printLayout.addMember(new PrintHeader("ใบเสนอราคา"));
+//            	empty.show();
+            	header.show();
+            	printLayout.setPrintChildrenAbsolutelyPositioned(true);
+            	//commentForm.hide();
             	printLayout.addMember(layout);
             	Canvas.showPrintPreview(printLayout);
             	main.destroy();
@@ -728,6 +749,8 @@ public class QuoteViewWindow extends EditorWindow{
             	if (selected != null) {
             		//quoteListGrid.removeSelectedData();
             		selected.setAttribute("status", false);
+            		System.out.println(selected.getAttributeAsString("sub_quote_id"));
+            		System.out.println(selected.getAttributeAsBoolean("status"));
             		quoteListGrid.updateData(selected);
             		quoteListGrid.removeSelectedData(new DSCallback() {
 						@Override
@@ -1004,7 +1027,7 @@ public class QuoteViewWindow extends EditorWindow{
 			final Double produce_weight = total_produce_weight;
 			final Integer produce_amount = total_produce_amount;
 			if (planProductList.size() != 0) {
-				SC.confirm("สร้างแผนการผลิตโดยอัตโนมัติ", "สินค้าในรายการขายไม่เพียงพอ <br> ต้องการสร้างแผนการผลิต หรือไม่?" , new BooleanCallback() {
+				SC.confirm("สร้างแผนการผลิตโดยอัตโนมัติ", "สินค้าในรายการขายไม่เพียงพอ <br> ต้องการสร้างแผนการผลิต หรือไม่? <br><br> หมายเหตุ: ถ้า 'ยกเลิก' การสร้างแผนการผลิต ระบบจะไม่สร้างรายการขายด้วย" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

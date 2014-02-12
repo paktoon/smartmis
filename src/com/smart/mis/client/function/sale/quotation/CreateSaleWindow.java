@@ -359,7 +359,7 @@ public class CreateSaleWindow extends EditorWindow{
         ListGridField quoteItemCell_3 = new ListGridField("unit", "หน่วย", 40);
         
         ListGridNumberField quoteItemCell_5 = new ListGridNumberField("price", 110);
-        quoteItemCell_5.setTitle("ราคาขายต่อหน่วย (บาท)");
+        quoteItemCell_5.setTitle("ราคาต่อหน่วย (บาท)");
         quoteItemCell_5.setShowGridSummary(false);
         quoteItemCell_5.setCellFormatter(FieldFormatter.getPriceFormat());
         quoteItemCell_5.setAlign(Alignment.RIGHT);
@@ -968,7 +968,7 @@ public class CreateSaleWindow extends EditorWindow{
 			final Double produce_weight = total_produce_weight;
 			final Integer produce_amount = total_produce_amount;
 			if (planProductList.size() != 0) {
-				SC.confirm("สร้างแผนการผลิตโดยอัตโนมัติ", "สินค้าในรายการขายไม่เพียงพอ <br> ต้องการสร้างแผนการผลิต หรือไม่?" , new BooleanCallback() {
+				SC.confirm("สร้างแผนการผลิตโดยอัตโนมัติ", "สินค้าในรายการขายไม่เพียงพอ <br> ต้องการสร้างแผนการผลิต หรือไม่? <br><br> หมายเหตุ: ถ้า 'ยกเลิก' การสร้างแผนการผลิต ระบบจะไม่สร้างรายการขายด้วย" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {

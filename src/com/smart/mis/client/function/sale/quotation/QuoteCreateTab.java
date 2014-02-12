@@ -401,7 +401,7 @@ public class QuoteCreateTab {
 		
         ListGridField quoteItemCell_3 = new ListGridField("unit", 50);
         
-        ListGridNumberField quoteItemCell_4 = new ListGridNumberField("weight", 90);
+        ListGridNumberField quoteItemCell_4 = new ListGridNumberField("weight", 110);
         quoteItemCell_4.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_4.setShowGridSummary(true);
         quoteItemCell_4.setIncludeInRecordSummary(false);
@@ -414,7 +414,7 @@ public class QuoteCreateTab {
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("quote_amount", 80);
         quoteItemCell_6.setValidators(ValidatorFactory.integerRange(50, 5000));
-        
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
         quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
@@ -490,9 +490,9 @@ public class QuoteCreateTab {
 					try {
 						Date from = (Date) event.getValue();
 						//if (!from.before(toDate.getValueAsDate()) || !from.before(deliveryDate.getValueAsDate())) {
-						if (from.after(toDate.getValueAsDate()) || from.after(deliveryDate.getValueAsDate())) {
+						if (from.after(toDate.getValueAsDate()) || from.after(deliveryDate.getValueAsDate()) || from.before(new Date())) {
 								//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
-								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + fromDate.getTitle() + " ต้องก่อนหน้า " + toDate.getTitle() + " และ " + deliveryDate.getTitle());
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
 								fromDate.setValue(fromDate.getValueAsDate());
 							}
 					} catch (Exception e) {
@@ -511,7 +511,7 @@ public class QuoteCreateTab {
 						
 						//if (!to.after(fromDate.getValueAsDate()) || !to.after(new Date())) {
 						if (to.before(fromDate.getValueAsDate()) || to.before(new Date())) {
-								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + toDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
 								toDate.setValue(toDate.getValueAsDate());
 							}
 					} catch (Exception e) {
@@ -530,7 +530,7 @@ public class QuoteCreateTab {
 						//if (!delivery.after(fromDate.getValueAsDate())  || !delivery.after(new Date())) {
 						if (delivery.before(fromDate.getValueAsDate())  || delivery.before(new Date())) {
 								//SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
-								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง <br> " + deliveryDate.getTitle() + " ต้องภายหลังจาก " + fromDate.getTitle() + " และวันนี้");
+								SC.warn("วันที่เลือกไม่ถูกต้อง กรุณาเลือกใหม่อีกครั้ง");
 								deliveryDate.setValue(deliveryDate.getValueAsDate());
 							}
 					} catch (Exception e) {

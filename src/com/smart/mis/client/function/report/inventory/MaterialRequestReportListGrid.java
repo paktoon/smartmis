@@ -112,13 +112,13 @@ public class MaterialRequestReportListGrid extends ListGrid {
 	
 	//new
 	
-	public Double getIssuedWeight(Record[] records) {
-		Double issued_weight = 0.0;
-		for (Record record : records) {
-			issued_weight += record.getAttributeAsDouble("issued_weight");
-		}
-		return issued_weight;
-	}
+//	public Double getIssuedWeight(Record[] records) {
+//		Double issued_weight = 0.0;
+//		for (Record record : records) {
+//			issued_weight += record.getAttributeAsDouble("issued_weight");
+//		}
+//		return issued_weight;
+//	}
 	
 	public MaterialRequestReportListGrid(Criterion criteria) {
 		setWidth(650);
@@ -144,9 +144,9 @@ public class MaterialRequestReportListGrid extends ListGrid {
             }  
         });
         
-        ListGridField field_3_1 = new ListGridField("issued_weight", "น้ำหนักวัตถุดิบที่เบิกจ่าย (กรัม)",170);
-        field_3_1.setShowGroupSummary(true);
-        field_3_1.setSummaryFunction(SummaryFunctionType.SUM);
+//        ListGridField field_3_1 = new ListGridField("issued_weight", "น้ำหนักวัตถุดิบที่เบิกจ่าย (กรัม)",170);
+//        field_3_1.setShowGroupSummary(true);
+//        field_3_1.setSummaryFunction(SummaryFunctionType.SUM);
         ListGridField field_3_2 = new ListGridField("issued_amount", "จำนวนวัตถุดิบที่เบิกจ่าย" , 170);
         field_3_2.setShowGroupSummary(true);
         field_3_2.setSummaryFunction(SummaryFunctionType.SUM);
@@ -154,12 +154,13 @@ public class MaterialRequestReportListGrid extends ListGrid {
         field_3_3.setAlign(Alignment.CENTER);
         
         //Cell Format
-        field_3_1.setAlign(Alignment.RIGHT);
-        field_3_1.setCellFormatter(FieldFormatter.getNumberFormat());
+//        field_3_1.setAlign(Alignment.RIGHT);
+//        field_3_1.setCellFormatter(FieldFormatter.getNumberFormat());
         field_3_2.setAlign(Alignment.RIGHT);
         field_3_2.setCellFormatter(FieldFormatter.getNumberFormat());
         
-        setFields(field_0, field_1, field_3_1, field_3_2, field_3_3);
+//        setFields(field_0, field_1, field_3_1, field_3_2, field_3_3);
+        setFields(field_0, field_1, field_3_2, field_3_3);
         
         setRecords(createListGridRecord(criteria));
         setHoverWidth(200);  
@@ -184,21 +185,30 @@ public class MaterialRequestReportListGrid extends ListGrid {
 	    		{getIssueAmount(mat_1), getIssueAmount(mat_2), getIssueAmount(mat_3)}
 	    };
 	    
+//    	return new ListGridRecord[]{ 
+//    			createRecord("แร่เงิน 100%", "แร่เงิน",getIssueAmount(silver100),getIssuedWeight(silver100), "กรัม"),
+//    			createRecord("แร่เงิน 92.5%", "แร่เงิน",getIssueAmount(silver925),getIssuedWeight(silver925), "กรัม"),
+//    			createRecord("พลอยประดับ", "วัตถุดิบ",getIssueAmount(mat_1),getIssuedWeight(mat_1), "เม็ด"),
+//    			createRecord("แมกกาไซต์", "วัตถุดิบ",getIssueAmount(mat_2),getIssuedWeight(mat_2), "เม็ด"),
+//    			createRecord("อื่นๆ", "วัตถุดิบ",getIssueAmount(mat_3),getIssuedWeight(mat_3), "ชิ้น")
+//    	};
+    	
     	return new ListGridRecord[]{ 
-    			createRecord("แร่เงิน 100%", "แร่เงิน",getIssueAmount(silver100),getIssuedWeight(silver100), "กรัม"),
-    			createRecord("แร่เงิน 92.5%", "แร่เงิน",getIssueAmount(silver925),getIssuedWeight(silver925), "กรัม"),
-    			createRecord("พลอยประดับ", "วัตถุดิบ",getIssueAmount(mat_1),getIssuedWeight(mat_1), "เม็ด"),
-    			createRecord("แมกกาไซต์", "วัตถุดิบ",getIssueAmount(mat_2),getIssuedWeight(mat_2), "เม็ด"),
-    			createRecord("อื่นๆ", "วัตถุดิบ",getIssueAmount(mat_3),getIssuedWeight(mat_3), "ชิ้น")
+    			createRecord("แร่เงิน 100%", "แร่เงิน",getIssueAmount(silver100), "กรัม"),
+    			createRecord("แร่เงิน 92.5%", "แร่เงิน",getIssueAmount(silver925), "กรัม"),
+    			createRecord("พลอยประดับ", "วัตถุดิบ",getIssueAmount(mat_1), "เม็ด"),
+    			createRecord("แมกกาไซต์", "วัตถุดิบ",getIssueAmount(mat_2), "เม็ด"),
+    			createRecord("อื่นๆ", "วัตถุดิบ",getIssueAmount(mat_3), "ชิ้น")
     	};
 	}
 	
-	public ListGridRecord createRecord(String type,String group, Double amount, Double weight, String unit){
+	//public ListGridRecord createRecord(String type,String group, Double amount, Double weight, String unit){
+	public ListGridRecord createRecord(String type,String group, Double amount, String unit){
 		ListGridRecord record = new ListGridRecord();
         record.setAttribute("type", type);
         record.setAttribute("group", group);
         record.setAttribute("issued_amount", amount);
-        record.setAttribute("issued_weight", weight);
+        //record.setAttribute("issued_weight", weight);
         record.setAttribute("unit", unit);
         return record;
 	}

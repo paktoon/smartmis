@@ -1,5 +1,8 @@
 package com.smart.mis.shared;
 
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Overflow;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.PrintWindow;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -16,5 +19,15 @@ public class Printing {
     	printWindow.centerInPage();
     	printWindow.addItem(printLayout);
     	printWindow.show();
+	}
+	
+	public static Label empty(){
+		Label empty = new Label();  
+		empty.setContents("");  
+		empty.setAlign(Alignment.CENTER);  
+		empty.setOverflow(Overflow.HIDDEN);  
+		empty.setWidth("*");
+		//empty.hide();
+		return empty;
 	}
 }

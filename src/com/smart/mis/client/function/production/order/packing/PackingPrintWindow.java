@@ -23,6 +23,7 @@ import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.Printing;
 import com.smart.mis.shared.prodution.ProcessStatus;
 import com.smart.mis.shared.prodution.ProcessType;
 import com.smart.mis.shared.prodution.ProductType;
@@ -52,6 +53,7 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -88,6 +90,8 @@ public class PackingPrintWindow extends EditorWindow{
 	//Double total_paid_wage;
 	//Double total_return_mat;
 	
+	PrintHeader header = new PrintHeader("ใบสั่งผลิต");
+	
 	public void show(ListGridRecord record, boolean edit, User currentUser, int page){
 		smith = new Smith();
 		editWindow = new Window();
@@ -112,6 +116,8 @@ public class PackingPrintWindow extends EditorWindow{
 		layout.setWidth(970);
 		layout.setHeight(450);
 		layout.setMargin(10);
+		layout.addMember(header);
+		header.hide();
 		
 		final String job_id = record.getAttributeAsString("job_id");
 		String plan_id = record.getAttributeAsString("plan_id");
@@ -337,6 +343,11 @@ public class PackingPrintWindow extends EditorWindow{
 		HLayout footerLayout = new HLayout();
 		footerLayout.setHeight(100);
 		footerLayout.setAlign(Alignment.RIGHT);
+		//For printing
+//		final Label empty = Printing.empty();
+//		empty.hide();
+//		footerLayout.addMember(empty);
+		//End
 		
 		final DynamicForm dateForm = new DynamicForm();
 		dateForm.setWidth(300);
@@ -347,7 +358,7 @@ public class PackingPrintWindow extends EditorWindow{
 		dateForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
 		dateForm.setGroupTitle("ข้อกำหนดคำสั่งผลิต");
 		dateForm.setCanEdit(false);
-		
+		//dateForm.setPrintChildrenAbsolutelyPositioned(true);
 		//DateRange dateRange = new DateRange();  
 	    //dateRange.setRelativeStartDate(RelativeDate.TODAY);
 	    //dateRange.setRelativeEndDate(new RelativeDate("+"+std_time+"d"));
@@ -389,6 +400,7 @@ public class PackingPrintWindow extends EditorWindow{
 		summaryForm_1.setIsGroup(true);
 		summaryForm_1.setGroupTitle("สรุปยอดสั่งผลิต");
 		summaryForm_1.setColWidths(120, 80);
+		//summaryForm_1.setPrintChildrenAbsolutelyPositioned(true);
 		final NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
 		total_sent_weight.setValue(nf.format(sent_weight));
@@ -542,9 +554,19 @@ public class PackingPrintWindow extends EditorWindow{
 //						}
 //					}
 //            	});
-				VLayout printLayout = new VLayout(10);
-            	printLayout.addMember(new PrintHeader("ใบสั่งผลิต"));
+//				VLayout printLayout = new VLayout(10);
+//            	printLayout.addMember(new PrintHeader("ใบสั่งผลิต"));
+//            	printLayout.addMember(layout);
+//            	Canvas.showPrintPreview(printLayout);
+//            	main.destroy();
+            	
+            	VLayout printLayout = new VLayout(10);
+            	//printLayout.addMember(new PrintHeader("ใบสั่งผลิต"));
+            	//empty.show();
+            	header.show();
+            	printLayout.setPrintChildrenAbsolutelyPositioned(true);
             	printLayout.addMember(layout);
+            	//System.out.println(printLayout.getPrintHTML(null, null));
             	Canvas.showPrintPreview(printLayout);
             	main.destroy();
           }
