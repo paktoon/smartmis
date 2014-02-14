@@ -18,6 +18,7 @@ import com.smart.mis.client.function.sale.order.SaleOrderData;
 import com.smart.mis.client.function.sale.order.product.SaleProductDS;
 import com.smart.mis.client.function.sale.order.product.SaleProductData;
 import com.smart.mis.client.function.sale.order.product.SaleProductDetails;
+import com.smart.mis.client.function.sale.quotation.QuotationDS;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductData;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDetails;
@@ -350,7 +351,7 @@ public class SaleViewWindow extends EditorWindow{
         quoteItemCell_5.setAlign(Alignment.RIGHT);
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("sale_amount", 70);
-        
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
         if (edit) quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
@@ -527,6 +528,7 @@ public class SaleViewWindow extends EditorWindow{
 						if (value) {
 								String invoice_id = record.getAttributeAsString("invoice_id");
 								String sale_id = record.getAttributeAsString("sale_id");
+								String quote_id = record.getAttributeAsString("quote_id");
 								ListGridRecord checkRecord = InvoiceData.getStatusRecords(invoice_id);
 								if (checkRecord.getAttributeAsString("status").equalsIgnoreCase("2_paid")) {
 									SC.warn("ลูกค้าชำระเงินแล้วไม่สามารถยกเลิกรายการขายได้");
@@ -534,6 +536,7 @@ public class SaleViewWindow extends EditorWindow{
 								}
 								
 								cancelProductionPlan(sale_id);
+								updateQuotation(quote_id);
 								
 								ListGridRecord invRecord = InvoiceData.createStatusRecord(invoice_id, "4_canceled");
 								InvoiceDS.getInstance().updateData(invRecord, new DSCallback() {
@@ -724,6 +727,14 @@ public class SaleViewWindow extends EditorWindow{
 		if (selected.length != 0) {
 			selected[0].setAttribute("status", "4_canceled");
 			PlanDS.getInstance().updateData(selected[0]);
+		}
+	}
+	
+	public void updateQuotation(String quote_id) {
+		Record[] selected = QuotationDS.getInstance().applyFilter(QuotationDS.getInstance().getCacheData(), new Criterion("quote_id", OperatorId.EQUALS, quote_id));
+		if (selected.length != 0) {
+			selected[0].setAttribute("status", "2_waiting_for_approved");
+			QuotationDS.getInstance().updateData(selected[0]);
 		}
 	}
 	

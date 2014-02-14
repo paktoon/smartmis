@@ -246,7 +246,12 @@ public class RequestViewWindow extends EditorWindow{
         			Double issued_amount = record.getAttributeAsDouble("issued_amount");
         			if (issued_amount != null) {
 	        			Double request_amount = record.getAttributeAsDouble("request_amount");
-	        			if (issued_amount > request_amount * 1.01 || issued_amount < request_amount * 0.99) {
+	        			
+        				if (!record.getAttributeAsString("type").equalsIgnoreCase("แร่เงิน") && (issued_amount != Math.floor(issued_amount))) {
+        					return "font-weight:bold; color:#d64949;";
+        				}
+        				
+	        			if (issued_amount > request_amount * 1.15 || issued_amount < request_amount * 0.85) {
 	        				return "font-weight:bold; color:#d64949;";
 	        			} else {
 	        				return "font-weight:bold; color:#009900;";
@@ -583,6 +588,7 @@ public class RequestViewWindow extends EditorWindow{
 								updateStock(item);
 							}
 							
+							MaterialRequestDS.getInstance().refreshData();
 							SC.say("บันทึกจ่ายวัตถุดิบเสร็จสิ้น");
 							editWindow.destroy();
 						}
@@ -644,8 +650,14 @@ public class RequestViewWindow extends EditorWindow{
 				//Double issued_weight = record.getAttributeAsDouble("issued_weight");
 				Double issued_amount = record.getAttributeAsDouble("issued_amount");
 				
+				String mat_type = record.getAttributeAsString("type");
+				
+				if (!mat_type.equalsIgnoreCase("แร่เงิน") && (issued_amount != Math.floor(issued_amount))) {
+					listGrid.setFieldError(row, "issued_amount", "ปริมาณไม่เหมาะสมกับชนิดของวัตถุดิบ");
+				}
+				
 				if (issued_amount != null) {
-					if (issued_amount > request_amount * 1.01 || issued_amount < request_amount * 0.99) {
+					if (issued_amount > request_amount * 1.15 || issued_amount < request_amount * 0.85) {
 						listGrid.setFieldError(row, "issued_amount", "ปริมาณวัตถุดิบไม่ถูกต้อง");
 					}
 				} else {

@@ -78,27 +78,28 @@ public class SelectProductList {
         
         ListGridField pidField = new ListGridField("pid", 70);
         pidField.setCanEdit(false);
-        ListGridField pnameField = new ListGridField("name", 150);
+        ListGridField pnameField = new ListGridField("name");
         pnameField.setCanEdit(false);
         //ListGridField pdescField = new ListGridField("desc", 150);
-        ListGridField pweightField = new ListGridField("weight", 80);
-        pweightField.setCellFormatter(FieldFormatter.getNumberFormat());
-        pweightField.setCanEdit(false);
+//        ListGridField pweightField = new ListGridField("weight", 80);
+//        pweightField.setCellFormatter(FieldFormatter.getNumberFormat());
+//        pweightField.setCanEdit(false);
         //ListGridField ptypeField = new ListGridField("type", 80);
         ListGridField premainField = new ListGridField("remain", 80);
-        premainField.setCellFormatter(FieldFormatter.getNumberFormat());
+        premainField.setCellFormatter(FieldFormatter.getIntegerFormat());
         premainField.setCanEdit(false);
         ListGridField punitField = new ListGridField("unit", 50);
         punitField.setCanEdit(false);
         //ListGridField pinStockField = new ListGridField("inStock", 50);
         ListGridField pplanAmount = new ListGridField("plan_amount", "จำนวน (ชิ้น)", 100);
         pplanAmount.setType(ListGridFieldType.INTEGER);
-        pplanAmount.setCellFormatter(FieldFormatter.getNumberFormat());
+        pplanAmount.setCellFormatter(FieldFormatter.getIntegerFormat());
         pplanAmount.setCanEdit(true);
         pplanAmount.setRequired(true);
         pplanAmount.setDefaultValue(0);
         pplanAmount.setValidators(ValidatorFactory.integerRange(50, 5000));
-        productGrid.setFields(pidField, pnameField, pweightField, premainField, punitField, pplanAmount); 
+        //productGrid.setFields(pidField, pnameField, pweightField, premainField, punitField, pplanAmount); 
+        productGrid.setFields(pidField, pnameField, premainField, punitField, pplanAmount); 
         
         HLayout control = new HLayout();
         control.setAlign(Alignment.CENTER);

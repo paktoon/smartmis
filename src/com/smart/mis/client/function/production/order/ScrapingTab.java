@@ -110,6 +110,7 @@ public class ScrapingTab {
 		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
 		statusSelected.setValueMap(ProcessStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem jidText = new TextItem("job_id", "รหัสคำสั่งผลิต");
 		jidText.setWrapTitle(false);

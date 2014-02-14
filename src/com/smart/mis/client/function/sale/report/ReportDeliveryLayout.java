@@ -118,6 +118,7 @@ public class ReportDeliveryLayout extends VLayout {
 		//statusSelected.setValueMap("กำลังนำส่ง", "นำส่งแล้ว");
 		statusSelected.setValueMap(DeliveryStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("cid", "รหัสลูกค้า");
 		cidText.setWrapTitle(false);
@@ -171,7 +172,7 @@ public class ReportDeliveryLayout extends VLayout {
 		deliveryListGrid.setUseAllDataSourceFields(false);
 		deliveryListGrid.setSelectionType(SelectionStyle.NONE);
 		
-		ListGridField delivery_id = new ListGridField("delivery_id" , 100);
+		ListGridField delivery_id = new ListGridField("delivery_id" , 110);
 		delivery_id.setSummaryFunction(new SummaryFunction() {  
             public Object getSummaryValue(Record[] records, ListGridField field) {
                 return records.length + " รายการ";  
@@ -190,14 +191,14 @@ public class ReportDeliveryLayout extends VLayout {
 		total_weight.setSummaryFunction(SummaryFunctionType.SUM);
 		total_weight.setShowGridSummary(true);
         
-		ListGridField total_amount = new ListGridField("total_amount", 120);
-		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		ListGridField total_amount = new ListGridField("total_amount", 110);
+		total_amount.setCellFormatter(FieldFormatter.getIntegerFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		total_amount.setSummaryFunction(SummaryFunctionType.SUM);
 		total_amount.setShowGridSummary(true);
 		
-		ListGridField created_date = new ListGridField("created_date", 100);
-		ListGridField delivery_date = new ListGridField("delivery", 120);
+		ListGridField created_date = new ListGridField("created_date", 90);
+		ListGridField delivery_date = new ListGridField("delivery", 110);
 		
 		deliveryListGrid.setFields(created_date, delivery_id, status,  sale_id, cus_name, total_weight, total_amount, delivery_date);
 		

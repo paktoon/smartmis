@@ -147,7 +147,9 @@ public class PurchasingListGrid extends ListGrid {
 	public Double getRequestAmount(Record[] records) {
 		Double request_amount = 0.0;
 		for (Record record : records) {
-			request_amount += record.getAttributeAsDouble("request_amount");
+			if (record.getAttributeAsDouble("request_amount") != null) {
+				request_amount += record.getAttributeAsDouble("request_amount");
+			}
 		}
 		return request_amount;
 	}
@@ -155,7 +157,9 @@ public class PurchasingListGrid extends ListGrid {
 	public Double getSumPrice(Record[] records) {
 		Double sum_price = 0.0;
 		for (Record record : records) {
-			sum_price += record.getAttributeAsDouble("sum_price");
+			if (record.getAttributeAsDouble("sum_price") != null) {
+				sum_price += record.getAttributeAsDouble("sum_price");
+			}
 		}
 		return sum_price;
 	}

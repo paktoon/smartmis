@@ -130,7 +130,9 @@ public class MaterialReportListGrid extends ListGrid {
 	public Double getRemaining(Record[] records) {
 		Double remaining = 0.0;
 		for (Record record : records) {
-			remaining += record.getAttributeAsDouble("remain");
+			if (record.getAttributeAsDouble("remain") != null) {
+				remaining += record.getAttributeAsDouble("remain");
+			}
 		}
 		return remaining;
 	}
@@ -138,7 +140,9 @@ public class MaterialReportListGrid extends ListGrid {
 	public Double getReserved(Record[] records) {
 		Double reserved = 0.0;
 		for (Record record : records) {
-			reserved += record.getAttributeAsDouble("reserved");
+			if (record.getAttributeAsDouble("reserved") != null) {
+				reserved += record.getAttributeAsDouble("reserved");
+			}
 		}	
 		return reserved;
 	}
@@ -146,7 +150,9 @@ public class MaterialReportListGrid extends ListGrid {
 	public Double getInStock(Record[] records) {
 		Double inStock = 0.0;
 		for (Record record : records) {
-			inStock += record.getAttributeAsDouble("inStock");
+			if (record.getAttributeAsDouble("inStock") != null) {
+				inStock += record.getAttributeAsDouble("inStock");
+			}
 		}	
 		return inStock;
 	}

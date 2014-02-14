@@ -118,6 +118,7 @@ public class ReturnLayout extends VLayout {
 		//statusSelected.setValueMap("รอผลิต", "กำลังผลิต", "พร้อมนำส่ง", "อยู่ระหว่างนำส่ง", "นำส่งแล้ว");
 		statusSelected.setValueMap(ReturnStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("job_id", "รหัสคำสั่งผลิต");
 		cidText.setWrapTitle(false);
@@ -170,12 +171,12 @@ public class ReturnLayout extends VLayout {
 		
 		ListGridField sale_id = new ListGridField("return_id" , 100);
 		ListGridField quote_id = new ListGridField("job_id" , 100);
-		ListGridField cus_name = new ListGridField("sm_name", 180);
+		ListGridField cus_name = new ListGridField("sm_name");
 		ListGridField status = new ListGridField("status", 80);
-		ListGridField total_amount = new ListGridField("total_return_weight");
+		ListGridField total_amount = new ListGridField("total_return_weight", 130);
 		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
 		total_amount.setAlign(Alignment.RIGHT);
-		ListGridField created_date = new ListGridField("return_date");
+		ListGridField created_date = new ListGridField("return_date", 100);
 		
 		returnListGrid.setFields(status, sale_id, quote_id, cus_name, total_amount, created_date);
 		

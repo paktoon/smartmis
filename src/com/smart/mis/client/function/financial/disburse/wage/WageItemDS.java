@@ -45,7 +45,7 @@ public class WageItemDS extends DataSource  {
 			 DataSourceTextField Field_7_4 = new DataSourceTextField("status", "สถานะ");
 			 
 			 DataSourceFloatField Field_7_5 = new DataSourceFloatField("recv_weight", "น้ำหนักที่รับ (กรัม)");
-			 DataSourceIntegerField Field_7_6 = new DataSourceIntegerField("recv_amount", "จำนวนที่รับ (ชิ้น)");
+			 DataSourceIntegerField Field_7_6 = new DataSourceIntegerField("recv_amount", "จำนวนที่รับ");
 			 
 			 DataSourceFloatField Field_8 = new DataSourceFloatField("wage", "ค่าจ้างต่อหน่วย (บาท)");
 			 DataSourceFloatField Field_9 = new DataSourceFloatField("sum_wage", "ค่าจ้างรวม (บาท)");

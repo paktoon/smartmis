@@ -167,7 +167,7 @@ public class OrderCreateTab {
 //		valueMap.put("3_approved", "approved");
 //		status.setValueMap(valueMap);
 		ListGridField total_amount = new ListGridField("total_amount", 120);
-		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		total_amount.setCellFormatter(FieldFormatter.getIntegerFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		ListGridField netInclusive = new ListGridField("netInclusive", 125);
 		netInclusive.setCellFormatter(FieldFormatter.getPriceFormat());

@@ -107,6 +107,7 @@ public class OrderReviseTab {
 		//statusSelected.setValueMap("รอผลิต", "กำลังผลิต", "พร้อมนำส่ง", "อยู่ระหว่างนำส่ง", "นำส่งแล้ว");
 		statusSelected.setValueMap(SaleOrderStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("cid", "รหัสลูกค้า");
 		cidText.setWrapTitle(false);
@@ -164,7 +165,7 @@ public class OrderReviseTab {
 //		valueMap.put("3_approved", "approved");
 //		status.setValueMap(valueMap);
 		ListGridField total_amount = new ListGridField("total_amount", 120);
-		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		total_amount.setCellFormatter(FieldFormatter.getIntegerFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		ListGridField netInclusive = new ListGridField("netInclusive", 125);
 		netInclusive.setCellFormatter(FieldFormatter.getPriceFormat());

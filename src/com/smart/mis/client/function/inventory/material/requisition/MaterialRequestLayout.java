@@ -119,6 +119,7 @@ public class MaterialRequestLayout extends VLayout {
 		//statusSelected.setValueMap("รอผลิต", "กำลังผลิต", "พร้อมนำส่ง", "อยู่ระหว่างนำส่ง", "นำส่งแล้ว");
 		statusSelected.setValueMap(RequisitionStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("job_id", "รหัสคำสั่งผลิต");
 		cidText.setWrapTitle(false);
@@ -169,7 +170,7 @@ public class MaterialRequestLayout extends VLayout {
 		returnListGrid.setGroupByField("status");
 		returnListGrid.setGroupStartOpen(GroupStartOpen.ALL);
 		
-		ListGridField sale_id = new ListGridField("mat_request_id" , 100);
+		ListGridField sale_id = new ListGridField("mat_request_id" , 110);
 		ListGridField quote_id = new ListGridField("job_id" , 100);
 		ListGridField cus_name = new ListGridField("sname", 180);
 		ListGridField status = new ListGridField("status", 80);

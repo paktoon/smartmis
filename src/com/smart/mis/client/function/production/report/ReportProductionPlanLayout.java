@@ -108,6 +108,7 @@ public class ReportProductionPlanLayout extends VLayout {
 		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
 		statusSelected.setValueMap(ProductionPlanStatus.getFilteredValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem saleText = new TextItem("sale_id", "รหัสรายการขาย");
 		saleText.setWrapTitle(false);
@@ -177,7 +178,7 @@ public class ReportProductionPlanLayout extends VLayout {
 		total_weight.setShowGridSummary(true);
         
 		ListGridField total_amount = new ListGridField("total_amount", 120);
-		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		total_amount.setCellFormatter(FieldFormatter.getIntegerFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		total_amount.setSummaryFunction(SummaryFunctionType.SUM);
 		total_amount.setShowGridSummary(true);

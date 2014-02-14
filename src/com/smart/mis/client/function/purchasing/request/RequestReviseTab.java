@@ -104,6 +104,7 @@ public class RequestReviseTab {
 		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
 		statusSelected.setValueMap(PurchaseRequestStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("sid", "รหัสผู้จำหน่าย");
 		cidText.setWrapTitle(false);

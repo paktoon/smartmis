@@ -22,6 +22,7 @@ import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.PrintSign;
 import com.smart.mis.shared.Printing;
 import com.smart.mis.shared.purchasing.PurchaseOrderStatus;
 import com.smart.mis.shared.purchasing.PurchaseRequestStatus;
@@ -84,8 +85,6 @@ public class OrderViewWindow extends EditorWindow{
 //	SelectMaterailList addFunc;
 //	Supplier client;
 //	String material_list = "NONE";
-
-	PrintHeader header = new PrintHeader("ใบสั่งซื้อ");
 	
 	public OrderViewWindow(){
 //		addFunc = new SelectMaterailList();
@@ -95,7 +94,7 @@ public class OrderViewWindow extends EditorWindow{
 //		client = new Supplier();
 		Window editWindow = new Window();
 		editWindow.setTitle("ข้อมูลคำสั่งซื้อ");
-		editWindow.setWidth(670);  
+		editWindow.setWidth(770);  
 		editWindow.setHeight(650);
 		editWindow.setShowMinimizeButton(false);
 		editWindow.setIsModal(true);
@@ -110,11 +109,16 @@ public class OrderViewWindow extends EditorWindow{
 	
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
 		final VLayout layout = new VLayout();
-		layout.setWidth(650);
+		final PrintHeader header = new PrintHeader("ใบสั่งซื้อ");
+		final PrintHeader payment_header = new PrintHeader("ใบสำคัญจ่ายค่าวัตถุดิบ");
+		layout.setWidth(750);
 		layout.setHeight(600);
 		layout.setMargin(10);
 		layout.addMember(header);
 		header.hide();
+		layout.addMember(payment_header);
+		payment_header.hide();
+		
 		
 		final String order_id = record.getAttributeAsString("order_id");
 		String request_id = record.getAttributeAsString("request_id");
@@ -136,6 +140,19 @@ public class OrderViewWindow extends EditorWindow{
 		Date created_date = record.getAttributeAsDate("created_date");
 		String modified_by = record.getAttributeAsString("modified_by");
 		Date modified_date = record.getAttributeAsDate("modified_date");
+		
+		String[][] signItem = new String[][] {
+				{"ผู้ออกคำสั่งซื้อ",created_by,"พนักงานฝ่ายจัดซื้อ"},
+				{"ผู้อนุมัติ",modified_by,"เจ้าของกิจการ"},
+				{"ผู้รับคำสั่งซื้อ","......................................................","ผู้จำหน่าย"}
+		};
+		final PrintSign sign = new PrintSign(signItem);
+		
+		String[][] payment_signItem = new String[][] {
+				{"ผู้จ่ายชำระเงิน",currentUser.getFullName(),"พนักงานฝ่ายการเงิน"},
+				{"ผู้รับเงิน","......................................................","ผู้จำหน่าย"}
+		};
+		final PrintSign payment_sign = new PrintSign(payment_signItem);
 		
 		DynamicForm quotationForm = new DynamicForm();
 		quotationForm.setWidth100(); 
@@ -229,7 +246,7 @@ public class OrderViewWindow extends EditorWindow{
 		paymentForm.setIsGroup(true);
 		paymentForm.setGroupTitle("ข้อมูลการชำระเงิน");
 		
-		StaticTextItem psts = new StaticTextItem("payment_status", "สถานะการชำระเงิน");
+		final StaticTextItem psts = new StaticTextItem("payment_status", "สถานะการชำระเงิน");
 		psts.setDefaultValue(PurchaseOrderStatus.getPaymentDisplay(payment_status));
 		StaticTextItem sup_payment_model = new StaticTextItem("payment_model", "วิธีการชำระเงิน");
 		sup_payment_model.setValue(payment_model);
@@ -361,7 +378,7 @@ public class OrderViewWindow extends EditorWindow{
 //		footerLayout.addMember(empty);
 		
 		final DynamicForm endForm = new DynamicForm();
-		endForm.setWidth(320);
+		endForm.setWidth(360);
 		endForm.setNumCols(4);
 		endForm.setMargin(5);
 		endForm.setIsGroup(true);
@@ -387,7 +404,7 @@ public class OrderViewWindow extends EditorWindow{
 		
 		//******************Summary
 		final DynamicForm summaryForm = new DynamicForm();
-		summaryForm.setWidth(320);
+		summaryForm.setWidth(360);
 		summaryForm.setNumCols(2);
 		summaryForm.setMargin(5);
 		summaryForm.setIsGroup(true);
@@ -441,6 +458,7 @@ public class OrderViewWindow extends EditorWindow{
             	//printLayout.addMember(new PrintHeader("ใบสั่งซื้อ"));
             	//empty.show();
             	header.show();
+            	sign.show();
             	printLayout.setPrintChildrenAbsolutelyPositioned(true);
             	printLayout.addMember(layout);
             	//System.out.println(printLayout.getPrintHTML(null, null));
@@ -448,6 +466,9 @@ public class OrderViewWindow extends EditorWindow{
             	main.destroy();
           }
         });
+		
+		if (record.getAttributeAsString("status").equalsIgnoreCase("2_recevied_product")) printButton.disable();
+		
 //		if (edit || !status.equals("3_approved")) printButton.disable();
 //		
 //		final IButton saveButton = new IButton("บันทึกการแก้ไข");
@@ -485,7 +506,7 @@ public class OrderViewWindow extends EditorWindow{
 				final Window confirm = new Window();
 				confirm.setTitle("รายละเอียดการจ่ายชำระเงิน");
 				confirm.setWidth(350);
-				confirm.setHeight(200);
+				confirm.setHeight(170);
 				confirm.setShowMinimizeButton(false);
 				confirm.setIsModal(true);
 				confirm.setShowModalMask(true);
@@ -497,20 +518,21 @@ public class OrderViewWindow extends EditorWindow{
 				
 				final DynamicForm receiptForm = new DynamicForm();
 				receiptForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-				StaticTextItem need_payment = new StaticTextItem("need_payment", "ยอดที่ต้องชำระ");
+				StaticTextItem need_payment = new StaticTextItem("need_payment", "ยอดที่จ่ายชำระ");
 				NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 				need_payment.setValue(nf.format(netEx * 1.07));
 				need_payment.setHint("บาท");
-				final DoubleItem paid_payment = new DoubleItem("paid_payment", "ยอดที่จ่ายชำระ");
+				//final DoubleItem paid_payment = new DoubleItem("paid_payment", "ยอดที่จ่ายชำระ");
 				StaticTextItem paid_date = new StaticTextItem("paid_date", "วันที่จ่ายชำระเงิน");
 				paid_date.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(new Date()));
 				StaticTextItem paid_by = new StaticTextItem("paid_by", "รับชำระเงินโดย");
 				paid_by.setValue(currentUser.getFirstName() + " " + currentUser.getLastName());
 				
-				paid_payment.setRequired(true);
-				paid_payment.setHint("บาท *");
+//				paid_payment.setRequired(true);
+//				paid_payment.setHint("บาท *");
 				
-				receiptForm.setFields(need_payment, paid_payment, paid_date, paid_by);
+//				receiptForm.setFields(need_payment, paid_payment, paid_date, paid_by);
+				receiptForm.setFields(need_payment, paid_date, paid_by);
 				
 				receiptLayout.addMember(receiptForm);
 				
@@ -527,36 +549,68 @@ public class OrderViewWindow extends EditorWindow{
 		        confirmButton.addClickHandler(new ClickHandler() {  
 		            public void onClick(ClickEvent event) { 
 		            	
-		            	Double upper = (netEx * 1.07) * 1.01;
-		            	Double lower = (netEx * 1.07) * 0.99;
-		            	System.out.println("paid_payment " + upper + " " + lower);
-		            	if (!receiptForm.validate() || paid_payment.getValueAsDouble() < (lower) || paid_payment.getValueAsDouble() > (upper)) {
-		            		SC.warn("ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบข้อมูลใหม่อีกครั้ง");
-		            		paid_payment.clearValue();
-		            		return;
-		            	}
+//		            	Double upper = (netEx * 1.07) * 1.01;
+//		            	Double lower = (netEx * 1.07) * 0.99;
+//		            	System.out.println("paid_payment " + upper + " " + lower);
+//		            	if (!receiptForm.validate() || paid_payment.getValueAsDouble() < (lower) || paid_payment.getValueAsDouble() > (upper)) {
+//		            		SC.warn("ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบข้อมูลใหม่อีกครั้ง");
+//		            		paid_payment.clearValue();
+//		            		return;
+//		            	}
 		            	
 		            	SC.confirm("ยืนยันการบันทึกจ่ายชำระเงิน", "ต้องการบันทึกจ่ายชำระเงินหรือไม่?" , new BooleanCallback() {
 							@Override
 							public void execute(Boolean value) {
 								if (value) {
-					            		record.setAttribute("payment_status", "2_paid");
-										record.setAttribute("paidInclusive", paid_payment.getValueAsDouble());
-					            		record.setAttribute("paid_date", new Date());
-					            		record.setAttribute("paid_by", currentUser.getFirstName() + " " + currentUser.getLastName());
-					            		PurchaseOrderDS.getInstance().updateData(record, new DSCallback() {
+										ListGridRecord order_update = new ListGridRecord();
+										order_update.setAttribute("order_id", order_id);
+										order_update.setAttribute("payment_status", "2_paid");
+										//record.setAttribute("paidInclusive", paid_payment.getValueAsDouble());
+										order_update.setAttribute("paidInclusive", (netEx * 1.07));
+										order_update.setAttribute("paid_date", new Date());
+										order_update.setAttribute("paid_by", currentUser.getFirstName() + " " + currentUser.getLastName());
+					            		PurchaseOrderDS.getInstance().updateData(order_update, new DSCallback() {
 											@Override
 											public void execute(DSResponse dsResponse, Object data,
 													DSRequest dsRequest) {
 													if (dsResponse.getStatus() != 0) {
 														SC.warn("การบันทึกจ่ายชำระเงิน ล้มเหลว");
 													} else { 
+														PurchaseOrderDS.getInstance().refreshData();
 														
+														psts.setValue(PurchaseOrderStatus.getPaymentDisplay("2_paid"));
 														updateDisburseMaterialReport(order_id);
 														
 														SC.say("การบันทึกจ่ายชำระเงิน เสร็จสมบูรณ์");
 														confirm.destroy();
-														main.destroy();
+														
+														SC.confirm("พิมพ์ใบสำคัญจ่ายค่าวัตถุดิบ", "การบันทึกจ่ายชำระเงิน เสร็จสมบูรณ์ <br><br> ต้องการพิมพ์ใบสำคัญจ่ายวัตถุดิบหรือไม่?" , new BooleanCallback() {
+
+															@Override
+															public void execute(
+																	Boolean value) {
+																	if(value != null && value) {
+//																		VLayout printLayout = new VLayout(10);
+//														            	printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
+//														            	printLayout.addMember(layout);
+//														            	Canvas.showPrintPreview(printLayout);
+														            	VLayout printLayout = new VLayout(10);
+														            	//printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
+														            	//empty.show();
+														            	payment_header.show();
+														            	payment_sign.show();
+														            	printLayout.setPrintChildrenAbsolutelyPositioned(true);
+														            	printLayout.addMember(layout);
+														            	//System.out.println(printLayout.getPrintHTML(null, null));
+														            	Canvas.showPrintPreview(printLayout);
+														            	main.destroy();
+																	} else {
+																		main.destroy();
+																	}
+																	//}
+															}});
+														
+														//main.destroy();
 													}
 											}
 										});
@@ -579,14 +633,36 @@ public class OrderViewWindow extends EditorWindow{
 		        confirm.show();
           }
         });
-		
 		if (record.getAttributeAsString("payment_status").equalsIgnoreCase("2_paid")) paidButton.disable();
+		
+		final IButton print_2_Button = new IButton("พิมพ์ใบสำคัญจ่าย");
+		print_2_Button.setIcon("icons/16/print.png");
+		print_2_Button.setWidth(150);
+		print_2_Button.addClickHandler(new ClickHandler() {  
+            public void onClick(ClickEvent event) { 
+            	VLayout printLayout = new VLayout(10);
+            	header.show();
+            	sign.show();
+            	printLayout.setPrintChildrenAbsolutelyPositioned(true);
+            	printLayout.addMember(layout);
+            	Canvas.showPrintPreview(printLayout);
+            	main.destroy();
+          }
+        });
+		if (!record.getAttributeAsString("payment_status").equalsIgnoreCase("2_paid")) print_2_Button.disable();
 		
 		if (page == 1) controls.addMember(printButton);
 		if (page == 2) controls.addMember(paidButton);
+		if (page == 2) controls.addMember(print_2_Button);
 		controls.addMember(closeButton);
 		layout.addMember(controls);
         
+		if (sign.isVisible()) sign.hide();
+		layout.addMember(sign);
+		
+		if (payment_sign.isVisible()) payment_sign.hide();
+		layout.addMember(payment_sign);
+		
 		return layout;
 	}
 	

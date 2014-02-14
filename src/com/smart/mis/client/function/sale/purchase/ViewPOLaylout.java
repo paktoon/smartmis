@@ -129,7 +129,7 @@ public class ViewPOLaylout extends VLayout{
 //		valueMap.put("3_approved", "approved");
 //		status.setValueMap(valueMap);
 		ListGridField total_amount = new ListGridField("total_amount", 100);
-		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		total_amount.setCellFormatter(FieldFormatter.getIntegerFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		ListGridField netInclusive = new ListGridField("netInclusive", 120);
 		netInclusive.setCellFormatter(FieldFormatter.getPriceFormat());

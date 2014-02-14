@@ -115,7 +115,9 @@ public class MaterialUsedReportListGrid extends ListGrid {
 	public Double getRequestAmount(Record[] records) {
 		Double request_amount = 0.0;
 		for (Record record : records) {
-			request_amount += record.getAttributeAsDouble("request_amount");
+			if (record.getAttributeAsDouble("request_amount") != null) {
+				request_amount += record.getAttributeAsDouble("request_amount");
+			}
 		}
 		return request_amount;
 	}

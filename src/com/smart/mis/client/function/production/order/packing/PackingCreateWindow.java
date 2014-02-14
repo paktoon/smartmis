@@ -30,6 +30,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.FromToValidate;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.prodution.Smith;
@@ -337,10 +338,11 @@ public class PackingCreateWindow {
         quoteItemCell_4.setIncludeInRecordSummary(false);
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("recv_amount", 90);
-        quoteItemCell_6.setTitle("จำนสนสินค้าที่สั่งผลิต");
+        quoteItemCell_6.setTitle("จำนวนสินค้า");
         
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
         
         ListGridField quoteItemCell_7 = new ListGridField("details");
         
@@ -426,10 +428,11 @@ public class PackingCreateWindow {
 		summaryForm.setGroupTitle("สรุปยอดรวม");
 		summaryForm.setColWidths(120, 100);
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat ef = NumberFormat.getFormat("#,##0");
 		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
 		total_sent_weight.setValue(nf.format(total_weight));
 		final StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
-		total_sent_amount.setValue(nf.format(total_amount));
+		total_sent_amount.setValue(ef.format(total_amount));
 		total_sent_weight.setWidth(100);
 		total_sent_amount.setWidth(100);
 		total_sent_weight.setTitle("น้ำหนักรวม");
@@ -834,7 +837,7 @@ public class PackingCreateWindow {
 		
 		final String plan_id = (String) planForm.getField("plan_id").getValue();
 		
-		final String job_id = "JOB70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		final String job_id = "JOB"+ KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		
 		Double total_sent_weight = 0.0;
 		Integer total_sent_amount = 0;
@@ -864,7 +867,7 @@ public class PackingCreateWindow {
 			
 			//if (desc != null && !desc.equals("")) details += "(" + desc + ")";
 			
-			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String sub_job_id = "SJ" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			ListGridRecord temp = PackingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, desc, sent_weight + recv_weight, sent_amount, true);
 			orderProductList.add(temp);
 			
@@ -872,7 +875,7 @@ public class PackingCreateWindow {
 			Record[] selectedMaterialProcess = MaterialProcessDS.getInstance(psid, pid).getCacheData();
 			
 			for (Record mat : selectedMaterialProcess) {
-				String cm_id = "SM70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+				String cm_id = "SM" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 				String mid = mat.getAttributeAsString("mid");
 				
 				Record[] materail = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mid", OperatorId.EQUALS, mid));
@@ -929,7 +932,7 @@ public class PackingCreateWindow {
 								DSRequest dsRequest) {
 							String message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id;
 							if (matRequest.size() != 0) {
-								final String request_id = "MR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+								final String request_id = "MR" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 								createMaterialRequest(request_id, job_id, currentUser.getFirstName() + " " + currentUser.getLastName(), matRequest);
 								message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> สร้างรายการขอเบิกวัตถุดิบ เลขที่ " + request_id;
 							}
@@ -973,7 +976,7 @@ public class PackingCreateWindow {
 //		System.out.println("Size " + matRequest.size());
 		for (MaterialRequestItemDetails item : matRequest.values()) {
 			total_request_amount += item.getAmount();
-			final String sub_request_id = "SMR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String sub_request_id = "SMR" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //			System.out.println("Debug ---");
 //			System.out.println("--- " + item.material_id);
 //			System.out.println("--- " + item.material_name);

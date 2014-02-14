@@ -115,6 +115,7 @@ public class ReportInvoiceLayout extends VLayout {
 		//statusSelected.setValueMap("รอชำระเงิน", "ชำระเงินแล้ว", "เกินกำหนดชำระเงิน");
 		statusSelected.setValueMap(InvoiceStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("cid", "รหัสลูกค้า");
 		cidText.setWrapTitle(false);
@@ -165,7 +166,7 @@ public class ReportInvoiceLayout extends VLayout {
 		invoiceListGrid.setUseAllDataSourceFields(false);
 		invoiceListGrid.setSelectionType(SelectionStyle.NONE);
 		
-		ListGridField invoice_id = new ListGridField("invoice_id" , 100);
+		ListGridField invoice_id = new ListGridField("invoice_id" , 90);
 		invoice_id.setSummaryFunction(new SummaryFunction() {  
             public Object getSummaryValue(Record[] records, ListGridField field) {
                 return records.length + " รายการ";  
@@ -185,7 +186,7 @@ public class ReportInvoiceLayout extends VLayout {
 		netInclusive.setSummaryFunction(SummaryFunctionType.SUM);
 		netInclusive.setShowGridSummary(true);
 		
-		ListGridField created_date = new ListGridField("created_date", 100);
+		ListGridField created_date = new ListGridField("created_date", 90);
 		ListGridField due_date = new ListGridField("due_date", 120);
 		
 		invoiceListGrid.setFields(created_date, invoice_id, status, sale_id, cus_name, payment_model, netInclusive, due_date);

@@ -43,7 +43,7 @@ public class DisburseMaterialPieChart {
 	
 	  private Options createOptions() {
 		    Options options = Options.create();
-		    options.setWidth(500);
+		    options.setWidth(450);
 		    options.setHeight(350);
 //		    options.setIsStacked(true);
 		    options.setLegend(LegendPosition.RIGHT);

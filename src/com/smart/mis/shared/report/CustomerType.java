@@ -11,7 +11,7 @@ public class CustomerType {
         valueMap.put("cus_type", "ประเภทลูกค้า");  
         valueMap.put("bus_type", "ลักษณะธุรกิจ"); 
         valueMap.put("cus_group", "กลุ่มลูกค้า"); 
-        valueMap.put("zone", "โซน");
+        //valueMap.put("zone", "โซน");
 	}
 	
 	public static LinkedHashMap<String, String> getValueMap() {

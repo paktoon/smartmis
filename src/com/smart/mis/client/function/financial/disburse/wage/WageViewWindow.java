@@ -12,12 +12,14 @@ import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.PrintSign;
 import com.smart.mis.shared.Printing;
 import com.smart.mis.shared.financial.WagePaymentStatus;
 import com.smart.mis.shared.prodution.ProcessStatus;
 import com.smart.mis.shared.prodution.ProcessType;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
 import com.smart.mis.shared.prodution.Smith;
+import com.smart.mis.shared.purchasing.PurchaseOrderStatus;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DSCallback;
@@ -80,8 +82,6 @@ public class WageViewWindow extends EditorWindow{
 	Double total_paid_wage;
 	Double total_return_mat;
 	
-	PrintHeader header = new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต");
-	
 	public void show(ListGridRecord record, boolean edit, User currentUser, int page){
 		smith = new Smith();
 		editWindow = new Window();
@@ -105,13 +105,15 @@ public class WageViewWindow extends EditorWindow{
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
 		
 		final VLayout layout = new VLayout();
+		final PrintHeader header = new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต");
+		
 		layout.setWidth(820);
 		layout.setHeight(540);
 		layout.setMargin(10);
 		layout.addMember(header);
 		header.hide();
 
-		String wage_id = record.getAttributeAsString("wage_id");
+		final String wage_id = record.getAttributeAsString("wage_id");
 		String job_id = record.getAttributeAsString("job_id");
 		String status = record.getAttributeAsString("status");
 		
@@ -133,11 +135,12 @@ public class WageViewWindow extends EditorWindow{
 		StaticTextItem jid = new StaticTextItem("wage_id", "รหัสค่าจ้างผลิต");
 		StaticTextItem qid = new StaticTextItem("job_id", "รหัสคำสั่งผลิต");
 		//StaticTextItem ddate = new StaticTextItem("delivery", "วันที่กำหนดส่งสินค้า");
-		StaticTextItem sts = new StaticTextItem("status", "สถานะ");
+		final StaticTextItem sts = new StaticTextItem("status", "สถานะ");
 		StaticTextItem cby = new StaticTextItem("created_by", "สร้างโดย");
 		StaticTextItem cdate = new StaticTextItem("created_date", "สร้างเมื่อ");
 		jid.setValue(wage_id);
 		qid.setValue(job_id);
+		
 //		if (delivery != null ) ddate.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(delivery));
 //		else ddate.setValue("-");
 		sts.setValue(WagePaymentStatus.getDisplay(status));
@@ -190,6 +193,7 @@ public class WageViewWindow extends EditorWindow{
 		smithForm.setColWidths(100,150,80,80,80,150);
 		//smithForm.editRecord(record);
 		
+		
 //		DynamicForm commentForm = new DynamicForm();
 //		commentForm.setWidth(250); 
 //		commentForm.setHeight(70);
@@ -214,6 +218,12 @@ public class WageViewWindow extends EditorWindow{
 //		//headerLayout.addMembers(smithForm, commentForm);
 //		headerLayout.addMembers(smithForm);
 		layout.addMember(smithForm);
+		
+		String[][] signItem = new String[][] {
+				{"ผู้จ่ายชำระเงิน",created_by,"พนักงานฝ่ายการเงิน"},
+				{"ผู้รับเงิน","......................................................","ช่าง"+stype}
+		};
+		final PrintSign sign = new PrintSign(signItem);
 		
 		SectionStack sectionStack = new SectionStack();
     	sectionStack.setWidth100();
@@ -298,7 +308,7 @@ public class WageViewWindow extends EditorWindow{
         //quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_8.setCellFormatter(FieldFormatter.getPriceFormat());
         //quoteItemCell_8.setType(ListGridFieldType.FLOAT); 
-        quoteItemCell_6.setShowGridSummary(false);
+        quoteItemCell_8.setShowGridSummary(false);
         //if (edit) quoteItemCell_8.setCanEdit(true);
         
 //        ListGridSummaryField quoteItemCell_sum = new ListGridSummaryField("sum_wage", 120);
@@ -420,21 +430,21 @@ public class WageViewWindow extends EditorWindow{
 		}
 		total_recv_weight.setWidth(100);
 		total_recv_amount.setWidth(100);
-		total_recv_weight.setTitle("น้ำหนักรวม");
-		total_recv_amount.setTitle("จำนวนรวม");
+		total_recv_weight.setTitle("น้ำหนักรวม (กรัม)");
+		total_recv_amount.setTitle("จำนวนรวม (หน่วย)");
 		total_recv_weight.setTextAlign(Alignment.RIGHT);
 		total_recv_amount.setTextAlign(Alignment.RIGHT);
-		total_recv_weight.setHint("กรัม");
-		total_recv_amount.setHint("ชิ้น");
+		//total_recv_weight.setHint("กรัม");
+		//total_recv_amount.setHint("ชิ้น");
 		final StaticTextItem total_wage = new StaticTextItem("total_wage");
 		if (job_wage == null) {
 			total_wage.setDefaultValue(nf.format(0));
 		} else {
 			total_wage.setDefaultValue(nf.format(job_wage));
 		}
-		total_wage.setTitle("ค่าจ้างผลิตรวม");
+		total_wage.setTitle("ค่าจ้างผลิตรวม (บาท)");
 		total_wage.setTextAlign(Alignment.RIGHT);
-		total_wage.setHint("บาท");
+		//total_wage.setHint("บาท");
 		summaryForm_2.setFields(total_recv_amount, total_recv_weight, total_wage);
 		footerLayout.addMember(summaryForm_2);
 		
@@ -488,7 +498,7 @@ public class WageViewWindow extends EditorWindow{
 				final Window confirm = new Window();
 				confirm.setTitle("รายละเอียดการชำระค่าจ้างผลิต");
 				confirm.setWidth(350);
-				confirm.setHeight(200);
+				confirm.setHeight(170);
 				confirm.setShowMinimizeButton(false);
 				confirm.setIsModal(true);
 				confirm.setShowModalMask(true);
@@ -500,21 +510,22 @@ public class WageViewWindow extends EditorWindow{
 				
 				final DynamicForm receiptForm = new DynamicForm();
 				receiptForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-				StaticTextItem need_payment = new StaticTextItem("need_payment", "ยอดที่ต้องชำระ");
+				StaticTextItem need_payment = new StaticTextItem("need_payment", "ยอดที่จ่ายชำระ");
 				NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 				//need_payment.setValue(nf.format(job_wage * 1.07));
 				need_payment.setValue(nf.format(job_wage));
 				need_payment.setHint("บาท");
-				final DoubleItem paid_payment = new DoubleItem("paid_payment", "ยอดที่จ่ายชำระ");
+				//final DoubleItem paid_payment = new DoubleItem("paid_payment", "ยอดที่จ่ายชำระ");
 				StaticTextItem paid_date = new StaticTextItem("paid_date", "วันที่จ่ายชำระเงิน");
 				paid_date.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(new Date()));
-				StaticTextItem paid_by = new StaticTextItem("paid_by", "รับชำระเงินโดย");
+				StaticTextItem paid_by = new StaticTextItem("paid_by", "จ่ายชำระเงินโดย");
 				paid_by.setValue(currentUser.getFirstName() + " " + currentUser.getLastName());
 				
-				paid_payment.setRequired(true);
-				paid_payment.setHint("บาท *");
+				//paid_payment.setRequired(true);
+				//paid_payment.setHint("บาท *");
 				
-				receiptForm.setFields(need_payment, paid_payment, paid_date, paid_by);
+				//receiptForm.setFields(need_payment, paid_payment, paid_date, paid_by);
+				receiptForm.setFields(need_payment, paid_date, paid_by);
 				
 				receiptLayout.addMember(receiptForm);
 				
@@ -531,36 +542,43 @@ public class WageViewWindow extends EditorWindow{
 		        confirmButton.addClickHandler(new ClickHandler() {  
 		            public void onClick(ClickEvent event) { 
 		            	
-		            	if (!receiptForm.validate() || paid_payment.getValueAsDouble() < (job_wage * 0.99) || paid_payment.getValueAsDouble() > (job_wage * 1.01)) {
-		            		SC.warn("ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบข้อมูลใหม่อีกครั้ง");
-		            		paid_payment.clearValue();
-		            		return;
-		            	}
+//		            	if (!receiptForm.validate() || paid_payment.getValueAsDouble() < (job_wage * 0.99) || paid_payment.getValueAsDouble() > (job_wage * 1.01)) {
+//		            		SC.warn("ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบข้อมูลใหม่อีกครั้ง");
+//		            		paid_payment.clearValue();
+//		            		return;
+//		            	}
 		            	
 		            	SC.confirm("ยืนยันการบันทึกจ่ายชำระเงิน", "ต้องการบันทึกจ่ายชำระเงินหรือไม่?" , new BooleanCallback() {
 							@Override
 							public void execute(Boolean value) {
 								if (value) {
-					            		record.setAttribute("status", "2_paid");
-										record.setAttribute("paidInclusive", paid_payment.getValueAsDouble());
-					            		record.setAttribute("paid_date", new Date());
-					            		record.setAttribute("paid_by", currentUser.getFirstName() + " " + currentUser.getLastName());
-					            		WageDS.getInstance().updateData(record, new DSCallback() {
+										ListGridRecord wage_update = new ListGridRecord();
+										wage_update.setAttribute("wage_id", wage_id);
+										wage_update.setAttribute("status", "2_paid");
+										//record.setAttribute("paidInclusive", paid_payment.getValueAsDouble());
+										wage_update.setAttribute("paidInclusive", job_wage);
+										wage_update.setAttribute("paid_date", new Date());
+										wage_update.setAttribute("paid_by", currentUser.getFirstName() + " " + currentUser.getLastName());
+					            		WageDS.getInstance().updateData(wage_update, new DSCallback() {
 											@Override
 											public void execute(DSResponse dsResponse, Object data,
 													DSRequest dsRequest) {
 													if (dsResponse.getStatus() != 0) {
 														SC.warn("การบันทึกจ่ายชำระเงิน ล้มเหลว");
 													} else { 
-														SC.say("การบันทึกจ่ายชำระเงิน เสร็จสมบูรณ์");
+
+														WageDS.getInstance().refreshData();
+														
+														sts.setValue(PurchaseOrderStatus.getPaymentDisplay("2_paid"));
+														//SC.say("การบันทึกจ่ายชำระเงิน เสร็จสมบูรณ์");
 														confirm.destroy();
 														
-														SC.confirm("พิมพ์ใบสำคัญจ่ายค่าจ้างวัตถุดิบ", "ต้องการพิมพ์ใบสำคัญจ่ายค่าจ้างวัตถุดิบหรือไม่?" , new BooleanCallback() {
+														SC.confirm("พิมพ์ใบสำคัญจ่ายค่าจ้างผลิต", "การบันทึกจ่ายชำระเงิน เสร็จสมบูรณ์ <br><br> ต้องการพิมพ์ใบสำคัญจ่ายค่าจ้างผลิตหรือไม่?" , new BooleanCallback() {
 
 															@Override
 															public void execute(
 																	Boolean value) {
-																	if(value) {
+																	if(value != null && value) {
 //																		VLayout printLayout = new VLayout(10);
 //														            	printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
 //														            	printLayout.addMember(layout);
@@ -569,13 +587,16 @@ public class WageViewWindow extends EditorWindow{
 														            	//printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
 														            	//empty.show();
 														            	header.show();
+														            	sign.show();
 														            	printLayout.setPrintChildrenAbsolutelyPositioned(true);
 														            	printLayout.addMember(layout);
 														            	//System.out.println(printLayout.getPrintHTML(null, null));
 														            	Canvas.showPrintPreview(printLayout);
 														            	main.destroy();
+																	} else {
+																		main.destroy();
 																	}
-													            	main.destroy();
+																	//}
 															}});
 														//main.destroy();
 													}
@@ -616,6 +637,7 @@ public class WageViewWindow extends EditorWindow{
             	//printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
             	//empty.show();
             	header.show();
+            	sign.show();
             	printLayout.setPrintChildrenAbsolutelyPositioned(true);
             	printLayout.addMember(layout);
             	//System.out.println(printLayout.getPrintHTML(null, null));
@@ -887,6 +909,9 @@ public class WageViewWindow extends EditorWindow{
 //        	
 //        });
         
+		if (sign.isVisible()) sign.hide();
+		layout.addMember(sign);
+		
 		return layout;
 	}
 	

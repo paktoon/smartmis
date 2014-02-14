@@ -300,6 +300,7 @@ public class ReturnViewWindow extends EditorWindow{
 						} else { 
 							updateStock(mid, rec_weight);
 							
+							ReturnDS.getInstance().refreshData();
 							SC.say("บันทึกรับวัตถุดิบเสร็จสิ้น");
 							editWindow.destroy();
 						}

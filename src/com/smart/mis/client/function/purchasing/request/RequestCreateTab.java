@@ -145,7 +145,6 @@ public class RequestCreateTab {
 		credit.setTextAlign(Alignment.LEFT);
 		credit.setDefaultValue(0);
 		
-		
 		DateRange dateRange = new DateRange();  
         dateRange.setRelativeStartDate(new RelativeDate("+15d")); //delivery date
         dateRange.setRelativeEndDate(new RelativeDate("+1m")); //end date
@@ -438,7 +437,7 @@ public class RequestCreateTab {
         quantity.disable();
         quantity.setWidth(100);
         quantity.setTextAlign(Alignment.LEFT);
-        //quantity.setValidators(ValidatorFactory.integerRange(50, null));
+        quantity.setValidators(ValidatorFactory.doubleRange(1000.00, null));
         
         final StaticTextItem pname_th = new StaticTextItem("desc", "คำอธิบาย");
         
@@ -448,6 +447,7 @@ public class RequestCreateTab {
         pprice.disable();
         pprice.setWidth(50);
         pprice.setTextAlign(Alignment.LEFT);
+        pprice.setValidators(ValidatorFactory.doubleRange(0.1, 100.00));
         
         pname.addChangedHandler(new ChangedHandler() {
 			@Override
@@ -603,7 +603,7 @@ public class RequestCreateTab {
 		
         ListGridField requestItemCell_3 = new ListGridField("unit", 50);
         
-        ListGridNumberField requestItemCell_4 = new ListGridNumberField("weight", 90);
+        ListGridNumberField requestItemCell_4 = new ListGridNumberField("weight", 110);
         requestItemCell_4.setSummaryFunction(SummaryFunctionType.SUM);
         requestItemCell_4.setShowGridSummary(true);
         requestItemCell_4.setIncludeInRecordSummary(false);
@@ -616,7 +616,7 @@ public class RequestCreateTab {
         
         ListGridNumberField requestItemCell_6 = new ListGridNumberField("request_amount", 80);
         
-        requestItemCell_6.setCanEdit(true);
+        //requestItemCell_6.setCanEdit(true);
         requestItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         requestItemCell_6.setShowGridSummary(true);
         

@@ -201,7 +201,7 @@ public class ReportReceiveLayout extends VLayout{
 		total_weight.setShowGridSummary(true);
         
 		ListGridField total_amount = new ListGridField("total_recv_amount", 150);
-		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		total_amount.setCellFormatter(FieldFormatter.getIntegerFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		total_amount.setSummaryFunction(SummaryFunctionType.SUM);
 		total_amount.setShowGridSummary(true);

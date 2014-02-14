@@ -7,7 +7,6 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
-import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.AdvancedCriteria;
 import com.smartgwt.client.data.Criterion;

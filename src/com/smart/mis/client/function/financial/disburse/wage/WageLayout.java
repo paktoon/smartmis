@@ -109,6 +109,7 @@ public class WageLayout extends VLayout {
 		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
 		statusSelected.setValueMap(WagePaymentStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem jidText = new TextItem("job_id", "รหัสคำสั่งผลิต");
 		jidText.setWrapTitle(false);
@@ -164,12 +165,12 @@ public class WageLayout extends VLayout {
                 new SortSpecifier("created_date", SortDirection.DESCENDING)  
         });
 		orderListGrid.setUseAllDataSourceFields(false);
-		//orderListGrid.setGroupByField("status");
-		//orderListGrid.setGroupStartOpen(GroupStartOpen.ALL);
+		orderListGrid.setGroupByField("status");
+		orderListGrid.setGroupStartOpen(GroupStartOpen.ALL);
 		
 		ListGridField wage_id = new ListGridField("wage_id" , 100);
 		ListGridField job_id = new ListGridField("job_id" , 100);
-		ListGridField sname = new ListGridField("sname", 150);
+		ListGridField sname = new ListGridField("sname");
 		ListGridField status = new ListGridField("status", 70);
 
 		ListGridField total_wage = new ListGridField("total_wage", 100);
@@ -180,7 +181,7 @@ public class WageLayout extends VLayout {
 		
 		orderListGrid.setFields(status, wage_id, job_id, sname, total_wage, created_date, iconField);
 		
-		//orderListGrid.hideField("status");
+		orderListGrid.hideField("status");
 		
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMargin(10);

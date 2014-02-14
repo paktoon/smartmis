@@ -101,13 +101,15 @@ public class DisburseWageListGrid extends ListGrid {
 	public Double getPaidInclusive(Record[] records) {
 		Double paidInclusive = 0.0;
 		for (Record record : records) {
-			paidInclusive += record.getAttributeAsDouble("paidInclusive");
+			if (record.getAttributeAsDouble("paidInclusive") != null) {
+				paidInclusive += record.getAttributeAsDouble("paidInclusive");
+			}
 		}
 		return paidInclusive;
 	}
 	
 	public DisburseWageListGrid(Criterion criteria) {
-		setWidth(400);
+		setWidth(450);
 		setHeight(150);
 		setAlign(Alignment.CENTER);
 		
@@ -130,6 +132,12 @@ public class DisburseWageListGrid extends ListGrid {
             }  
         });
         
+        ListGridField Field_6_0 = new ListGridField("percentage", "อัตราส่วน (%)", 100);
+        Field_6_0.setShowGridSummary(true);
+        Field_6_0.setSummaryFunction(SummaryFunctionType.SUM);
+        Field_6_0.setCellFormatter(FieldFormatter.getPercentageFormat());
+        Field_6_0.setAlign(Alignment.RIGHT);
+        
       ListGridField Field_6_1 = new ListGridField("sum_paid", "ยอดชำระค่าจ้างผลิต (บาท)", 170);
       Field_6_1.setShowGridSummary(true);
       Field_6_1.setSummaryFunction(SummaryFunctionType.SUM);
@@ -138,7 +146,7 @@ public class DisburseWageListGrid extends ListGrid {
       Field_6_1.setAlign(Alignment.RIGHT);
       Field_6_1.setCellFormatter(FieldFormatter.getPriceFormat());
         
-        setFields(field_1, Field_6_1);
+        setFields(field_1, Field_6_0, Field_6_1);
         
         setRecords(createListGridRecord(criteria));
         setHoverWidth(200);  
@@ -156,17 +164,20 @@ public class DisburseWageListGrid extends ListGrid {
 		dataTable = new Double[][] {
 		    		{getPaidInclusive(mat_1), getPaidInclusive(mat_2), getPaidInclusive(mat_3) }
 		    };
+		
+		Double sum_price = getPaidInclusive(mat_1) + getPaidInclusive(mat_2) + getPaidInclusive(mat_3);
 	    
     	return new ListGridRecord[]{ 
-    			createRecord("หล่อขึ้นรูป",getPaidInclusive(mat_1)),
-    			createRecord("แต่งและฝังพลอยประดับ",getPaidInclusive(mat_2)),
-    			createRecord("ขัดและติดพลอยแมกกาไซต์",getPaidInclusive(mat_3))
+    			createRecord("หล่อขึ้นรูป", (getPaidInclusive(mat_1) / sum_price) * 100, getPaidInclusive(mat_1)),
+    			createRecord("แต่งและฝังพลอยประดับ", (getPaidInclusive(mat_2) / sum_price) * 100,getPaidInclusive(mat_2)),
+    			createRecord("ขัดและติดพลอยแมกกาไซต์", (getPaidInclusive(mat_3) / sum_price) * 100,getPaidInclusive(mat_3))
     	};
 	}
 	
-	public ListGridRecord createRecord(String type, Double sum_price){
+	public ListGridRecord createRecord(String type, Double percentage, Double sum_price){
 		ListGridRecord record = new ListGridRecord();
         record.setAttribute("type", type);
+        record.setAttribute("percentage", percentage);
         record.setAttribute("sum_paid", sum_price);
         return record;
 	}

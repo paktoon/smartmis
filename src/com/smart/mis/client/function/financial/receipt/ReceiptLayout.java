@@ -117,6 +117,7 @@ public class ReceiptLayout extends VLayout {
 		//statusSelected.setValueMap("รอชำระเงิน", "ชำระเงินแล้ว", "เกินกำหนดชำระเงิน");
 		statusSelected.setValueMap(InvoiceStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
         
 		final DynamicForm dateForm = new DynamicForm();

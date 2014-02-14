@@ -65,6 +65,10 @@ public class User implements IsSerializable{
 		return this._lastname;
 	}
 	
+	public String getFullName(){
+		return this._firstname + " " + this._lastname;
+	}
+	
 	public String getEmail(){
 		return this._email;
 	}

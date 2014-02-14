@@ -41,7 +41,9 @@ public class RequestMaterialDS extends DataSource  {
 			 DataSourceFloatField Field_8 = new DataSourceFloatField("price", "ราคา (บาท)");
 			 DataSourceFloatField Field_9 = new DataSourceFloatField("sum_price", "ราคารวม (บาท)");
 			 
-			 setFields(Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9);
+			 DataSourceBooleanField Field_10 = new DataSourceBooleanField("status");
+			 
+			 setFields(Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(new ListGridRecord[]{}); // For create tab
@@ -50,6 +52,7 @@ public class RequestMaterialDS extends DataSource  {
 		 
 		 public RequestMaterialDS(String request_id){
 			 DataSourceTextField sub_request_id_field = new DataSourceTextField("sub_request_id");
+			 sub_request_id_field.setPrimaryKey(true);
 			 sub_request_id_field.setHidden(true);
 			 DataSourceTextField request_id_field = new DataSourceTextField("request_id");
 			 request_id_field.setHidden(true);
@@ -64,7 +67,9 @@ public class RequestMaterialDS extends DataSource  {
 			 DataSourceFloatField Field_8 = new DataSourceFloatField("price", "ราคา (บาท)");
 			 DataSourceFloatField Field_9 = new DataSourceFloatField("sum_price", "ราคารวม (บาท)");
 			 
-			 setFields(sub_request_id_field, request_id_field, Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9);
+			 DataSourceBooleanField Field_10 = new DataSourceBooleanField("status");
+			 
+			 setFields(sub_request_id_field, request_id_field, Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(RequestMaterialData.getRecords(request_id)); // For edit tab

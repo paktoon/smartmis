@@ -12,11 +12,13 @@ import com.smart.mis.shared.security.PermissionProfile;
 import com.smart.mis.shared.security.Role;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.BackgroundRepeat;
 import com.smartgwt.client.util.EventHandler;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -25,6 +27,7 @@ import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout; 
 
 public class Smartmis implements EntryPoint {
@@ -109,12 +112,36 @@ public class Smartmis implements EntryPoint {
 		vLoginLayout.setWidth100();  
 		vLoginLayout.setHeight100();  
 		vLoginLayout.setDefaultLayoutAlign(Alignment.CENTER);
+		vLoginLayout.setBackgroundImage("background_3.jpg");
+		vLoginLayout.setBackgroundRepeat(BackgroundRepeat.NO_REPEAT);
+		vLoginLayout.setBackgroundPosition("left bottom");
 		//vLoginLayout.setBackgroundImage("background.jpg");
+		
+		HLayout appLogo = new HLayout();
+		appLogo.setWidth100();
+		appLogo.setHeight(110);
+		//appLogo.setBackgroundColor("#22AAFF");
+		//appLogo.setBackgroundImage("background_2.jpg");
+		//appLogo.setBackgroundRepeat(BackgroundRepeat.NO_REPEAT);
+		
+		HLayout empty = new HLayout();
+		empty.setHeight(100);
+		empty.setWidth("*");
+		Label appName = new Label();
+		appName.setWidth100();
+		appName.setContents("ระบบสารสนเทศเพื่อการจัดการ <br> &nbsp;&nbsp;&nbsp;ธุรกิจผลิตและจำหน่ายเครื่องประดับเงิน");
+		appName.setStyleName("appNameLabel");
+		empty.addMember(appName);
+		appLogo.addMember(empty);
+		
+		HLayout loginHLayout = new HLayout();
+		loginHLayout.setHeight(100);
+		loginHLayout.setWidth("40%");
 		
 		VLayout loginWindow = new VLayout();
 		loginWindow.setGroupTitle("ยินดีต้อนรับ");
 		loginWindow.setIsGroup(true);
-		loginWindow.setWidth(210);
+		loginWindow.setWidth("210");
 		loginWindow.setHeight(100);
 		loginWindow.setPadding(10);
 		//loginWindow.setBorder("3px solid blue");
@@ -137,6 +164,15 @@ public class Smartmis implements EntryPoint {
 		
 		loginForm.setFields(userName, passWord);
 		loginWindow.addMembers(loginForm, loginButton, errorLabel);
+		loginHLayout.addMember(loginWindow);
+		appLogo.addMember(loginHLayout);
+		
+		Img gaeLogo = new Img("https://developers.google.com/appengine/images/appengine-noborder-120x30.gif", 120 , 30);
+		gaeLogo.setImageWidth(120);  
+		gaeLogo.setImageHeight(30);
+		//gaeLogo.setLeft("*");
+		//gaeLogo.setWidth100();
+		//gaeLogo.setAlign(Alignment.RIGHT);
 		
 		Canvas[] loginPage = {
 			new Canvas() {{  
@@ -146,11 +182,13 @@ public class Smartmis implements EntryPoint {
 			//,loginForm
 			//,loginButton
 			//,errorLabel
-			,loginWindow
+			//,loginWindow
+			,appLogo
 			,new Canvas() {{  
 	            setHeight("*");  
 	            setWidth("*");  
 	        }}
+			,gaeLogo
         }; 
 		
 		vLoginLayout.addMembers(loginPage, 0);
@@ -220,7 +258,7 @@ public class Smartmis implements EntryPoint {
 		securityService.createUserOnServer(new User("inventory", "test", "สมศักดิ์" , "ดูแลคลัง", "somsak@richsilver.com" , "inventory staff", "นาย", true),"INVENTORY", "admin",callback);
 		securityService.createUserOnServer(new User("purchasing", "test", "สมหมาย" , "ซื้อของ", "sommai@richsilver.com" , "purchasing staff", "นาย", true),"PURCHASING", "admin",callback);
 		securityService.createUserOnServer(new User("financial", "test", "สมปรีดี" , "เงินสด", "sompredee@richsilver.com" , "accouting staff", "นาง", true),"FINANCIAL", "admin",callback);
-		securityService.createUserOnServer(new User("owner", "test", "ดาว" , "เจ้าของ", "dow@richsilver.com" , "business owner", "นางสาว", true),"OWNER", "admin",callback);
+		securityService.createUserOnServer(new User("owner", "test", "แสงดาว" , "วิเชียร", "dow@richsilver.com" , "business owner", "นางสาว", true),"OWNER", "admin",callback);
 
 	    if (!isLogin) {
 	    	// To do should implement cookies

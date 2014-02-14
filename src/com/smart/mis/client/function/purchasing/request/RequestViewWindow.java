@@ -359,13 +359,13 @@ public class RequestViewWindow extends EditorWindow{
         quoteItemCell_4.setIncludeInRecordSummary(false);
         
         ListGridField quoteItemCell_5 = new ListGridField("price", 90);
-        if (edit) quoteItemCell_5.setCanEdit(true);
+        //if (edit) quoteItemCell_5.setCanEdit(true);
         quoteItemCell_5.setShowGridSummary(false);
         quoteItemCell_5.setCellFormatter(FieldFormatter.getPriceFormat());
         quoteItemCell_5.setAlign(Alignment.RIGHT);
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("request_amount", 70);
-        if (edit) quoteItemCell_6.setCanEdit(true);
+        //if (edit) quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
         
@@ -879,6 +879,7 @@ public class RequestViewWindow extends EditorWindow{
 					if (dsResponse.getStatus() != 0) {
 						SC.warn("การอนุมัติใบเสนอซื้อล้มเหลว");
 					} else { 
+						PurchaseRequestDS.getInstance().refreshData();
 						SC.say("แก้ไขสถานะใบเสนอซื้อ \"" + PurchaseRequestStatus.getDisplay(status) + "\" เสร็จสิ้น");
 					}
 			}
@@ -1020,7 +1021,7 @@ public class RequestViewWindow extends EditorWindow{
 //									main.destroy();
 //								}});
 							
-							SC.confirm("คำสั่งซื้อรหัส " + order_id + "<br> สถานะเป็น " + PurchaseOrderStatus.getDisplay(orderRecord.getAttributeAsString("status")) + " และ " + PurchaseOrderStatus.getPaymentDisplay(orderRecord.getAttributeAsString("payment_status")) + "<br><br> ต้องการพิ่มพ์คำสั่งซื้อหรือไม่?", new BooleanCallback(){
+							SC.confirm("คำสั่งซื้อรหัส " + order_id + "<br> สถานะเป็น " + PurchaseOrderStatus.getDisplay(orderRecord.getAttributeAsString("status")) + " และ " + PurchaseOrderStatus.getPaymentDisplay(orderRecord.getAttributeAsString("payment_status")) + "<br><br> ต้องการพิมพ์คำสั่งซื้อหรือไม่?", new BooleanCallback(){
 								@Override
 								public void execute(Boolean value) {
 									if (value != null && value) {

@@ -31,6 +31,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.FromToValidate;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.prodution.ProductionPlanStatus;
@@ -340,10 +341,11 @@ public class AbradingCreateWindow {
         quoteItemCell_4.setIncludeInRecordSummary(false);
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("recv_amount", 90);
-        quoteItemCell_6.setTitle("จำนสนสินค้าที่สั่งผลิต");
+        quoteItemCell_6.setTitle("จำนวนสินค้า");
         
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
         
         ListGridField quoteItemCell_7 = new ListGridField("details");
         
@@ -429,10 +431,11 @@ public class AbradingCreateWindow {
 		summaryForm.setGroupTitle("สรุปยอดรวม");
 		summaryForm.setColWidths(120, 100);
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat ef = NumberFormat.getFormat("#,##0");
 		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
 		total_sent_weight.setValue(nf.format(total_weight));
 		final StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
-		total_sent_amount.setValue(nf.format(total_amount));
+		total_sent_amount.setValue(ef.format(total_amount));
 		total_sent_weight.setWidth(100);
 		total_sent_amount.setWidth(100);
 		total_sent_weight.setTitle("น้ำหนักรวม");
@@ -835,7 +838,7 @@ public class AbradingCreateWindow {
 		
 		final String plan_id = (String) planForm.getField("plan_id").getValue();
 		
-		final String job_id = "JOB70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		final String job_id = "JOB" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		
 		Double total_sent_weight = 0.0;
 		Integer total_sent_amount = 0;

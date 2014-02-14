@@ -109,6 +109,7 @@ public class TransferLayout extends VLayout {
 		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
 		statusSelected.setValueMap(WagePaymentStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem jidText = new TextItem("plan_id", "รหัสแผนการผลิต");
 		jidText.setWrapTitle(false);
@@ -172,7 +173,7 @@ public class TransferLayout extends VLayout {
 		ListGridField total_sent_weight = new ListGridField("total_sent_weight");
 		total_sent_weight.setCellFormatter(FieldFormatter.getNumberFormat());
 		ListGridField total_sent_amount = new ListGridField("total_sent_amount");
-		total_sent_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		total_sent_amount.setCellFormatter(FieldFormatter.getIntegerFormat());
 		
 		//ListGridField iconField = new ListGridField("transferField", "จัดการ");
 		

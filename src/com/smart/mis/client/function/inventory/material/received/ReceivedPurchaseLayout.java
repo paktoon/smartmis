@@ -118,6 +118,7 @@ public class ReceivedPurchaseLayout extends VLayout {
 		//statusSelected.setValueMap("รอผลิต", "กำลังผลิต", "พร้อมนำส่ง", "อยู่ระหว่างนำส่ง", "นำส่งแล้ว");
 		statusSelected.setValueMap(PurchaseOrderStatus.getValueReceivedMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("sid", "รหัสผู้จำหน่าย");
 		cidText.setWrapTitle(false);
@@ -172,7 +173,7 @@ public class ReceivedPurchaseLayout extends VLayout {
 		//ListGridField quote_id = new ListGridField("request_id" , 90);
 		ListGridField cus_name = new ListGridField("sup_name", 180);
 		ListGridField status = new ListGridField("received_status");
-		ListGridField total_amount = new ListGridField("total_weight", 110);
+		ListGridField total_amount = new ListGridField("total_amount", 110);
 		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		ListGridField netInclusive = new ListGridField("netInclusive", 110);

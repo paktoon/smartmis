@@ -98,7 +98,9 @@ public class ProductReceivedReportListGrid extends ListGrid {
 	public Double getReceviedAmount(Record[] records) {
 		Double recv_amount = 0.0;
 		for (Record record : records) {
-			recv_amount += record.getAttributeAsDouble("recv_amount");
+			if (record.getAttributeAsDouble("recv_amount") != null) {
+				recv_amount += record.getAttributeAsDouble("recv_amount");
+			}
 		}
 		return recv_amount;
 	}
@@ -108,7 +110,9 @@ public class ProductReceivedReportListGrid extends ListGrid {
 	public Double getReceviedWeight(Record[] records) {
 		Double recv_weight = 0.0;
 		for (Record record : records) {
-			recv_weight += record.getAttributeAsDouble("recv_weight");
+			if (record.getAttributeAsDouble("recv_weight") != null) {
+				recv_weight += record.getAttributeAsDouble("recv_weight");
+			}
 		}
 		return recv_weight;
 	}

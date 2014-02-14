@@ -257,6 +257,11 @@ public class ReceivedViewWindow extends EditorWindow{
         			if (recv_amount != null) {
         				Double sent_amount = record.getAttributeAsDouble("request_amount");
 	        			//if (recv_amount.intValue() != sent_amount.intValue()) {
+        				
+        				if (!record.getAttributeAsString("type").equalsIgnoreCase("แร่เงิน") && (recv_amount != Math.floor(recv_amount))) {
+        					return "font-weight:bold; color:#d64949;";
+        				}
+        				
 	        			if (recv_amount > sent_amount * 1.02 || recv_amount < sent_amount * 0.98) {
 	        				return "font-weight:bold; color:#d64949;";
 	        			} else {
@@ -604,6 +609,7 @@ public class ReceivedViewWindow extends EditorWindow{
 								updateStock(item);
 							}
 							
+							PurchaseOrderDS.getInstance().refreshData();
 							SC.say("บันทึกรับวัตถุดิบเสร็จสิ้น");
 							editWindow.destroy();
 						}
@@ -677,6 +683,12 @@ public class ReceivedViewWindow extends EditorWindow{
 				
 				Double recv_weight = record.getAttributeAsDouble("received_weight");
 				Double recv_amount = record.getAttributeAsDouble("received_amount");
+				
+				String mat_type = record.getAttributeAsString("type");
+				
+				if (!mat_type.equalsIgnoreCase("แร่เงิน") && (recv_amount != Math.floor(recv_amount))) {
+					listGrid.setFieldError(row, "received_amount", "ปริมาณไม่เหมาะสมกับชนิดของวัตถุดิบ");
+				}
 				
 				if (recv_weight != null) {
 					if (recv_weight > sent_weight * 1.02 || recv_weight < sent_weight * 0.98) {

@@ -23,6 +23,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.FromToValidate;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.WaitingCallback;
@@ -322,7 +323,7 @@ public class CastingCreateWindow {
         quoteItemCell_4.setIncludeInRecordSummary(false);
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("plan_amount", 70);
-        
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
         
@@ -410,10 +411,11 @@ public class CastingCreateWindow {
 		summaryForm.setGroupTitle("สรุปยอดรวม");
 		summaryForm.setColWidths(120, 100);
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat ef = NumberFormat.getFormat("#,##0");
 		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
 		total_sent_weight.setValue(nf.format(total_weight));
 		final StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
-		total_sent_amount.setValue(nf.format(total_amount));
+		total_sent_amount.setValue(ef.format(total_amount));
 		total_sent_weight.setWidth(100);
 		total_sent_amount.setWidth(100);
 		total_sent_weight.setTitle("น้ำหนักรวม");
@@ -818,7 +820,7 @@ public class CastingCreateWindow {
 		final String sale_id = (String) planForm.getField("sale_id").getValue();
 		System.out.println(plan_id);
 		
-		final String job_id = "JOB70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		final String job_id = "JOB" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		
 		Double total_sent_weight = 0.0;
 		Integer total_sent_amount = 0;
@@ -836,7 +838,7 @@ public class CastingCreateWindow {
 
 			total_sent_amount += sent_amount;
 
-			ProcessListDS.getInstance(pid).refreshData();
+			//ProcessListDS.getInstance(pid).refreshData();
 			Record[] selectedProcess = ProcessListDS.getInstance(pid).applyFilter(ProcessListDS.getInstance(pid).getCacheData(), new Criterion("type", OperatorId.EQUALS, "1_casting"));
 			Record process = selectedProcess[0];
 			String psid = process.getAttributeAsString("psid");
@@ -847,15 +849,15 @@ public class CastingCreateWindow {
 			
 			//if (desc != null && !desc.equals("")) details += "(" + desc + ")";
 			
-			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String sub_job_id = "SJ" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			ListGridRecord temp = CastingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, desc, sent_weight, sent_amount, true);
 			orderProductList.add(temp);
 			
-			MaterialProcessDS.getInstance(psid, pid).refreshData();
+			//MaterialProcessDS.getInstance(psid, pid).refreshData();
 			Record[] selectedMaterialProcess = MaterialProcessDS.getInstance(psid, pid).getCacheData();
 			
 			for (Record mat : selectedMaterialProcess) {
-				String cm_id = "CM70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+				String cm_id = "CM" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 				CastingMaterialDS.getInstance(sub_job_id, job_id).addData(CastingMaterialData.createRecord(sub_job_id, cm_id,  sent_amount, mat));
 			}
 		}
@@ -879,8 +881,15 @@ public class CastingCreateWindow {
 		String plan_status = "5_on_production";
 		ListGridRecord update_plan = PlanData.createStatusRecord(planRecord, plan_status, "ออกคำสั่งผลิตแล้ว");
 		System.out.println("update plan : " + update_plan.getAttributeAsString("plan_id") + " status: " + update_plan.getAttributeAsString("status"));
-		PlanDS.getInstance().updateData(update_plan);
-		PlanDS.getInstance().refreshData();
+		
+		PlanDS.getInstance().updateData(update_plan, new DSCallback() {
+				@Override
+				public void execute(DSResponse dsResponse, Object data,
+						DSRequest dsRequest) {
+					PlanDS.getInstance().refreshData();
+				}
+			}
+		);
 		
 		String status = "1_on_production";
 		final ListGridRecord jobOrder = CastingData.createSentRecord(job_id, plan_id, smith, sent_date, due_date, total_sent_weight, total_sent_amount, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), "", "", status);

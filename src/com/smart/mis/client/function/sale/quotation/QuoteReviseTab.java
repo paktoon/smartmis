@@ -103,6 +103,7 @@ public class QuoteReviseTab {
 		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
 		statusSelected.setValueMap(QuotationStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("cid", "รหัสลูกค้า");
 		cidText.setWrapTitle(false);
@@ -156,7 +157,7 @@ public class QuoteReviseTab {
 		ListGridField cus_name = new ListGridField("cus_name", 200);
 		ListGridField status = new ListGridField("status");
 		ListGridField total_amount = new ListGridField("total_amount", 120);
-		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		total_amount.setCellFormatter(FieldFormatter.getIntegerFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		ListGridField netInclusive = new ListGridField("netInclusive", 125);
 		netInclusive.setCellFormatter(FieldFormatter.getPriceFormat());

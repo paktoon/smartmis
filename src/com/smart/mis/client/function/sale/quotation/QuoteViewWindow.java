@@ -2,6 +2,7 @@ package com.smart.mis.client.function.sale.quotation;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
@@ -26,8 +27,10 @@ import com.smart.mis.client.function.sale.quotation.product.QuoteProductDetails;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.PrintSign;
 import com.smart.mis.shared.Printing;
 import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.sale.Customer;
@@ -88,7 +91,6 @@ public class QuoteViewWindow extends EditorWindow{
 
 	SelectProductList addFunc;
 	Customer client;
-	PrintHeader header = new PrintHeader("ใบเสนอราคา");
 	
 	public QuoteViewWindow(){
 		addFunc = new SelectProductList();
@@ -113,11 +115,17 @@ public class QuoteViewWindow extends EditorWindow{
 	
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
 		final VLayout layout = new VLayout();
+		final PrintHeader header = new PrintHeader("ใบเสนอราคา");
+
+//		LinkedHashMap<String, String> signItem = new LinkedHashMap<String, String>();
+//		signItem.put("ผู้เสนอราคา", "พนักงานขาย");
+//		signItem.put("ผู้อนุมัติ", "เจ้าของกิจการ");
+		
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
 		layout.addMember(header);
-		header.hide();
+		if (header.isVisible()) header.hide();
 		
 		String cid = record.getAttributeAsString("cid");
 		String payment_model = record.getAttributeAsString("payment_model");
@@ -136,7 +144,14 @@ public class QuoteViewWindow extends EditorWindow{
 		//System.out.println(from + " " + to + " " + delivery + " " + netEx);
 		String status = record.getAttributeAsString("status");
 		String created_by = record.getAttributeAsString("created_by");
+		String modified_by = record.getAttributeAsString("modified_by");
 		Date created_date = record.getAttributeAsDate("created_date");
+		
+		String[][] signItem = new String[][] {
+				{"ผู้เสนอราคา",created_by,"พนักงานขาย"},
+				{"ผู้อนุมัติ",modified_by,"เจ้าของกิจการ"}
+		};
+		final PrintSign sign = new PrintSign(signItem);
 		
 		DynamicForm quotationForm = new DynamicForm();
 		quotationForm.setWidth100(); 
@@ -324,8 +339,6 @@ public class QuoteViewWindow extends EditorWindow{
 		//quoteListGrid.setEditEvent(ListGridEditEvent.CLICK);  
 		//quoteListGrid.setListEndEditAction(RowEndEditAction.NONE);
 		quoteListGrid.setShowRowNumbers(true);
-        final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
-		quoteListGrid.setCriteria(ci);
 //		if (edit) {
 //			quoteListGrid.setCanRemoveRecords(true);
 //			quoteListGrid.setWarnOnRemoval(true);
@@ -333,17 +346,22 @@ public class QuoteViewWindow extends EditorWindow{
 //		}
 		
 		QuoteProductDS tempView = new QuoteProductDS(quote_id);
+//		QuoteProductDS.getInstance(quote_id).refreshData();
 		Record[] cachedData = QuoteProductDS.getInstance(quote_id).getCacheData();
 		if (cachedData.length != 0) {
 			tempView.setTestData(cachedData);
-			for (Record cache : cachedData){
-				System.out.println(cache.getAttributeAsString("sub_quote_id") + " "+ cache.getAttributeAsString("status"));
-			}
-		} else {
-			System.out.println("0 result found....");
 		}
+//			for (Record cache : cachedData){
+//				System.out.println(cache.getAttributeAsString("sub_quote_id") + " "+ cache.getAttributeAsString("status"));
+//			}
+//		} else {
+//			System.out.println("0 result found....");
+//		}
 		quoteListGrid.setDataSource(tempView);
 		quoteListGrid.setUseAllDataSourceFields(false);
+		
+        final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
+		quoteListGrid.setCriteria(ci);
 		
 		ListGridField quoteItemCell_1 = new ListGridField("pid", 60);
         ListGridField quoteItemCell_2 = new ListGridField("name"); 
@@ -363,8 +381,9 @@ public class QuoteViewWindow extends EditorWindow{
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("quote_amount", 70);
         quoteItemCell_6.setValidators(ValidatorFactory.integerRange(50, 5000));
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
         
-        if (edit) quoteItemCell_6.setCanEdit(true);
+        //if (edit) quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
         
@@ -544,7 +563,9 @@ public class QuoteViewWindow extends EditorWindow{
             	printLayout.setAlign(Alignment.CENTER);
 //            	printLayout.addMember(new PrintHeader("ใบเสนอราคา"));
 //            	empty.show();
+            	layout.setBorder("2px solid blue");
             	header.show();
+            	sign.show();
             	printLayout.setPrintChildrenAbsolutelyPositioned(true);
             	//commentForm.hide();
             	printLayout.addMember(layout);
@@ -595,7 +616,7 @@ public class QuoteViewWindow extends EditorWindow{
 					public void execute(Boolean value) {
 						if (value) {
 							//saveQuotation(main, quote_id, customerForm, quoteListGrid, fromDate.getValueAsDate(), toDate.getValueAsDate(), deliveryDate.getValueAsDate(), currentUser);
-							updateQuoteStatus(quote_id, "3_approved", "");
+							updateQuoteStatus(quote_id, "3_approved", currentUser.getFullName(), "");
 							main.destroy();
 						}
 					}
@@ -661,7 +682,7 @@ public class QuoteViewWindow extends EditorWindow{
 					            public void onClick(ClickEvent event) { 
 					            	String value = selectOtherItem.getValueAsString();
 					            	if (value != null && !value.equalsIgnoreCase("")) {
-						            	updateQuoteStatus(quote_id, "1_waiting_for_revised", selectOtherItem.getValueAsString());
+						            	updateQuoteStatus(quote_id, "1_waiting_for_revised", currentUser.getFullName(), selectOtherItem.getValueAsString());
 						            	confirm.destroy();
 						            	main.destroy();
 					            	} else {
@@ -798,7 +819,9 @@ public class QuoteViewWindow extends EditorWindow{
 //			}
 //        	
 //        });
-        
+       
+		layout.addMember(sign);
+		if (sign.isVisible()) sign.hide();
 		return layout;
 	}
 	
@@ -874,7 +897,7 @@ public class QuoteViewWindow extends EditorWindow{
 						} else { 
 							for (QuoteProductDetails item : productList) {
 								if (item.sub_quote_id == null) {
-									item.sub_quote_id = "QS80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+									item.sub_quote_id = "QS" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 									ListGridRecord subUpdateRecord = QuoteProductData.createRecord(item);
 									QuoteProductDS.getInstance(quote_id).addData(subUpdateRecord);
 								} else  {
@@ -889,8 +912,8 @@ public class QuoteViewWindow extends EditorWindow{
 			});
 	}
 	
-	void updateQuoteStatus(String quote_id, final String status, String comment) {
-		Record updated = QuotationData.createStatusRecord(quote_id,status,comment);
+	void updateQuoteStatus(String quote_id, final String status,String modified_by, String comment) {
+		Record updated = QuotationData.createStatusRecord(quote_id, status, modified_by, comment);
 		QuotationDS.getInstance().updateData(updated, new DSCallback() {
 			@Override
 			public void execute(DSResponse dsResponse, Object data,
@@ -1012,9 +1035,9 @@ public class QuoteViewWindow extends EditorWindow{
 	        dateRange.setRelativeEndDate(new RelativeDate("+"+credit+"d"));
 	        final Date due_date = dateRange.getEndDate();
 	        
-			final String sale_id = "SO70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
-			final String invoice_id = "IN70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
-			final String plan_id = "PL70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String sale_id = "SO" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String invoice_id = "IN" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String plan_id = "PL" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			
 			final ListGridRecord saleRecord = SaleOrderData.createRecord(sale_id, quote_id, invoice_id, cid, cus_name, payment_model, credit, cus_type ,bus_type, cus_group, zone, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, sale_status, purchase_id, due_date);
 			final ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, cus_name, payment_model, credit, cus_type ,bus_type, cus_group, zone, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
@@ -1027,7 +1050,7 @@ public class QuoteViewWindow extends EditorWindow{
 			final Double produce_weight = total_produce_weight;
 			final Integer produce_amount = total_produce_amount;
 			if (planProductList.size() != 0) {
-				SC.confirm("สร้างแผนการผลิตโดยอัตโนมัติ", "สินค้าในรายการขายไม่เพียงพอ <br> ต้องการสร้างแผนการผลิต หรือไม่? <br><br> หมายเหตุ: ถ้า 'ยกเลิก' การสร้างแผนการผลิต ระบบจะไม่สร้างรายการขายด้วย" , new BooleanCallback() {
+				SC.confirm("สร้างแผนการผลิตโดยอัตโนมัติ", "สินค้าในรายการขายไม่เพียงพอ <br> ต้องการสร้างแผนการผลิต หรือไม่? <br><br> หมายเหตุ: <br> ถ้า 'ยกเลิก' การสร้างแผนการผลิต ระบบจะไม่สร้างรายการขายด้วย" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
@@ -1063,7 +1086,7 @@ public class QuoteViewWindow extends EditorWindow{
 	}
 	
 	private PlanProductDetails CreatePlanProductDetails(Record product, Integer pplan_amount) {
-		String sub_plan_id = "SP80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String sub_plan_id = "SP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		String pid = product.getAttributeAsString("pid");
 		String pname = product.getAttributeAsString("name");
 		String ptype = product.getAttributeAsString("type");

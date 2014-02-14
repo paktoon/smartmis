@@ -286,6 +286,7 @@ public class TransferViewWindow extends EditorWindow{
         
         ListGridNumberField quoteItemCell_5 = new ListGridNumberField("sent_amount", 120);
         quoteItemCell_5.setSummaryFunction(SummaryFunctionType.SUM);
+        quoteItemCell_5.setCellFormatter(FieldFormatter.getIntegerFormat());
         quoteItemCell_5.setShowGridSummary(true);
         quoteItemCell_5.setIncludeInRecordSummary(false);
         
@@ -301,7 +302,7 @@ public class TransferViewWindow extends EditorWindow{
         
         ListGridNumberField quoteItemCell_7 = new ListGridNumberField("recv_amount", 120);
         quoteItemCell_7.setSummaryFunction(SummaryFunctionType.SUM);
-        quoteItemCell_7.setCellFormatter(FieldFormatter.getNumberFormat());
+        quoteItemCell_7.setCellFormatter(FieldFormatter.getIntegerFormat());
         quoteItemCell_7.setType(ListGridFieldType.FLOAT);
         quoteItemCell_7.setShowGridSummary(true);
         if (edit) quoteItemCell_7.setCanEdit(true);
@@ -375,10 +376,11 @@ public class TransferViewWindow extends EditorWindow{
 		summaryForm_1.setGroupTitle("สรุปยอดขอโอนสินค้า");
 		summaryForm_1.setColWidths(120, 80);
 		final NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		final NumberFormat ef = NumberFormat.getFormat("#,##0");
 		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
 		total_sent_weight.setValue(nf.format(sent_weight));
 		final StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
-		total_sent_amount.setValue(nf.format(sent_amount));
+		total_sent_amount.setValue(ef.format(sent_amount));
 		total_sent_weight.setWidth(100);
 		total_sent_amount.setWidth(100);
 		total_sent_weight.setTitle("น้ำหนักรวม");
@@ -407,9 +409,9 @@ public class TransferViewWindow extends EditorWindow{
 		}
 		final StaticTextItem total_recv_amount = new StaticTextItem("total_recv_amount");
 		if (recv_amount == null) {
-			total_recv_amount.setDefaultValue(nf.format(0));
+			total_recv_amount.setDefaultValue(ef.format(0));
 		} else {
-			total_recv_amount.setDefaultValue(nf.format(recv_amount));
+			total_recv_amount.setDefaultValue(ef.format(recv_amount));
 		}
 		total_recv_weight.setWidth(100);
 		total_recv_amount.setWidth(100);
@@ -842,6 +844,7 @@ public class TransferViewWindow extends EditorWindow{
 							}
 							
 							SC.say("บันทึกรับโอนสินค้าเสร็จสิ้น");
+							TransferDS.getInstance().refreshData();
 							editWindow.destroy();
 						}
 				}

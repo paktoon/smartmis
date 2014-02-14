@@ -11,6 +11,7 @@ import com.smart.mis.client.function.production.plan.product.PlanProductDetails;
 import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.shared.FieldFormatter;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.prodution.ProductType;
@@ -233,7 +234,7 @@ public class PlanCreateTab {
         ListGridField Field_M2 = new ListGridField("name", 200);
         ListGridField Field_M3 = new ListGridField("type", 70);
         ListGridField Field_M4 = new ListGridField("remain", 70);
-        Field_M4.setCellFormatter(FieldFormatter.getNumberFormat());
+        Field_M4.setCellFormatter(FieldFormatter.getIntegerFormat());
         Field_M4.setAlign(Alignment.LEFT);
         pname.setPickListFields(Field_M1, Field_M2, Field_M3, Field_M4);
         
@@ -405,8 +406,8 @@ public class PlanCreateTab {
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("plan_amount", 90);
         quoteItemCell_6.setValidators(ValidatorFactory.integerRange(50, 5000));
-        
-        quoteItemCell_6.setCanEdit(true);
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
+        //quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
         
@@ -711,7 +712,7 @@ public class PlanCreateTab {
 			total_amount += item.getAttributeAsInt("plan_amount");
 			//total_netExclusive += item.getAttributeAsDouble("sum_price");
 			
-			String sub_plan_id = "SP80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			String sub_plan_id = "SP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			String pid = item.getAttributeAsString("pid");
 			String pname = item.getAttributeAsString("name");
 			String ptype = item.getAttributeAsString("type");
@@ -739,7 +740,7 @@ public class PlanCreateTab {
 		String plan_status = "2_waiting_for_approved";
 		//xxxService.xxx(Callback quoteId);
 		System.out.println("Create plan, total_weight = " + total_weight);
-		final String plan_id = "PL70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		final String plan_id = "PL" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		ListGridRecord newRecord = PlanData.createRecord(plan_id, null, delivery, total_weight, total_amount, new Date(), null, user, null, "", plan_status, reason);
 		// client; - cid
 		// DateForm; - from , to

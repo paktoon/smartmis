@@ -12,6 +12,14 @@
     font-size:18px;
 }
 
+.appNameLabel {
+    font-family:Arial,Verdana,tahoma,serif;
+    color:#898989;
+    font-size:24px;
+    padding-left:5em;
+    font-weight:bold;
+}
+
 .initFunctionLabel {
     font-family:Arial,Verdana,tahoma,serif;
     color:#F0F0F0;
@@ -35,6 +43,12 @@
     font-family:Arial,Verdana,tahoma,serif;
     color:#454545;
     font-size:16px;
+}
+
+.printSigns {
+    font-family:Arial,Verdana,tahoma,serif;
+    color:#454545;
+    font-size:10px;
 }
 
 .printDocHeader {

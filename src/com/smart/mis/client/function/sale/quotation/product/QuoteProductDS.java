@@ -40,8 +40,10 @@ public class QuoteProductDS extends DataSource  {
 			 DataSourceTextField Field_7 = new DataSourceTextField("unit", "หน่วย");
 			 DataSourceFloatField Field_8 = new DataSourceFloatField("price", "ราคา (บาท)");
 			 DataSourceFloatField Field_9 = new DataSourceFloatField("sum_price", "ราคารวม (บาท)");
+
+			 DataSourceBooleanField Field_10 = new DataSourceBooleanField("status");
 			 
-			 setFields(Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9);
+			 setFields(Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(new ListGridRecord[]{}); // For create tab
@@ -50,6 +52,7 @@ public class QuoteProductDS extends DataSource  {
 		 
 		 public QuoteProductDS(String quote_id){
 			 DataSourceTextField sub_quote_id_field = new DataSourceTextField("sub_quote_id");
+			 sub_quote_id_field.setPrimaryKey(true);
 			 sub_quote_id_field.setHidden(true);
 			 DataSourceTextField quote_id_field = new DataSourceTextField("quote_id");
 			 quote_id_field.setHidden(true);
@@ -63,8 +66,10 @@ public class QuoteProductDS extends DataSource  {
 			 DataSourceTextField Field_7 = new DataSourceTextField("unit", "หน่วย");
 			 DataSourceFloatField Field_8 = new DataSourceFloatField("price", "ราคา (บาท)");
 			 DataSourceFloatField Field_9 = new DataSourceFloatField("sum_price", "ราคารวม (บาท)");
+
+			 DataSourceBooleanField Field_10 = new DataSourceBooleanField("status");
 			 
-			 setFields(sub_quote_id_field, quote_id_field, Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9);
+			 setFields(sub_quote_id_field, quote_id_field, Field_1, Field_2, Field_3, Field_5, Field_6 ,Field_7, Field_8,  Field_9, Field_10);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(QuoteProductData.getRecords(quote_id)); // For edit tab

@@ -143,13 +143,13 @@ public class ViewProductLaylout extends VLayout{
 		ListGridField unit = new ListGridField("unit", 50);
 		
 		ListGridField remain = new ListGridField("remain");
-		remain.setCellFormatter(FieldFormatter.getNumberFormat());
+		remain.setCellFormatter(FieldFormatter.getIntegerFormat());
 		remain.setAlign(Alignment.RIGHT);
 		ListGridField reserved = new ListGridField("reserved");
-		reserved.setCellFormatter(FieldFormatter.getNumberFormat());
+		reserved.setCellFormatter(FieldFormatter.getIntegerFormat());
 		reserved.setAlign(Alignment.RIGHT);
 		ListGridField inStock = new ListGridField("inStock");
-		inStock.setCellFormatter(FieldFormatter.getNumberFormat());
+		inStock.setCellFormatter(FieldFormatter.getIntegerFormat());
 		inStock.setAlign(Alignment.RIGHT);
 		
 		productListGrid.setFields(pid, name, inStock, remain, reserved, unit);

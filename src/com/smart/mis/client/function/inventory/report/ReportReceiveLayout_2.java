@@ -105,6 +105,7 @@ public class ReportReceiveLayout_2 extends VLayout {
 		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
 		statusSelected.setValueMap(TransferStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem jidText = new TextItem("plan_id", "รหัสแผนการผลิต");
 		jidText.setWrapTitle(false);

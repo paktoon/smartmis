@@ -15,6 +15,7 @@ import com.smart.mis.client.function.sale.quotation.product.QuoteProductDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.prodution.ProcessType;
@@ -249,8 +250,8 @@ public class PlanViewWindow extends EditorWindow{
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("plan_amount", 70);
         quoteItemCell_6.setValidators(ValidatorFactory.integerRange(50, 5000));
-        
-        if (edit) quoteItemCell_6.setCanEdit(true);
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
+        //if (edit) quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
         
@@ -690,7 +691,7 @@ public class PlanViewWindow extends EditorWindow{
 						} else { 
 							for (PlanProductDetails item : productList) {
 								if (item.sub_plan_id == null) {
-									item.sub_plan_id = "QS80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+									item.sub_plan_id = "QS" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 									ListGridRecord subUpdateRecord = PlanProductData.createRecord(item, plan_id);
 									PlanProductDS.getInstance(plan_id).addData(subUpdateRecord);
 								} else  {

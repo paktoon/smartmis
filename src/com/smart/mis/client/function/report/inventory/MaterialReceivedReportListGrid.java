@@ -109,7 +109,9 @@ public class MaterialReceivedReportListGrid extends ListGrid {
 	public Double getReceviedAmount(Record[] records) {
 		Double received_amount = 0.0;
 		for (Record record : records) {
-			received_amount += record.getAttributeAsDouble("received_amount");
+			if (record.getAttributeAsDouble("received_amount") != null) {
+				received_amount += record.getAttributeAsDouble("received_amount");
+			}
 		}
 		return received_amount;
 	}
@@ -119,7 +121,9 @@ public class MaterialReceivedReportListGrid extends ListGrid {
 	public Double getReceviedWeight(Record[] records) {
 		Double recv_weight = 0.0;
 		for (Record record : records) {
-			recv_weight += record.getAttributeAsDouble("received_weight");
+			if (record.getAttributeAsDouble("received_weight") != null) {
+				recv_weight += record.getAttributeAsDouble("received_weight");
+			}
 		}
 		return recv_weight;
 	}

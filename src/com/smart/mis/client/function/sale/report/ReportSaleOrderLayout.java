@@ -113,6 +113,7 @@ public class ReportSaleOrderLayout extends VLayout {
 		//statusSelected.setValueMap("รอผลิต", "กำลังผลิต", "พร้อมนำส่ง", "อยู่ระหว่างนำส่ง", "นำส่งแล้ว");
 		statusSelected.setValueMap(SaleOrderStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem cidText = new TextItem("cid", "รหัสลูกค้า");
 		cidText.setWrapTitle(false);
@@ -172,7 +173,7 @@ public class ReportSaleOrderLayout extends VLayout {
 		sale_id.setShowGridSummary(true);
         
 		ListGridField status = new ListGridField("status" , 80);
-		ListGridField cid = new ListGridField("cid", 100);
+		ListGridField cid = new ListGridField("cid", 80);
 		ListGridField cus_name = new ListGridField("cus_name");
 
 		ListGridField total_weight = new ListGridField("total_weight", 120);
@@ -182,7 +183,7 @@ public class ReportSaleOrderLayout extends VLayout {
 		total_weight.setShowGridSummary(true);
         
 		ListGridField total_amount = new ListGridField("total_amount", 120);
-		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		total_amount.setCellFormatter(FieldFormatter.getIntegerFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		total_amount.setSummaryFunction(SummaryFunctionType.SUM);
 		total_amount.setShowGridSummary(true);
@@ -193,7 +194,7 @@ public class ReportSaleOrderLayout extends VLayout {
 		netInclusive.setSummaryFunction(SummaryFunctionType.SUM);
 		netInclusive.setShowGridSummary(true);
 		
-		ListGridField created_date = new ListGridField("created_date", 100);
+		ListGridField created_date = new ListGridField("created_date", 90);
 		
 		saleListGrid.setFields(created_date, sale_id, status, cid, cus_name, total_weight, total_amount, netInclusive);
 		

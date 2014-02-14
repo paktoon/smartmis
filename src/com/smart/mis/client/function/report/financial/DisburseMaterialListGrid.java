@@ -102,13 +102,15 @@ public class DisburseMaterialListGrid extends ListGrid {
 	public Double getSumPrice(Record[] records) {
 		Double sum_price = 0.0;
 		for (Record record : records) {
-			sum_price += record.getAttributeAsDouble("sum_price");
+			if (record.getAttributeAsDouble("sum_price") != null) {
+				sum_price += record.getAttributeAsDouble("sum_price");
+			}
 		}
 		return sum_price;
 	}
 	
 	public DisburseMaterialListGrid(Criterion criteria) {
-		setWidth(400);
+		setWidth(450);
 		setHeight(170);
 		setAlign(Alignment.CENTER);
 		
@@ -131,15 +133,21 @@ public class DisburseMaterialListGrid extends ListGrid {
             }  
         });
         
-      ListGridField Field_6_1 = new ListGridField("sum_price", "ยอดชำระค่าวัตถุดิบ (บาท)", 170);
-      Field_6_1.setShowGridSummary(true);
-      Field_6_1.setSummaryFunction(SummaryFunctionType.SUM);
+        ListGridField Field_6_0 = new ListGridField("percentage", "อัตราส่วน (%)", 100);
+        Field_6_0.setShowGridSummary(true);
+        Field_6_0.setSummaryFunction(SummaryFunctionType.SUM);
+        Field_6_0.setCellFormatter(FieldFormatter.getPercentageFormat());
+        Field_6_0.setAlign(Alignment.RIGHT);
+        
+	    ListGridField Field_6_1 = new ListGridField("sum_price", "ยอดชำระค่าวัตถุดิบ (บาท)", 170);
+	    Field_6_1.setShowGridSummary(true);
+	    Field_6_1.setSummaryFunction(SummaryFunctionType.SUM);
         
         //Cell Format
-      Field_6_1.setAlign(Alignment.RIGHT);
-      Field_6_1.setCellFormatter(FieldFormatter.getPriceFormat());
+        Field_6_1.setAlign(Alignment.RIGHT);
+        Field_6_1.setCellFormatter(FieldFormatter.getPriceFormat());
         
-        setFields(field_1, Field_6_1);
+        setFields(field_1, Field_6_0, Field_6_1);
         
         setRecords(createListGridRecord(criteria));
         setHoverWidth(200);  
@@ -159,17 +167,20 @@ public class DisburseMaterialListGrid extends ListGrid {
 	    		{getSumPrice(mat_1), getSumPrice(mat_2), getSumPrice(mat_3), getSumPrice(mat_4) }
 	    };
 	    
+	    Double sum_price = getSumPrice(mat_1) + getSumPrice(mat_2) + getSumPrice(mat_3) + getSumPrice(mat_4);
+	    
     	return new ListGridRecord[]{ 
-    			createRecord("แร่เงิน",getSumPrice(mat_1)),
-    			createRecord("พลอยประดับ",getSumPrice(mat_2)),
-    			createRecord("แมกกาไซต์",getSumPrice(mat_3)),
-    			createRecord("อื่นๆ",getSumPrice(mat_4))
+    			createRecord("แร่เงิน", (getSumPrice(mat_1) / sum_price) * 100, getSumPrice(mat_1)),
+    			createRecord("พลอยประดับ", (getSumPrice(mat_2) / sum_price) * 100,getSumPrice(mat_2)),
+    			createRecord("แมกกาไซต์", (getSumPrice(mat_3) / sum_price) * 100,getSumPrice(mat_3)),
+    			createRecord("อื่นๆ", (getSumPrice(mat_4) / sum_price) * 100,getSumPrice(mat_4))
     	};
 	}
 	
-	public ListGridRecord createRecord(String type, Double sum_price){
+	public ListGridRecord createRecord(String type, Double percentage, Double sum_price){
 		ListGridRecord record = new ListGridRecord();
         record.setAttribute("type", type);
+        record.setAttribute("percentage", percentage);
         record.setAttribute("sum_price", sum_price);
         return record;
 	}

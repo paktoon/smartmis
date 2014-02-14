@@ -204,23 +204,23 @@ public class ReportInventoryLayout extends VLayout{
         });  
 		pid.setShowGridSummary(true);
         
-		ListGridField name = new ListGridField("name");
-		ListGridField type = new ListGridField("type", 100);
+		ListGridField name = new ListGridField("name", "ชื่อสินค้า");
+		ListGridField type = new ListGridField("type", 120);
 
 		ListGridField inStock = new ListGridField("inStock", 100);
-		inStock.setCellFormatter(FieldFormatter.getNumberFormat());
+		inStock.setCellFormatter(FieldFormatter.getIntegerFormat());
 		inStock.setAlign(Alignment.RIGHT);
 		inStock.setSummaryFunction(SummaryFunctionType.SUM);
 		inStock.setShowGridSummary(true);
         
 		ListGridField reserved = new ListGridField("reserved", 100);
-		reserved.setCellFormatter(FieldFormatter.getNumberFormat());
+		reserved.setCellFormatter(FieldFormatter.getIntegerFormat());
 		reserved.setAlign(Alignment.RIGHT);
 		reserved.setSummaryFunction(SummaryFunctionType.SUM);
 		reserved.setShowGridSummary(true);
         
 		ListGridField remain = new ListGridField("remain", 100);
-		remain.setCellFormatter(FieldFormatter.getNumberFormat());
+		remain.setCellFormatter(FieldFormatter.getIntegerFormat());
 		remain.setAlign(Alignment.RIGHT);
 		remain.setSummaryFunction(SummaryFunctionType.SUM);
 		remain.setShowGridSummary(true);

@@ -159,7 +159,9 @@ public class CashReceiptListGrid extends ListGrid {
 	public Double getNetInclusive(Record[] records) {
 		Double netInclusive = 0.0;
 		for (Record record : records) {
-			netInclusive += record.getAttributeAsDouble("netInclusive");
+			if (record.getAttributeAsDouble("netInclusive") != null) {
+				netInclusive += record.getAttributeAsDouble("netInclusive");
+			}
 		}
 		return netInclusive;
 	}

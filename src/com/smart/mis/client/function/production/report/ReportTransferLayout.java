@@ -114,6 +114,7 @@ public class ReportTransferLayout extends VLayout {
 		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
 		statusSelected.setValueMap(TransferStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem jidText = new TextItem("plan_id", "รหัสแผนการผลิต");
 		jidText.setWrapTitle(false);
@@ -190,7 +191,7 @@ public class ReportTransferLayout extends VLayout {
 		total_weight.setShowGridSummary(true);
         
 		ListGridField total_amount = new ListGridField("total_sent_amount", 120);
-		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		total_amount.setCellFormatter(FieldFormatter.getIntegerFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		total_amount.setSummaryFunction(SummaryFunctionType.SUM);
 		total_amount.setShowGridSummary(true);

@@ -21,9 +21,11 @@ import com.smart.mis.client.function.production.process.ProcessListDS;
 import com.smart.mis.client.function.production.smith.SmithDS;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.client.function.report.production.MaterialUsedReportDS;
+import com.smart.mis.client.function.sale.delivery.DeliveryItemDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.prodution.ProcessStatus;
@@ -248,6 +250,13 @@ public class CastingViewWindow extends EditorWindow{
 		CastingProductDS tempView = CastingProductDS.getInstance(job_id);
 		tempView.refreshData();
 		
+//		CastingProductDS tempView = new CastingProductDS();
+//		CastingProductDS.getInstance(job_id).refreshData();
+//		Record[] cachedData = CastingProductDS.getInstance(job_id).getCacheData();
+//		if (cachedData.length != 0) {
+//			tempView.setTestData(cachedData);
+//		}
+		
 		orderListGrid.setDataSource(tempView);
 		orderListGrid.setUseAllDataSourceFields(false);
 		
@@ -270,6 +279,7 @@ public class CastingViewWindow extends EditorWindow{
         ListGridNumberField quoteItemCell_5 = new ListGridNumberField("sent_amount", 120);
         quoteItemCell_5.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_5.setShowGridSummary(true);
+        quoteItemCell_5.setCellFormatter(FieldFormatter.getIntegerFormat());
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("recv_weight", 120);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
@@ -282,7 +292,7 @@ public class CastingViewWindow extends EditorWindow{
         
         ListGridNumberField quoteItemCell_7 = new ListGridNumberField("recv_amount", 120);
         quoteItemCell_7.setSummaryFunction(SummaryFunctionType.SUM);
-        quoteItemCell_7.setCellFormatter(FieldFormatter.getNumberFormat());
+        quoteItemCell_7.setCellFormatter(FieldFormatter.getIntegerFormat());
         quoteItemCell_7.setType(ListGridFieldType.FLOAT);
         quoteItemCell_7.setShowGridSummary(true);
         if (edit) quoteItemCell_7.setCanEdit(true);
@@ -345,10 +355,11 @@ public class CastingViewWindow extends EditorWindow{
 		summaryForm_1.setGroupTitle("สรุปยอดสั่งผลิต");
 		summaryForm_1.setColWidths(120, 80);
 		final NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat ef = NumberFormat.getFormat("#,##0");
 		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
 		total_sent_weight.setValue(nf.format(sent_weight));
 		final StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
-		total_sent_amount.setValue(nf.format(sent_amount));
+		total_sent_amount.setValue(ef.format(sent_amount));
 		total_sent_weight.setWidth(100);
 		total_sent_amount.setWidth(100);
 		total_sent_weight.setTitle("น้ำหนักรวม");
@@ -377,9 +388,9 @@ public class CastingViewWindow extends EditorWindow{
 		}
 		final StaticTextItem total_recv_amount = new StaticTextItem("total_recv_amount");
 		if (recv_amount == null) {
-			total_recv_amount.setDefaultValue(nf.format(0));
+			total_recv_amount.setDefaultValue(ef.format(0));
 		} else {
-			total_recv_amount.setDefaultValue(nf.format(recv_amount));
+			total_recv_amount.setDefaultValue(ef.format(recv_amount));
 		}
 		
 		total_recv_weight.setWidth(100);
@@ -787,8 +798,9 @@ public class CastingViewWindow extends EditorWindow{
 			total_received_amount += recv_amount;
 		}
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat ef = NumberFormat.getFormat("#,##0");
 		target.getField("total_recv_weight").setValue(nf.format(total_received_weight));
-		target.getField("total_recv_amount").setValue(nf.format(total_received_amount));
+		target.getField("total_recv_amount").setValue(ef.format(total_received_amount));
 		wage_per_gam = perGam;
 		total_paid_wage = total_received_weight * perGam;
 		target_2.getField("total_wage").setValue(nf.format(total_paid_wage));
@@ -818,7 +830,7 @@ public class CastingViewWindow extends EditorWindow{
 			
 			//Create Material Request total_recv_weight / 2 -> Silver 92.5% + 100%
 			//final HashMap<String, MaterialRequestItemDetails> matRequest = new HashMap<String, MaterialRequestItemDetails>();
-			final String request_id = "MR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String request_id = "MR" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			createMaterialRequest(request_id, job_id, smith, currentUser.getFirstName() + " " + currentUser.getLastName(), total_received_weight);
 
 			CastingDS.getInstance().updateData(record, new DSCallback() {
@@ -853,7 +865,7 @@ public class CastingViewWindow extends EditorWindow{
 	}
 	
 	String createWagePayment(ListGridRecord record, String user) {
-		String wage_id = "WP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String wage_id = "WP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		String status = "1_waiting_for_payment";
 		ListGridRecord newRecord = WageData.createRecord(record, wage_id, new Date(), user, status);
 		WageDS.getInstance().addData(newRecord);
@@ -861,7 +873,7 @@ public class CastingViewWindow extends EditorWindow{
 	}
 	
 	void createWageItemPayment(ListGridRecord record, String wage_id) {
-		String sub_wage_id = "SWP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String sub_wage_id = "SWP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		ListGridRecord newRecord = WageItemData.createRecord(record, sub_wage_id, wage_id, true);
 		WageItemDS.getInstance(wage_id).addData(newRecord);
 	}
@@ -880,7 +892,7 @@ public class CastingViewWindow extends EditorWindow{
 		Double total_request_amount = 0.0;
 		for (MaterialRequestItemDetails item : matRequest) {
 			total_request_amount += item.getAmount();
-			final String sub_request_id = "SMR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String sub_request_id = "SMR" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			ListGridRecord newRecord = MaterialRequestItemData.createRecord(sub_request_id, request_id, item);
 			newRecord.setAttribute("request_date", new Date());
 			MaterialRequestItemDS.getInstance(request_id).addData(newRecord);

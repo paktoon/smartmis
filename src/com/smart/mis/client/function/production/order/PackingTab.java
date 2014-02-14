@@ -109,6 +109,7 @@ public class PackingTab {
 		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
 		statusSelected.setValueMap(ProcessStatus.getValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 		final TextItem jidText = new TextItem("job_id", "รหัสคำสั่งผลิต");
 		jidText.setWrapTitle(false);
@@ -165,10 +166,10 @@ public class PackingTab {
 		//orderListGrid.setGroupByField("status");
 		//orderListGrid.setGroupStartOpen(GroupStartOpen.ALL);
 		
-		ListGridField job_id = new ListGridField("job_id" , 120);
-		ListGridField plan_id = new ListGridField("plan_id" , 120);
+		ListGridField job_id = new ListGridField("job_id" , 110);
+		ListGridField plan_id = new ListGridField("plan_id" , 110);
 		//ListGridField sname = new ListGridField("sname");
-		ListGridField status = new ListGridField("status", 100);
+		ListGridField status = new ListGridField("status", 120);
 		
 		ListGridField sent_date = new ListGridField("sent_date", 100);
 		//ListGridField due_date = new ListGridField("due_date", 100);

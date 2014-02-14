@@ -20,6 +20,7 @@ import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.PrintSign;
 import com.smart.mis.shared.Printing;
 import com.smart.mis.shared.prodution.ProcessStatus;
 import com.smart.mis.shared.prodution.ProcessType;
@@ -87,8 +88,6 @@ public class ScrapingPrintWindow extends EditorWindow{
 	Double total_paid_wage;
 	Double total_return_mat;
 	
-	PrintHeader header = new PrintHeader("ใบสั่งผลิต");
-	
 	public void show(ListGridRecord record, boolean edit, User currentUser, int page){
 		smith = new Smith();
 		editWindow = new Window();
@@ -110,6 +109,8 @@ public class ScrapingPrintWindow extends EditorWindow{
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
 		
 		final VLayout layout = new VLayout();
+		final PrintHeader header = new PrintHeader("ใบสั่งผลิต");
+		
 		layout.setWidth(970);
 		layout.setHeight(550);
 		layout.setMargin(10);
@@ -227,6 +228,12 @@ public class ScrapingPrintWindow extends EditorWindow{
 //		//headerLayout.addMembers(smithForm, commentForm);
 //		headerLayout.addMembers(smithForm);
 //		layout.addMember(headerLayout);
+		String[][] signItem = new String[][] {
+				{"ผู้สั่งผลิต",created_by,"พนักงานฝ่ายผลิต"},
+				{"ผู้รับคำสั่งผลิต",sname,"ช่าง"+stype}
+		};
+		final PrintSign sign = new PrintSign(signItem);
+		
 		layout.addMember(smithForm);
 		
 		SectionStack sectionStack = new SectionStack();
@@ -297,6 +304,7 @@ public class ScrapingPrintWindow extends EditorWindow{
         quoteItemCell_5.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_5.setShowGridSummary(true);
         quoteItemCell_5.setIncludeInRecordSummary(false);
+        quoteItemCell_5.setCellFormatter(FieldFormatter.getIntegerFormat());
         
         ListGridField quoteItemCell_6 = new ListGridField("details", "รายละเอียดสินค้า", 200);
         ListGridField quoteItemCell_7 = new ListGridField("pdetails", "รายละเอียดการผลิต", 100);
@@ -348,9 +356,9 @@ public class ScrapingPrintWindow extends EditorWindow{
 		//End
 		
 		final DynamicForm dateForm = new DynamicForm();
-		dateForm.setWidth(300);
+		dateForm.setWidth(550);
 		dateForm.setHeight(75);
-		dateForm.setNumCols(2);
+		dateForm.setNumCols(4);
 		dateForm.setMargin(5);
 		dateForm.setIsGroup(true);
 		dateForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
@@ -385,35 +393,36 @@ public class ScrapingPrintWindow extends EditorWindow{
 //		
 //		dateForm.setFields(sentDate, dueDate, receivedDate);
 		dateForm.setFields(sentDate, dueDate);
-		dateForm.setColWidths(130,80);
+		dateForm.setColWidths(150,80,150,80);
 		//dateForm.editRecord(record);
 		footerLayout.addMember(dateForm);
 		//******************End
 		
 		//******************Summary
 		final DynamicForm summaryForm_1 = new DynamicForm();
-		summaryForm_1.setWidth(200);
+		summaryForm_1.setWidth(400);
 		summaryForm_1.setHeight(75);
-		summaryForm_1.setNumCols(2);
+		summaryForm_1.setNumCols(4);
 		summaryForm_1.setMargin(5);
 		summaryForm_1.setIsGroup(true);
 		summaryForm_1.setGroupTitle("สรุปยอดสั่งผลิต");
-		summaryForm_1.setColWidths(120, 80);
+		summaryForm_1.setColWidths(120, 80, 120, 80);
 		//summaryForm_1.setPrintChildrenAbsolutelyPositioned(true);
 		
-		final NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat ef = NumberFormat.getFormat("#,##0");
 		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
 		total_sent_weight.setValue(nf.format(sent_weight));
 		final StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
-		total_sent_amount.setValue(nf.format(sent_amount));
+		total_sent_amount.setValue(ef.format(sent_amount));
 		total_sent_weight.setWidth(100);
 		total_sent_amount.setWidth(100);
-		total_sent_weight.setTitle("น้ำหนักรวม");
-		total_sent_amount.setTitle("จำนวนรวม");
+		total_sent_weight.setTitle("น้ำหนักรวม (กรัม)");
+		total_sent_amount.setTitle("จำนวนรวม (หน่วย)");
 		total_sent_weight.setTextAlign(Alignment.RIGHT);
 		total_sent_amount.setTextAlign(Alignment.RIGHT);
-		total_sent_weight.setHint("กรัม");
-		total_sent_amount.setHint("ชิ้น");
+		//total_sent_weight.setHint("กรัม");
+		//total_sent_amount.setHint("ชิ้น");
 		summaryForm_1.setFields(total_sent_amount, total_sent_weight);
 		//summaryForm.editRecord(record);
 		footerLayout.addMember(summaryForm_1);
@@ -609,6 +618,7 @@ public class ScrapingPrintWindow extends EditorWindow{
             	//printLayout.addMember(new PrintHeader("ใบสั่งผลิต"));
             	//empty.show();
             	header.show();
+            	sign.show();
             	printLayout.setPrintChildrenAbsolutelyPositioned(true);
             	printLayout.addMember(layout);
             	//System.out.println(printLayout.getPrintHTML(null, null));
@@ -847,6 +857,9 @@ public class ScrapingPrintWindow extends EditorWindow{
 //        	
 //        });
         
+		if (sign.isVisible()) sign.hide();
+		layout.addMember(sign);
+		
 		return layout;
 	}
 	

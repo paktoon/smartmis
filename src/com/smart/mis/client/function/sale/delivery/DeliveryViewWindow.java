@@ -13,6 +13,7 @@ import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.PrintSign;
 import com.smart.mis.shared.Printing;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.DeliveryStatus;
@@ -67,7 +68,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class DeliveryViewWindow extends EditorWindow{
 
 	Customer client;
-	PrintHeader header = new PrintHeader("ใบนำส่งสินค้า");
 	
 	public DeliveryViewWindow(){
 		
@@ -93,6 +93,8 @@ public class DeliveryViewWindow extends EditorWindow{
 	
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
 		final VLayout layout = new VLayout();
+		final PrintHeader header = new PrintHeader("ใบนำส่งสินค้า");
+		
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
@@ -114,10 +116,16 @@ public class DeliveryViewWindow extends EditorWindow{
 		Double total_weight = record.getAttributeAsDouble("total_weight");
 		Integer total_amount = record.getAttributeAsInt("total_amount");
 		
-		//String issued_status = record.getAttributeAsString("issued_status");
+		String created_by = record.getAttributeAsString("created_by");
 		//String issued_by = record.getAttributeAsString("issued_by");
 		//if (issued_by == null) issued_by = "รอเบิกสินค้า";
 		Date issued_date = record.getAttributeAsDate("issued_date");
+		
+		String[][] signItem = new String[][] {
+				{"ผู้ส่งมอบสินค้า",created_by,"พนักงานขาย"},
+				{"ผู้รับมอบสินค้า","......................................................",""}
+		};
+		final PrintSign sign = new PrintSign(signItem);
 		
 		DynamicForm quotationForm = new DynamicForm();
 		quotationForm.setWidth100(); 
@@ -264,6 +272,7 @@ public class DeliveryViewWindow extends EditorWindow{
         quoteItemCell_5.setShowGridSummary(true);
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("sale_amount", 70);
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
         if (edit) quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
@@ -321,10 +330,11 @@ public class DeliveryViewWindow extends EditorWindow{
 		summaryForm.setColWidths(120, 100);
 		//summaryForm.setPrintChildrenAbsolutelyPositioned(true);
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat ef = NumberFormat.getFormat("#,##0");
 		StaticTextItem tweight = new StaticTextItem("total_weight");
 		tweight.setValue(nf.format(total_weight));
 		StaticTextItem tamount = new StaticTextItem("total_amount");
-		tamount.setValue(nf.format(total_amount));
+		tamount.setValue(ef.format(total_amount));
 		tweight.setWidth(100);
 		tamount.setWidth(100);
 		tweight.setTitle("น้ำหนักรวม");
@@ -359,6 +369,7 @@ public class DeliveryViewWindow extends EditorWindow{
             	VLayout printLayout = new VLayout(10);
             	//printLayout.addMember(new PrintHeader("ใบนำส่งสินค้า"));
             	header.show();
+            	sign.show();
             	printLayout.setPrintChildrenAbsolutelyPositioned(true);
             	//empty.show();
             	printLayout.addMember(layout);
@@ -427,6 +438,9 @@ public class DeliveryViewWindow extends EditorWindow{
 		//if (page == 2 && issued_status.equals("0_product_request")) controls.addMember(issueButton);
 		controls.addMember(closeButton);
 		layout.addMember(controls);
+		
+		layout.addMember(sign);
+		if (sign.isVisible()) sign.hide();
 		
 		return layout;
 	}

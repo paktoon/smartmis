@@ -48,7 +48,9 @@ public class PlanProductDS extends DataSource  {
 			 
 			 DataSourceTextField Field_7 = new DataSourceTextField("details", "รายละเอียดสินค้า");
 
-			 setFields(Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_7_6, Field_7);
+			 DataSourceBooleanField Field_10 = new DataSourceBooleanField("status");
+			 
+			 setFields(Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_7_6, Field_7, Field_10);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(new ListGridRecord[]{}); // For create tab
@@ -57,6 +59,7 @@ public class PlanProductDS extends DataSource  {
 		 
 		 public PlanProductDS(String plan_id){
 			 DataSourceTextField sub_plan_id_field = new DataSourceTextField("sub_plan_id");
+			 sub_plan_id_field.setPrimaryKey(true);
 			 sub_plan_id_field.setHidden(true);
 			 DataSourceTextField plan_id_field = new DataSourceTextField("plan_id");
 			 plan_id_field.setHidden(true);
@@ -78,7 +81,9 @@ public class PlanProductDS extends DataSource  {
 			 
 			 DataSourceTextField Field_7 = new DataSourceTextField("details", "รายละเอียดสินค้า");
 
-			 setFields(sub_plan_id_field, plan_id_field, Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_7_6, Field_7);
+			 DataSourceBooleanField Field_10 = new DataSourceBooleanField("status");
+			 
+			 setFields(sub_plan_id_field, plan_id_field, Field_1, Field_2, Field_4, Field_3, Field_5, Field_6 ,Field_7_1, Field_7_2,  Field_7_3, Field_7_4, Field_7_5, Field_7_6, Field_7, Field_10);
 			 
 			 //setDataURL("smartmis/security/userData");
 			 setTestData(PlanProductData.getRecords(plan_id)); // For edit tab

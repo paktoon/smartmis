@@ -21,6 +21,9 @@ public class ProductionPlanStatus {
         filteredValueMap.put("1_waiting_for_revised", "รอแก้ไข");  
         filteredValueMap.put("2_waiting_for_approved", "รออนุมัติ");  
         filteredValueMap.put("3_approved", "อนุมัติแล้ว"); 
+        filteredValueMap.put("5_on_production", "กำลังผลิต");
+        filteredValueMap.put("6_production_completed", "ผลิตเสร็จสิ้น");
+        filteredValueMap.put("7_transferred", "โอนสินค้าแล้ว");
 	}
 	
 	public static LinkedHashMap<String, String> getValueMap() {

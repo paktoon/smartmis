@@ -22,6 +22,7 @@ import com.smart.mis.client.function.report.production.ProductionReportDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.prodution.ProcessStatus;
 import com.smart.mis.shared.prodution.ProcessType;
@@ -290,6 +291,7 @@ public class PackingViewWindow extends EditorWindow{
         quoteItemCell_5.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_5.setShowGridSummary(true);
         quoteItemCell_5.setIncludeInRecordSummary(false);
+        quoteItemCell_5.setCellFormatter(FieldFormatter.getIntegerFormat());
         
 //        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("recv_weight", 120);
 //        quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
@@ -382,11 +384,12 @@ public class PackingViewWindow extends EditorWindow{
 		summaryForm_1.setIsGroup(true);
 		summaryForm_1.setGroupTitle("สรุปยอดสั่งผลิต");
 		summaryForm_1.setColWidths(120, 80);
-		final NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat ef = NumberFormat.getFormat("#,##0");
 		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
 		total_sent_weight.setValue(nf.format(sent_weight));
 		final StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
-		total_sent_amount.setValue(nf.format(sent_amount));
+		total_sent_amount.setValue(ef.format(sent_amount));
 		total_sent_weight.setWidth(100);
 		total_sent_amount.setWidth(100);
 		total_sent_weight.setTitle("น้ำหนักรวม");
@@ -862,7 +865,7 @@ public class PackingViewWindow extends EditorWindow{
 	}
 	
 	String createTransfer(ListGridRecord record, String user) {
-		String transfer_id = "TF70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String transfer_id = "TF" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		String status = "1_sent";
 		ListGridRecord newRecord = TransferData.createRecord(record, transfer_id, new Date(), user, status);
 		TransferDS.getInstance().addData(newRecord);
@@ -870,7 +873,7 @@ public class PackingViewWindow extends EditorWindow{
 	}
 	
 	void createTransferItem(ListGridRecord record, String transfer_id, String plan_id) {
-		String sub_transfer_id = "STFP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String sub_transfer_id = "STFP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		ListGridRecord newRecord = TransferItemData.createRecord(record, sub_transfer_id, transfer_id, true);
 		newRecord.setAttribute("plan_id", plan_id);
 		newRecord.setAttribute("produced_date", new Date());

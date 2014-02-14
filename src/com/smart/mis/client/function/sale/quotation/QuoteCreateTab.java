@@ -12,6 +12,7 @@ import com.smart.mis.client.function.sale.quotation.product.QuoteProductData;
 import com.smart.mis.client.function.sale.quotation.product.QuoteProductDetails;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FromToValidate;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.prodution.ProductType;
@@ -242,10 +243,10 @@ public class QuoteCreateTab {
         pname.setRequired(true);
 		pname.setHint("*");
 		ListGridField Field_M1 = new ListGridField("pid", 80);  
-        ListGridField Field_M2 = new ListGridField("name", 200);
-        ListGridField Field_M3 = new ListGridField("type", 70);
+        ListGridField Field_M2 = new ListGridField("name", 190);
+        ListGridField Field_M3 = new ListGridField("type", 80);
         ListGridField Field_M4 = new ListGridField("remain", 70);
-        Field_M4.setCellFormatter(FieldFormatter.getNumberFormat());
+        Field_M4.setCellFormatter(FieldFormatter.getIntegerFormat());
         Field_M4.setAlign(Alignment.LEFT);
         pname.setPickListFields(Field_M1, Field_M2, Field_M3, Field_M4);
         
@@ -415,7 +416,7 @@ public class QuoteCreateTab {
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("quote_amount", 80);
         quoteItemCell_6.setValidators(ValidatorFactory.integerRange(50, 5000));
         quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
-        quoteItemCell_6.setCanEdit(true);
+        //quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
         
@@ -596,14 +597,14 @@ public class QuoteCreateTab {
 								Double total_weight = 0.0;
 								Double total_netExclusive = 0.0;
 								Integer total_amount = 0;
-								final String quote_id = "QA70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+								final String quote_id = "QA" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 								final ArrayList<QuoteProductDetails> productList = new ArrayList<QuoteProductDetails>();
 								for (ListGridRecord item : all){
 									total_weight += item.getAttributeAsDouble("weight");
 									total_amount += item.getAttributeAsInt("quote_amount");
 									total_netExclusive += item.getAttributeAsDouble("sum_price");
 									
-									String sub_quote_id = "QS80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+									String sub_quote_id = "QS" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 									String pid = item.getAttributeAsString("pid");
 									String pname = item.getAttributeAsString("name");
 									String ptype = item.getAttributeAsString("type");

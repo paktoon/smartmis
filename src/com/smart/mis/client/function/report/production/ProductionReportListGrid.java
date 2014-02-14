@@ -106,7 +106,9 @@ public class ProductionReportListGrid extends ListGrid {
 	public Double getProducedAmount(Record[] records) {
 		Double sent_amount = 0.0;
 		for (Record record : records) {
-			sent_amount += record.getAttributeAsDouble("sent_amount");
+			if (record.getAttributeAsDouble("sent_amount") != null) {
+				sent_amount += record.getAttributeAsDouble("sent_amount");
+			}
 		}
 		return sent_amount;
 	}
@@ -114,7 +116,9 @@ public class ProductionReportListGrid extends ListGrid {
 	public Double getProducedWeight(Record[] records) {
 		Double sent_weight = 0.0;
 		for (Record record : records) {
-			sent_weight += record.getAttributeAsDouble("sent_weight");
+			if (record.getAttributeAsDouble("sent_weight") != null) {
+				sent_weight += record.getAttributeAsDouble("sent_weight");
+			}
 		}
 		return sent_weight;
 	}

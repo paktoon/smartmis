@@ -18,6 +18,7 @@ import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.prodution.ProcessStatus;
 import com.smart.mis.shared.prodution.ProcessType;
@@ -286,6 +287,7 @@ public class ScrapingViewWindow extends EditorWindow{
         quoteItemCell_5.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_5.setShowGridSummary(true);
         quoteItemCell_5.setIncludeInRecordSummary(false);
+        quoteItemCell_5.setCellFormatter(FieldFormatter.getIntegerFormat());
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("recv_weight", 120);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
@@ -299,7 +301,7 @@ public class ScrapingViewWindow extends EditorWindow{
         
         ListGridNumberField quoteItemCell_7 = new ListGridNumberField("recv_amount", 120);
         quoteItemCell_7.setSummaryFunction(SummaryFunctionType.SUM);
-        quoteItemCell_7.setCellFormatter(FieldFormatter.getNumberFormat());
+        quoteItemCell_7.setCellFormatter(FieldFormatter.getIntegerFormat());
         quoteItemCell_7.setType(ListGridFieldType.FLOAT);
         quoteItemCell_7.setShowGridSummary(true);
         if (edit) quoteItemCell_7.setCanEdit(true);
@@ -383,11 +385,12 @@ public class ScrapingViewWindow extends EditorWindow{
 		summaryForm_1.setIsGroup(true);
 		summaryForm_1.setGroupTitle("สรุปยอดสั่งผลิต");
 		summaryForm_1.setColWidths(120, 80);
-		final NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat ef = NumberFormat.getFormat("#,##0");
 		final StaticTextItem total_sent_weight = new StaticTextItem("total_sent_weight");
 		total_sent_weight.setValue(nf.format(sent_weight));
 		final StaticTextItem total_sent_amount = new StaticTextItem("total_sent_amount");
-		total_sent_amount.setValue(nf.format(sent_amount));
+		total_sent_amount.setValue(ef.format(sent_amount));
 		total_sent_weight.setWidth(100);
 		total_sent_amount.setWidth(100);
 		total_sent_weight.setTitle("น้ำหนักรวม");
@@ -416,9 +419,9 @@ public class ScrapingViewWindow extends EditorWindow{
 		}
 		final StaticTextItem total_recv_amount = new StaticTextItem("total_recv_amount");
 		if (recv_amount == null) {
-			total_recv_amount.setDefaultValue(nf.format(0));
+			total_recv_amount.setDefaultValue(ef.format(0));
 		} else {
-			total_recv_amount.setDefaultValue(nf.format(recv_amount));
+			total_recv_amount.setDefaultValue(ef.format(recv_amount));
 		}
 		total_recv_weight.setWidth(100);
 		total_recv_amount.setWidth(100);
@@ -518,7 +521,7 @@ public class ScrapingViewWindow extends EditorWindow{
 			    					@Override
 			    					public void execute(Boolean value) {
 			    						if (value) {
-			    							final String return_id = "RT70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			    							final String return_id = "RT" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			    							//job_id
 			    							MaterialDS.getInstance().refreshData();
 			    							Record[] selected = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mat_name", OperatorId.EQUALS, "แร่เงิน 92.5%"));
@@ -854,8 +857,9 @@ public class ScrapingViewWindow extends EditorWindow{
 			total_paid_wage += sum_page;
 		}
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat ef = NumberFormat.getFormat("#,##0");
 		target.getField("total_recv_weight").setValue(nf.format(total_received_weight));
-		target.getField("total_recv_amount").setValue(nf.format(total_received_amount));
+		target.getField("total_recv_amount").setValue(ef.format(total_received_amount));
 		target_2.getField("total_wage").setValue(nf.format(total_paid_wage));
 		
 		if (total_received_weight < need_weight) {
@@ -914,7 +918,7 @@ public class ScrapingViewWindow extends EditorWindow{
 	}
 	
 	String createWagePayment(ListGridRecord record, String user) {
-		String wage_id = "WP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String wage_id = "WP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		String status = "1_waiting_for_payment";
 		ListGridRecord newRecord = WageData.createRecord(record, wage_id, new Date(), user, status);
 		WageDS.getInstance().addData(newRecord);
@@ -922,7 +926,7 @@ public class ScrapingViewWindow extends EditorWindow{
 	}
 	
 	void createWageItemPayment(ListGridRecord record, String wage_id) {
-		String sub_wage_id = "SWP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String sub_wage_id = "SWP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		ListGridRecord newRecord = WageItemData.createRecord(record, sub_wage_id, wage_id, true);
 		WageItemDS.getInstance(wage_id).addData(newRecord);
 	}

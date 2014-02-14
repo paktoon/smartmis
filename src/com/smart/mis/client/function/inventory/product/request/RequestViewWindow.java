@@ -252,7 +252,7 @@ public class RequestViewWindow extends EditorWindow{
 		saleListGrid.setAutoFetchData(true);  
 		//if (edit) saleListGrid.setSelectionType(SelectionStyle.SINGLE);
 		//else 
-		saleListGrid.setSelectionType(SelectionStyle.NONE);
+		saleListGrid.setSelectionType(SelectionStyle.SINGLE);
 		saleListGrid.setCanResizeFields(false);
 		saleListGrid.setShowGridSummary(true);
 		saleListGrid.setEditEvent(ListGridEditEvent.CLICK);  
@@ -296,6 +296,7 @@ public class RequestViewWindow extends EditorWindow{
         quoteItemCell_6.setTitle("จำนวนที่ขอเบิก");
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
         
         ListGridField quoteItemCell_7 = new ListGridField("issued_weight", "น้ำหนักที่จ่าย (กรัม)", 120);
         quoteItemCell_7.setShowGridSummary(false);
@@ -312,6 +313,7 @@ public class RequestViewWindow extends EditorWindow{
         if (edit) quoteItemCell_8.setCanEdit(true);
         quoteItemCell_8.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_8.setShowGridSummary(true);
+        quoteItemCell_8.setCellFormatter(FieldFormatter.getIntegerFormat());
         if (edit) quoteItemCell_8.setEmptyCellValue("--โปรดระบุจำนวน--");
         else quoteItemCell_8.setEmptyCellValue("ยังไม่มีการเบิกจ่าย");
  
@@ -366,10 +368,11 @@ public class RequestViewWindow extends EditorWindow{
 		summaryForm_1.setGroupTitle("สรุปยอดขอเบิกสินค้า");
 		summaryForm_1.setColWidths(120, 80);
 		final NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		final NumberFormat ef = NumberFormat.getFormat("#,##0");
 		final StaticTextItem total_sent_weight = new StaticTextItem("total_weight");
 		total_sent_weight.setValue(nf.format(req_weight));
 		final StaticTextItem total_sent_amount = new StaticTextItem("total_amount");
-		total_sent_amount.setValue(nf.format(req_amount));
+		total_sent_amount.setValue(ef.format(req_amount));
 		total_sent_weight.setWidth(100);
 		total_sent_amount.setWidth(100);
 		total_sent_weight.setTitle("น้ำหนักรวม");
@@ -398,9 +401,9 @@ public class RequestViewWindow extends EditorWindow{
 		}
 		final StaticTextItem total_recv_amount = new StaticTextItem("total_issued_amount");
 		if (issued_amount == null) {
-			total_recv_amount.setDefaultValue(nf.format(0));
+			total_recv_amount.setDefaultValue(ef.format(0));
 		} else {
-			total_recv_amount.setDefaultValue(nf.format(issued_amount));
+			total_recv_amount.setDefaultValue(ef.format(issued_amount));
 		}
 		
 		total_recv_weight.setWidth(100);
@@ -530,8 +533,9 @@ public class RequestViewWindow extends EditorWindow{
 			total_issued_amount += issued_amount;
 		}
 		NumberFormat nf = NumberFormat.getFormat("#,##0.00");
+		NumberFormat ef = NumberFormat.getFormat("#,##0");
 		target.getField("total_issued_weight").setValue(nf.format(total_issued_weight));
-		target.getField("total_issued_amount").setValue(nf.format(total_issued_amount));
+		target.getField("total_issued_amount").setValue(ef.format(total_issued_amount));
 	}
 	
 	public void updateIssued(final String delivery_id , final ListGridRecord record, ListGrid orderListGrid, User currentUser){
@@ -577,6 +581,7 @@ public class RequestViewWindow extends EditorWindow{
 								updateStock(item);
 							}
 							
+							DeliveryDS.getInstance().refreshData();
 							SC.say("บันทึกการสั่งจ่ายสินค้าเสร็จสิ้น");
 							editWindow.destroy();
 						}

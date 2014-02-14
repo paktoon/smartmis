@@ -26,6 +26,7 @@ import com.smart.mis.client.function.sale.quotation.product.QuoteProductDetails;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
 import com.smart.mis.shared.sale.Customer;
@@ -358,20 +359,22 @@ public class CreateSaleWindow extends EditorWindow{
         quoteItemCell_2.setShowGridSummary(true);
         ListGridField quoteItemCell_3 = new ListGridField("unit", "หน่วย", 40);
         
-        ListGridNumberField quoteItemCell_5 = new ListGridNumberField("price", 110);
+        ListGridNumberField quoteItemCell_5 = new ListGridNumberField("price", 120);
         quoteItemCell_5.setTitle("ราคาต่อหน่วย (บาท)");
         quoteItemCell_5.setShowGridSummary(false);
         quoteItemCell_5.setCellFormatter(FieldFormatter.getPriceFormat());
         quoteItemCell_5.setAlign(Alignment.RIGHT);
         
-        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("quote_amount", 90);
+        ListGridNumberField quoteItemCell_6 = new ListGridNumberField("quote_amount", 80);
         quoteItemCell_6.setTitle("จำนวนขาย");
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
 //        if (edit) quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
         
         ListGridNumberField quoteItemCell_7 = new ListGridNumberField("remain", 90);
         quoteItemCell_7.setTitle("สินค้าคงเหลือ");
+        quoteItemCell_7.setCellFormatter(FieldFormatter.getIntegerFormat());
 //        if (edit) quoteItemCell_6.setCanEdit(true);
 //        quoteItemCell_7.setSummaryFunction(SummaryFunctionType.SUM);
 //        quoteItemCell_7.setShowGridSummary(true);
@@ -379,6 +382,7 @@ public class CreateSaleWindow extends EditorWindow{
         
         ListGridNumberField quoteItemCell_8 = new ListGridNumberField("produce_amount", 90);
         quoteItemCell_8.setTitle("ต้องผลิตเพิ่ม");
+        quoteItemCell_8.setCellFormatter(FieldFormatter.getIntegerFormat());
 //        if (edit) quoteItemCell_6.setCanEdit(true);
         quoteItemCell_8.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_8.setShowGridSummary(true);
@@ -953,9 +957,9 @@ public class CreateSaleWindow extends EditorWindow{
 	        dateRange.setRelativeEndDate(new RelativeDate("+"+credit+"d"));
 	        final Date due_date = dateRange.getEndDate();
 	        
-			final String sale_id = "SO70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
-			final String invoice_id = "IN70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
-			final String plan_id = "PL70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String sale_id = "SO" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String invoice_id = "IN" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String plan_id = "PL" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			
 			final ListGridRecord saleRecord = SaleOrderData.createRecord(sale_id, quote_id, invoice_id, cid, cus_name, payment_model, credit, cus_type ,bus_type, cus_group, zone, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, sale_status, purchase_id, due_date);
 			final ListGridRecord invoiceRecord = InvoiceData.createRecord(invoice_id, sale_id, cid, cus_name, payment_model, credit, cus_type ,bus_type, cus_group, zone, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, invoice_status, purchase_id, due_date, null);
@@ -968,7 +972,7 @@ public class CreateSaleWindow extends EditorWindow{
 			final Double produce_weight = total_produce_weight;
 			final Integer produce_amount = total_produce_amount;
 			if (planProductList.size() != 0) {
-				SC.confirm("สร้างแผนการผลิตโดยอัตโนมัติ", "สินค้าในรายการขายไม่เพียงพอ <br> ต้องการสร้างแผนการผลิต หรือไม่? <br><br> หมายเหตุ: ถ้า 'ยกเลิก' การสร้างแผนการผลิต ระบบจะไม่สร้างรายการขายด้วย" , new BooleanCallback() {
+				SC.confirm("สร้างแผนการผลิตโดยอัตโนมัติ", "สินค้าในรายการขายไม่เพียงพอ <br> ต้องการสร้างแผนการผลิต หรือไม่? <br><br> หมายเหตุ: <br> ถ้า 'ยกเลิก' การสร้างแผนการผลิต ระบบจะไม่สร้างรายการขายด้วย" , new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
@@ -1001,7 +1005,7 @@ public class CreateSaleWindow extends EditorWindow{
 	}
 	
 	private PlanProductDetails CreatePlanProductDetails(Record product, Integer pplan_amount) {
-		String sub_plan_id = "SP80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String sub_plan_id = "SP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		String pid = product.getAttributeAsString("pid");
 		String pname = product.getAttributeAsString("name");
 		String ptype = product.getAttributeAsString("type");
@@ -1038,6 +1042,8 @@ public class CreateSaleWindow extends EditorWindow{
 							SaleProductDS.getInstance(invoice_id).addData(subAddRecord);
 						}
 						
+						final String quote_id = saleRecord.getAttributeAsString("quote_id");
+						
 						SaleOrderDS.getInstance().addData(saleRecord, new DSCallback() {
 							@Override
 							public void execute(DSResponse dsResponse, Object data,
@@ -1051,6 +1057,26 @@ public class CreateSaleWindow extends EditorWindow{
 												SaleProductDS.getInstance(sale_id).addData(subAddRecord);
 										}
 										SC.say("สร้างรายการขายเสร็จสิ้น <br> " + "รหัสรายการขาย " + sale_id + "<br> สถานะของรายการขาย " + SaleOrderStatus.getDisplay(saleRecord.getAttributeAsString("status")) + "<br><br> สร้างใบแจ้งหนี้โดยอัตโนมัติ เลขที่ "+ invoice_id + "<br> กำหนดชำระเงินวันที่ " + DateUtil.formatAsShortDate(saleRecord.getAttributeAsDate("due_date")) + message);
+										
+										//New
+										String quote_status = "5_created_sale";
+										ListGridRecord update_quote = new ListGridRecord();
+										update_quote.setAttribute("quote_id", quote_id);
+										update_quote.setAttribute("status", quote_status);
+//										ListGridRecord update_quote = QuotationData.createStatusRecord(quote_id, quote_status, "");
+										//ListGridRecord update_plan = PlanData.createStatusRecord(planRecord, plan_status, "ออกคำสั่งผลิตแล้ว");
+										System.out.println("update quote : " + update_quote.getAttributeAsString("quote_id") + " status: " + update_quote.getAttributeAsString("status"));
+										
+										QuotationDS.getInstance().updateData(update_quote, new DSCallback() {
+												@Override
+												public void execute(DSResponse dsResponse, Object data,
+														DSRequest dsRequest) {
+													QuotationDS.getInstance().refreshData();
+												}
+											}
+										);
+										//End
+										
 										main.destroy();
 									}
 							}

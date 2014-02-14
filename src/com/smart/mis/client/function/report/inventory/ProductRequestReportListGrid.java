@@ -95,7 +95,9 @@ public class ProductRequestReportListGrid extends ListGrid {
 	public Double getIssuedAmount(Record[] records) {
 		Double issued_amount = 0.0;
 		for (Record record : records) {
-			issued_amount += record.getAttributeAsDouble("issued_amount");
+			if (record.getAttributeAsDouble("issued_amount") != null) {
+				issued_amount += record.getAttributeAsDouble("issued_amount");
+			}
 		}
 		return issued_amount;
 	}
@@ -105,7 +107,9 @@ public class ProductRequestReportListGrid extends ListGrid {
 	public Double getIssuedWeight(Record[] records) {
 		Double issued_weight = 0.0;
 		for (Record record : records) {
-			issued_weight += record.getAttributeAsDouble("issued_weight");
+			if (record.getAttributeAsDouble("issued_weight") != null) {
+				issued_weight += record.getAttributeAsDouble("issued_weight");
+			}
 		}
 		return issued_weight;
 	}

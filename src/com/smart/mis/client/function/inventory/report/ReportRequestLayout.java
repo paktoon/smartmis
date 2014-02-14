@@ -190,7 +190,7 @@ public class ReportRequestLayout extends VLayout{
 		ListGridField status = new ListGridField("issued_status" , 100);
 		ListGridField sale_id = new ListGridField("sale_id", 100);
 		ListGridField issued_by = new ListGridField("issued_by");
-		ListGridField issued_date = new ListGridField("issued_date");
+		ListGridField issued_date = new ListGridField("issued_date", 120);
 
 		ListGridField total_weight = new ListGridField("total_issued_weight", 150);
 		total_weight.setCellFormatter(FieldFormatter.getNumberFormat());
@@ -199,7 +199,7 @@ public class ReportRequestLayout extends VLayout{
 		total_weight.setShowGridSummary(true);
         
 		ListGridField total_amount = new ListGridField("total_issued_amount", 150);
-		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		total_amount.setCellFormatter(FieldFormatter.getIntegerFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		total_amount.setSummaryFunction(SummaryFunctionType.SUM);
 		total_amount.setShowGridSummary(true);

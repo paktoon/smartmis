@@ -13,6 +13,7 @@ import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.prodution.ProcessType;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
@@ -399,11 +400,11 @@ public class ProcessAdd {
 	
 	private void saveProduct(final Record product, final List<ListGridRecord> processList, final List<ListGridRecord> List_1, final List<ListGridRecord> List_2, final List<ListGridRecord> List_3, final List<ListGridRecord> List_4){
 		//Save part
-		String product_id = "PD70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
-		String process_id_1 = "PS70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
-		String process_id_2 = "PS70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
-		String process_id_3 = "PS70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
-		String process_id_4 = "PS70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String product_id = "PD" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String process_id_1 = "PS" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String process_id_2 = "PS" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String process_id_3 = "PS" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		String process_id_4 = "PS" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		
       	product.setAttribute("pid", product_id);
       	
@@ -418,7 +419,7 @@ public class ProcessAdd {
       	Double weight_4 = 0.0;
       	
       	for (ListGridRecord item : List_1) {
-      		String mat_process_id = "MP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+      		String mat_process_id = "MP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
       		item.setAttribute("mpid", mat_process_id);
       		item.setAttribute("psid", process_id_1);
       		weight_1 += item.getAttributeAsDouble("weight");
@@ -427,7 +428,7 @@ public class ProcessAdd {
       	}
       	
       	for (ListGridRecord item : List_2) {
-      		String mat_process_id = "MP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+      		String mat_process_id = "MP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
       		item.setAttribute("mpid", mat_process_id);
       		item.setAttribute("psid", process_id_2);
       		weight_2 += item.getAttributeAsDouble("weight");
@@ -436,7 +437,7 @@ public class ProcessAdd {
       	}
       	
       	for (ListGridRecord item : List_3) {
-      		String mat_process_id = "MP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+      		String mat_process_id = "MP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
       		item.setAttribute("mpid", mat_process_id);
       		item.setAttribute("psid", process_id_3);
       		weight_3 += item.getAttributeAsDouble("weight");
@@ -445,7 +446,7 @@ public class ProcessAdd {
       	}
       	
       	for (ListGridRecord item : List_4) {
-      		String mat_process_id = "MP70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+      		String mat_process_id = "MP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
       		item.setAttribute("mpid", mat_process_id);
       		item.setAttribute("psid", process_id_4);
       		weight_4 += item.getAttributeAsDouble("weight");

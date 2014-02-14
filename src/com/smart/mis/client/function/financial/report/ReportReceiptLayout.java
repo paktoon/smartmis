@@ -170,7 +170,7 @@ public class ReportReceiptLayout extends VLayout {
 		ListGridField status = new ListGridField("status" , 100);
 		//ListGridField cid = new ListGridField("cid", 100);
 		ListGridField cus_name = new ListGridField("cus_name");
-		ListGridField payment_model = new ListGridField("payment_model");
+		ListGridField payment_model = new ListGridField("payment_model", 120);
         
 		ListGridField netInclusive = new ListGridField("netInclusive", 100);
 		netInclusive.setCellFormatter(FieldFormatter.getPriceFormat());

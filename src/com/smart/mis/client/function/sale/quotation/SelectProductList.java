@@ -86,14 +86,14 @@ public class SelectProductList {
         ppriceField.setCanEdit(false);
         //ListGridField ptypeField = new ListGridField("type", 80);
         ListGridField premainField = new ListGridField("remain", 80);
-        premainField.setCellFormatter(FieldFormatter.getNumberFormat());
+        premainField.setCellFormatter(FieldFormatter.getIntegerFormat());
         premainField.setCanEdit(false);
         ListGridField punitField = new ListGridField("unit", 50);
         punitField.setCanEdit(false);
         //ListGridField pinStockField = new ListGridField("inStock", 50);
         ListGridField pquoteAmount = new ListGridField("quote_amount", "จำนวน (ชิ้น)", 100);
         pquoteAmount.setType(ListGridFieldType.INTEGER);
-        pquoteAmount.setCellFormatter(FieldFormatter.getNumberFormat());
+        pquoteAmount.setCellFormatter(FieldFormatter.getIntegerFormat());
         pquoteAmount.setCanEdit(true);
         pquoteAmount.setRequired(true);
         pquoteAmount.setDefaultValue(0);

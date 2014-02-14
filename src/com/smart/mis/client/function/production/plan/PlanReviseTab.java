@@ -102,6 +102,7 @@ public class PlanReviseTab {
 		//statusSelected.setValueMap("รอแก้ไข", "รออนุมัติ", "อนุมัติแล้ว");
 		statusSelected.setValueMap(ProductionPlanStatus.getFilteredValueMap());
 		statusSelected.setAllowEmptyValue(true);
+		statusSelected.setEmptyDisplayValue("ทั้งหมด");
 		statusSelected.setOperator(OperatorId.EQUALS);
 //		final TextItem cidText = new TextItem("sale_id", "รหัสรายการขาย");
 //		cidText.setWrapTitle(false);
@@ -155,7 +156,7 @@ public class PlanReviseTab {
 		ListGridField reason = new ListGridField("reason", 200);
 		ListGridField status = new ListGridField("status");
 		ListGridField total_amount = new ListGridField("total_amount", 120);
-		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
+		total_amount.setCellFormatter(FieldFormatter.getIntegerFormat());
 		total_amount.setAlign(Alignment.RIGHT);
 		ListGridField total_weight = new ListGridField("total_weight", 120);
 		total_weight.setCellFormatter(FieldFormatter.getNumberFormat());
@@ -186,9 +187,9 @@ public class PlanReviseTab {
             	search.addCriteria(searchForm.getValuesAsCriteria());
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
           		      new Criterion("status", OperatorId.NOT_EQUAL, "4_canceled"),
-          		      new Criterion("status", OperatorId.NOT_EQUAL, "5_on_production"),
-        		      new Criterion("status", OperatorId.NOT_EQUAL, "6_production_completed"),
-        		      new Criterion("status", OperatorId.NOT_EQUAL, "7_transferred"),
+          		      //new Criterion("status", OperatorId.NOT_EQUAL, "5_on_production"),
+        		      //new Criterion("status", OperatorId.NOT_EQUAL, "6_production_completed"),
+        		      //new Criterion("status", OperatorId.NOT_EQUAL, "7_transferred"),
         		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
           		      search
           		  });

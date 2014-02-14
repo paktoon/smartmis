@@ -21,7 +21,9 @@ import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.PrintSign;
 import com.smart.mis.shared.Printing;
+import com.smart.mis.shared.purchasing.PurchaseOrderStatus;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.InvoiceStatus;
 import com.smart.mis.shared.sale.QuotationStatus;
@@ -78,8 +80,6 @@ public class InvoiceViewWindow extends EditorWindow{
 
 //	SelectProductList addFunc;
 	Customer client;
-	PrintHeader invoiceHeader = new PrintHeader("ใบแจ้งหนี้");
-	PrintHeader receiptHeader = new PrintHeader("ใบเสร็จรับเงิน");
 	
 	public InvoiceViewWindow(){
 //		super();
@@ -114,6 +114,8 @@ public class InvoiceViewWindow extends EditorWindow{
 	
 	private VLayout getViewEditor(final ListGridRecord record, boolean edit, final Window main, final User currentUser, int page) {
 		final VLayout layout = new VLayout();
+		final PrintHeader invoiceHeader = new PrintHeader("ใบแจ้งหนี้");
+		final PrintHeader receiptHeader = new PrintHeader("ใบเสร็จรับเงิน");
 		layout.setWidth(650);
 		layout.setHeight(600);
 		layout.setMargin(10);
@@ -134,7 +136,7 @@ public class InvoiceViewWindow extends EditorWindow{
 		final Double netEx = record.getAttributeAsDouble("netExclusive");
 		
 		String status = record.getAttributeAsString("status");
-		//String created_by = record.getAttributeAsString("created_by");
+		String created_by = record.getAttributeAsString("created_by");
 		//Date created_date = record.getAttributeAsDate("created_date");
 		Date due_date = record.getAttributeAsDate("due_date");
 		
@@ -143,6 +145,17 @@ public class InvoiceViewWindow extends EditorWindow{
 		
 		//Double recIn = record.getAttributeAsDouble("receivedInclusive");
 		//Date paid_date = record.getAttributeAsDate("paid_date");
+		
+		String[][] signInvoiceItem = new String[][] {
+				{"ผู้ออกใบแจ้งหนี้",created_by,"พนักงานขาย"},
+				{"ผู้รับใบแจ้งหนี้","......................................................",""}
+		};
+		final PrintSign signInvoice = new PrintSign(signInvoiceItem);
+		String[][] signReceiptItem = new String[][] {
+				{"ผู้รับชำระเงิน",currentUser.getFullName(),"พนักงานการเงิน"},
+				{"ผู้ชำระเงิน","......................................................",""}
+		};
+		final PrintSign signReceipt = new PrintSign(signReceiptItem);
 		
 		DynamicForm quotationForm = new DynamicForm();
 		quotationForm.setWidth100(); 
@@ -154,7 +167,7 @@ public class InvoiceViewWindow extends EditorWindow{
 
 		StaticTextItem invid = new StaticTextItem("invoice_id", "รหัสใบแจ้งหนี้");
 		StaticTextItem sid = new StaticTextItem("sale_id", "รหัสรายการขาย");
-		StaticTextItem sts = new StaticTextItem("status", "สถานะ");
+		final StaticTextItem sts = new StaticTextItem("status", "สถานะ");
 		StaticTextItem cdate = new StaticTextItem("due_date", "วันครบกำหนดชำระเงิน");
 		//StaticTextItem pdate = new StaticTextItem("paid_date", "วันจ่ายชำระเงิน");
 		invid.setValue(invoice_id);
@@ -283,7 +296,7 @@ public class InvoiceViewWindow extends EditorWindow{
         quoteItemCell_5.setAlign(Alignment.RIGHT);
         
         ListGridNumberField quoteItemCell_6 = new ListGridNumberField("sale_amount", 70);
-        
+        quoteItemCell_6.setCellFormatter(FieldFormatter.getIntegerFormat());
         //if (edit) quoteItemCell_6.setCanEdit(true);
         quoteItemCell_6.setSummaryFunction(SummaryFunctionType.SUM);
         quoteItemCell_6.setShowGridSummary(true);
@@ -413,6 +426,7 @@ public class InvoiceViewWindow extends EditorWindow{
             	//printLayout.addMember(new PrintHeader("ใบแจ้งหนี้"));
             	//empty.show();
             	invoiceHeader.show();
+            	signInvoice.show();
             	printLayout.setPrintChildrenAbsolutelyPositioned(true);
             	printLayout.addMember(layout);
             	//System.out.println(printLayout.getPrintHTML(null, null));
@@ -438,6 +452,7 @@ public class InvoiceViewWindow extends EditorWindow{
 //            	printLayout.addMember(new PrintHeader("ใบเสร็จรับเงิน"));
 //            	empty.show();
             	receiptHeader.show();
+            	signReceipt.show();
             	printLayout.setPrintChildrenAbsolutelyPositioned(true);
             	printLayout.addMember(layout);
             	//System.out.println(printLayout.getPrintHTML(null, null));
@@ -464,7 +479,7 @@ public class InvoiceViewWindow extends EditorWindow{
 				final Window confirm = new Window();
 				confirm.setTitle("รายละเอียดการรับชำระเงิน");
 				confirm.setWidth(350);
-				confirm.setHeight(200);
+				confirm.setHeight(170);
 				confirm.setShowMinimizeButton(false);
 				confirm.setIsModal(true);
 				confirm.setShowModalMask(true);
@@ -476,20 +491,21 @@ public class InvoiceViewWindow extends EditorWindow{
 				
 				final DynamicForm receiptForm = new DynamicForm();
 				receiptForm.setRequiredMessage("กรุณากรอกข้อมูลให้ครบถ้วน");
-				StaticTextItem need_payment = new StaticTextItem("need_payment", "ยอดที่ต้องชำระ");
+				StaticTextItem need_payment = new StaticTextItem("need_payment", "ยอดที่รับชำระ");
 				NumberFormat nf = NumberFormat.getFormat("#,##0.00");
 				need_payment.setValue(nf.format(netEx * 1.07));
 				need_payment.setHint("บาท");
-				final DoubleItem received_payment = new DoubleItem("received_payment", "ยอดที่รับชำระ");
+				//final DoubleItem received_payment = new DoubleItem("received_payment", "ยอดที่รับชำระ");
 				StaticTextItem received_date = new StaticTextItem("received_date", "วันที่รับชำระเงิน");
 				received_date.setValue(DateTimeFormat.getFormat("MM/dd/yyy").format(new Date()));
 				StaticTextItem received_by = new StaticTextItem("received_by", "รับชำระเงินโดย");
 				received_by.setValue(currentUser.getFirstName() + " " + currentUser.getLastName());
 				
-				received_payment.setRequired(true);
-				received_payment.setHint("บาท *");
+				//received_payment.setRequired(true);
+				//received_payment.setHint("บาท *");
 				
-				receiptForm.setFields(need_payment, received_payment, received_date, received_by);
+				//receiptForm.setFields(need_payment, received_payment, received_date, received_by);
+				receiptForm.setFields(need_payment, received_date, received_by);
 				
 				receiptLayout.addMember(receiptForm);
 				
@@ -506,33 +522,66 @@ public class InvoiceViewWindow extends EditorWindow{
 		        confirmButton.addClickHandler(new ClickHandler() {  
 		            public void onClick(ClickEvent event) { 
 		            	//Double need = netEx * 1.07;
-		            	Double upper = (netEx * 1.07) * 1.01;
-		            	Double lower = (netEx * 1.07) * 0.99;
-		            	System.out.println("received_payment " + upper + " " + lower);
-		            	if (!receiptForm.validate() || received_payment.getValueAsDouble() < lower || received_payment.getValueAsDouble() > upper) {
-		            		SC.warn("ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบข้อมูลใหม่อีกครั้ง");
-		            		received_payment.clearValue();
-		            		return;
-		            	}
+//		            	Double upper = (netEx * 1.07) * 1.01;
+//		            	Double lower = (netEx * 1.07) * 0.99;
+//		            	System.out.println("received_payment " + upper + " " + lower);
+//		            	if (!receiptForm.validate() || received_payment.getValueAsDouble() < lower || received_payment.getValueAsDouble() > upper) {
+//		            		SC.warn("ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบข้อมูลใหม่อีกครั้ง");
+//		            		received_payment.clearValue();
+//		            		return;
+//		            	}
 		            	
 		            	SC.confirm("ยืนยันการบันทึกรับชำระเงิน", "ต้องการบันทึกรับชำระเงินหรือไม่?" , new BooleanCallback() {
 							@Override
 							public void execute(Boolean value) {
 								if (value) {
-					            		record.setAttribute("status", "2_paid");
-										record.setAttribute("receivedInclusive", received_payment.getValueAsDouble());
-					            		record.setAttribute("paid_date", new Date());
-					            		record.setAttribute("paid_by", currentUser.getFirstName() + " " + currentUser.getLastName());
-					            		InvoiceDS.getInstance().updateData(record, new DSCallback() {
+										ListGridRecord update_invoice = new ListGridRecord();
+										update_invoice.setAttribute("invoice_id", invoice_id);
+										update_invoice.setAttribute("status", "2_paid");
+										//record.setAttribute("receivedInclusive", received_payment.getValueAsDouble());
+										update_invoice.setAttribute("receivedInclusive", (netEx * 1.07));
+										update_invoice.setAttribute("paid_date", new Date());
+										update_invoice.setAttribute("paid_by", currentUser.getFirstName() + " " + currentUser.getLastName());
+					            		InvoiceDS.getInstance().updateData(update_invoice, new DSCallback() {
 											@Override
 											public void execute(DSResponse dsResponse, Object data,
 													DSRequest dsRequest) {
 													if (dsResponse.getStatus() != 0) {
 														SC.warn("การบันทึกรับชำระเงิน ล้มเหลว");
 													} else { 
-														SC.say("การบันทึกรับชำระเงิน เสร็จสมบูรณ์");
+
+														InvoiceDS.getInstance().refreshData();
+														
+														sts.setValue(PurchaseOrderStatus.getPaymentDisplay("2_paid"));
+														//SC.say("การบันทึกรับชำระเงิน เสร็จสมบูรณ์");
 														confirm.destroy();
-														main.destroy();
+														
+														SC.confirm("พิมพ์ใบเสร็จรับเงิน", "การบันทึกรับชำระเงิน เสร็จสมบูรณ์ <br><br> ต้องการพิมพ์ใบเสร็จรับเงินหรือไม่?" , new BooleanCallback() {
+
+															@Override
+															public void execute(Boolean value) {
+																	//System.out.println(value);
+																	if (value != null && value) {
+//																		VLayout printLayout = new VLayout(10);
+//														            	printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
+//														            	printLayout.addMember(layout);
+//														            	Canvas.showPrintPreview(printLayout);
+														            	VLayout printLayout = new VLayout(10);
+														            	//printLayout.addMember(new PrintHeader("ใบสำคัญจ่ายค่าจ้างผลิต"));
+														            	//empty.show();
+														            	receiptHeader.show();
+														            	signReceipt.show();
+														            	printLayout.setPrintChildrenAbsolutelyPositioned(true);
+														            	printLayout.addMember(layout);
+														            	//System.out.println(printLayout.getPrintHTML(null, null));
+														            	Canvas.showPrintPreview(printLayout);
+														            	main.destroy();
+																	} else {
+																		main.destroy();
+																	}
+																	//}
+															}});
+														//main.destroy();
 													}
 											}
 										});
@@ -710,6 +759,11 @@ public class InvoiceViewWindow extends EditorWindow{
 //        	
 //        });
         
+		layout.addMember(signInvoice);
+		if (signInvoice.isVisible()) signInvoice.hide();
+		layout.addMember(signReceipt);
+		if (signReceipt.isVisible()) signReceipt.hide();
+		
 		return layout;
 	}
 
