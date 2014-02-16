@@ -4,6 +4,7 @@ import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.production.product.ProductData;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.shared.FieldFormatter;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.prodution.ProcessType;
 import com.smartgwt.client.data.DSCallback;
 import com.smartgwt.client.data.DSRequest;
@@ -331,7 +332,7 @@ public class ProcessOutline extends VLayout {
 		    	                	  
 			  	    	        	  MaterialProcessDS currentDS = MaterialProcessDS.getInstance(psid, pid);
 			  	    	        	  Record newRecord = MaterialProcessData.createRecord(
-			  									"MP70" + Math.round((Math.random() * 100)),
+			  									"MP" + KeyGenerator.genKey() + Math.round((Math.random() * 100)),
 			  									psid,
 			  									mid,
 			  									mat_name,

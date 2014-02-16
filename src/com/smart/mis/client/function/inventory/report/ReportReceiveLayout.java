@@ -244,7 +244,7 @@ public class ReportReceiveLayout extends VLayout{
 		ListGridField sup_name = new ListGridField("sup_name");
 		
 		ListGridField received_by = new ListGridField("received_by");
-		ListGridField received_date = new ListGridField("received_date");
+		ListGridField received_date = new ListGridField("received_date", 100);
 
 		ListGridField total_weight = new ListGridField("total_received_weight", 130);
 		total_weight.setCellFormatter(FieldFormatter.getNumberFormat());

@@ -16,6 +16,16 @@
   		<url-pattern>/smartmis/security</url-pattern> 
   	</servlet-mapping>
   	
+    <servlet>
+  		<servlet-name>DataStoreServlet</servlet-name> 
+  		<servlet-class>com.smart.mis.datastore.DataStoreServiceImpl</servlet-class> 
+  	</servlet>
+  	
+  	<servlet-mapping>
+  		<servlet-name>DataStoreServlet</servlet-name> 
+  		<url-pattern>/smartmis/datastore</url-pattern> 
+  	</servlet-mapping>
+  	
 
   	<!-- Json Servlets -->
   	<servlet>
@@ -58,10 +68,10 @@
 	   <servlet-name>Upload</servlet-name>
 	   <url-pattern>/upload</url-pattern>
 	 </servlet-mapping>
-	 
+  
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>Smartmis.html</welcome-file>
+    <welcome-file>Smartmis_ee.html</welcome-file>
   </welcome-file-list>
 
 </web-app>

@@ -1,4 +1,4 @@
-package com.smart.mis.client.chart.inventory;
+package com.smart.mis.client.chart.production;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.visualization.client.AbstractDataTable;
@@ -19,9 +19,9 @@ import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.report.ReportPanel;
 import com.smartgwt.client.widgets.Canvas;
 
-public class SilverRequestColumnChart {
+public class MaterialUsedValueColumnChart {
 
-	public void loadChart(final Canvas loader, final ReportPanel panel, final Double[][] item) {  
+	public void loadChart(final Canvas loader, final ReportPanel panel,final Double[][] item) {  
 	    Runnable onLoadCallback = new Runnable() {
 	        public void run() {
 	   
@@ -42,13 +42,13 @@ public class SilverRequestColumnChart {
 	
 	  private Options createOptions() {
 		    Options options = Options.create();
-		    options.setWidth(550);
+		    options.setWidth(600);
 		    options.setHeight(350);
 //		    options.setIsStacked(true);
 		    options.setLegend(LegendPosition.NONE);
-		    options.setHAxisOptions(createAxisOption("ประเภทแร่เงิน"));
-		    options.setVAxisOptions(createAxisOption("ปริมาณแร่เงินที่เบิกจ่าย (กรัม)"));
-		    options.setTitle("รายงานสรุปการเบิกจ่ายแร่เงิน");
+		    options.setHAxisOptions(createAxisOption("ประเภทวัตถุดิบ"));
+		    options.setVAxisOptions(createAxisOption("มูลค่าวัตถุดิบที่ใช้ในการผลิต (บาท)"));
+		    options.setTitle("รายงานสรุปมูลค่าวัตถุดิบที่ใช้ในการผลิต");
 //		    ChartArea area = ChartArea.create();
 //		    area.setHeight("80%");
 //		    area.setWidth("80%");
@@ -102,7 +102,7 @@ public class SilverRequestColumnChart {
 		        
 		        //System.out.println(message);
 		        //panel.updateProductGrid(row);
-		        //panel.updateInventoryMaterialGrid(1, 0);
+		        //panel.updateInventoryMaterialGrid(2, row);
 		        //Window.alert(message);
 		      }
 		    };
@@ -110,21 +110,24 @@ public class SilverRequestColumnChart {
 
 		  private AbstractDataTable createTable(Double[][] item) {
 		    DataTable data = DataTable.create();
-		    data.addColumn(ColumnType.STRING, "ประเภทแร่เงิน"); //0
-		    data.addColumn(ColumnType.NUMBER, "ปริมาณแร่เงินที่เบิกจ่าย(กรัม)"); //1
-//		    data.addColumn(ColumnType.NUMBER, "ปริมาณแร่เงินที่ถูกจอง (กรัม)"); //2
+		    data.addColumn(ColumnType.STRING, "ประเภทวัตถุดิบ"); //0
+		    data.addColumn(ColumnType.NUMBER, "มูลค่าวัตถุดิบที่ใช้ในการผลิต (บาท)"); //1
+//		    data.addColumn(ColumnType.NUMBER, "ปริมาณวัตถุดิบที่ถูกจอง (หน่วย)"); //2
 //		    addAnnotationColumn(data); //3
 		    
-		    data.addRows(2);
+		    data.addRows(3);
 		    //row, column
-		    data.setValue(0, 0, "แร่เงิน 100%");
-		    data.setValue(1, 0, "แร่เงิน 92.5%");
+		    data.setValue(0, 0, "พลอยประดับ");
+		    data.setValue(1, 0, "แมกกาไซต์");
+		    data.setValue(2, 0, "อื่นๆ");
 		    
 		    data.setValue(0, 1, item[0][0]);
 		    data.setValue(1, 1, item[0][1]);
+		    data.setValue(2, 1, item[0][2]);
 		    
 //		    data.setValue(0, 2, 100.0);
 //		    data.setValue(1, 2, 220.0);
+//		    data.setValue(2, 2, 170.0);
 		    
 		    // 2 Digit display for remaining
 		    NumberFormat.Options option = NumberFormat.Options.create();

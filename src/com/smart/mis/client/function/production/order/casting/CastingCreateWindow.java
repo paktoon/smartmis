@@ -954,14 +954,19 @@ public class CastingCreateWindow {
 					if ( sale_id != null && !sale_id.equalsIgnoreCase("-")) {
 						final String sale_status = "2_production_in_progress";
 						
-						SaleOrderDS.getInstance().refreshData();
-						Record[] selected = SaleOrderDS.getInstance().applyFilter(SaleOrderDS.getInstance().getCacheData(), new Criterion("sale_id", OperatorId.EQUALS, sale_id));
-						Record selectedSaleOrder = selected[0];
-						selectedSaleOrder.setAttribute("status", sale_status);
+						//SaleOrderDS.getInstance().refreshData();
+						//Record[] selected = SaleOrderDS.getInstance().applyFilter(SaleOrderDS.getInstance().getCacheData(), new Criterion("sale_id", OperatorId.EQUALS, sale_id));
+						//Record selectedSaleOrder = selected[0];
+						//selectedSaleOrder.setAttribute("status", sale_status);
+						ListGridRecord selectedSaleOrder = new ListGridRecord();
+						selectedSaleOrder.setAttribute("sale_id", sale_id);
+						selectedSaleOrder.setAttribute("status", sale_status); 
 						SaleOrderDS.getInstance().updateData(selectedSaleOrder, new DSCallback() {
 							@Override
 							public void execute(DSResponse dsResponse,
 									Object data, DSRequest dsRequest) {
+								
+									SaleOrderDS.getInstance().refreshData();
 									String message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> รายการขายเขที่ " + sale_id + " มีสถานะเป็น " + SaleOrderStatus.getDisplay(sale_status);
 									printDialog(jobOrder, currentUser, message);
 //									SC.say("สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> รายการขายเขที่ " + sale_id + " มีสถานะเป็น " + SaleOrderStatus.getDisplay(sale_status), new BooleanCallback(){

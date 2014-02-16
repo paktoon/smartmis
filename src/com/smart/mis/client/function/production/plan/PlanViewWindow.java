@@ -224,11 +224,23 @@ public class PlanViewWindow extends EditorWindow{
         final Criterion ci = new Criterion("status", OperatorId.EQUALS, true);
 		planListGrid.setCriteria(ci);
 		
-		PlanProductDS tempView = new PlanProductDS(plan_id);
+//		PlanProductDS tempView = new PlanProductDS(plan_id);
+//		Record[] cachedData = PlanProductDS.getInstance(plan_id).getCacheData();
+//		if (cachedData.length != 0) {
+//			tempView.setTestData(cachedData);
+//		}
+		
+		PlanProductDS tempView = new PlanProductDS();
+		PlanProductDS.getInstance(plan_id).refreshData();
 		Record[] cachedData = PlanProductDS.getInstance(plan_id).getCacheData();
 		if (cachedData.length != 0) {
+			System.out.println("Found "+cachedData.length+" result...");
 			tempView.setTestData(cachedData);
+		} else {
+			tempView = new PlanProductDS(plan_id);
+			System.out.println("Found 0 result...");
 		}
+		
 		planListGrid.setDataSource(tempView);
 		planListGrid.setUseAllDataSourceFields(false);
 		
@@ -708,7 +720,12 @@ public class PlanViewWindow extends EditorWindow{
 	
 	void updatePlanStatus(String plan_id, final String status, String comment, ListGridRecord record) {
 		Record updated = PlanData.createStatusRecord(record,status,comment);
-		PlanDS.getInstance().updateData(updated, new DSCallback() {
+		
+		ListGridRecord update_plan = new ListGridRecord();
+		update_plan.setAttribute("plan_id", plan_id);
+		update_plan.setAttribute("status", status);
+		update_plan.setAttribute("comment", comment);
+		PlanDS.getInstance().updateData(update_plan, new DSCallback() {
 			@Override
 			public void execute(DSResponse dsResponse, Object data,
 					DSRequest dsRequest) {
@@ -720,6 +737,19 @@ public class PlanViewWindow extends EditorWindow{
 					}
 			}
 		});
+		
+//		PlanDS.getInstance().updateData(updated, new DSCallback() {
+//			@Override
+//			public void execute(DSResponse dsResponse, Object data,
+//					DSRequest dsRequest) {
+//					if (dsResponse.getStatus() != 0) {
+//						SC.warn("การอนุมัติแผนการผลิตล้มเหลว");
+//					} else { 
+//						PlanDS.getInstance().refreshData();
+//						SC.say("แก้ไขสถานะแผนการผลิต \"" + ProductionPlanStatus.getDisplay(status) + "\" เสร็จสิ้น");
+//					}
+//			}
+//		});
 	}
 	
 	public void createJobOrder(ListGridRecord plan, User currentUser, Integer std_time){

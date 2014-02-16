@@ -18,9 +18,12 @@ public class SaleVolumnData {
 //						dataGen.add(new SaleVolumn(i.toString(), year, 2, month, customer, product, type, (int) Math.round(Math.random() * 10000)));
 //						i++;
 //					}
-					int amount = (int) Math.round(Math.random() * 2000 * 12);
+					int amount = (int) Math.round(Math.random() * 2000);
 					amount += 80;
 					
+					if (customer.equalsIgnoreCase("Retails")) {
+						amount *= 0.2;
+					}
 					dataGen.add(new SaleVolumn(i.toString(), year, 2, month, customer, product, "Quantity (unit)", amount));
 					i++;
 					dataGen.add(new SaleVolumn(i.toString(), year, 2, month, customer, product, "Amount (Baht)", amount * 22.345));
@@ -49,6 +52,9 @@ public class SaleVolumnData {
 					if (quater.equalsIgnoreCase("Q2") || quater.equalsIgnoreCase("Q3")) {
 						amount *= 0.6;
 					}
+					if (customer.equalsIgnoreCase("Retails")) {
+						amount *= 0.2;
+					}
 					dataGen.add(new SaleVolumn(i.toString(), year, 1, quater, customer, product, "Quantity (unit)", amount));
 					i++;
 					dataGen.add(new SaleVolumn(i.toString(), year, 1, quater, customer, product, "Amount (Baht)", amount * 22.345));
@@ -69,8 +75,13 @@ public class SaleVolumnData {
 					for (String product : products) {
 						//for (String type : types) {
 							//time, zone, product, matric, value
-							int amount = (int) Math.round(Math.random() * 2000);
+							int amount = (int) Math.round(Math.random() * 2000 * 12);
 							amount += 1000;
+							
+							if (customer.equalsIgnoreCase("Retails")) {
+								amount *= 0.2;
+							}
+							
 							dataGen.add(new SaleVolumn(i.toString(), year, customer, product, "Quantity (unit)", amount));
 							i++;
 							dataGen.add(new SaleVolumn(i.toString(), year, customer, product, "Amount (Baht)", amount * 22.345));

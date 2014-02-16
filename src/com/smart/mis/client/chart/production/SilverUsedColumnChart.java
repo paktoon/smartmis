@@ -111,8 +111,8 @@ public class SilverUsedColumnChart {
 		  private AbstractDataTable createTable(Double[][] item) {
 		    DataTable data = DataTable.create();
 		    data.addColumn(ColumnType.STRING, "ประเภทแร่เงิน"); //0
-		    data.addColumn(ColumnType.NUMBER, "ปริมาณแร่เงินที่เบิกจ่าย(กรัม)"); //1
-//		    data.addColumn(ColumnType.NUMBER, "ปริมาณแร่เงินที่ถูกจอง (กรัม)"); //2
+		    data.addColumn(ColumnType.NUMBER, "ปริมาณการใช้แร่เงิน (กรัม)"); //1
+//		    data.addColumn(ColumnType.NUMBER, "ปริมาณแร่เงินที่ถูกจงอ (กรัม)"); //2
 //		    addAnnotationColumn(data); //3
 		    
 		    data.addRows(2);

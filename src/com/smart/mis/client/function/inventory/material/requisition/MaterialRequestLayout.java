@@ -178,7 +178,7 @@ public class MaterialRequestLayout extends VLayout {
 //		total_amount.setCellFormatter(FieldFormatter.getNumberFormat());
 //		total_amount.setAlign(Alignment.RIGHT);
 		ListGridField req_type = new ListGridField("req_type");
-		ListGridField created_date = new ListGridField("req_date");
+		ListGridField created_date = new ListGridField("req_date", 80);
 		
 		returnListGrid.setFields(status, sale_id, quote_id, cus_name, req_type, created_date);
 		

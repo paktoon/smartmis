@@ -30,6 +30,22 @@ public class TransferItemData {
         return record;  
     }
     
+    public static ListGridRecord createRecord(String sub_transfer_id, String transfer_id, String pid, String name, String type, String unit, Double sent_weight, Integer sent_amount, Boolean status) {
+        ListGridRecord record = new ListGridRecord();
+        record.setAttribute("pid", pid);
+        record.setAttribute("name", name);  
+        record.setAttribute("type", type);  
+        record.setAttribute("unit", unit); 
+        
+        record.setAttribute("sent_weight",  sent_weight);
+        record.setAttribute("sent_amount",  sent_amount);
+        
+        record.setAttribute("sub_transfer_id", sub_transfer_id);
+        record.setAttribute("transfer_id", transfer_id);
+        record.setAttribute("status", status);
+        return record;  
+    }
+    
     public static ListGridRecord createReceivedRecord(ListGridRecord record, Double recv_weight, Integer recv_amount) {  
         record.setAttribute("recv_weight", recv_weight);
         record.setAttribute("recv_amount", recv_amount);
@@ -46,6 +62,10 @@ public class TransferItemData {
     }
     	
     public static ListGridRecord[] getRecords(String quote_id) {
-        return new ListGridRecord[]{};
+    	if (quote_id != null &&  quote_id.equals( "TF10001")) {
+    		return new ListGridRecord[]{
+    				createRecord("STFP10001", quote_id, "PD10001", "Diamond cut silver ring", "ring", "วง", 1496.0, 220, true)
+    		};
+    	} else return new ListGridRecord[]{};
     }
 }

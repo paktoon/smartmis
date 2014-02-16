@@ -1,6 +1,9 @@
 package com.smart.mis.shared;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
+
+import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class DateTimeMapping {
 	static LinkedHashMap<String, String> monthMap;
@@ -71,5 +74,11 @@ public class DateTimeMapping {
 	public static String getRealYear(String thai_year){
 		int year = Integer.parseInt(thai_year);
 		return Integer.toString(year - 543);
+	}
+	
+	public static Date getDate(String text){
+		DateTimeFormat fmt = DateTimeFormat.getFormat("MM/dd/yyyy");
+		Date parsed = fmt.parse(text);
+		return parsed;
 	}
 }

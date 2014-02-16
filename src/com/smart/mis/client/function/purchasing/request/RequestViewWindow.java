@@ -21,6 +21,7 @@ import com.smart.mis.client.function.report.purchasing.PurchasingReportDS;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.purchasing.PurchaseOrderStatus;
 import com.smart.mis.shared.purchasing.PurchaseRequestStatus;
@@ -333,11 +334,18 @@ public class RequestViewWindow extends EditorWindow{
 //			quoteListGrid.setWarnOnRemovalMessage("คุณต้องการลบ รายการสินค้า หรือไม่?");
 //		}
 		
-		RequestMaterialDS tempView = new RequestMaterialDS(request_id);
+//		RequestMaterialDS tempView = new RequestMaterialDS(request_id);
+		RequestMaterialDS tempView = new RequestMaterialDS();
+		RequestMaterialDS.getInstance(request_id).refreshData();
 		Record[] cachedData = RequestMaterialDS.getInstance(request_id).getCacheData();
 		if (cachedData.length != 0) {
+			System.out.println("Found "+cachedData.length+" result...");
 			tempView.setTestData(cachedData);
+		} else {
+			tempView = new RequestMaterialDS(request_id);
+			System.out.println("Found 0 result...");
 		}
+		
 		quoteListGrid.setDataSource(tempView);
 		quoteListGrid.setUseAllDataSourceFields(false);
 		
@@ -842,7 +850,11 @@ public class RequestViewWindow extends EditorWindow{
 			String quoteId = (String) Suppiler.getField("quote_id").getValue();
 			String payment_model = (String) Suppiler.getField("payment_model").getValue();
 			Integer credit = (Integer) Suppiler.getField("credit").getValue();
-			ListGridRecord updateRecord = PurchaseRequestData.createRecord(request_id, client.sid, client.sup_name, quoteId, payment_model, credit, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "", request_status);
+			
+			String sid = (String) Suppiler.getField("sid").getValue();
+			String sup_name = (String) Suppiler.getField("sup_name").getValue();
+			
+			ListGridRecord updateRecord = PurchaseRequestData.createRecord(request_id, sid, sup_name, quoteId, payment_model, credit, from, to, delivery, total_weight, total_amount, total_netExclusive, new Date(), null, currentUser.getFirstName() + " " + currentUser.getLastName(), null, "", request_status);
 			
 			PurchaseRequestDS.getInstance().updateData(updateRecord, new DSCallback() {
 				@Override
@@ -855,10 +867,12 @@ public class RequestViewWindow extends EditorWindow{
 						} else { 
 							for (RequestMaterialDetails item : materialList) {
 								if (item.sub_request_id == null) {
-									item.sub_request_id = "SPR80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+									item.sub_request_id = "SPR" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+									System.out.println("item.sub_request_id == NULL, gen new id " + item.sub_request_id);
 									ListGridRecord subUpdateRecord = RequestMaterialData.createRecord(item);
 									RequestMaterialDS.getInstance(request_id).addData(subUpdateRecord);
 								} else  {
+									System.out.println("item.sub_request_id != NULL, id " + item.sub_request_id);
 									ListGridRecord subUpdateRecord = RequestMaterialData.createRecord(item);
 									RequestMaterialDS.getInstance(request_id).updateData(subUpdateRecord);
 								}
@@ -901,7 +915,7 @@ public class RequestViewWindow extends EditorWindow{
 		Double total_amount = 0.0;
 		//Integer total_produce_amount = 0;
 		
-		final String order_id = "PO70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		final String order_id = "PO" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		//final String invoice_id = "IN70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		//final String plan_id = "PL70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		final ArrayList<OrderMaterialDetails> orderProductList = new ArrayList<OrderMaterialDetails>();

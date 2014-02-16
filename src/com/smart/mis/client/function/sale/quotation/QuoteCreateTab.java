@@ -473,7 +473,8 @@ public class QuoteCreateTab {
         fromDate.setDefaultValue(dateRange.getStartDate());
         toDate.setDefaultChooserDate(dateRange.getEndDate());
         toDate.setDefaultValue(dateRange.getEndDate());
-        dateRange.setRelativeEndDate(new RelativeDate("+1m"));
+        //dateRange.setRelativeEndDate(new RelativeDate("+1m"));
+        dateRange.setRelativeEndDate(new RelativeDate("+30d"));
         deliveryDate.setDefaultChooserDate(dateRange.getEndDate());
         deliveryDate.setDefaultValue(dateRange.getEndDate());
         

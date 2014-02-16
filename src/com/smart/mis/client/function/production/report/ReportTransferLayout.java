@@ -94,7 +94,7 @@ public class ReportTransferLayout extends VLayout {
 		
 		//VLayout leftLayout = new VLayout();
 		final DynamicForm searchForm = new DynamicForm();
-		searchForm.setWidth(950); 
+		searchForm.setWidth(450); 
 		searchForm.setHeight(30);
 		searchForm.setMargin(5); 
 		searchForm.setNumCols(8);
@@ -123,15 +123,15 @@ public class ReportTransferLayout extends VLayout {
 //		smidText.setWrapTitle(false);
 //		smidText.setOperator(OperatorId.REGEXP);
         
-//		final DynamicForm dateForm = new DynamicForm();
-//		dateForm.setWidth(300); 
-//		dateForm.setHeight(30);
-//		dateForm.setMargin(5); 
-//		dateForm.setNumCols(2);
-//		dateForm.setCellPadding(2);
-//		dateForm.setSelectOnFocus(true);
-//		dateForm.setIsGroup(true);
-//		dateForm.setGroupTitle("วันที่ขอโอนสินค้า");
+		final DynamicForm dateForm = new DynamicForm();
+		dateForm.setWidth(450); 
+		dateForm.setHeight(30);
+		dateForm.setMargin(5); 
+		dateForm.setNumCols(4);
+		dateForm.setCellPadding(2);
+		dateForm.setSelectOnFocus(true);
+		dateForm.setIsGroup(true);
+		dateForm.setGroupTitle("วันที่ขอโอนสินค้า");
 		DateRange dateRange = new DateRange();  
         dateRange.setRelativeStartDate(new RelativeDate("-1w"));
         dateRange.setRelativeEndDate(RelativeDate.TODAY);
@@ -145,9 +145,9 @@ public class ReportTransferLayout extends VLayout {
         to.setUseTextField(true);
 
         FromToValidate.addValidator(from, to);
-        searchForm.setItems(statusSelected, jidText, from, to);
-        //searchForm.setItems(planText, jidText);
-//        dateForm.setItems(from, to);
+        //searchForm.setItems(statusSelected, jidText, from, to);
+        searchForm.setItems(statusSelected, jidText);
+        dateForm.setItems(from, to);
         
 		final ListGrid orderListGrid = new ListGrid();
 		
@@ -209,12 +209,13 @@ public class ReportTransferLayout extends VLayout {
 		searchButton.setWidth(170);
 		searchButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-            	//Criterion search = new Criterion();
-            	//search.addCriteria(searchForm.getValuesAsCriteria());
+            	Criterion search = new Criterion();
+            	search.addCriteria(searchForm.getValuesAsCriteria());
             	AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
           		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
-          		      new Criterion("status", OperatorId.REGEXP, statusSelected.getValueAsString()),
-          		      new Criterion("plan_id", OperatorId.REGEXP, jidText.getValueAsString()),
+          		      //new Criterion("status", OperatorId.REGEXP, statusSelected.getValueAsString()),
+          		      //new Criterion("plan_id", OperatorId.REGEXP, jidText.getValueAsString()),
+          		      search
             		  });
                 reportDate.setContents("ตั้งแต่วันที่ " + DateTimeFormat.getFormat( "d-M-yyyy" ).format(from.getValueAsDate()) + " ถึงวันที่ " +  DateTimeFormat.getFormat( "d-M-yyyy" ).format(to.getValueAsDate()));
               orderListGrid.fetchData(criteria);  
@@ -243,7 +244,7 @@ public class ReportTransferLayout extends VLayout {
 		
 		buttonLayout.addMembers(searchButton, listAllButton, printButton);
 		
-		searchLayout.addMembers(searchForm);
+		searchLayout.addMembers(searchForm, dateForm);
 		//reviseLayout.
 		addMember(searchLayout);
 		

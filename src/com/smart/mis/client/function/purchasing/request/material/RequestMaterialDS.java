@@ -35,7 +35,7 @@ public class RequestMaterialDS extends DataSource  {
 			 Field_1.setPrimaryKey(true);
 			 DataSourceTextField Field_2 = new DataSourceTextField("mat_name", "รายการวัตถุดิบ");
 			 DataSourceTextField Field_3 = new DataSourceTextField("type", "ประเภท");
-			 DataSourceFloatField Field_5 = new DataSourceFloatField("weight", "น้ำหนักรวม (กรัม)");
+			 DataSourceFloatField Field_5 = new DataSourceFloatField("weight", "น้ำหนัก (กรัม)");
 			 DataSourceFloatField Field_6 = new DataSourceFloatField("request_amount", "จำนวน");
 			 DataSourceTextField Field_7 = new DataSourceTextField("unit", "หน่วย");
 			 DataSourceFloatField Field_8 = new DataSourceFloatField("price", "ราคา (บาท)");

@@ -1,4 +1,4 @@
-package com.smart.mis.client.chart.inventory;
+package com.smart.mis.client.chart.production;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.visualization.client.AbstractDataTable;
@@ -19,7 +19,7 @@ import com.smart.mis.client.function.FunctionPanel;
 import com.smart.mis.client.function.report.ReportPanel;
 import com.smartgwt.client.widgets.Canvas;
 
-public class SilverRequestColumnChart {
+public class SilverUsedValueColumnChart {
 
 	public void loadChart(final Canvas loader, final ReportPanel panel, final Double[][] item) {  
 	    Runnable onLoadCallback = new Runnable() {
@@ -47,8 +47,8 @@ public class SilverRequestColumnChart {
 //		    options.setIsStacked(true);
 		    options.setLegend(LegendPosition.NONE);
 		    options.setHAxisOptions(createAxisOption("ประเภทแร่เงิน"));
-		    options.setVAxisOptions(createAxisOption("ปริมาณแร่เงินที่เบิกจ่าย (กรัม)"));
-		    options.setTitle("รายงานสรุปการเบิกจ่ายแร่เงิน");
+		    options.setVAxisOptions(createAxisOption("มูลค่าแร่เงินที่ใช้ในการผลิต (บาท)"));
+		    options.setTitle("รายงานสรุปมูลค่าแร่เงินที่ใช้ในการผลิต");
 //		    ChartArea area = ChartArea.create();
 //		    area.setHeight("80%");
 //		    area.setWidth("80%");
@@ -111,7 +111,7 @@ public class SilverRequestColumnChart {
 		  private AbstractDataTable createTable(Double[][] item) {
 		    DataTable data = DataTable.create();
 		    data.addColumn(ColumnType.STRING, "ประเภทแร่เงิน"); //0
-		    data.addColumn(ColumnType.NUMBER, "ปริมาณแร่เงินที่เบิกจ่าย(กรัม)"); //1
+		    data.addColumn(ColumnType.NUMBER, "มูลค่าแร่เงินที่ใช้ในการผลิต (บาท)"); //1
 //		    data.addColumn(ColumnType.NUMBER, "ปริมาณแร่เงินที่ถูกจอง (กรัม)"); //2
 //		    addAnnotationColumn(data); //3
 		    

@@ -127,7 +127,8 @@ public class InvoiceReviewTab {
 		dateForm.setGroupTitle("วันที่ครบกำหนดชำระเงิน");
 		DateRange dateRange = new DateRange();  
         dateRange.setRelativeStartDate(new RelativeDate("-1m"));
-        dateRange.setRelativeEndDate(new RelativeDate("+1m"));
+        //dateRange.setRelativeEndDate(new RelativeDate("+1m"));
+        dateRange.setRelativeEndDate(new RelativeDate("+30d"));
 		final DateItem from = new DateItem("due_from" , "ตั้งแต่");
 		final DateItem to = new DateItem("due_to" , "ถึง");
 		from.setDefaultChooserDate(dateRange.getStartDate());

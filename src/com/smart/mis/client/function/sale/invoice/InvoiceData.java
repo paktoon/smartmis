@@ -2,6 +2,7 @@ package com.smart.mis.client.function.sale.invoice;
 
 import java.util.Date;
 
+import com.smart.mis.shared.DateTimeMapping;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -65,16 +66,26 @@ public class InvoiceData {
     }
     
     public static ListGridRecord[] getNewRecords() {
+    	
+		Date delivery =	DateTimeMapping.getDate("03/17/2014");
+		Date created =	DateTimeMapping.getDate("02/15/2014");
+		Date due_date_0 = DateTimeMapping.getDate("02/15/2014");
+		Date due_date_10 = DateTimeMapping.getDate("02/25/2014");
+		Date due_date_20 = DateTimeMapping.getDate("03/07/2014");
+		Date due_date_30 = DateTimeMapping.getDate("03/17/2014");
+		
+		Date paid_date = DateTimeMapping.getDate("02/16/2014");
+		
     	return new ListGridRecord[]{ 
-    			createRecord("IN10001","SO10001","CU10017", "Flora Creek", "เงินสด", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date() , 1360.0, 200, 11000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "PO1111", new Date(), null),
-    			createRecord("IN10002","SO10002","CU10008", "ประทีปเจมส์", "เงินสด", 0 , "ลูกค้าทั่วไป", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date() , 1836.0, 270, 14850.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "PO1112", new Date(), null),
-    			createRecord("IN10003","SO10003","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "เงินสด", 20 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date() , 1896.0, 300, 16500.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "4_canceled", "PO1113", new Date(), null),
-    			createRecord("IN10004","SO10004","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "เงินสด", 10 ,"ลูกค้าประจำ", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date() , 632.0, 100, 5000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "PO1114", new Date(), null),
+    			createRecord("IN10001","SO10001","CU10017", "Flora Creek", "เงินสด", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", delivery , 1360.0, 200, 11000.0, created, null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "PO1111", due_date_10, null),
+    			createRecord("IN10002","SO10002","CU10008", "ประทีปเจมส์", "เงินสด", 0 , "ลูกค้าทั่วไป", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , delivery , 1836.0, 270, 14850.0, created, null, "ภักดิ์ทูล ใจทอง", null, "2_paid", "PO1112", due_date_0, paid_date),
+    			createRecord("IN10003","SO10003","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "เงินสด", 20 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , delivery , 1896.0, 300, 16500.0, created, null, "ภักดิ์ทูล ใจทอง", null, "4_canceled", "PO1113", due_date_20, null),
+    			createRecord("IN10004","SO10004","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "เงินสด", 10 ,"ลูกค้าประจำ", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , delivery , 632.0, 100, 5000.0, created, null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "PO1114", due_date_10, null),
     		
-    			createRecord("IN10005","SO10005","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 30 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date() , 1360.0, 200, 11000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "PO1177", new Date(), null),
-    			createRecord("IN10006","SO10006","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 0 , "ลูกค้าทั่วไป", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date() , 1836.0, 270, 14850.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "2_paid", "PO1179", new Date(), new Date()),
-    			createRecord("IN10007","SO10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date() , 1896.0, 300, 16500.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "PO1126", new Date(), null),
-    			createRecord("IN10008","SO10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 ,"ลูกค้าประจำ", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date() , 632.0, 100, 5000.0, new Date(), null, "ภักดิ์ทูล ใจทอง", null, "2_paid", "PO1178", new Date(), new Date())
+    			createRecord("IN10005","SO10005","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 30 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", delivery , 1360.0, 200, 11000.0, created, null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "PO1177", due_date_30, null),
+    			createRecord("IN10006","SO10006","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 0 , "ลูกค้าทั่วไป", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , delivery , 1836.0, 270, 14850.0, created, null, "ภักดิ์ทูล ใจทอง", null, "2_paid", "PO1179", due_date_0, paid_date),
+    			createRecord("IN10007","SO10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , delivery , 1896.0, 300, 16500.0, created, null, "ภักดิ์ทูล ใจทอง", null, "1_waiting_for_payment", "PO1126", due_date_10, null),
+    			createRecord("IN10008","SO10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 ,"ลูกค้าประจำ", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , delivery , 632.0, 100, 5000.0, created, null, "ภักดิ์ทูล ใจทอง", null, "2_paid", "PO1178", due_date_10, paid_date)
     			};
     	//return new ListGridRecord[]{};
     }

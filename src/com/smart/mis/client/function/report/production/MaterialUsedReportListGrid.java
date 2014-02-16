@@ -25,6 +25,7 @@ import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 public class MaterialUsedReportListGrid extends ListGrid {
 
 	private Double[][] silverDataTable, matDataTable;
+	private Double[][] silverValueTable, matValueTable;
 //	@Override
 //	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
 //		if (getFieldName(colNum).equals("remain")) { 
@@ -112,6 +113,33 @@ public class MaterialUsedReportListGrid extends ListGrid {
 	    };
 	}
 	
+	public Double[][] createSilverValueTable(Criterion criteria){
+		
+		if (silverValueTable != null) return silverValueTable;
+		
+		MaterialUsedReportDS.getInstance().refreshData();
+	    Record[] silver100 = MaterialUsedReportDS.getInstance().applyFilter(MaterialUsedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("mname", OperatorId.EQUALS, "แร่เงิน 100%")}));
+	    Record[] silver925 = MaterialUsedReportDS.getInstance().applyFilter(MaterialUsedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("mname", OperatorId.EQUALS, "แร่เงิน 92.5%")}));
+
+	    return new Double[][] {
+	    		{getRequestValue(silver100), getRequestValue(silver925)}
+	    };
+	}
+	
+	public Double[][] createMaterialValueTable(Criterion criteria){
+		
+		if (matValueTable != null) return matValueTable;
+		
+		MaterialUsedReportDS.getInstance().refreshData();
+		Record[] mat_1 = MaterialUsedReportDS.getInstance().applyFilter(MaterialUsedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "พลอยประดับ")}));
+	    Record[] mat_2 = MaterialUsedReportDS.getInstance().applyFilter(MaterialUsedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "แมกกาไซต์")}));
+	    Record[] mat_3 = MaterialUsedReportDS.getInstance().applyFilter(MaterialUsedReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "อื่นๆ")}));
+
+	    return new Double[][] {
+	    		{getRequestValue(mat_1), getRequestValue(mat_2), getRequestValue(mat_3)}
+	    };
+	}
+	
 	public Double getRequestAmount(Record[] records) {
 		Double request_amount = 0.0;
 		for (Record record : records) {
@@ -123,6 +151,15 @@ public class MaterialUsedReportListGrid extends ListGrid {
 	}
 	
 	//new
+	public Double getRequestValue(Record[] records) {
+		Double value = 0.0;
+		for (Record record : records) {
+			if (record.getAttributeAsDouble("value") != null) {
+				value += record.getAttributeAsDouble("value");
+			}
+		}
+		return value;
+	}
 	
 	public MaterialUsedReportListGrid(Criterion criteria) {
 		setWidth(450);
@@ -149,12 +186,12 @@ public class MaterialUsedReportListGrid extends ListGrid {
             }  
         });
         
-      ListGridField Field_6_1 = new ListGridField("request_amount", "จำนวนที่ใช้ในการผลิต", 150);
+      ListGridField Field_6_1 = new ListGridField("request_amount", "จำนวนที่ใช้ในการผลิต", 130);
       Field_6_1.setShowGroupSummary(true);
       Field_6_1.setSummaryFunction(SummaryFunctionType.SUM);
-//      ListGridField Field_6_2 = new ListGridField("reserved","จำนวนที่จอง", 150);
-//      Field_6_2.setShowGroupSummary(true);
-//      Field_6_2.setSummaryFunction(SummaryFunctionType.SUM);
+      ListGridField Field_6_2 = new ListGridField("value","มูลค่า (บาท)", 100);
+      Field_6_2.setShowGroupSummary(true);
+      Field_6_2.setSummaryFunction(SummaryFunctionType.SUM);
 //      ListGridField Field_6_3 = new ListGridField("remain","จำนวนคงเหลือ", 150);
 //      Field_6_3.setShowGroupSummary(true);
 //      Field_6_3.setSummaryFunction(SummaryFunctionType.SUM);
@@ -165,12 +202,12 @@ public class MaterialUsedReportListGrid extends ListGrid {
         //Cell Format
       Field_6_1.setAlign(Alignment.RIGHT);
       Field_6_1.setCellFormatter(FieldFormatter.getNumberFormat());
-//      Field_6_2.setAlign(Alignment.RIGHT);
-//      Field_6_2.setCellFormatter(FieldFormatter.getNumberFormat());
+      Field_6_2.setAlign(Alignment.RIGHT);
+      Field_6_2.setCellFormatter(FieldFormatter.getPriceFormat());
 //      Field_6_3.setAlign(Alignment.RIGHT);
 //      Field_6_3.setCellFormatter(FieldFormatter.getNumberFormat());
         
-        setFields(field_0, field_1, Field_6_1, field_3_3);
+        setFields(field_0, field_1, Field_6_2, Field_6_1, field_3_3);
         
         setRecords(createListGridRecord(criteria));
         setHoverWidth(200);  
@@ -196,20 +233,29 @@ public class MaterialUsedReportListGrid extends ListGrid {
 	    		{getRequestAmount(mat_1), getRequestAmount(mat_2), getRequestAmount(mat_3)}
 	    };
 	    
+	    silverValueTable =  new Double[][] {
+	    		{getRequestValue(silver100), getRequestValue(silver925)}
+	    };
+	    
+	    matValueTable = new Double[][] {
+	    		{getRequestValue(mat_1), getRequestValue(mat_2), getRequestValue(mat_3)}
+	    };
+	    
     	return new ListGridRecord[]{ 
-    			createRecord("แร่เงิน 100%", "แร่เงิน",getRequestAmount(silver100), "กรัม"),
-    			createRecord("แร่เงิน 92.5%", "แร่เงิน",getRequestAmount(silver925), "กรัม"),
-    			createRecord("พลอยประดับ", "วัตถุดิบ",getRequestAmount(mat_1), "เม็ด"),
-    			createRecord("แมกกาไซต์", "วัตถุดิบ",getRequestAmount(mat_2), "เม็ด"),
-    			createRecord("อื่นๆ", "วัตถุดิบ",getRequestAmount(mat_3), "ชิ้น")
+    			createRecord("แร่เงิน 100%", "แร่เงิน",getRequestAmount(silver100), getRequestValue(silver100), "กรัม"),
+    			createRecord("แร่เงิน 92.5%", "แร่เงิน",getRequestAmount(silver925), getRequestValue(silver925), "กรัม"),
+    			createRecord("พลอยประดับ", "วัตถุดิบ",getRequestAmount(mat_1), getRequestValue(mat_1), "เม็ด"),
+    			createRecord("แมกกาไซต์", "วัตถุดิบ",getRequestAmount(mat_2), getRequestValue(mat_2), "เม็ด"),
+    			createRecord("อื่นๆ", "วัตถุดิบ",getRequestAmount(mat_3), getRequestValue(mat_3), "ชิ้น")
     	};
 	}
 	
-	public ListGridRecord createRecord(String type, String group, Double request_amount, String unit){
+	public ListGridRecord createRecord(String type, String group, Double request_amount, Double value, String unit){
 		ListGridRecord record = new ListGridRecord();
         record.setAttribute("type", type);
         record.setAttribute("group", group);
         record.setAttribute("request_amount", request_amount);
+        record.setAttribute("value", value);
         record.setAttribute("unit", unit);
         return record;
 	}

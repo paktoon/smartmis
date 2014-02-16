@@ -2,6 +2,7 @@ package com.smart.mis.client.function.production.order.casting;
 
 import java.util.Date;
 
+import com.smart.mis.shared.DateTimeMapping;
 import com.smart.mis.shared.prodution.Smith;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.security.User;
@@ -117,22 +118,18 @@ public class CastingData {
     }
     
     public static ListGridRecord[] getNewRecords() {
-//    	return new ListGridRecord[]{ 
-//    			createRecord("QA10001","CU10017", "Flora Creek", "เงินสด", 10 , new Date(), new Date(), new Date() , 120.0, 200, 11000.0, new Date(), null, "admin test", null, "", "2_waiting_for_approved"),
-//    			createRecord("QA10002","CU10008", "ประทีปเจมส์", "เงินสด", 30 , new Date(), new Date(), new Date() , 120.0, 270, 14850.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    			createRecord("QA10003","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "เงินสด", 20 , new Date(), new Date(), new Date() , 120.0, 300, 16500.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    			createRecord("QA10004","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "เงินสด", 10 , new Date(), new Date(), new Date() , 120.0, 100, 5000.0, new Date(), null, "admin test", null, "", "4_canceled"),
-//    			
-//    			createRecord("QA10005","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 30 , new Date(), new Date(), new Date() , 120.0, 200, 11000.0, new Date(), null, "admin test", null, "", "2_waiting_for_approved"),
-//    			createRecord("QA10006","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 20 , new Date(), new Date(), new Date() , 120.0, 270, 14850.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    			createRecord("QA10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , new Date(), new Date(), new Date() , 120.0, 300, 16500.0, new Date(), null, "admin test", null, "", "2_waiting_for_approved"),
-//    			createRecord("QA10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 , new Date(), new Date(), new Date() , 120.0, 100, 5000.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    			
-//    			createRecord("QA10009","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 30 , new Date(), new Date(), new Date() , 120.0, 210, 11000.0, new Date(), null, "admin test", null, "", "1_waiting_for_revised"),
-//    			createRecord("QA10010","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 20 , new Date(), new Date(), new Date() , 120.0, 70, 14850.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    			createRecord("QA10011","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , new Date(), new Date(), new Date() , 120.0, 50, 16500.0, new Date(), null, "admin test", null, "", "1_waiting_for_revised"),
-//    			createRecord("QA10012","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 , new Date(), new Date(), new Date() , 120.0, 125, 5000.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    	};
-    	return new ListGridRecord[]{};
+    	
+    	Date sent_date =	DateTimeMapping.getDate("02/15/2014");
+    	Date due_date =	DateTimeMapping.getDate("02/18/2014");
+		Date created =	DateTimeMapping.getDate("02/15/2014");
+		Date modified =	DateTimeMapping.getDate("02/15/2014");
+		
+    	Smith sm_1 = new Smith("SM10006", "โรงหล่อ พรหมรังสี", "(02) 454-4964", "(081) 843-3076", "test_6@smith.co.th", "392/21 ถนน สุขุมวิท 20 เขต คลองเตย จังหวัด กรุงเทพ รหัสไปรษณีย์ 10110", "หล่อขึ้นรูป");
+    	return new ListGridRecord[]{ 
+    			createSentRecord("JOB10001","PL10004", sm_1, sent_date, due_date, 3080.0, 550 , created, modified, "สมใจ ผลิตเก่ง", "ภักดิ์ทูล ใจทอง", "", "1_on_production"),
+    			createSentRecord("JOB10002","PL10006", sm_1, sent_date, due_date, 560.0, 100 , created, modified, "สมใจ ผลิตเก่ง", "ภักดิ์ทูล ใจทอง", "", "1_on_production"),
+    			createSentRecord("JOB10003","PL10007", sm_1, sent_date, due_date, 1512.0, 270 , created, modified, "สมใจ ผลิตเก่ง", "ภักดิ์ทูล ใจทอง", "", "1_on_production")
+    	};
+//    	return new ListGridRecord[]{};
     }
 }

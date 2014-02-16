@@ -7,6 +7,7 @@ import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
 import com.smart.mis.shared.Country;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
@@ -218,7 +219,7 @@ public class CustomerAdd {
 	//									if (result != null)
 	//									{
 									    	Record newRecord = CustomerData.createRecord(
-									    			"CU70" + Math.round((Math.random() * 100)),
+									    			"CU" + KeyGenerator.genKey() + Math.round((Math.random() * 100)),
 													cus_name,
 													cus_phone,
 													contact_name,

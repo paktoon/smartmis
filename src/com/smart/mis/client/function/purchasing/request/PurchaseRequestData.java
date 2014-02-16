@@ -2,6 +2,7 @@ package com.smart.mis.client.function.purchasing.request;
 
 import java.util.Date;
 
+import com.smart.mis.shared.DateTimeMapping;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -72,22 +73,23 @@ public class PurchaseRequestData {
     }
     
     public static ListGridRecord[] getNewRecords() {
-//    	return new ListGridRecord[]{ 
-//    			createRecord("QA10001","CU10017", "Flora Creek", "เงินสด", 10 , new Date(), new Date(), new Date() , 120.0, 200, 11000.0, new Date(), null, "admin test", null, "", "2_waiting_for_approved"),
-//    			createRecord("QA10002","CU10008", "ประทีปเจมส์", "เงินสด", 30 , new Date(), new Date(), new Date() , 120.0, 270, 14850.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    			createRecord("QA10003","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "เงินสด", 20 , new Date(), new Date(), new Date() , 120.0, 300, 16500.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    			createRecord("QA10004","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "เงินสด", 10 , new Date(), new Date(), new Date() , 120.0, 100, 5000.0, new Date(), null, "admin test", null, "", "4_canceled"),
-//    			
-//    			createRecord("QA10005","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 30 , new Date(), new Date(), new Date() , 120.0, 200, 11000.0, new Date(), null, "admin test", null, "", "2_waiting_for_approved"),
-//    			createRecord("QA10006","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 20 , new Date(), new Date(), new Date() , 120.0, 270, 14850.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    			createRecord("QA10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , new Date(), new Date(), new Date() , 120.0, 300, 16500.0, new Date(), null, "admin test", null, "", "2_waiting_for_approved"),
-//    			createRecord("QA10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 , new Date(), new Date(), new Date() , 120.0, 100, 5000.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    			
-//    			createRecord("QA10009","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 30 , new Date(), new Date(), new Date() , 120.0, 200, 11000.0, new Date(), null, "admin test", null, "", "1_waiting_for_revised"),
-//    			createRecord("QA10010","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 20 , new Date(), new Date(), new Date() , 120.0, 270, 14850.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    			createRecord("QA10011","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , new Date(), new Date(), new Date() , 120.0, 300, 16500.0, new Date(), null, "admin test", null, "", "1_waiting_for_revised"),
-//    			createRecord("QA10012","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 , new Date(), new Date(), new Date() , 120.0, 100, 5000.0, new Date(), null, "admin test", null, "", "3_approved"),
-//    	};
-    	return new ListGridRecord[]{};
+    	
+		Date from =	DateTimeMapping.getDate("02/15/2014");
+		Date to =	DateTimeMapping.getDate("02/22/2014");
+		Date delivery =	DateTimeMapping.getDate("03/02/2014");
+		Date created =	DateTimeMapping.getDate("02/15/2014");
+		
+    	return new ListGridRecord[]{ 
+    			createRecord("PR10001","SU10001","บริษัท 99GOLDS", "PO0101", "เงินสด", 10 , from, to, delivery , 2000.0, 2000.0, 22500.0, created, null, "สมหมาย ซื้อของ", "ภักดิ์ทูล ใจทอง", "", "2_waiting_for_approved"),
+    			createRecord("PR10002","SU10002","ห้างทอง น่ำเชียง","PO0102", "เงินสด", 30 , from, to, delivery , 3000.0, 3000.0, 32500.0, created, null, "สมหมาย ซื้อของ", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
+    			createRecord("PR10003","SU10001","บริษัท 99GOLDS","PO0103", "เงินสด", 20 , from, to, delivery , 2000.0, 2000.0, 22500.0, created, null, "สมหมาย ซื้อของ", "ภักดิ์ทูล ใจทอง", "", "1_waiting_for_revised"),
+    			createRecord("PR10004","SU10002","ห้างทอง น่ำเชียง","PO0104", "เงินสด", 10 , from, to, delivery , 3000.0, 3000.0, 32500.0, created, null, "สมหมาย ซื้อของ", "ภักดิ์ทูล ใจทอง", "", "1_waiting_for_revised"),
+    			
+    			createRecord("PR10005","SU10003","ร้าน วีวี่เจมส์","PO0105", "เงินสด", 30 , from, to, delivery , 2400.0, 20000.0, 15000.0, created, null, "สมหมาย ซื้อของ", "ภักดิ์ทูล ใจทอง", "", "2_waiting_for_approved"),
+    			createRecord("PR10006","SU10003","ร้าน วีวี่เจมส์","PO0106", "เงินสด", 20 , from, to, delivery , 3000.0, 25000.0, 18000.0, created, null, "สมหมาย ซื้อของ", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
+    			createRecord("PR10007","SU10005","บริษัท เครื่องประดับอิรอส จำกัด","PO0107", "เงินสด", 10 , from, to, delivery , 2400.0, 20000.0, 15000.0, created, null, "สมหมาย ซื้อของ", "ภักดิ์ทูล ใจทอง", "", "2_waiting_for_approved"),
+    			createRecord("PR10008","SU10005","บริษัท เครื่องประดับอิรอส จำกัด","PO0108", "เงินสด", 10 , from, to, delivery , 3000.0, 25000.0, 18000.0, created, null, "สมหมาย ซื้อของ", "ภักดิ์ทูล ใจทอง", "", "1_waiting_for_revised")
+    	}; 	
+//    	return new ListGridRecord[]{};
     }
 }

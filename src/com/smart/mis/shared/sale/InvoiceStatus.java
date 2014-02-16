@@ -10,7 +10,7 @@ public class InvoiceStatus {
 		valueMap = new LinkedHashMap<String, String>();  
         valueMap.put("1_waiting_for_payment", "รอชำระเงิน");  
         valueMap.put("2_paid", "ชำระเงินแล้ว"); 
-        valueMap.put("3_over_due", "เกินกำหนดชำระเงิน"); 
+        //valueMap.put("3_over_due", "เกินกำหนดชำระเงิน"); 
         valueMap.put("4_canceled", "ยกเลิก");
 	}
 	

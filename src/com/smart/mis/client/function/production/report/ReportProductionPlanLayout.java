@@ -88,7 +88,7 @@ public class ReportProductionPlanLayout extends VLayout {
 		searchLayout.setHeight(20);
 		
 		final DynamicForm searchForm = new DynamicForm();
-		searchForm.setWidth(950); 
+		searchForm.setWidth(450); 
 		searchForm.setHeight(30);
 		searchForm.setMargin(5); 
 		searchForm.setNumCols(8);
@@ -117,15 +117,15 @@ public class ReportProductionPlanLayout extends VLayout {
 //		cnameText.setWrapTitle(false);
 //		cnameText.setOperator(OperatorId.REGEXP);
         
-//		final DynamicForm dateForm = new DynamicForm();
-//		dateForm.setWidth(300); 
-//		dateForm.setHeight(30);
-//		dateForm.setMargin(5); 
-//		dateForm.setNumCols(2);
-//		dateForm.setCellPadding(2);
-//		dateForm.setSelectOnFocus(true);
-//		dateForm.setIsGroup(true);
-//		dateForm.setGroupTitle("วันที่สร้างแผนการผลิต");
+		final DynamicForm dateForm = new DynamicForm();
+		dateForm.setWidth(450); 
+		dateForm.setHeight(30);
+		dateForm.setMargin(5); 
+		dateForm.setNumCols(4);
+		dateForm.setCellPadding(2);
+		dateForm.setSelectOnFocus(true);
+		dateForm.setIsGroup(true);
+		dateForm.setGroupTitle("วันที่สร้างแผนการผลิต");
 		DateRange dateRange = new DateRange();  
         dateRange.setRelativeStartDate(new RelativeDate("-1w"));
         dateRange.setRelativeEndDate(RelativeDate.TODAY);
@@ -139,9 +139,9 @@ public class ReportProductionPlanLayout extends VLayout {
         to.setUseTextField(true);
 
         FromToValidate.addValidator(from, to);
-        //searchForm.setItems(planText,statusSelected, cidText, cnameText);
-        searchForm.setItems(statusSelected, saleText , from, to);
-        //dateForm.setItems(from, to);
+        searchForm.setItems(statusSelected, saleText);
+        //searchForm.setItems(statusSelected, saleText , from, to);
+        dateForm.setItems(from, to);
         
 		final ListGrid planListGrid = new ListGrid();
  
@@ -169,6 +169,7 @@ public class ReportProductionPlanLayout extends VLayout {
         
 		ListGridField status = new ListGridField("status" , 120);
 		ListGridField sale_id = new ListGridField("sale_id", 100);
+		sale_id.setEmptyCellValue("-");
 		ListGridField reason = new ListGridField("reason");
 
 		ListGridField total_weight = new ListGridField("total_weight", 120);
@@ -189,7 +190,7 @@ public class ReportProductionPlanLayout extends VLayout {
 		
 		//planListGrid.hideField("status");
 
-		searchLayout.addMembers(searchForm);
+		searchLayout.addMembers(searchForm, dateForm);
 		addMember(searchLayout);
 		
 		HLayout buttonLayout = new HLayout();
@@ -201,12 +202,13 @@ public class ReportProductionPlanLayout extends VLayout {
 		searchButton.setWidth(150);
 		searchButton.addClickHandler(new ClickHandler() {  
             public void onClick(ClickEvent event) { 
-            	//Criterion search = new Criterion();
-            	//search.addCriteria(searchForm.getValuesAsCriteria());
+            	Criterion search = new Criterion();
+            	search.addCriteria(searchForm.getValuesAsCriteria());
                 AdvancedCriteria criteria = new AdvancedCriteria(OperatorId.AND, new Criterion[]{
         		      new Criterion("created_date", OperatorId.BETWEEN_INCLUSIVE, from.getValueAsDate(), to.getValueAsDate()),
-        		      new Criterion("status", OperatorId.REGEXP, statusSelected.getValueAsString()),
-        		      new Criterion("sale_id", OperatorId.REGEXP, saleText.getValueAsString()),
+        		      //new Criterion("status", OperatorId.REGEXP, statusSelected.getValueAsString()),
+        		      //new Criterion("sale_id", OperatorId.REGEXP, saleText.getValueAsString()),
+        		      search
           		  });
                 reportDate.setContents("ตั้งแต่วันที่ " + DateTimeFormat.getFormat( "d-M-yyyy" ).format(from.getValueAsDate()) + " ถึงวันที่ " +  DateTimeFormat.getFormat( "d-M-yyyy" ).format(to.getValueAsDate()));
               planListGrid.fetchData(criteria);  

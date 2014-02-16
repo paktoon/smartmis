@@ -13,6 +13,7 @@ import com.smart.mis.client.function.production.plan.product.PlanProductData;
 import com.smart.mis.client.function.production.plan.product.PlanProductDetails;
 import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.client.function.production.product.ProductData;
+import com.smart.mis.client.function.purchasing.request.material.RequestMaterialDS;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.invoice.InvoiceDS;
 import com.smart.mis.client.function.sale.invoice.InvoiceData;
@@ -345,18 +346,23 @@ public class QuoteViewWindow extends EditorWindow{
 //			quoteListGrid.setWarnOnRemovalMessage("คุณต้องการลบ รายการสินค้า หรือไม่?");
 //		}
 		
-		QuoteProductDS tempView = new QuoteProductDS(quote_id);
-//		QuoteProductDS.getInstance(quote_id).refreshData();
+//		QuoteProductDS tempView = new QuoteProductDS(quote_id);
+//		Record[] cachedData = QuoteProductDS.getInstance(quote_id).getCacheData();
+//		if (cachedData.length != 0) {
+//			tempView.setTestData(cachedData);
+//		}
+		
+		QuoteProductDS tempView = new QuoteProductDS();
+		QuoteProductDS.getInstance(quote_id).refreshData();
 		Record[] cachedData = QuoteProductDS.getInstance(quote_id).getCacheData();
 		if (cachedData.length != 0) {
+			System.out.println("Found "+cachedData.length+" result...");
 			tempView.setTestData(cachedData);
+		} else {
+			tempView = new QuoteProductDS(quote_id);
+			System.out.println("Found 0 result...");
 		}
-//			for (Record cache : cachedData){
-//				System.out.println(cache.getAttributeAsString("sub_quote_id") + " "+ cache.getAttributeAsString("status"));
-//			}
-//		} else {
-//			System.out.println("0 result found....");
-//		}
+		
 		quoteListGrid.setDataSource(tempView);
 		quoteListGrid.setUseAllDataSourceFields(false);
 		

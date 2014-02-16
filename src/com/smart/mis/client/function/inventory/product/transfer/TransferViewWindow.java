@@ -88,7 +88,7 @@ public class TransferViewWindow extends EditorWindow{
 		String created_by = record.getAttributeAsString("created_by");
 		Date created_date = record.getAttributeAsDate("created_date");
 		
-		String transfer_by = record.getAttributeAsString("received_by");
+		String transfer_by = record.getAttributeAsString("transfer_by");
 		Date transfer_date = record.getAttributeAsDate("transfer_date");
 		String received_by = record.getAttributeAsString("received_by");
 		Date received_date = record.getAttributeAsDate("received_date");

@@ -8,6 +8,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.smart.mis.client.function.sale.customer.CustomerDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryDS;
 import com.smart.mis.client.function.sale.delivery.DeliveryData;
+import com.smart.mis.client.function.sale.order.SaleOrderDS;
 import com.smart.mis.shared.Country;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
@@ -17,6 +18,7 @@ import com.smart.mis.shared.PrintSign;
 import com.smart.mis.shared.Printing;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.DeliveryStatus;
+import com.smart.mis.shared.sale.SaleOrderStatus;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criterion;
 import com.smartgwt.client.data.DSCallback;
@@ -394,7 +396,7 @@ public class DeliveryViewWindow extends EditorWindow{
 									if (value == null || value.equals("")){
 										SC.warn("กรุณาระบุเลขที่ใบรับสินค้า");
 									} else {
-										updateDeliveryOrder(delivery_id, "2_delivery_completed", value);
+										updateDeliveryOrder(delivery_id, "2_delivery_completed", value, sale_id);
 										main.destroy();
 									}
 								}});
@@ -445,7 +447,7 @@ public class DeliveryViewWindow extends EditorWindow{
 		return layout;
 	}
 	
-	public void updateDeliveryOrder(String delivery_id, String status, String receipt_id){
+	public void updateDeliveryOrder(String delivery_id, String status, String receipt_id, final String sale_id){
 		ListGridRecord updated = DeliveryData.createStatusRecord(delivery_id, "2_delivery_completed", new Date(),receipt_id);
 		DeliveryDS.getInstance().updateData(updated, new DSCallback() {
 			@Override
@@ -455,7 +457,18 @@ public class DeliveryViewWindow extends EditorWindow{
 						SC.warn("การบันทึกการนำส่งสินค้าล้มเหลว กรุณาทำรายการใหม่อีกครั้ง");
 						return;
 					} else {
-						SC.say("การบันทึกการนำส่งสินค้าเสร็จสิ้น <br> บันทึกเมื่อวันที่ " + DateUtil.formatAsShortDate(new Date()));
+						ListGridRecord selectedSaleOrder = new ListGridRecord();
+						final String sale_status = "5_delivery_completed";
+						selectedSaleOrder.setAttribute("sale_id", sale_id);
+						selectedSaleOrder.setAttribute("status", sale_status); 
+						SaleOrderDS.getInstance().updateData(selectedSaleOrder, new DSCallback() {
+							@Override
+							public void execute(DSResponse dsResponse,
+									Object data, DSRequest dsRequest) {
+									SaleOrderDS.getInstance().refreshData();
+									SC.say("การบันทึกการนำส่งสินค้าเสร็จสิ้น <br> บันทึกเมื่อวันที่ " + DateUtil.formatAsShortDate(new Date()) + "<br><br> รายการขายรหัส " + sale_id + " สถานะเป็น " + SaleOrderStatus.getDisplay(sale_status));
+							}
+						});
 					}
 			}
 		});

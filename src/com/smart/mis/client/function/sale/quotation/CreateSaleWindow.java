@@ -955,6 +955,8 @@ public class CreateSaleWindow extends EditorWindow{
 			DateRange dateRange = new DateRange();  
 	        dateRange.setRelativeStartDate(RelativeDate.TODAY);
 	        dateRange.setRelativeEndDate(new RelativeDate("+"+credit+"d"));
+	        //System.out.println("RelativeDate.TODAY - " + dateRange.getStartDate());
+	        //System.out.println("RelativeDate("+ "+"+credit+"d" + ") - " + dateRange.getEndDate());
 	        final Date due_date = dateRange.getEndDate();
 	        
 			final String sale_id = "SO" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));

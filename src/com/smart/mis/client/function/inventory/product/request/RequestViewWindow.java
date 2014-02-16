@@ -607,13 +607,15 @@ public class RequestViewWindow extends EditorWindow{
 	void updateStock(ListGridRecord record) {
 		String pid = record.getAttributeAsString("pid");
 		Integer issued_amount = record.getAttributeAsInt("issued_amount");
-		
+		System.out.println(pid + " issued_amount " + issued_amount);
 		ProductDS.getInstance().refreshData();
 		Record[] updated_records = ProductDS.getInstance().applyFilter(ProductDS.getInstance().getCacheData(), new Criterion("pid", OperatorId.EQUALS, pid));
 		Record updated = updated_records[0];
 		Integer inStock = updated.getAttributeAsInt("inStock") - issued_amount;
+		System.out.println(pid + "inStock " + inStock);
 		updated.setAttribute("inStock", inStock);
 		Integer reserved = updated.getAttributeAsInt("reserved") - issued_amount;
+		System.out.println(pid + "reserved " + reserved);
 		updated.setAttribute("reserved", reserved);
 		ProductDS.getInstance().updateData(updated);
 	}

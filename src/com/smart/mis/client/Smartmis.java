@@ -6,7 +6,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smart.mis.client.function.security.SecurityService;
 import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.shared.FieldVerifier;
-import com.smart.mis.shared.image.ImageUpload;
 import com.smart.mis.shared.security.Function;
 import com.smart.mis.shared.security.PermissionProfile;
 import com.smart.mis.shared.security.Role;
@@ -239,6 +238,8 @@ public class Smartmis implements EntryPoint {
 			}
 			
 		};
+		
+//		PrepareData.insertAll();
 		
 		//Need to be revise
 		securityService.createPermOnServer(new PermissionProfile("ADMIN", Function.ALL, Role.ADMIN, true), "admin", callback);

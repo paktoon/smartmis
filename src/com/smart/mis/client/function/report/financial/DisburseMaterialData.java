@@ -37,14 +37,14 @@ public class DisburseMaterialData {
     	for (int i = 1; i <= 6 ; i++) {
     		dateRange.setRelativeEndDate(new RelativeDate("-"+ (i * 10) +"d"));
     		Date date = dateRange.getEndDate();
-    		Double request_amount = (Math.random() * 10000.0) + 1000;
+    		Double request_amount = (Math.random() * 5000.0) + 1000;
     		dummyReport.add(createRecord("MRC10"+i , "PO20"+i, "MA10001","แร่เงิน 100%", "แร่เงิน", "กรัม", 10.25, request_amount, date));
     		request_amount += 3562;
     		dummyReport.add(createRecord("MRC20"+i , "PO23"+i, "MA10002","แร่เงิน 92.5%", "แร่เงิน", "กรัม", 9.50, request_amount, date));
 
-    		dummyReport.add(createRecord("MRC30"+i , "PO23"+i, "MA20001","แมกกาไซต์ PP6", "แมกกาไซต์", "เม็ด", 5.00, Math.round((Math.random() * 5000.0) + 1000) * 1.0, date));
-    		dummyReport.add(createRecord("MRC40"+i , "PO23"+i, "MA20002","แมกกาไซต์ PP7", "แมกกาไซต์", "เม็ด", 6.5, Math.round((Math.random() * 5000.0) + 1000) * 1.0, date));
-    		dummyReport.add(createRecord("MRC50"+i , "PO23"+i, "MA20005","ถุงพลาสติก 6x6", "อื่นๆ", "ถุง" , 1.2, Math.round((Math.random() * 5000.0) + 1000) * 1.0, date));
+    		dummyReport.add(createRecord("MRC30"+i , "PO23"+i, "MA20001","แมกกาไซต์ PP6", "แมกกาไซต์", "เม็ด", 5.00, Math.round((Math.random() * 2000.0) + 1000) * 1.0, date));
+    		dummyReport.add(createRecord("MRC40"+i , "PO23"+i, "MA20002","แมกกาไซต์ PP7", "แมกกาไซต์", "เม็ด", 6.5, Math.round((Math.random() * 2000.0) + 1000) * 1.0, date));
+    		dummyReport.add(createRecord("MRC50"+i , "PO23"+i, "MA20005","ถุงพลาสติก 6x6", "อื่นๆ", "ถุง" , 1.2, Math.round((Math.random() * 2000.0) + 1000) * 1.0, date));
     	}
     	ListGridRecord[] T = new ListGridRecord[]{};
     	return dummyReport.toArray(T);

@@ -61,25 +61,22 @@ public class CastingProductData {
     }
     	
     public static ListGridRecord[] getRecords(String quote_id) {
-//    	if (quote_id != null && ( quote_id.equals( "QA10001") || quote_id.equals( "QA10005"))) {
-//        	return new ListGridRecord[]{ 
-//        			createRecord("QS10001",quote_id, "PD10002", "Thin plain silver ring",6.3, 55.0, "ring","วง", 200, true)
-//        	};
-//        } else if (quote_id != null && ( quote_id.equals( "QA10002") || quote_id.equals( "QA10006"))) {
-//        	return new ListGridRecord[]{ 
-//        			createRecord("QS10002",quote_id, "PD10001", "Diamond cut silver ring", 6.3, 55.0, "ring","วง", 70, true),
-//        			createRecord("QS10003",quote_id, "PD10002", "Thin plain silver ring",6.3, 55.0, "ring","วง", 200, true)
-//        	};
-//        } else if (quote_id != null && (quote_id.equals( "QA10003") || quote_id.equals( "QA10007"))) {
-//        	return new ListGridRecord[]{ 
-//        			createRecord("QS10004",quote_id, "PD10004","Spiral silver earrings", 6.3, 55.0, "earring", "คู่", 300, true)
-//        	};
-//        } else if (quote_id != null && (quote_id.equals( "QA10004") || quote_id.equals( "QA10008"))) {
-//        	return new ListGridRecord[]{ 
-//        			createRecord("QS10005",quote_id, "PD10007","Plain silver necklaces", 5.6, 50.0, "necklace","เส้น",100, true)
-//        	};
-//        }
-//        	else 
+    	if (quote_id != null && quote_id.equals("JOB10001")) {
+        	return new ListGridRecord[]{ 
+        			createSentRecord("SJ10001",quote_id, "PD10001", "Diamond cut silver ring", "ring","วง", "สั่งเทียน", "ขนาดมาตรฐาน 5.0 หนา 3.0 มม.", 1120.0, 200, true),
+        			createSentRecord("SJ10002",quote_id, "PD10003", "Dense plain silver ring", "ring","วง", "สั่งเทียน", "	ขนาดมาตรฐาน 5.0 หนา 4.0 มม.", 1960.0, 350, true)
+        	};
+        } else if (quote_id != null && quote_id.equals("JOB10002")) {
+        	return new ListGridRecord[]{ 
+        			createSentRecord("SJ10003",quote_id, "PD10001", "Diamond cut silver ring", "ring","วง", "สั่งเทียน", "ขนาดมาตรฐาน 5.0 หนา 3.0 มม.", 560.0, 100, true)
+        	};
+        } else if (quote_id != null && quote_id.equals("JOB10003")) {
+        	return new ListGridRecord[]{ 
+        			createSentRecord("SJ10004",quote_id, "PD10001", "Diamond cut silver ring", "ring","วง", "สั่งเทียน", "ขนาดมาตรฐาน 5.0 หนา 3.0 มม.", 392.0, 70, true),
+        			createSentRecord("SJ10005",quote_id, "PD10002", "Thin plain silver ring", "ring","วง", "สั่งเทียน", "ขนาดมาตรฐาน 5.0 หนา 3.0 มม.", 1120.0, 200, true)
+        	};
+        }
+        	else 
         		return new ListGridRecord[]{};
     }
 }

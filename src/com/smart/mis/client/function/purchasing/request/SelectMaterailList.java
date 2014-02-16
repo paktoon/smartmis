@@ -93,6 +93,7 @@ public class SelectMaterailList {
         pquoteAmount.setCanEdit(true);
         pquoteAmount.setRequired(true);
         pquoteAmount.setDefaultValue(0);
+        pquoteAmount.setValidators(ValidatorFactory.doubleRange(1000.00, null));
         //pquoteAmount.setValidators(ValidatorFactory.doubleRange(0.01, null));
         //ListGridField pdescField = new ListGridField("desc", 150);
         ListGridField ppriceField = new ListGridField("price", "ราคาต่อหน่วย (บาท)", 120);
@@ -101,6 +102,7 @@ public class SelectMaterailList {
         ppriceField.setCanEdit(true);
         ppriceField.setRequired(true);
         ppriceField.setDefaultValue(0);
+        ppriceField.setValidators(ValidatorFactory.doubleRange(0.1, 100.00));
         //ppriceField.setValidators(ValidatorFactory.doubleRange(0.01, null));
         //ListGridField ptypeField = new ListGridField("type", 50);
         productGrid.setFields(pidField, pnameField, premainField, punitField, pquoteAmount, punitField, ppriceField); 

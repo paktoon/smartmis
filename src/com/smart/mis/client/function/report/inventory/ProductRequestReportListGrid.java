@@ -148,7 +148,7 @@ public class ProductRequestReportListGrid extends ListGrid {
         field_3_1.setAlign(Alignment.RIGHT);
         field_3_1.setCellFormatter(FieldFormatter.getNumberFormat());
         field_3_2.setAlign(Alignment.RIGHT);
-        field_3_2.setCellFormatter(FieldFormatter.getNumberFormat());
+        field_3_2.setCellFormatter(FieldFormatter.getIntegerFormat());
         
         setFields(field_1, field_3_1, field_3_2, field_3_3);
         

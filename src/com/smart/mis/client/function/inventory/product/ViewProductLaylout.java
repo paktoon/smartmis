@@ -9,6 +9,7 @@ import com.smart.mis.client.function.production.product.ProductDS;
 import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.PrintHeader;
+import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.AdvancedCriteria;
 import com.smartgwt.client.data.Criterion;
@@ -152,7 +153,7 @@ public class ViewProductLaylout extends VLayout{
 		inStock.setCellFormatter(FieldFormatter.getIntegerFormat());
 		inStock.setAlign(Alignment.RIGHT);
 		
-		productListGrid.setFields(pid, name, inStock, remain, reserved, unit);
+		productListGrid.setFields(pid, name, inStock, reserved, remain, unit);
 		
 		productListGrid.addRecordClickHandler(new RecordClickHandler() {  
 			@Override
@@ -233,6 +234,7 @@ public class ViewProductLaylout extends VLayout{
 		final StaticTextItem pReserved = new StaticTextItem("reserved", "ถูกจองแล้ว");
 		final StaticTextItem pRemain = new StaticTextItem("remain", "คงเหลือ");
 		pInStock.setValue(inStock);
+		pInStock.setValidators(ValidatorFactory.integerRange(0, 5000));
 		pReserved.setValue(reserved);
 		pRemain.setValue(remain);
 		

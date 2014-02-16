@@ -8,6 +8,7 @@ import com.smart.mis.client.function.security.SecurityService;
 import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
 import com.smartgwt.client.data.DSCallback;
@@ -227,7 +228,7 @@ public class MaterialAdd {
 //									if (result != null)
 //									{
 										Record newRecord = MaterialData.createRecord(
-												"MA70" + Math.round((Math.random() * 100)),
+												"MA" + KeyGenerator.genKey() + Math.round((Math.random() * 100)),
 								    			editorForm.getValueAsString("mat_name"),
 								    			editorForm.getValueAsString("desc"),
 								    			editorForm.getValueAsString("type"),

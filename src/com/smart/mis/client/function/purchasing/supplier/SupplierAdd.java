@@ -9,6 +9,7 @@ import com.smart.mis.client.function.security.SecurityService;
 import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
@@ -215,7 +216,7 @@ public class SupplierAdd {
 //									if (result != null)
 //									{
 										Record newRecord = SupplierData.createRecord(
-												"SU88" + Math.round((Math.random() * 100)),
+												"SU" + KeyGenerator.genKey() + Math.round((Math.random() * 100)),
 												editorForm.getValueAsString("sup_name"),
 												editorForm.getValueAsString("sup_phone1"),
 												editorForm.getValueAsString("sup_phone2"),

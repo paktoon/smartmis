@@ -34,9 +34,9 @@ public class MaterialRequestReportData {
     	for (int i = 1; i <= 15 ; i++) {
     		dateRange.setRelativeEndDate(new RelativeDate("-"+ (i * 4) +"d"));
     		Date date = dateRange.getEndDate();
-    		Double request_weight = (Math.random() * 1000.0) + 1000;
+    		Double request_weight = (Math.random() * 10000.0) + 1000;
     		dummyReport.add(createRecord("MRR10"+i , "MR20"+i, "MA10001","แร่เงิน 100%", "กรัม", request_weight, request_weight, "แร่เงิน", date));
-    		request_weight += 12;
+    		request_weight += 500.72;
     		dummyReport.add(createRecord("MRR20"+i , "MR23"+i, "MA10002","แร่เงิน 92.5%", "กรัม", request_weight, request_weight, "แร่เงิน", date));
 
     		dummyReport.add(createRecord("MRR30"+i , "MR23"+i, "MA20001","แมกกาไซต์ PP6", "เม็ด", (Math.random() * 500.0) + 1000, Math.round((Math.random() * 1000.0) + 1000) * 1.0, "แมกกาไซต์", date));

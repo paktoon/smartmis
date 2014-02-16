@@ -868,7 +868,7 @@ public class AbradingCreateWindow {
 			
 			//if (desc != null && !desc.equals("")) details += "(" + desc + ")";
 			
-			final String sub_job_id = "SJ70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+			final String sub_job_id = "SJ" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 			ListGridRecord temp = AbradingProductData.createSentRecord(sub_job_id, job_id, pid, name, type, unit, details, desc, sent_weight + recv_weight, sent_amount, true);
 			orderProductList.add(temp);
 			
@@ -876,7 +876,7 @@ public class AbradingCreateWindow {
 			Record[] selectedMaterialProcess = MaterialProcessDS.getInstance(psid, pid).getCacheData();
 			
 			for (Record mat : selectedMaterialProcess) {
-				String cm_id = "SM70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+				String cm_id = "SM" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 				String mid = mat.getAttributeAsString("mid");
 				
 				Record[] materail = MaterialDS.getInstance().applyFilter(MaterialDS.getInstance().getCacheData(), new Criterion("mid", OperatorId.EQUALS, mid));
@@ -933,7 +933,7 @@ public class AbradingCreateWindow {
 								DSRequest dsRequest) {
 							String message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id;
 							if (matRequest.size() != 0) {
-								final String request_id = "MR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+								final String request_id = "MR" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 								createMaterialRequest(request_id, job_id, smith, currentUser.getFirstName() + " " + currentUser.getLastName(), matRequest);
 								message = "สร้างคำสั่งเสร็จสิ้น เลขที่คำสั่งผลิต " + job_id + " <br> สร้างรายการขอเบิกวัตถุดิบ เลขที่ " + request_id;
 							}

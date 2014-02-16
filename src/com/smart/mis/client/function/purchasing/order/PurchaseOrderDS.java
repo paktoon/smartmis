@@ -44,8 +44,8 @@ public class PurchaseOrderDS extends DataSource {
 		 DataSourceTextField Field_3_2 = new DataSourceTextField("payment_model", "วิธีการชำระเงิน");
 		 DataSourceIntegerField Field_3_3 = new DataSourceIntegerField("credit", "เครดิต");
 		 
-		 DataSourceDateField Field_3 = new DataSourceDateField("received_date", "วันที่รับสินค้า");
-		 DataSourceDateField Field_4 = new DataSourceDateField("returned_date", "วันที่คืนสินค้า");
+		 DataSourceDateField Field_3 = new DataSourceDateField("received_date", "วันที่รับวัตถุดิบ");
+		 DataSourceDateField Field_4 = new DataSourceDateField("returned_date", "วันที่คืนวัตถุดิบ");
 		 DataSourceDateField Field_5 = new DataSourceDateField("delivery", "กำหนดส่งสินค้า");
 		 
 		 DataSourceFloatField Field_6 = new DataSourceFloatField("total_weight", "น้ำหนักรวม (กรัม)");

@@ -25,6 +25,7 @@ import com.smart.mis.client.function.sale.quotation.product.QuoteProductDetails;
 import com.smart.mis.shared.EditorWindow;
 import com.smart.mis.shared.FieldFormatter;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.sale.InvoiceStatus;
@@ -538,6 +539,9 @@ public class SaleViewWindow extends EditorWindow{
 								cancelProductionPlan(sale_id);
 								updateQuotation(quote_id);
 								
+								//New
+								updateStock(sale_id);
+								
 								ListGridRecord invRecord = InvoiceData.createStatusRecord(invoice_id, "4_canceled");
 								InvoiceDS.getInstance().updateData(invRecord, new DSCallback() {
 									@Override
@@ -738,6 +742,10 @@ public class SaleViewWindow extends EditorWindow{
 		}
 	}
 	
+	public void updateStock(String sale_id) {
+		// Todo
+	}
+	
 	public void createDeliveryOrder(final Window main, final String sale_id, String invoice_id, DynamicForm customer, ListGrid saleListGrid, Date delivery, User currentUser){
 		
 		final ListGridRecord[] all = saleListGrid.getRecords();
@@ -750,7 +758,7 @@ public class SaleViewWindow extends EditorWindow{
 		Double total_weight = 0.0;
 		Double total_netExclusive = 0.0;
 		Integer total_amount = 0;
-		final String delivery_id = "DL70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+		final String delivery_id = "DL" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 		//final String invoice_id = "IN70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 //		final ArrayList<SaleProductDetails> saleProductList = new ArrayList<SaleProductDetails>();
 		//final ArrayList<SaleProductDetails> invoiceProductList = new ArrayList<SaleProductDetails>();

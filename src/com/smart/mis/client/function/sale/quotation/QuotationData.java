@@ -2,6 +2,7 @@ package com.smart.mis.client.function.sale.quotation;
 
 import java.util.Date;
 
+import com.smart.mis.shared.DateTimeMapping;
 import com.smart.mis.shared.sale.Customer;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -88,21 +89,26 @@ public class QuotationData {
 //    }
     
     public static ListGridRecord[] getNewRecords() {
-    	return new ListGridRecord[]{ 
-    			createRecord("QA10001","CU10017", "Flora Creek", "เงินสด", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date(), new Date(), new Date() , 1360.0, 200, 11000.0, new Date(), null, "สมบัติ ยอดขาย", null, "", "2_waiting_for_approved"),
-    			createRecord("QA10002","CU10008", "ประทีปเจมส์", "เงินสด", 0, "ลูกค้าทั่วไป", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , new Date(), new Date(), new Date() , 1836.0, 270, 14850.0, new Date(), null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
-    			createRecord("QA10003","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "เงินสด", 20 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date(), new Date(), new Date() , 1896.0, 300, 16500.0, new Date(), null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
-    			createRecord("QA10004","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "เงินสด", 10 ,"ลูกค้าประจำ", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date(), new Date(), new Date() , 632.0, 100, 5000.0, new Date(), null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "4_canceled"),
+		Date from =	DateTimeMapping.getDate("02/15/2014");
+		Date to =	DateTimeMapping.getDate("02/22/2014");
+		Date delivery =	DateTimeMapping.getDate("03/17/2014");
+		Date created =	DateTimeMapping.getDate("02/15/2014");
+    	return new ListGridRecord[]{
+    			//Date from, Date to, Date delivery
+    			createRecord("QA10001","CU10017", "Flora Creek", "เงินสด", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", from, to ,delivery , 1360.0, 200, 11000.0, created, null, "สมบัติ ยอดขาย", null, "", "2_waiting_for_approved"),
+    			createRecord("QA10002","CU10008", "ประทีปเจมส์", "เงินสด", 0, "ลูกค้าทั่วไป", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย" , from, to ,delivery , 1836.0, 270, 14850.0, created, null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
+    			createRecord("QA10003","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "เงินสด", 20 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", from, to ,delivery , 1896.0, 300, 16500.0, created, null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
+    			createRecord("QA10004","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "เงินสด", 10 ,"ลูกค้าประจำ", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", from, to ,delivery , 632.0, 100, 5000.0, created, null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "4_canceled"),
     			
-    			createRecord("QA10005","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 30 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date(), new Date(), new Date() , 1360.0, 200, 11000.0, new Date(), null, "สมบัติ ยอดขาย", null, "", "2_waiting_for_approved"),
-    			createRecord("QA10006","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 0 , "ลูกค้าทั่วไป", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date(), new Date(), new Date() , 1836.0, 270, 14850.0, new Date(), null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
-    			createRecord("QA10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date(), new Date(), new Date() , 1896.0, 300, 16500.0, new Date(), null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "2_waiting_for_approved"),
-    			createRecord("QA10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 ,"ลูกค้าประจำ", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date(), new Date(), new Date() , 632.0, 100, 5000.0, new Date(), null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
+    			createRecord("QA10005","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 30 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", from, to ,delivery , 1360.0, 200, 11000.0, created, null, "สมบัติ ยอดขาย", null, "", "2_waiting_for_approved"),
+    			createRecord("QA10006","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 0 , "ลูกค้าทั่วไป", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", from, to ,delivery , 1836.0, 270, 14850.0, created, null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
+    			createRecord("QA10007","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", from, to ,delivery , 1896.0, 300, 16500.0, created, null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "2_waiting_for_approved"),
+    			createRecord("QA10008","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 ,"ลูกค้าประจำ", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", from, to ,delivery , 632.0, 100, 5000.0, created, null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
     			
-    			createRecord("QA10009","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 30 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date(), new Date(), new Date() , 1360.0, 200, 11000.0, new Date(), null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "1_waiting_for_revised"),
-    			createRecord("QA10010","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 0 , "ลูกค้าทั่วไป", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date(), new Date(), new Date() , 1836.0, 270, 14850.0, new Date(), null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
-    			createRecord("QA10011","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date(), new Date(), new Date() , 1896.0, 300, 16500.0, new Date(), null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "1_waiting_for_revised"),
-    			createRecord("QA10012","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 ,"ลูกค้าประจำ", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", new Date(), new Date(), new Date() , 632.0, 100, 5000.0, new Date(), null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
+    			createRecord("QA10009","CU10017", "Flora Creek", "แคชเชียร์เช็ค", 30 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", from, to ,delivery , 1360.0, 200, 11000.0, created, null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "1_waiting_for_revised"),
+    			createRecord("QA10010","CU10008", "ประทีปเจมส์", "แคชเชียร์เช็ค", 0 , "ลูกค้าทั่วไป", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", from, to ,delivery , 1836.0, 270, 14850.0, created, null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
+    			createRecord("QA10011","CU10004", "มายด์ แอนด์ ลีน่าเครื่องประดับ", "แคชเชียร์เช็ค", 10 , "ลูกค้าประจำ", "ค้าปลีกผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", from, to ,delivery , 1896.0, 300, 16500.0, created, null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "1_waiting_for_revised"),
+    			createRecord("QA10012","CU10010", "บริษัท บิ๊กซิลเวอร์ แมนูแฟคเจอร์ริ่ง จำกัด", "แคชเชียร์เช็ค", 10 ,"ลูกค้าประจำ", "ค้าส่งผ่านหน้าร้าน", "ร้านค้า", "เอเซีย", from, to ,delivery , 632.0, 100, 5000.0, created, null, "สมบัติ ยอดขาย", "ภักดิ์ทูล ใจทอง", "", "3_approved"),
     	};
     	//return new ListGridRecord[]{};
     }

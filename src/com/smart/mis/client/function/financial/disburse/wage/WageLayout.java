@@ -177,7 +177,7 @@ public class WageLayout extends VLayout {
 		total_wage.setCellFormatter(FieldFormatter.getPriceFormat());
 		
 		ListGridField created_date = new ListGridField("created_date", 100);
-		ListGridField iconField = new ListGridField("paidWageField", "เรียกดู");
+		ListGridField iconField = new ListGridField("paidWageField", "เรียกดู", 100);
 		
 		orderListGrid.setFields(status, wage_id, job_id, sname, total_wage, created_date, iconField);
 		

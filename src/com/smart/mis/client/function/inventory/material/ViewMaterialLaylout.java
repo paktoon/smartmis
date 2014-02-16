@@ -7,6 +7,7 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.smart.mis.client.function.purchasing.material.MaterialDS;
 import com.smart.mis.shared.EditorListGrid;
 import com.smart.mis.shared.FieldFormatter;
+import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.AdvancedCriteria;
 import com.smartgwt.client.data.Criterion;
@@ -153,7 +154,7 @@ public class ViewMaterialLaylout extends VLayout{
 		inStock.setCellFormatter(FieldFormatter.getNumberFormat());
 		inStock.setAlign(Alignment.RIGHT);
 		
-		materialListGrid.setFields(mid, name, safety, inStock, remain, reserved, unit);
+		materialListGrid.setFields(mid, name, safety, inStock, reserved, remain, unit);
 		
 		materialListGrid.addRecordClickHandler(new RecordClickHandler() {  
 			@Override
@@ -235,7 +236,9 @@ public class ViewMaterialLaylout extends VLayout{
 		final StaticTextItem pReserved = new StaticTextItem("reserved", "ถูกจองแล้ว");
 		final StaticTextItem pRemain = new StaticTextItem("remain", "คงเหลือ");
 		pSafety.setValue(safety);
+		pSafety.setValidators(ValidatorFactory.doubleRange(0.0, 100000.0));
 		pInStock.setValue(inStock);
+		pInStock.setValidators(ValidatorFactory.doubleRange(0.0, 1000000.0));
 		pReserved.setValue(nf.format(reserved));
 		pRemain.setValue(nf.format(remain));
 		

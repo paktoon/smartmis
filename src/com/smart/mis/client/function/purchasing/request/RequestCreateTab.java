@@ -11,6 +11,7 @@ import com.smart.mis.client.function.purchasing.request.material.RequestMaterial
 import com.smart.mis.client.function.purchasing.request.material.RequestMaterialDetails;
 import com.smart.mis.client.function.purchasing.supplier.SupplierDS;
 import com.smart.mis.shared.FieldFormatter;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ListGridNumberField;
 import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.prodution.ProductType;
@@ -147,7 +148,8 @@ public class RequestCreateTab {
 		
 		DateRange dateRange = new DateRange();  
         dateRange.setRelativeStartDate(new RelativeDate("+15d")); //delivery date
-        dateRange.setRelativeEndDate(new RelativeDate("+1m")); //end date
+        //dateRange.setRelativeEndDate(new RelativeDate("+1m")); //end date
+        dateRange.setRelativeEndDate(new RelativeDate("+30d")); //end date
         
 		final DateItem deliveryDate = new DateItem();
 		deliveryDate.setName("deliveryDate");
@@ -736,14 +738,14 @@ public class RequestCreateTab {
 								Double total_weight = 0.0;
 								Double total_netExclusive = 0.0;
 								Double total_amount = 0.0;
-								final String request_id = "PR70" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+								final String request_id = "PR" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 								final ArrayList<RequestMaterialDetails> materailList = new ArrayList<RequestMaterialDetails>();
 								for (ListGridRecord item : all){
 									total_weight += item.getAttributeAsDouble("weight");
 									total_amount += item.getAttributeAsDouble("request_amount");
 									total_netExclusive += item.getAttributeAsDouble("sum_price");
 									
-									String sub_request_id = "SPR80" + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
+									String sub_request_id = "SPR" + KeyGenerator.genKey() + Math.round((Math.random() * 100)) + Math.round((Math.random() * 100));
 									String mid = item.getAttributeAsString("mid");
 									String pname = item.getAttributeAsString("mat_name");
 									String ptype = item.getAttributeAsString("type");

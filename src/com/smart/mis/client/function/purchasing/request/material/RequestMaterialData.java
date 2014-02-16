@@ -19,7 +19,7 @@ public class RequestMaterialData {
         return record;  
     }
     
-    public static ListGridRecord createRecord(String sub_request_id, String request_id, String mid, String name, Double weight, Double price, String type, String unit, Integer request_amount, Boolean status) {  
+    public static ListGridRecord createRecord(String sub_request_id, String request_id, String mid, String name, Double weight, Double price, String type, String unit, Double request_amount, Boolean status) {  
         ListGridRecord record = new ListGridRecord();
         record.setAttribute("sub_request_id", sub_request_id);
         record.setAttribute("request_id", request_id);
@@ -56,25 +56,28 @@ public class RequestMaterialData {
     }
     	
     public static ListGridRecord[] getRecords(String quote_id) {
-//    	if (quote_id != null && ( quote_id.equals( "QA10001") || quote_id.equals( "QA10005") || quote_id.equals( "QA10009"))) {
-//        	return new ListGridRecord[]{ 
-//        			createRecord("QS10001",quote_id, "PD10002", "Thin plain silver ring",6.3, 55.0, "ring","วง", 200, true)
-//        	};
-//        } else if (quote_id != null && ( quote_id.equals( "QA10002") || quote_id.equals( "QA10006") || quote_id.equals( "QA10010"))) {
-//        	return new ListGridRecord[]{ 
-//        			createRecord("QS10002",quote_id, "PD10001", "Diamond cut silver ring", 6.3, 55.0, "ring","วง", 70, true),
-//        			createRecord("QS10003",quote_id, "PD10002", "Thin plain silver ring",6.3, 55.0, "ring","วง", 200, true)
-//        	};
-//        } else if (quote_id != null && (quote_id.equals( "QA10003") || quote_id.equals( "QA10007") || quote_id.equals( "QA10011"))) {
-//        	return new ListGridRecord[]{ 
-//        			createRecord("QS10004",quote_id, "PD10004","Spiral silver earrings", 6.3, 55.0, "earring", "คู่", 300, true)
-//        	};
-//        } else if (quote_id != null && (quote_id.equals( "QA10004") || quote_id.equals( "QA10008") || quote_id.equals( "QA10012"))) {
-//        	return new ListGridRecord[]{ 
-//        			createRecord("QS10005",quote_id, "PD10007","Plain silver necklaces", 5.6, 50.0, "necklace","เส้น",100, true)
-//        	};
-//        }
-//        	else 
-        		return new ListGridRecord[]{};
+    	if (quote_id != null && ( quote_id.equals( "PR10001") || quote_id.equals( "PR10003"))) {
+        	return new ListGridRecord[]{ 
+        			createRecord("SPR10001",quote_id, "MA10001","แร่เงิน 100%", 1000.0, 12.5, "แร่เงิน","กรัม", 1000.0, true),
+        			createRecord("SPR10002",quote_id, "MA10002","แร่เงิน 92.5%", 1000.0, 10.0, "แร่เงิน","กรัม", 1000.0, true)
+        	};
+        } else if (quote_id != null && ( quote_id.equals( "PR10002") || quote_id.equals( "PR10004"))) {
+        	return new ListGridRecord[]{ 
+        			createRecord("SPR10003",quote_id, "MA10001", "แร่เงิน 100%", 1000.0, 12.5, "แร่เงิน","กรัม", 1000.0, true),
+        			createRecord("SPR10004",quote_id, "MA10002", "แร่เงิน 92.5%", 2000.0, 10.0, "แร่เงิน","กรัม", 2000.0, true)
+        	};
+        } else if (quote_id != null && (quote_id.equals( "PR10005") || quote_id.equals( "PR10007"))) {
+        	return new ListGridRecord[]{ 
+        			createRecord("SPR10005",quote_id, "MA20002","แมกกาไซต์ PP7", 1200.0, 0.7, "แมกกาไซต์","เม็ด", 10000.0, true),
+        			createRecord("SPR10006",quote_id, "MA20003","แมกกาไซต์ PP8", 1200.0, 0.8, "แมกกาไซต์","เม็ด", 10000.0, true)
+        	};
+        } else if (quote_id != null && (quote_id.equals( "PR10006") || quote_id.equals( "PR10008"))) {
+        	return new ListGridRecord[]{ 
+        			createRecord("SPR10007",quote_id, "MA20001","แมกกาไซต์ PP6", 600.0, 0.6, "แมกกาไซต์","เม็ด", 5000.0, true),
+        			createRecord("SPR10008",quote_id, "MA20002","แมกกาไซต์ PP7", 1200.0, 0.7, "แมกกาไซต์","เม็ด", 10000.0, true),
+        			createRecord("SPR10009",quote_id, "MA20003","แมกกาไซต์ PP8", 1200.0, 0.8, "แมกกาไซต์","เม็ด", 10000.0, true)
+        	};
+        }
+        else return new ListGridRecord[]{};
     }
 }

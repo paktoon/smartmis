@@ -318,6 +318,7 @@ public class OrderViewWindow extends EditorWindow{
 //			quoteListGrid.setWarnOnRemovalMessage("คุณต้องการลบ รายการสินค้า หรือไม่?");
 //		}
 		
+		System.out.println("order_id " + order_id);
 		OrderMaterialDS tempView = new OrderMaterialDS(order_id);
 		Record[] cachedData = OrderMaterialDS.getInstance(order_id).getCacheData();
 		if (cachedData.length != 0) {

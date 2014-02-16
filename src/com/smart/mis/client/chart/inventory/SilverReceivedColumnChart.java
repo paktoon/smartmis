@@ -48,7 +48,7 @@ public class SilverReceivedColumnChart {
 		    options.setLegend(LegendPosition.NONE);
 		    options.setHAxisOptions(createAxisOption("ประเภทแร่เงิน"));
 		    options.setVAxisOptions(createAxisOption("ปริมาณแร่เงินที่รับ(กรัม)"));
-		    options.setTitle("รายงานสรุปแร่เงินคงเหลือ");
+		    options.setTitle("รายงานสรุปการรับแร่เงิน");
 //		    ChartArea area = ChartArea.create();
 //		    area.setHeight("80%");
 //		    area.setWidth("80%");

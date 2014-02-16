@@ -18,8 +18,11 @@ import com.smart.mis.client.chart.inventory.SilverColumnChart;
 import com.smart.mis.client.chart.inventory.SilverReceivedColumnChart;
 import com.smart.mis.client.chart.inventory.SilverRequestColumnChart;
 import com.smart.mis.client.chart.production.MaterialUsedColumnChart;
+import com.smart.mis.client.chart.production.MaterialUsedValueColumnChart;
 import com.smart.mis.client.chart.production.ProductionColumnChart;
+import com.smart.mis.client.chart.production.ProductionValueColumnChart;
 import com.smart.mis.client.chart.production.SilverUsedColumnChart;
+import com.smart.mis.client.chart.production.SilverUsedValueColumnChart;
 import com.smart.mis.client.chart.purchasing.PurchasingColumnChart;
 import com.smart.mis.client.cube.SaleCube;
 import com.smart.mis.client.cube.advanced.AdvancedSaleCube;
@@ -322,6 +325,7 @@ public class ReportPanel extends FunctionPanel{
 		gridLayout.addMember(productionReportListGrid);
 		
 		ProductionColumnChart chart = new ProductionColumnChart();
+		ProductionValueColumnChart value_chart = new ProductionValueColumnChart();
 		VLayout reportLayout = new VLayout();
 		
 		Label title = new Label();
@@ -336,7 +340,12 @@ public class ReportPanel extends FunctionPanel{
 		chartLayout.setHeight(350);
 		chart.loadChart(chartLayout, this, productionReportListGrid.createDataTable(criteria));
 		
-		reportLayout.addMembers(filterLayout, title, chartLayout, gridLayout);
+		HLayout value_chartLayout = new HLayout();
+		value_chartLayout.setAlign(Alignment.CENTER);
+		value_chartLayout.setHeight(350);
+		value_chart.loadChart(value_chartLayout, this, productionReportListGrid.createValueTable(criteria));
+		
+		reportLayout.addMembers(filterLayout, title, chartLayout, value_chartLayout, gridLayout);
 //		reportLayout.addMembers(filterLayout, title, chartLayout);
 		this.productionReportWindow.addItem(reportLayout);
 	}
@@ -414,6 +423,10 @@ public class ReportPanel extends FunctionPanel{
 		
 		SilverUsedColumnChart chart_1 = new SilverUsedColumnChart();
 		MaterialUsedColumnChart chart_2 = new MaterialUsedColumnChart();
+		
+		SilverUsedValueColumnChart chart_1_1 = new SilverUsedValueColumnChart();
+		MaterialUsedValueColumnChart chart_2_1 = new MaterialUsedValueColumnChart();
+		
 		VLayout reportLayout = new VLayout();
 		
 		Label title = new Label();
@@ -426,18 +439,26 @@ public class ReportPanel extends FunctionPanel{
 		HLayout chartLayout = new HLayout();
 		chartLayout.setAlign(Alignment.CENTER);
 		chartLayout.setHeight(350);
-		//chartLayout.setMargin(5);
-		
 		VLayout chartLayout_1 = new VLayout(); 
 		chartLayout_1.setWidth(450);
 		chart_1.loadChart(chartLayout_1, this, materialUsedReportListGrid.createSilverDataTable(criteria));
 		VLayout chartLayout_2 = new VLayout(); 
 		chartLayout_2.setWidth(600);
 		chart_2.loadChart(chartLayout_2, this, materialUsedReportListGrid.createMaterialDataTable(criteria));
-		
 		chartLayout.addMembers(chartLayout_1, chartLayout_2);
 		
-		reportLayout.addMembers(filterLayout, title, chartLayout, gridLayout);
+		HLayout chartLayout_0 = new HLayout();
+		chartLayout_0.setAlign(Alignment.CENTER);
+		chartLayout_0.setHeight(350);
+		VLayout chartLayout_1_1 = new VLayout(); 
+		chartLayout_1_1.setWidth(450);
+		chart_1_1.loadChart(chartLayout_1_1, this, materialUsedReportListGrid.createSilverValueTable(criteria));
+		VLayout chartLayout_2_1 = new VLayout(); 
+		chartLayout_2_1.setWidth(600);
+		chart_2_1.loadChart(chartLayout_2_1, this, materialUsedReportListGrid.createMaterialValueTable(criteria));
+		chartLayout_0.addMembers(chartLayout_1_1, chartLayout_2_1);
+		
+		reportLayout.addMembers(filterLayout, title, chartLayout, chartLayout_0, gridLayout);
 //		reportLayout.addMembers(filterLayout, title, chartLayout);
 		this.materailUsedReportWindow.addItem(reportLayout);
 	}

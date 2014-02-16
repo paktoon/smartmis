@@ -6,6 +6,7 @@ import com.smart.mis.client.function.security.SecurityService;
 import com.smart.mis.client.function.security.SecurityServiceAsync;
 import com.smart.mis.client.function.security.permission.PermissionDS;
 import com.smart.mis.shared.FieldVerifier;
+import com.smart.mis.shared.KeyGenerator;
 import com.smart.mis.shared.ValidatorFactory;
 import com.smart.mis.shared.security.User;
 import com.smartgwt.client.data.Criteria;
@@ -187,7 +188,7 @@ public class SmithAdd {
 //									if (result != null)
 //									{
 										Record newRecord = SmithData.createRecord(
-												"SM70" + Math.round((Math.random() * 100)),
+												"SM" + KeyGenerator.genKey() + Math.round((Math.random() * 100)),
 												editorForm.getValueAsString("name"),
 												editorForm.getValueAsString("phone1"),
 												editorForm.getValueAsString("phone2"),

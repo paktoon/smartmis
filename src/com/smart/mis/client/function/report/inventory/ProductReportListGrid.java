@@ -141,8 +141,8 @@ public class ProductReportListGrid extends ListGrid {
 	public Double getInStock(Record[] records) {
 		Double inStock = 0.0;
 		for (Record record : records) {
-			if (record.getAttributeAsDouble("inStock") != null) {
-				inStock += record.getAttributeAsDouble("inStock");
+			if (record.getAttributeAsInt("inStock") != null) {
+				inStock += record.getAttributeAsInt("inStock");
 			}
 		}	
 		return inStock;
@@ -192,11 +192,11 @@ public class ProductReportListGrid extends ListGrid {
         
         //Cell Format
         Field_6_1.setAlign(Alignment.RIGHT);
-        Field_6_1.setCellFormatter(FieldFormatter.getNumberFormat());
+        Field_6_1.setCellFormatter(FieldFormatter.getIntegerFormat());
         Field_6_2.setAlign(Alignment.RIGHT);
-        Field_6_2.setCellFormatter(FieldFormatter.getNumberFormat());
+        Field_6_2.setCellFormatter(FieldFormatter.getIntegerFormat());
         Field_6_3.setAlign(Alignment.RIGHT);
-        Field_6_3.setCellFormatter(FieldFormatter.getNumberFormat());
+        Field_6_3.setCellFormatter(FieldFormatter.getIntegerFormat());
         
         setFields(field_1, Field_6_1, Field_6_2, Field_6_3, field_3_3);
         

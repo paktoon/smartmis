@@ -48,7 +48,7 @@ public class MaterialReceivedColumnChart {
 		    options.setLegend(LegendPosition.BOTTOM);
 		    options.setHAxisOptions(createAxisOption("ประเภทวัตถุดิบ"));
 		    options.setVAxisOptions(createAxisOption("ปริมาณวัตถุดิบที่รับ (หน่วย)"));
-		    options.setTitle("รายงานสรุปวัตถุดิบคงเหลือ");
+		    options.setTitle("รายงานสรุปการรับวัตถุดิบ");
 //		    ChartArea area = ChartArea.create();
 //		    area.setHeight("80%");
 //		    area.setWidth("80%");

@@ -17,7 +17,7 @@ import com.smartgwt.client.widgets.grid.SummaryFunction;
 
 public class ProductionReportListGrid extends ListGrid {
 
-	private Double[][] dataTable;
+	private Double[][] dataTable, valueTable;
 	
 //	@Override
 //	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) { 
@@ -103,6 +103,25 @@ public class ProductionReportListGrid extends ListGrid {
 	    };
 	}
 	
+	public Double[][] createValueTable(Criterion criteria){
+		
+		if (valueTable != null) return valueTable;
+		
+		ProductionReportDS.getInstance().refreshData();
+	    Record[] ring = ProductionReportDS.getInstance().applyFilter(ProductionReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "ring")}));
+	    Record[] toe_ring = ProductionReportDS.getInstance().applyFilter(ProductionReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "toe ring")}));
+	    Record[] earring = ProductionReportDS.getInstance().applyFilter(ProductionReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "earring")}));
+	    Record[] necklace = ProductionReportDS.getInstance().applyFilter(ProductionReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "necklace")}));
+	    Record[] pendant = ProductionReportDS.getInstance().applyFilter(ProductionReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "pendant")}));
+	    Record[] bracelet = ProductionReportDS.getInstance().applyFilter(ProductionReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "bracelet")}));
+	    Record[] anklet = ProductionReportDS.getInstance().applyFilter(ProductionReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "anklet")}));
+	    Record[] bangle = ProductionReportDS.getInstance().applyFilter(ProductionReportDS.getInstance().getCacheData(), new AdvancedCriteria(OperatorId.AND, new Criterion[] {criteria, new Criterion("type", OperatorId.EQUALS, "bangle")}));
+
+	    return new Double[][] {
+	    		{getProducedValue(ring), getProducedValue(toe_ring), getProducedValue(earring), getProducedValue(necklace), getProducedValue(pendant), getProducedValue(bracelet), getProducedValue(anklet), getProducedValue(bangle)}
+	    };
+	}
+	
 	public Double getProducedAmount(Record[] records) {
 		Double sent_amount = 0.0;
 		for (Record record : records) {
@@ -121,6 +140,16 @@ public class ProductionReportListGrid extends ListGrid {
 			}
 		}
 		return sent_weight;
+	}
+	
+	public Double getProducedValue(Record[] records) {
+		Double value = 0.0;
+		for (Record record : records) {
+			if (record.getAttributeAsDouble("value") != null) {
+				value += record.getAttributeAsDouble("value");
+			}
+		}
+		return value;
 	}
 	
 	public ProductionReportListGrid(Criterion criteria) {
@@ -144,9 +173,14 @@ public class ProductionReportListGrid extends ListGrid {
             }  
         });
         
-        ListGridField Field_6_1 = new ListGridField("weight", "น้ำหนักที่ผลิต (กรัม)", 150);
+//        ListGridField Field_6_1 = new ListGridField("weight", "น้ำหนักที่ผลิต (กรัม)", 150);
+//        Field_6_1.setShowGridSummary(true);
+//        Field_6_1.setSummaryFunction(SummaryFunctionType.SUM);
+        
+        ListGridField Field_6_1 = new ListGridField("value", "มูลค่า (บาท)", 150);
         Field_6_1.setShowGridSummary(true);
         Field_6_1.setSummaryFunction(SummaryFunctionType.SUM);
+        
         ListGridField Field_6_2 = new ListGridField("amount","จำนวนที่ผลิตได้", 150);
         Field_6_2.setShowGridSummary(true);
         Field_6_2.setSummaryFunction(SummaryFunctionType.SUM);
@@ -155,9 +189,9 @@ public class ProductionReportListGrid extends ListGrid {
         
         //Cell Format
         Field_6_1.setAlign(Alignment.RIGHT);
-        Field_6_1.setCellFormatter(FieldFormatter.getNumberFormat());
+        Field_6_1.setCellFormatter(FieldFormatter.getPriceFormat());
         Field_6_2.setAlign(Alignment.RIGHT);
-        Field_6_2.setCellFormatter(FieldFormatter.getNumberFormat());
+        Field_6_2.setCellFormatter(FieldFormatter.getIntegerFormat());
         
         setFields(field_1, Field_6_1, Field_6_2, field_3_3);
         
@@ -182,23 +216,28 @@ public class ProductionReportListGrid extends ListGrid {
 	    		{getProducedAmount(ring), getProducedAmount(toe_ring), getProducedAmount(earring), getProducedAmount(necklace), getProducedAmount(pendant), getProducedAmount(bracelet), getProducedAmount(anklet), getProducedAmount(bangle)}
 	    };
 	    
+	    valueTable = new Double[][] {
+	    		{getProducedValue(ring), getProducedValue(toe_ring), getProducedValue(earring), getProducedValue(necklace), getProducedValue(pendant), getProducedValue(bracelet), getProducedValue(anklet), getProducedValue(bangle)}
+	    };
+	    
     	return new ListGridRecord[]{ 
-    			createRecord("แหวนนิ้วมือ",getProducedAmount(ring),getProducedWeight(ring), "วง"),
-    			createRecord("แหวนนิ้วเท้า",getProducedAmount(toe_ring),getProducedWeight(toe_ring), "วง"),
-    			createRecord("ต่างหู",getProducedAmount(earring),getProducedWeight(earring), "คู่"),
-    			createRecord("สร้อยคอ",getProducedAmount(necklace),getProducedWeight(necklace), "เส้น"),
-    			createRecord("จี้",getProducedAmount(pendant),getProducedWeight(pendant), "ชิ้น"),
-    			createRecord("กำไลข้อมือ",getProducedAmount(bracelet),getProducedWeight(bracelet), "วง"),
-    			createRecord("กำไลข้อเท้า",getProducedAmount(anklet),getProducedWeight(anklet), "วง"),
-    			createRecord("สร้อยข้อเท้าหรือข้อมือ",getProducedAmount(bangle),getProducedWeight(bangle), "เส้น"),
+    			createRecord("แหวนนิ้วมือ",getProducedAmount(ring),getProducedValue(ring), "วง"),
+    			createRecord("แหวนนิ้วเท้า",getProducedAmount(toe_ring),getProducedValue(toe_ring), "วง"),
+    			createRecord("ต่างหู",getProducedAmount(earring),getProducedValue(earring), "คู่"),
+    			createRecord("สร้อยคอ",getProducedAmount(necklace),getProducedValue(necklace), "เส้น"),
+    			createRecord("จี้",getProducedAmount(pendant),getProducedValue(pendant), "ชิ้น"),
+    			createRecord("กำไลข้อมือ",getProducedAmount(bracelet),getProducedValue(bracelet), "วง"),
+    			createRecord("กำไลข้อเท้า",getProducedAmount(anklet),getProducedValue(anklet), "วง"),
+    			createRecord("สร้อยข้อเท้าหรือข้อมือ",getProducedAmount(bangle),getProducedValue(bangle), "เส้น"),
     	};
 	}
 	
-	public ListGridRecord createRecord(String type, Double amount, Double weight, String unit){
+	public ListGridRecord createRecord(String type, Double amount, Double value, String unit){
 		ListGridRecord record = new ListGridRecord();
         record.setAttribute("type", type);
         record.setAttribute("amount", amount);
-        record.setAttribute("weight", weight);
+        //record.setAttribute("weight", weight);
+        record.setAttribute("value", value);
         record.setAttribute("unit", unit);
         return record;
 	}
